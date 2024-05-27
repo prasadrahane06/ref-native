@@ -7,20 +7,13 @@ import Animated, {
   useScrollViewOffset,
 } from "react-native-reanimated";
 
-import { ThemedView } from "@/components/common/AUIThemedView";
+import { AUIThemedView } from "@/components/common/AUIThemedView";
 
 const HEADER_HEIGHT = 250;
 
-type Props = PropsWithChildren<{
-  headerImage: ReactElement;
-  headerBackgroundColor: { dark: string; light: string };
-}>;
+type Props = PropsWithChildren<{}>;
 
-export default function ParallaxScrollView({
-  children,
-  headerImage,
-  headerBackgroundColor,
-}: Props) {
+export default function ParallaxScrollView({ children }: Props) {
   const colorScheme = useColorScheme() ?? "light";
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
   const scrollOffset = useScrollViewOffset(scrollRef);
@@ -47,20 +40,22 @@ export default function ParallaxScrollView({
   });
 
   return (
-    <ThemedView style={styles.container}>
+    <AUIThemedView style={styles.container}>
       <Animated.ScrollView ref={scrollRef} scrollEventThrottle={16}>
         <Animated.View
           style={[
             styles.header,
-            { backgroundColor: headerBackgroundColor[colorScheme] },
+            {
+              backgroundColor: colorScheme === "light" ? "" : "#1D3D47",
+            }, // Set header background color based on color scheme
             headerAnimatedStyle,
           ]}
         >
-          {headerImage}
+          {/* Header content */}
         </Animated.View>
-        <ThemedView style={styles.content}>{children}</ThemedView>
+        <AUIThemedView style={styles.content}>{children}</AUIThemedView>
       </Animated.ScrollView>
-    </ThemedView>
+    </AUIThemedView>
   );
 }
 
@@ -69,7 +64,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    height: 250,
+    height: HEADER_HEIGHT,
     overflow: "hidden",
   },
   content: {
