@@ -1,26 +1,85 @@
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
- */
+// theme.ts
 
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
+export interface AppVariant {
+  first: string;
+  second: string;
+  third: string;
+}
+export interface AppTheme {
+  background: string;
+  primary: AppVariant;
+  secondary: AppVariant;
+  ternary: AppVariant;
+}
 
-export const Colors = {
-  light: {
-    text: '#11181C',
-    background: '#fff',
-    tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
-    tabIconSelected: tintColorLight,
+export interface TextTheme {
+  primary: string;
+  secondary: string;
+  danger: string;
+  warning: string;
+  info: string;
+  light: string;
+  dark: string;
+}
+
+export interface ButtonVariant {
+  background: string;
+  color: string;
+}
+
+export interface ButtonTheme {
+  primary: ButtonVariant;
+  secondary: ButtonVariant;
+  success: ButtonVariant;
+  danger: ButtonVariant;
+}
+
+const APP_THEME: AppTheme = {
+  background: "#ffffff",
+  primary: {
+    first: "#93D1BF",
+    second: "#A5D7B9",
+    third: "#95CF9C",
   },
-  dark: {
-    text: '#ECEDEE',
-    background: '#151718',
-    tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
-    tabIconSelected: tintColorDark,
+  secondary: {
+    first: "#9CD292",
+    second: "#B1D788",
+    third: "#CAE18E",
+  },
+  ternary: {
+    first: "#192119",
+    second: "#484D48",
+    third: "#7A827A",
   },
 };
+
+const TEXT_THEME: TextTheme = {
+  primary: "#000000",
+  secondary: "#6c757d",
+  danger: "#dc3545",
+  warning: "#ffc107",
+  info: "#17a2b8",
+  light: "#f8f9fa",
+  dark: "#343a40",
+};
+
+const BUTTON_THEME: ButtonTheme = {
+  primary: {
+    background: "#3498db",
+    color: "#ffffff",
+  },
+  secondary: {
+    background: "#2ecc71",
+    color: "#ffffff",
+  },
+  success: {
+    background: "#28a745",
+    color: "#ffffff",
+  },
+  danger: {
+    background: "#dc3545",
+    color: "#ffffff",
+  },
+};
+
+export { APP_THEME, TEXT_THEME, BUTTON_THEME };
