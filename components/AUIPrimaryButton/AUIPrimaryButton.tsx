@@ -4,6 +4,7 @@ import styles from "./style";
 
 interface ButtonProps extends TouchableOpacityProps {
   title: string;
+  background?: string;
 }
 /**
  *AUIPrimaryButton is a custom button component that displays a title and an icon.
@@ -12,9 +13,17 @@ interface ButtonProps extends TouchableOpacityProps {
  * @param {Function} [props.onPress]
  * @returns {React.ReactElement}
  */
-const AUIPrimaryButton: React.FC<ButtonProps> = ({ title, onPress }) => {
+
+const AUIPrimaryButton: React.FC<ButtonProps> = ({
+  title,
+  onPress,
+  background,
+}) => {
   return (
-    <TouchableOpacity style={[styles.button]} onPress={onPress}>
+    <TouchableOpacity
+      style={[styles.button, { backgroundColor: background }]}
+      onPress={onPress}
+    >
       <Text style={styles.buttonText}>{title}</Text>
     </TouchableOpacity>
   );
