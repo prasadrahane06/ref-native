@@ -1,13 +1,12 @@
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { Image, TouchableOpacity } from "react-native";
+import { Image, Platform, TouchableOpacity, View } from "react-native";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUISafeAreaView } from "@/components/common/AUISafeAreaView";
 import { AUILinearGradient } from "@/components/common/AUILinearGradient";
 import { GLOBAL_TEXT } from "@/constants/Properties";
 import { APP_THEME } from "@/constants/Colors";
 import { initialPageStyles } from "@/constants/Styles";
-import { useState } from "react";
-import AUIPrimaryButton from "@/components/AUIPrimaryButton";
+import AUIButton from "@/components/common/AUIButton";
 import { useRouter } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 import { setProfile } from "@/redux/globalSlice";
@@ -22,12 +21,19 @@ const InitialPage = () => {
     <AUISafeAreaView edges={["bottom"]}>
       <AUIThemedView style={initialPageStyles.container}>
         <AUILinearGradient
-          style={[
-            initialPageStyles.loginScreenInner,
-            initialPageStyles.rectangleViewPosition,
-          ]}
+          style={
+            Platform.OS === "ios"
+              ? [initialPageStyles.iosIndexHeader]
+              : [initialPageStyles.indexHeader]
+          }
         >
-          <AUIThemedText style={initialPageStyles.title}>
+          <AUIThemedText
+            style={
+              Platform.OS === "ios"
+                ? initialPageStyles.iosTitle
+                : initialPageStyles.title
+            }
+          >
             {GLOBAL_TEXT.create_your_profile}
           </AUIThemedText>
         </AUILinearGradient>
@@ -39,8 +45,7 @@ const InitialPage = () => {
                 initialPageStyles.circularViewPosition,
                 profile === "student" && {
                   borderColor: APP_THEME.primary.first,
-                  borderWidth: 1,
-                  // borderRadius: 200,
+                  borderWidth: 5,
                 },
               ]}
               locations={[0, 1]}
@@ -61,7 +66,6 @@ const InitialPage = () => {
                 profile === "school" && {
                   borderColor: APP_THEME.primary.first,
                   borderWidth: 5,
-                  borderRadius: 200,
                 },
               ]}
               locations={[0, 1]}
@@ -78,8 +82,10 @@ const InitialPage = () => {
         </AUIThemedView>
 
         <AUIThemedView style={initialPageStyles.button}>
-          <AUIPrimaryButton
+          <AUIButton
             title="Continue"
+            disabled={!profile}
+            selected={Boolean(profile)}
             onPress={() => router.navigate("/signup")}
           />
         </AUIThemedView>

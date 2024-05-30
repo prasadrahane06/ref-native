@@ -53,17 +53,28 @@ const InitialLayout = () => {
   return (
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />
-
       <Stack.Screen
         name="signup"
         options={{
-          headerShown: false,
+          headerTitle: "",
+          headerLeft: () => (
+            <TouchableOpacity onPress={router.back}>
+              <Ionicons
+                name="arrow-back"
+                size={34}
+                color={APP_THEME.ternary.first}
+              />
+            </TouchableOpacity>
+          ),
+          // headerShown: false,
         }}
       />
 
       <Stack.Screen
         name="login"
         options={{
+          headerTitle: "",
+
           headerLeft: () => (
             <TouchableOpacity onPress={router.back}>
               <Ionicons
@@ -91,6 +102,8 @@ const InitialLayout = () => {
         name="help"
         options={{ title: "Help", presentation: "modal" }}
       />
+      <Stack.Screen name="(student)/home" />
+      <Stack.Screen name="student" />
     </Stack>
   );
 };

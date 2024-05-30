@@ -13,20 +13,29 @@ export const initialPageStyles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-between",
   },
-  loginScreenInner: {
-    marginLeft: -22,
+  iosIndexHeader: {
+    marginLeft: -25,
     top: -71,
     width: 444,
     height: 208,
     backgroundColor: "transparent",
-  },
-  rectangleViewPosition: {
     borderRadius: 104,
   },
+  indexHeader: {
+    // marginLeft: -25,
+    top: -75,
+
+    // width: 444,
+    // @ts-ignore
+    height: StatusBar.currentHeight + 130,
+    backgroundColor: "transparent",
+    borderRadius: 100,
+  },
+
   button: {
     paddingHorizontal: 10,
   },
-  title: {
+  iosTitle: {
     marginLeft: -87,
     top: 150,
     fontSize: 18,
@@ -37,6 +46,17 @@ export const initialPageStyles = StyleSheet.create({
     left: "50%",
     position: "absolute",
   },
+  title: {
+    top: 120,
+    fontSize: 18,
+    fontWeight: "700",
+    // fontFamily: font,
+    color: APP_THEME.ternary.first,
+    lineHeight: 21,
+    width: "100%",
+    textAlign: "center",
+    position: "absolute",
+  },
   optionContainer: {
     flexDirection: "row",
     justifyContent: "space-evenly",
@@ -44,6 +64,7 @@ export const initialPageStyles = StyleSheet.create({
   circularViewPosition: {
     height: 150,
     width: 150,
+    borderCurve: "circular",
     borderRadius: 200,
     alignItems: "center",
     justifyContent: "center",
@@ -75,23 +96,35 @@ export const loginPageStyles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,
+    paddingTop: 10,
   },
   heading: {
     fontSize: 30,
     // marginTop: 40,
-    paddingTop: 30,
+    paddingTop: 10,
     fontWeight: "bold",
   },
   mobileEmailButtonContainer: {
     flexDirection: "row",
-    gap: 10,
+    gap: 5,
     marginTop: 20,
+  },
+  sendOtpContainer: {
+    marginTop: 20,
+    flexDirection: "column",
+    gap: 20,
+  },
+  otpViewContainer: {
+    marginTop: 40,
+    flexDirection: "column",
+    alignItems: "center",
+    gap: 30,
   },
 });
 
 export const buttonStyle = StyleSheet.create({
   button: {
-    padding: 10,
+    // padding: 10,
     borderRadius: 5,
     // borderWidth: 1,
     alignItems: "center",
@@ -215,9 +248,19 @@ export const splitOTPinputFieldStyle = StyleSheet.create({
   },
 });
 export const signupPageStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: 20,
+  },
+  heading: {
+    fontSize: 30,
+    // marginTop: 40,
+    paddingTop: 20,
+    fontWeight: "bold",
+  },
   formLayout: {
     gap: 20,
-    marginTop: 20,
+    marginTop: 10,
     flex: 1,
     justifyContent: "space-between",
   },

@@ -30,7 +30,11 @@ const AUIInputField: React.FC<CustomInputProps> = ({
     <View style={[inputFieldStyle.container, style]}>
       {label && <Text style={inputFieldStyle.label}>{label}</Text>}
       <TextInput
-        style={[inputFieldStyle.input]}
+        style={[
+          inputFieldStyle.input,
+          // @ts-ignore
+          error && { borderWidth: 1, borderColor: "red" },
+        ]}
         placeholder={placeholder}
         value={value}
         onChangeText={onChangeText}

@@ -1,5 +1,5 @@
 import AUIInputField from "@/components/common/AUIInputField";
-import AUIPrimaryButton from "@/components/common/AUIPrimaryButton";
+import AUIButton from "@/components/common/AUIButton";
 import AUISplitOTPInput from "@/components/common/AUISplitOTPInput";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
@@ -12,21 +12,21 @@ import {
 } from "@/constants/Styles";
 import { useState } from "react";
 import { KeyboardAvoidingView, Platform, View } from "react-native";
+import AUIOTPInput from "@/components/common/AUIOtpInput";
+import { useRouter } from "expo-router";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState<string>("");
-  const [emailError, setEmailError] = useState<string>("");
-  const [mobileNumber, setMobileNumber] = useState<string>("");
-  const [mobileNumberError, setmobileNumberError] = useState<string>("");
+  const router = useRouter();
+
+  const [inputValue, setInputValue] = useState<string>("");
+  const [inputError, setInputError] = useState({
+    show: false,
+    label: "",
+  });
   const [selectedButton, setSelectedButton] = useState<string>("mobile");
   const [otp, setOtp] = useState<string>("");
   const [otpSent, setOtpSent] = useState<boolean>(false);
   const [submitOtp, setSubmitOtp] = useState<string>("");
-
-  const handleOTPChange = (newOtp: string) => {
-    setOtp(newOtp);
-    console.log("Current OTP:", newOtp);
-  };
 
   const validateMobileNumber = (number: string): boolean => {
     const mobileRegex = /^[0-9]{10}$/;
@@ -37,35 +37,44 @@ const LoginPage = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
-
-  const handleSendOtp = () => {
+  const handleOnInputChange = (val: string) => {
     let isValid = true;
 
-    if (selectedButton === "mobile") {
-      if (!mobileNumber) {
-        setmobileNumberError("Mobile number is required");
-        isValid = false;
-      } else if (!validateMobileNumber(mobileNumber)) {
-        setmobileNumberError("Invalid mobile number");
-        isValid = false;
-      } else {
-        setmobileNumberError("");
-      }
+    setInputValue(val);
+
+    if (selectedButton === "mobile" && !validateMobileNumber(val)) {
+      setInputError({ show: true, label: GLOBAL_TEXT.validate_mobile });
+      isValid = false;
     }
 
-    if (selectedButton === "email") {
-      if (!email) {
-        setEmailError("Email ID is required");
-        isValid = false;
-      } else if (!validateEmail(email)) {
-        setEmailError("Invalid email ID");
-        isValid = false;
-      } else {
-        setEmailError("");
-      }
+    if (selectedButton === "email" && !validateEmail(val)) {
+      setInputError({ show: true, label: GLOBAL_TEXT.validate_email });
+      isValid = false;
+    }
+    if (isValid) {
+      setInputError({ show: false, label: "" });
+    }
+  };
+
+  const handleOTPChange = (newOtp: string) => {
+    setOtp(newOtp);
+    console.log("Current OTP:", newOtp);
+  };
+  const handleSendOtp = () => {
+    let isValid = true;
+    if (selectedButton === "mobile" && !validateMobileNumber(inputValue)) {
+      setInputError({ show: true, label: GLOBAL_TEXT.validate_mobile });
+      isValid = false;
+    }
+
+    if (selectedButton === "email" && !validateEmail(inputValue)) {
+      setInputError({ show: true, label: GLOBAL_TEXT.validate_email });
+      isValid = false;
     }
 
     if (isValid) {
+      setInputError({ show: false, label: "" });
+
       setOtpSent(true);
     }
   };
@@ -83,68 +92,61 @@ const LoginPage = () => {
         behavior="padding"
         keyboardVerticalOffset={keyboardVerticalOffset}
       >
-        <AUIThemedView>
-          <View style={loginPageStyles.mobileEmailButtonContainer}>
-            <AUIPrimaryButton
-              title="Mobile Number"
-              onPress={() => setSelectedButton("mobile")}
-              selected={selectedButton === "mobile"}
+        <AUIThemedView style={loginPageStyles.mobileEmailButtonContainer}>
+          <AUIButton
+            style={{ width: "50%" }}
+            title="Mobile Number"
+            onPress={() => setSelectedButton("mobile")}
+            selected={selectedButton === "mobile"}
+          />
+          <AUIButton
+            style={{ width: "50%" }}
+            title="Email ID"
+            onPress={() => setSelectedButton("email")}
+            selected={selectedButton === "email"}
+          />
+        </AUIThemedView>
+        {!otpSent && (
+          <AUIThemedView style={loginPageStyles.sendOtpContainer}>
+            <AUIInputField
+              label=""
+              placeholder={
+                selectedButton === "mobile"
+                  ? GLOBAL_TEXT.enter_mobile_number
+                  : GLOBAL_TEXT.enter_email_id
+              }
+              value={inputValue}
+              onChangeText={handleOnInputChange}
+              error={inputError.label}
             />
-            <AUIPrimaryButton
-              title="Email ID"
-              onPress={() => setSelectedButton("email")}
-              selected={selectedButton === "email"}
-            />
-          </View>
-          {!otpSent && (
-            <>
-              {selectedButton === "mobile" && (
-                <AUIInputField
-                  label=""
-                  placeholder="Enter your Mobile Number"
-                  value={mobileNumber}
-                  onChangeText={setMobileNumber}
-                  error={mobileNumberError}
-                  secureTextEntry
-                />
-              )}
-
-              {selectedButton === "email" && (
-                <AUIInputField
-                  label=""
-                  placeholder="Enter your email"
-                  value={email}
-                  onChangeText={setEmail}
-                  error={emailError}
-                />
-              )}
-            </>
-          )}
-
-          {otpSent && (
-            <>
-              <View style={splitOTPInputContainer.container}>
-                <AUISplitOTPInput length={4} onOTPChange={handleOTPChange} />
-              </View>
-              <View style={secondaryButtonStyle.buttonContainer}>
-                <AUIPrimaryButton
-                  title="Submit"
-                  background={APP_THEME.primary.first}
-                  onPress={handleSubmitOtp}
-                />
-              </View>
-            </>
-          )}
-          {!otpSent && (
             <View style={secondaryButtonStyle.buttonContainer}>
-              <AUIPrimaryButton
+              <AUIButton
                 title="Send OTP"
+                disabled={!Boolean(inputValue) || inputError.show}
+                selected={Boolean(inputValue) && !inputError.show}
+                style={{ width: "50%" }}
                 background={APP_THEME.primary.first}
                 onPress={handleSendOtp}
               />
             </View>
-          )}
-        </AUIThemedView>
+          </AUIThemedView>
+        )}
+
+        {otpSent && (
+          <>
+            <AUIThemedView style={loginPageStyles.otpViewContainer}>
+              <AUIOTPInput length={4} onChange={handleOTPChange} />
+              <AUIButton
+                title="Submit"
+                style={{ width: "50%" }}
+                disabled={!Boolean(otp)}
+                selected={otp.length === 4 && otp !== ""}
+                onPress={handleSubmitOtp}
+                onPressIn={() => router.push({ pathname: "(student)/home" })}
+              />
+            </AUIThemedView>
+          </>
+        )}
       </KeyboardAvoidingView>
     </AUIThemedView>
   );

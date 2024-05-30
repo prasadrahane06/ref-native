@@ -18,6 +18,8 @@ export function AUILinearGradient({
       locations={locations}
       colors={colors}
       style={style}
+      start={[0, 0]}
+      end={[1, 1]}
       {...otherProps}
     />
   );

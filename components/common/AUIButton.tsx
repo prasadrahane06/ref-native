@@ -13,6 +13,7 @@ interface ButtonProps extends TouchableOpacityProps {
   title: string;
   background?: string;
   selected?: boolean;
+  disabled?: boolean;
 }
 /**
  *AUIPrimaryButton is a custom button component that displays a title and an icon.
@@ -22,21 +23,26 @@ interface ButtonProps extends TouchableOpacityProps {
  * @returns {React.ReactElement}
  */
 
-const AUIPrimaryButton: React.FC<ButtonProps> = ({
+const AUIButton: React.FC<ButtonProps> = ({
   title,
   onPress,
   background,
   selected,
+  style,
+  disabled,
 }) => {
   return (
-    <TouchableOpacity style={[buttonStyle.button]} onPress={onPress}>
+    <TouchableOpacity
+      style={[buttonStyle.button, style]}
+      onPress={disabled ? () => null : onPress}
+    >
       <AUILinearGradient
         style={buttonStyle.buttonInner}
         colors={
-          selected
-            ? [APP_THEME.primary.first, APP_THEME.primary.first]
-            : background
-            ? [background, background]
+          disabled
+            ? ["#dcdcdd", "#dcdcdd"]
+            : selected
+            ? [APP_THEME.primary.first, APP_THEME.secondary.first]
             : [APP_THEME.ternary.second, APP_THEME.ternary.second]
         }
       >
@@ -46,4 +52,4 @@ const AUIPrimaryButton: React.FC<ButtonProps> = ({
   );
 };
 
-export default AUIPrimaryButton;
+export default AUIButton;

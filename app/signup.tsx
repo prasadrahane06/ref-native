@@ -1,15 +1,19 @@
-import AUIPrimaryButton from "@/components/AUIPrimaryButton";
+import AUIButton from "@/components/common/AUIButton";
 import DropdownComponent from "@/components/common/AUIDropdown";
 import { AUISafeAreaView } from "@/components/common/AUISafeAreaView";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
+import { APP_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT, SIGNUP_FIELDS } from "@/constants/Properties";
 import { loginPageStyles, signupPageStyles } from "@/constants/Styles";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { KeyboardAvoidingView, Platform, ScrollView } from "react-native";
 
 const SignupPage = () => {
   const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
+  const router = useRouter();
+
   const [signupValues, setSignupValues] = useState({
     qualification: null,
     academic: null,
@@ -61,9 +65,9 @@ const SignupPage = () => {
   ];
 
   return (
-    <AUISafeAreaView edges={["top", "bottom"]}>
-      <AUIThemedView style={loginPageStyles.container}>
-        <AUIThemedText style={loginPageStyles.heading}>
+    <ScrollView scrollEnabled style={{ backgroundColor: APP_THEME.background }}>
+      <AUIThemedView style={signupPageStyles.container}>
+        <AUIThemedText style={signupPageStyles.heading}>
           {GLOBAL_TEXT.tell_about_yourself}
         </AUIThemedText>
         <KeyboardAvoidingView
@@ -96,13 +100,24 @@ const SignupPage = () => {
               ))}
             </AUIThemedView>
             <AUIThemedView style={signupPageStyles.buttonContainer}>
-              <AUIPrimaryButton title={"Save"} style={{ width: "50%" }} />
-              <AUIPrimaryButton title={"Next"} style={{ width: "50%" }} />
+              <AUIButton
+                title="Save"
+                disabled={!Object.values(signupValues).every((x) => x)}
+                style={{ width: "50%" }}
+                // onPress={() => router.navigate("/signup")}
+              />
+              <AUIButton
+                title={"Next"}
+                disabled={!Object.values(signupValues).every((x) => x)}
+                selected={Object.values(signupValues).every((x) => x)}
+                style={{ width: "50%" }}
+                onPress={() => router.navigate("/login")}
+              />
             </AUIThemedView>
           </AUIThemedView>
         </KeyboardAvoidingView>
       </AUIThemedView>
-    </AUISafeAreaView>
+    </ScrollView>
   );
 };
 

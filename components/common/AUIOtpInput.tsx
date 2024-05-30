@@ -50,6 +50,7 @@ const AUIOTPInput = ({ length, onChange }: any) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
+    gap: 10,
     justifyContent: "space-between",
   },
   input: {
