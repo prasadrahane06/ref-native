@@ -4,6 +4,7 @@ import styles from "./style";
 
 interface ButtonProps extends TouchableOpacityProps {
   title: string;
+  style?: any;
   background?: string;
 }
 /**
@@ -17,11 +18,12 @@ interface ButtonProps extends TouchableOpacityProps {
 const AUIPrimaryButton: React.FC<ButtonProps> = ({
   title,
   onPress,
+  style,
   background,
 }) => {
   return (
     <TouchableOpacity
-      style={[styles.button, { backgroundColor: background }]}
+      style={[styles.button, style, { backgroundColor: background }]}
       onPress={onPress}
     >
       <Text style={styles.buttonText}>{title}</Text>

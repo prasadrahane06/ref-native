@@ -1,16 +1,24 @@
 import { defaultStyles } from "@/constants/Styles";
 import { View, type ViewProps } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  NativeSafeAreaViewProps,
+  SafeAreaView,
+} from "react-native-safe-area-context";
 
 export type ThemedViewProps = ViewProps & {
   style?: any;
+  edges?: any;
 };
 
-export function AUISafeAreaView({ style, ...otherProps }: ThemedViewProps) {
+export function AUISafeAreaView({
+  style,
+  edges = [],
+  ...otherProps
+}: ThemedViewProps) {
   return (
     <SafeAreaView
       style={[defaultStyles.safeAreaView, style]}
-      edges={["left", "right"]}
+      edges={["left", "right", ...edges]}
       {...otherProps}
     />
   );

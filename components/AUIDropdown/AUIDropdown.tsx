@@ -34,7 +34,7 @@ const AUIDropdown: React.FC<CustomDropdownProps> = ({
     <View style={styles.container}>
       <Picker
         selectedValue={value}
-        onValueChange={(itemValue) => onValueChange(itemValue)}
+        onValueChange={(itemValue: any) => onValueChange(itemValue)}
         style={styles.picker}
       >
         <Picker.Item label={placeholder} value={null} />

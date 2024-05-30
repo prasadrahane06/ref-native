@@ -23,6 +23,9 @@ export const initialPageStyles = StyleSheet.create({
   rectangleViewPosition: {
     borderRadius: 104,
   },
+  button: {
+    paddingHorizontal: 10,
+  },
   title: {
     marginLeft: -87,
     top: 150,
@@ -42,7 +45,6 @@ export const initialPageStyles = StyleSheet.create({
     height: 150,
     width: 150,
     borderRadius: 200,
-    borderWidth: 5,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -210,5 +212,22 @@ export const splitOTPinputFieldStyle = StyleSheet.create({
     width: 40,
     height: 40,
     marginHorizontal: 5,
+  },
+});
+export const signupPageStyles = StyleSheet.create({
+  formLayout: {
+    gap: 20,
+    marginTop: 20,
+    flex: 1,
+    justifyContent: "space-between",
+  },
+  fieldContainer: {
+    gap: 20,
+  },
+  buttonContainer: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: 5,
   },
 });

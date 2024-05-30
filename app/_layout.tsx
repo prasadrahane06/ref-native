@@ -1,5 +1,6 @@
 import { APP_THEME } from "@/constants/Colors";
-import { Ionicons } from "@expo/vector-icons";
+import { store } from "@/redux/store";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
 import { Link, Stack, useRouter, useSegments } from "expo-router";
@@ -8,11 +9,7 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { TouchableOpacity, Text, View, ActivityIndicator } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from "expo-router";
+import { Provider } from "react-redux";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -24,7 +21,7 @@ const InitialLayout = () => {
   });
   const router = useRouter();
   const segments = useSegments();
-
+  console.log(segments);
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
     if (error) throw error;
@@ -56,18 +53,11 @@ const InitialLayout = () => {
   return (
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />
+
       <Stack.Screen
         name="signup"
         options={{
-          headerLeft: () => (
-            <TouchableOpacity onPress={router.back}>
-              <Ionicons
-                name="arrow-back"
-                size={34}
-                color={APP_THEME.ternary.first}
-              />
-            </TouchableOpacity>
-          ),
+          headerShown: false,
         }}
       />
 
@@ -107,11 +97,16 @@ const InitialLayout = () => {
 
 const RootLayoutNav = () => {
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <StatusBar style="light" />
-      <InitialLayout />
-    </GestureHandlerRootView>
+    <Provider store={store}>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <StatusBar style="light" />
+        <InitialLayout />
+      </GestureHandlerRootView>
+    </Provider>
   );
 };
-
+export {
+  // Catch any errors thrown by the Layout component.
+  ErrorBoundary,
+} from "expo-router";
 export default RootLayoutNav;
