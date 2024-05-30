@@ -80,4 +80,135 @@ export const loginPageStyles = StyleSheet.create({
     paddingTop: 30,
     fontWeight: "bold",
   },
+  mobileEmailButtonContainer: {
+    flexDirection: "row",
+    gap: 10,
+    marginTop: 20,
+  },
+});
+
+export const buttonStyle = StyleSheet.create({
+  button: {
+    padding: 10,
+    borderRadius: 5,
+    // borderWidth: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+  },
+  buttonInner: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 5,
+    width: 680,
+    height: 40,
+    paddingHorizontal: 10,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
+    justifyContent: "center",
+  },
+  // sendOtpButton: {
+  //   width: 200,
+  // },
+});
+
+export const secondaryButtonStyle = StyleSheet.create({
+  buttonContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  button: {
+    width: "50%",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+  },
+  buttonInner: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 5,
+    width: 680,
+    height: 40,
+    paddingHorizontal: 10,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
+    justifyContent: "center",
+  },
+});
+
+export const inputFieldStyle = StyleSheet.create({
+  container: {
+    marginVertical: 10,
+  },
+  label: {
+    marginBottom: 5,
+    fontSize: 16,
+    color: "#333",
+  },
+  input: {
+    height: 40,
+    borderColor: "#ccc",
+    borderWidth: 2,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+  },
+  error: {
+    marginTop: 5,
+    fontSize: 14,
+    color: "red",
+  },
+});
+
+export const dropdownStyle = StyleSheet.create({
+  container: {
+    padding: 10,
+  },
+  picker: {
+    width: "100%",
+    height: 40,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    justifyContent: "center",
+  },
+});
+
+export const splitOTPInputContainer = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+});
+export const splitOTPinputFieldStyle = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  input: {
+    borderWidth: 2,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    textAlign: "center",
+    fontSize: 18,
+    width: 40,
+    height: 40,
+    marginHorizontal: 5,
+  },
 });
