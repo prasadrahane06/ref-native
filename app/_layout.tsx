@@ -102,8 +102,8 @@ const InitialLayout = () => {
         name="help"
         options={{ title: "Help", presentation: "modal" }}
       />
-      <Stack.Screen name="(student)/home" />
-      <Stack.Screen name="student" />
+      <Stack.Screen name="(home)/(school)" />
+      <Stack.Screen name="(home)/(student)" />
     </Stack>
   );
 };

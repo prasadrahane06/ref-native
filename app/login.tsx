@@ -64,7 +64,7 @@ const LoginPage = () => {
   };
 
   const handleSubmitOtp = () => {
-    router.push({ pathname: "(student)/home" });
+    router.push({ pathname: "(home)/(school)" });
   };
 
   const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
