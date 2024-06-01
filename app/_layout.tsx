@@ -1,5 +1,5 @@
-import { APP_THEME } from "@/constants/Colors";
-import { store } from "@/redux/store";
+import { APP_THEME, COLOR_THEME, TEXT_THEME } from "@/constants/Colors";
+import { RootState, store } from "@/redux/store";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
@@ -9,7 +9,7 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { TouchableOpacity, Text, View, ActivityIndicator } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -32,6 +32,8 @@ const InitialLayout = () => {
       SplashScreen.hideAsync();
     }
   }, [loaded]);
+
+  const theme = useSelector((state: RootState) => state.global.theme);
 
   // useEffect(() => {
   //   if (!isLoaded) return;
@@ -62,11 +64,13 @@ const InitialLayout = () => {
               <Ionicons
                 name="arrow-back"
                 size={34}
-                color={APP_THEME.ternary.first}
+                color={TEXT_THEME[theme].primary}
               />
             </TouchableOpacity>
           ),
-          // headerShown: false,
+          headerStyle: {
+            backgroundColor: COLOR_THEME[theme].backgound,
+          },
         }}
       />
 
