@@ -1,85 +1,72 @@
 import AUIInputField from "@/components/common/AUIInputField";
 import AUIButton from "@/components/common/AUIButton";
-import AUISplitOTPInput from "@/components/common/AUISplitOTPInput";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { APP_THEME, BUTTON_THEME } from "@/constants/Colors";
+import { APP_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
-import {
-  loginPageStyles,
-  secondaryButtonStyle,
-  splitOTPInputContainer,
-} from "@/constants/Styles";
+import { loginPageStyles, secondaryButtonStyle } from "@/constants/Styles";
 import { useState } from "react";
 import { KeyboardAvoidingView, Platform, View } from "react-native";
 import AUIOTPInput from "@/components/common/AUIOtpInput";
 import { useRouter } from "expo-router";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
+
+const schema = Yup.object().shape({
+  input: Yup.string().when("selectedButton", {
+    is: "mobile",
+    then: (schema) =>
+      schema
+        .matches(/^[0-9]{10}$/, GLOBAL_TEXT.validate_mobile)
+        .required(GLOBAL_TEXT.validate_mobile),
+    otherwise: (schema) =>
+      schema
+        .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, GLOBAL_TEXT.validate_email)
+        .required(GLOBAL_TEXT.validate_email),
+  }),
+  selectedButton: Yup.string().required(),
+});
 
 const LoginPage = () => {
   const router = useRouter();
 
-  const [inputValue, setInputValue] = useState<string>("");
-  const [inputError, setInputError] = useState({
-    show: false,
-    label: "",
-  });
-  const [selectedButton, setSelectedButton] = useState<string>("mobile");
-  const [otp, setOtp] = useState<string>("");
   const [otpSent, setOtpSent] = useState<boolean>(false);
-  const [submitOtp, setSubmitOtp] = useState<string>("");
+  const [otp, setOtp] = useState<string>("");
 
-  const validateMobileNumber = (number: string): boolean => {
-    const mobileRegex = /^[0-9]{10}$/;
-    return mobileRegex.test(number);
-  };
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isValid },
+    setValue,
+    watch,
+    reset,
+  } = useForm({
+    resolver: yupResolver(schema),
+    mode: "onChange",
+    defaultValues: {
+      input: "",
+      selectedButton: "mobile",
+    },
+  });
 
-  const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-  const handleOnInputChange = (val: string) => {
-    let isValid = true;
+  const selectedButton = watch("selectedButton");
 
-    setInputValue(val);
-
-    if (selectedButton === "mobile" && !validateMobileNumber(val)) {
-      setInputError({ show: true, label: GLOBAL_TEXT.validate_mobile });
-      isValid = false;
-    }
-
-    if (selectedButton === "email" && !validateEmail(val)) {
-      setInputError({ show: true, label: GLOBAL_TEXT.validate_email });
-      isValid = false;
-    }
-    if (isValid) {
-      setInputError({ show: false, label: "" });
-    }
+  const handleSendOtp = () => {
+    handleSubmit(() => {
+      setOtpSent(true);
+    })();
   };
 
   const handleOTPChange = (newOtp: string) => {
     setOtp(newOtp);
     console.log("Current OTP:", newOtp);
   };
-  const handleSendOtp = () => {
-    let isValid = true;
-    if (selectedButton === "mobile" && !validateMobileNumber(inputValue)) {
-      setInputError({ show: true, label: GLOBAL_TEXT.validate_mobile });
-      isValid = false;
-    }
 
-    if (selectedButton === "email" && !validateEmail(inputValue)) {
-      setInputError({ show: true, label: GLOBAL_TEXT.validate_email });
-      isValid = false;
-    }
-
-    if (isValid) {
-      setInputError({ show: false, label: "" });
-
-      setOtpSent(true);
-    }
+  const handleSubmitOtp = () => {
+    router.push({ pathname: "(student)/home" });
   };
 
-  const handleSubmitOtp = () => {};
   const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
 
   return (
@@ -96,34 +83,48 @@ const LoginPage = () => {
           <AUIButton
             style={{ width: "50%" }}
             title="Mobile Number"
-            onPress={() => setSelectedButton("mobile")}
+            onPress={() => {
+              setValue("selectedButton", "mobile");
+              // setValue("input", "");
+              reset({ input: "", selectedButton: "mobile" });
+            }}
             selected={selectedButton === "mobile"}
           />
           <AUIButton
             style={{ width: "50%" }}
             title="Email ID"
-            onPress={() => setSelectedButton("email")}
+            onPress={() => {
+              setValue("selectedButton", "email");
+              // setValue("input", "");
+              reset({ input: "", selectedButton: "email" });
+            }}
             selected={selectedButton === "email"}
           />
         </AUIThemedView>
         {!otpSent && (
           <AUIThemedView style={loginPageStyles.sendOtpContainer}>
-            <AUIInputField
-              label=""
-              placeholder={
-                selectedButton === "mobile"
-                  ? GLOBAL_TEXT.enter_mobile_number
-                  : GLOBAL_TEXT.enter_email_id
-              }
-              value={inputValue}
-              onChangeText={handleOnInputChange}
-              error={inputError.label}
+            <Controller
+              name="input"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <AUIInputField
+                  label=""
+                  placeholder={
+                    selectedButton === "mobile"
+                      ? GLOBAL_TEXT.enter_mobile_number
+                      : GLOBAL_TEXT.enter_email_id
+                  }
+                  value={value}
+                  onChangeText={onChange}
+                  error={errors.input ? errors.input.message : ""}
+                />
+              )}
             />
             <View style={secondaryButtonStyle.buttonContainer}>
               <AUIButton
                 title="Send OTP"
-                disabled={!Boolean(inputValue) || inputError.show}
-                selected={Boolean(inputValue) && !inputError.show}
+                disabled={!isValid}
+                selected={isValid}
                 style={{ width: "50%" }}
                 background={APP_THEME.primary.first}
                 onPress={handleSendOtp}
@@ -142,7 +143,6 @@ const LoginPage = () => {
                 disabled={!Boolean(otp)}
                 selected={otp.length === 4 && otp !== ""}
                 onPress={handleSubmitOtp}
-                onPressIn={() => router.push({ pathname: "(student)/home" })}
               />
             </AUIThemedView>
           </>
