@@ -5,7 +5,7 @@ import { AUIThemedText } from "@/components/common/AUIThemedText";
 
 export default function TabFourScreen() {
   return (
-    <AUIThemedView>
+    <AUIThemedView style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
       <AUIThemedText>cart</AUIThemedText>
     </AUIThemedView>
   );

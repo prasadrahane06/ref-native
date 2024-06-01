@@ -4,7 +4,7 @@ import { AUIThemedText } from "@/components/common/AUIThemedText";
 
 export default function HomeScreen() {
   return (
-    <AUIThemedView>
+    <AUIThemedView style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
       <AUIThemedText>index</AUIThemedText>
     </AUIThemedView>
   );

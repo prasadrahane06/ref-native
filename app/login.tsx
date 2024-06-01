@@ -12,6 +12,8 @@ import { useRouter } from "expo-router";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 const schema = Yup.object().shape({
   input: Yup.string().when("selectedButton", {
@@ -30,7 +32,7 @@ const schema = Yup.object().shape({
 
 const LoginPage = () => {
   const router = useRouter();
-
+  const profile = useSelector((state: RootState) => state.global.profile);
   const [otpSent, setOtpSent] = useState<boolean>(false);
   const [otp, setOtp] = useState<string>("");
 
@@ -64,7 +66,7 @@ const LoginPage = () => {
   };
 
   const handleSubmitOtp = () => {
-    router.push({ pathname: "(home)/(school)" });
+    router.push({ pathname: `(home)/(${profile})` });
   };
 
   const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;

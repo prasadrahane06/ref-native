@@ -5,7 +5,7 @@ import { AUIThemedText } from "@/components/common/AUIThemedText";
 
 export default function TabTwoScreen() {
   return (
-    <AUIThemedView>
+    <AUIThemedView style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
       <AUIThemedText>favourite</AUIThemedText>
     </AUIThemedView>
   );
