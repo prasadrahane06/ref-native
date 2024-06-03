@@ -1,6 +1,6 @@
 import { APP_THEME } from "@/constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
-import { View, type ViewProps } from "react-native";
+import { type ViewProps } from "react-native";
 
 export type LinearGradientProps = ViewProps & {
   locations?: number[] | null | undefined;

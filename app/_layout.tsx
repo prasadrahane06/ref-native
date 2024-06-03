@@ -106,8 +106,14 @@ const InitialLayout = () => {
         name="help"
         options={{ title: "Help", presentation: "modal" }}
       />
-      <Stack.Screen  name="(home)/(school)" options={{  title:"Home", headerTitle: "Home" }} />
-      <Stack.Screen name="(home)/(student)" options={{ title:"Home", headerTitle: "Home" }} />
+      <Stack.Screen
+        name="(home)/(school)"
+        options={{ headerShown: false, title: "Home", headerTitle: "Home" }}
+      />
+      <Stack.Screen
+        name="(home)/(student)"
+        options={{ headerShown: false, title: "Home", headerTitle: "Home" }}
+      />
     </Stack>
   );
 };

@@ -1,11 +1,11 @@
-import { Image, StyleSheet, Platform } from "react-native";
-import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
+import { AUIThemedView } from "@/components/common/AUIThemedView";
+import { StyleSheet } from "react-native";
 
 export default function HomeScreen() {
   return (
     <AUIThemedView style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
-      <AUIThemedText>index</AUIThemedText>
+      <AUIThemedText>inside home</AUIThemedText>
     </AUIThemedView>
   );
 }
