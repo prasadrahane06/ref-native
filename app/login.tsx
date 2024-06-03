@@ -12,6 +12,7 @@ import { useRouter } from "expo-router";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
+import OTPScreen from "@/components/screenComponents/OTPScreen";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 
@@ -53,6 +54,7 @@ const LoginPage = () => {
   });
 
   const selectedButton = watch("selectedButton");
+  const inputValue = watch("input");
 
   const handleSendOtp = () => {
     handleSubmit(() => {
@@ -67,6 +69,11 @@ const LoginPage = () => {
 
   const handleSubmitOtp = () => {
     router.push({ pathname: `(home)/(${profile})` });
+  };
+
+  const handleBackToInput = () => {
+    setOtpSent(false);
+    reset({ input: inputValue, selectedButton });
   };
 
   const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
@@ -138,7 +145,12 @@ const LoginPage = () => {
         {otpSent && (
           <>
             <AUIThemedView style={loginPageStyles.otpViewContainer}>
-              <AUIOTPInput length={4} onChange={handleOTPChange} />
+              <OTPScreen
+                length={4}
+                onChange={handleOTPChange}
+                onBackToInput={handleBackToInput}
+                inputValue={inputValue}
+              />
               <AUIButton
                 title="Submit"
                 style={{ width: "50%" }}
