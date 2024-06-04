@@ -5,7 +5,7 @@ import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { APP_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
 import { loginPageStyles, secondaryButtonStyle } from "@/constants/Styles";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { KeyboardAvoidingView, Platform, View } from "react-native";
 import AUIOTPInput from "@/components/common/AUIOtpInput";
 import { useRouter } from "expo-router";
@@ -15,6 +15,11 @@ import * as Yup from "yup";
 import OTPScreen from "@/components/screenComponents/OTPScreen";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import DropdownComponent from "@/components/common/AUIDropdown";
+// @ts-ignore
+import countryList from "react-select-country-list";
+import { post } from "./services/axiosClient";
+import { API_URL } from "@/constants/urlProperties";
 
 const schema = Yup.object().shape({
   input: Yup.string().when("selectedButton", {
@@ -34,9 +39,14 @@ const schema = Yup.object().shape({
 const LoginPage = () => {
   const router = useRouter();
   const profile = useSelector((state: RootState) => state.global.profile);
+  const signInType = useSelector((state: RootState) => state.global.signInType);
+  const signupDetails = useSelector(
+    (state: RootState) => state.global.signupDetails
+  );
+
   const [otpSent, setOtpSent] = useState<boolean>(false);
   const [otp, setOtp] = useState<string>("");
-
+  const options = useMemo(() => countryList().getValue("India"), []);
   const {
     control,
     handleSubmit,
@@ -56,6 +66,13 @@ const LoginPage = () => {
   const selectedButton = watch("selectedButton");
   const inputValue = watch("input");
 
+  useEffect(() => {
+    if (signInType === "new" && signupDetails?.email) {
+      setOtpSent(true);
+      setValue("input", signupDetails?.phone);
+      setValue("selectedButton", "mobile");
+    }
+  }, []);
   const handleSendOtp = () => {
     handleSubmit(() => {
       setOtpSent(true);
@@ -64,10 +81,21 @@ const LoginPage = () => {
 
   const handleOTPChange = (newOtp: string) => {
     setOtp(newOtp);
-    console.log("Current OTP:", newOtp);
   };
 
   const handleSubmitOtp = () => {
+    let payload = {
+      phone: inputValue,
+      otp,
+    };
+    console.log(payload);
+    post(API_URL.verifyOTP, payload)
+      .then((res) => {
+        console.log("res", res);
+      })
+      .catch((e: any) => {
+        console.log("e", e);
+      });
     router.push({ pathname: `(home)/(${profile})` });
   };
 
@@ -81,10 +109,14 @@ const LoginPage = () => {
   return (
     <AUIThemedView style={loginPageStyles.container}>
       <AUIThemedText style={loginPageStyles.heading}>
-        {GLOBAL_TEXT.login_to_continue}
+        {otpSent
+          ? GLOBAL_TEXT.enter_pin
+          : signInType === "new"
+          ? GLOBAL_TEXT.create_account
+          : GLOBAL_TEXT.login_to_continue}
       </AUIThemedText>
       <KeyboardAvoidingView
-        style={{ flex: 1 }}
+        style={{ flex: 1, backgroundColor: "#ffffff" }}
         behavior="padding"
         keyboardVerticalOffset={keyboardVerticalOffset}
       >
@@ -95,7 +127,10 @@ const LoginPage = () => {
             onPress={() => {
               setValue("selectedButton", "mobile");
               // setValue("input", "");
-              reset({ input: "", selectedButton: "mobile" });
+              reset({
+                input: signupDetails?.phone || "",
+                selectedButton: "mobile",
+              });
             }}
             selected={selectedButton === "mobile"}
           />
@@ -105,7 +140,10 @@ const LoginPage = () => {
             onPress={() => {
               setValue("selectedButton", "email");
               // setValue("input", "");
-              reset({ input: "", selectedButton: "email" });
+              reset({
+                input: signupDetails?.email || "",
+                selectedButton: "email",
+              });
             }}
             selected={selectedButton === "email"}
           />
@@ -116,17 +154,29 @@ const LoginPage = () => {
               name="input"
               control={control}
               render={({ field: { onChange, value } }) => (
-                <AUIInputField
-                  label=""
-                  placeholder={
-                    selectedButton === "mobile"
-                      ? GLOBAL_TEXT.enter_mobile_number
-                      : GLOBAL_TEXT.enter_email_id
-                  }
-                  value={value}
-                  onChangeText={onChange}
-                  error={errors.input ? errors.input.message : ""}
-                />
+                <>
+                  {/* <DropdownComponent
+                    // list={degreeCertificates}
+                    // @ts-ignore
+                    value={signupValues[item]}
+                    // setValue={(val: any) =>
+                    //   // setSignupValues({ ...signupValues, [item]: val })
+                    // }
+                    //  @ts-ignore
+                    label={SIGNUP_FIELDS[item].label}
+                  /> */}
+                  <AUIInputField
+                    label=""
+                    placeholder={
+                      selectedButton === "mobile"
+                        ? GLOBAL_TEXT.enter_mobile_number
+                        : GLOBAL_TEXT.enter_email_id
+                    }
+                    value={value}
+                    onChangeText={onChange}
+                    error={errors.input ? errors.input.message : ""}
+                  />
+                </>
               )}
             />
             <View style={secondaryButtonStyle.buttonContainer}>

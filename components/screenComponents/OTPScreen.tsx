@@ -46,8 +46,8 @@ const OTPScreen = ({
       <AUIThemedText style={styles.resendOtpText}>
         {canResend ? (
           <TouchableOpacity onPress={handleResendOtp}>
-            <AUIThemedText>
-              Don't receive the OTP? {"  "}
+            <AUIThemedText style={{ fontSize: 14, color: "gray" }}>
+              Did't receive the OTP? {"  "}
               <AUIThemedText style={styles.resendLink}>
                 Resend OTP
               </AUIThemedText>
@@ -66,7 +66,8 @@ export default OTPScreen;
 const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: "#ffffff",
+    // alignItems: "center",
   },
   changeText: {
     color: "blue",
@@ -77,6 +78,7 @@ const styles = StyleSheet.create({
   },
   resendLink: {
     color: "blue",
+    fontSize: 14,
     textDecorationLine: "underline",
   },
   AUIOTPInput: {

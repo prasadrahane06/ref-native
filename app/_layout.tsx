@@ -21,7 +21,6 @@ const InitialLayout = () => {
   });
   const router = useRouter();
   const segments = useSegments();
-  console.log(segments);
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
     if (error) throw error;

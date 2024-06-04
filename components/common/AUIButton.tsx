@@ -4,10 +4,11 @@ import {
   Text,
   TouchableOpacityProps,
   View,
+  Pressable,
 } from "react-native";
 import { buttonStyle } from "@/constants/Styles";
 import { AUILinearGradient } from "./AUILinearGradient";
-import { APP_THEME } from "@/constants/Colors";
+import { APP_THEME, BUTTON_THEME } from "@/constants/Colors";
 
 interface ButtonProps extends TouchableOpacityProps {
   title: string;
@@ -32,24 +33,43 @@ const AUIButton: React.FC<ButtonProps> = ({
   disabled,
 }) => {
   return (
-    <TouchableOpacity
+    <Pressable
       style={[buttonStyle.button, style]}
       onPress={disabled ? () => null : onPress}
     >
-      <AUILinearGradient
-        style={buttonStyle.buttonInner}
-        colors={
-          disabled
-            ? ["#dcdcdd", "#dcdcdd"]
-            : selected
-            ? [APP_THEME.primary.first, APP_THEME.secondary.first]
-            : [APP_THEME.ternary.second, APP_THEME.ternary.second]
-        }
-      >
-        <Text style={buttonStyle.buttonText}>{title}</Text>
-      </AUILinearGradient>
-    </TouchableOpacity>
+      {selected ? (
+        <HighlightedBtn disabled={disabled} title={title} />
+      ) : (
+        <DefaultBtn disabled={disabled} title={title} />
+      )}
+    </Pressable>
   );
 };
 
+const HighlightedBtn = ({ disabled, title }: any) => (
+  <AUILinearGradient
+    style={buttonStyle.buttonInner}
+    colors={
+      disabled
+        ? ["#dcdcdd", "#dcdcdd"]
+        : [APP_THEME.primary.first, APP_THEME.secondary.first]
+    }
+  >
+    <Text style={buttonStyle.buttonText}>{title}</Text>
+  </AUILinearGradient>
+);
+const DefaultBtn = ({ disabled, title }: any) => (
+  <AUILinearGradient
+    style={[buttonStyle.buttonInner, !disabled && { borderWidth: 1 }]}
+    colors={
+      disabled
+        ? ["#dcdcdd", "#dcdcdd"]
+        : [BUTTON_THEME.primary.color, BUTTON_THEME.primary.color]
+    }
+  >
+    <Text style={[buttonStyle.buttonText, !disabled && { color: "#000" }]}>
+      {title}
+    </Text>
+  </AUILinearGradient>
+);
 export default AUIButton;

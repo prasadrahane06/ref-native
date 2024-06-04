@@ -1,5 +1,6 @@
 import AUIButton from "@/components/common/AUIButton";
 import DropdownComponent from "@/components/common/AUIDropdown";
+import AUIInputField from "@/components/common/AUIInputField";
 import { AUISafeAreaView } from "@/components/common/AUISafeAreaView";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
@@ -7,13 +8,25 @@ import { APP_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT, SIGNUP_FIELDS } from "@/constants/Properties";
 import { loginPageStyles, signupPageStyles } from "@/constants/Styles";
 import { useRouter } from "expo-router";
-import { useState } from "react";
-import { KeyboardAvoidingView, Platform, ScrollView } from "react-native";
-
+import { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+} from "react-native";
+import DATA from "@/app/services/data.json";
+import { post } from "./services/axiosClient";
+import { API_URL } from "@/constants/urlProperties";
+import { useDispatch } from "react-redux";
+import { setSignupDetails } from "@/redux/globalSlice";
 const SignupPage = () => {
   const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
   const router = useRouter();
-
+  const dispatch = useDispatch();
+  const [errors, setErrors] = useState({});
   const [signupValues, setSignupValues] = useState({
     qualification: null,
     academic: null,
@@ -21,51 +34,42 @@ const SignupPage = () => {
     country: null,
     city: null,
     state: null,
+    email: null,
+    phone: null,
+    name: null,
   });
-  const degreeCertificates = [
-    {
-      label: "degree",
-      value: "Bachelor of Science in Computer Science",
-    },
-    {
-      label: "institution",
-      value: "University of Example",
-    },
 
-    {
-      label: "honors",
-      value: "Summa Cum Laude",
-    },
-    {
-      label: "degree",
-      value: "Master of Business Administration",
-    },
-    {
-      label: "institution",
-      value: "Business School Example",
-    },
-
-    {
-      label: "honors",
-      value: "Magna Cum Laude",
-    },
-    {
-      label: "degree",
-      value: "PhD in Artificial Intelligence",
-    },
-    {
-      label: "institution",
-      value: "Institute of Advanced Studies",
-    },
-
-    {
-      label: "honors",
-      value: "Cum Laude",
-    },
-  ];
+  const handleOnSave = () => {
+    // @ts-ignore
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(signupValues.email)) {
+      setErrors({
+        ...errors,
+        email: GLOBAL_TEXT.validate_email,
+      });
+      return;
+    }
+    // @ts-ignore
+    if (!/^[0-9]{10}$/.test(signupValues.phone)) {
+      setErrors({
+        ...errors,
+        phone: GLOBAL_TEXT.validate_mobile,
+      });
+      return;
+    }
+    setErrors({});
+    dispatch(setSignupDetails(signupValues));
+    console.log(signupValues);
+    post(API_URL.sendOTP, signupValues)
+      .then((res) => {
+        console.log("res", res);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
 
   return (
-    <ScrollView scrollEnabled style={{ backgroundColor: APP_THEME.background }}>
+    <AUISafeAreaView edges={["bottom"]}>
       <AUIThemedView style={signupPageStyles.container}>
         <AUIThemedText style={signupPageStyles.heading}>
           {GLOBAL_TEXT.tell_about_yourself}
@@ -76,40 +80,63 @@ const SignupPage = () => {
           keyboardVerticalOffset={keyboardVerticalOffset}
         >
           <AUIThemedView style={signupPageStyles.formLayout}>
-            {/* <AUIDropdown
-              items={degreeCertificates}
-              onValueChange={handleDropdownValue}
-              key={"qualification"}
-              placeholder=""
-              value=""
-            /> */}
-            <AUIThemedView style={signupPageStyles.fieldContainer}>
-              {Object.keys(SIGNUP_FIELDS).map((item, i) => (
-                <AUIThemedView key={i}>
-                  <DropdownComponent
-                    list={degreeCertificates}
-                    // @ts-ignore
-                    value={signupValues[item]}
-                    setValue={(val: any) =>
-                      setSignupValues({ ...signupValues, [item]: val })
-                    }
-                    //  @ts-ignore
-                    label={SIGNUP_FIELDS[item]}
-                  />
-                </AUIThemedView>
-              ))}
-            </AUIThemedView>
+            <ScrollView
+              scrollEnabled
+              style={{ backgroundColor: APP_THEME.background }}
+            >
+              <AUIThemedView style={signupPageStyles.fieldContainer}>
+                {Object.keys(SIGNUP_FIELDS).map((item, i) => (
+                  <AUIThemedView key={i}>
+                    {/* @ts-ignore */}
+                    {SIGNUP_FIELDS[item].type === "DROPDOWN" ? (
+                      <DropdownComponent
+                        // @ts-ignore
+                        list={DATA[item]}
+                        // @ts-ignore
+                        value={signupValues[item]}
+                        setValue={(val: any) =>
+                          setSignupValues({
+                            ...signupValues,
+                            [item]: val.value,
+                          })
+                        }
+                        //  @ts-ignore
+                        label={SIGNUP_FIELDS[item].label}
+                      />
+                    ) : (
+                      <AUIInputField
+                        // @ts-ignore
+                        label={SIGNUP_FIELDS[item].label}
+                        // @ts-ignore
+
+                        value={signupValues[item]}
+                        onChangeText={(val: any) =>
+                          setSignupValues({
+                            ...signupValues,
+                            [item]: val,
+                          })
+                        }
+                        error={
+                          // @ts-ignore
+                          Object.keys(errors).length > 0 ? errors[item] : ""
+                        }
+                      />
+                    )}
+                  </AUIThemedView>
+                ))}
+              </AUIThemedView>
+            </ScrollView>
             <AUIThemedView style={signupPageStyles.buttonContainer}>
               <AUIButton
                 title="Save"
-                disabled={!Object.values(signupValues).every((x) => x)}
+                // disabled={!Object.values(signupValues).every((x) => x)}
                 style={{ width: "50%" }}
-                // onPress={() => router.navigate("/signup")}
+                onPress={handleOnSave}
               />
               <AUIButton
                 title={"Next"}
                 disabled={!Object.values(signupValues).every((x) => x)}
-                selected={Object.values(signupValues).every((x) => x)}
+                selected
                 style={{ width: "50%" }}
                 onPress={() => router.navigate("/login")}
               />
@@ -117,7 +144,7 @@ const SignupPage = () => {
           </AUIThemedView>
         </KeyboardAvoidingView>
       </AUIThemedView>
-    </ScrollView>
+    </AUISafeAreaView>
   );
 };
 

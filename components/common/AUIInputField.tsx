@@ -1,5 +1,5 @@
 import React from "react";
-import { View, TextInput, Text, TextInputProps } from "react-native";
+import { View, TextInput, Text, TextInputProps, Platform } from "react-native";
 import { inputFieldStyle } from "@/constants/Styles";
 
 /**
@@ -36,6 +36,7 @@ const AUIInputField: React.FC<CustomInputProps> = ({
           error && { borderWidth: 1, borderColor: "red" },
         ]}
         placeholder={placeholder}
+        placeholderTextColor={"gray"}
         value={value}
         onChangeText={onChangeText}
         {...props}
