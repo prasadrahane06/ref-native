@@ -11,7 +11,6 @@ export interface AppTheme {
     secondary: AppVariant;
     ternary: AppVariant;
 }
-
 export interface ButtonVariant {
     background: string;
     color: string;
@@ -22,8 +21,6 @@ export interface ButtonTheme {
     success: ButtonVariant;
     danger: ButtonVariant;
 }
-
-export type ThemeType = "light" | "dark";
 export interface TextTheme {
     light: {
         primary: string;
@@ -40,11 +37,20 @@ export interface TextTheme {
         info: string;
     };
 }
-
 export interface ColorThemes {
     light: { backgound: string };
     dark: { backgound: string };
 }
+export interface StudentGradient {
+    primary: string;
+    secondary: string;
+    ternary: string;
+}
+export interface TabColors {
+    active: string;
+    inactive: string;
+}
+export type ThemeType = "light" | "dark";
 
 const APP_THEME: AppTheme = {
     background: "#ffffff",
@@ -106,4 +112,22 @@ const BUTTON_THEME: ButtonTheme = {
     },
 };
 
-export { APP_THEME, TEXT_THEME, BUTTON_THEME, COLOR_THEME };
+const STUDENT_GRADIENT: StudentGradient = {
+    primary: "rgba(118, 250, 178, 1)",
+    secondary: "rgba(91, 216, 148, 1)",
+    ternary: "rgba(91, 216, 148, 0.8)",
+};
+
+const TAB_COLORS: TabColors = {
+    active: "#ffffff",
+    inactive: "#265451",
+};
+
+export {
+    APP_THEME,
+    TEXT_THEME,
+    BUTTON_THEME,
+    COLOR_THEME,
+    STUDENT_GRADIENT,
+    TAB_COLORS,
+};
