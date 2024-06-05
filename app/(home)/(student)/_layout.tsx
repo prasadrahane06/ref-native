@@ -1,13 +1,12 @@
-import "react-native-gesture-handler";
-import { APP_THEME } from "@/constants/Colors";
+import { AUILinearGradient } from "@/components/common/AUILinearGradient";
+import { AUIThemedText } from "@/components/common/AUIThemedText";
+import { AUIThemedView } from "@/components/common/AUIThemedView";
+import { FontAwesome, FontAwesome6, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { Tabs, router } from "expo-router";
+import { Tabs } from "expo-router";
 import React, { useState } from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
-import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { AUIThemedText } from "@/components/common/AUIThemedText";
-import { FontAwesome, Ionicons } from "@expo/vector-icons";
-import AUIButton from "@/components/common/AUIButton";
+import "react-native-gesture-handler";
 
 const ProfileScreen = () => (
   <AUIThemedView>
@@ -141,26 +140,31 @@ const DrawerContent = (props: any) => {
 const Drawer = createDrawerNavigator();
 
 const MenuButton = ({ navigation }: any) => (
-  <TouchableOpacity onPress={() => navigation.openDrawer()}>
-    <Ionicons name="menu" size={25} style={{ marginLeft: 15 }} />
-  </TouchableOpacity>
+    <TouchableOpacity onPress={() => navigation.openDrawer()}>
+        <Ionicons name="menu" size={25} style={{ marginLeft: 15 }} />
+    </TouchableOpacity>
 );
 
 const HeaderIcons = () => (
-  <View style={{ flexDirection: "row", marginRight: 15 }}>
-    <TouchableOpacity onPress={() => alert("Search")}>
-      <Ionicons name="search" size={25} style={{ marginRight: 20 }} />
-    </TouchableOpacity>
-    <TouchableOpacity onPress={() => alert("Notifications")}>
-      <Ionicons name="notifications" size={25} />
-    </TouchableOpacity>
-  </View>
+    <View style={{ flexDirection: "row", marginRight: 15 }}>
+        <TouchableOpacity onPress={() => alert("Search")}>
+            <Ionicons name="search" size={25} style={{ marginRight: 20 }} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => alert("Notifications")}>
+            <Ionicons name="notifications" size={25} />
+        </TouchableOpacity>
+    </View>
 );
 
 const screenOptions = (navigation: any) => ({
-  headerStyle: { backgroundColor: `${APP_THEME.secondary.first}` },
-  headerLeft: () => <MenuButton navigation={navigation} />,
-  headerRight: () => <HeaderIcons />,
+    headerBackground: () => (
+        <AUILinearGradient
+            colors={["rgba(118, 250,178, 1)", "rgba(91, 216,148, 1)"]}
+            style={{ flex: 1 }}
+        />
+    ),
+    headerLeft: () => <MenuButton navigation={navigation} />,
+    headerRight: () => <HeaderIcons />,
 });
 
 export default function AUIDrawer() {
@@ -249,66 +253,87 @@ export default function AUIDrawer() {
 }
 
 export function TabLayout() {
-  return (
-    <Tabs
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "Home",
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? "home" : "home-outline"}
-              color={color}
-              size={24}
+    return (
+        <Tabs
+            screenOptions={{
+                headerShown: false,
+                tabBarBackground: () => (
+                    <AUILinearGradient
+                        colors={[
+                            "rgba(118, 250,178, 1)",
+                            "rgba(91, 216,148, 1)",
+                        ]}
+                        style={{ flex: 1 }}
+                    />
+                ),
+            }}
+        >
+            <Tabs.Screen
+                name="index"
+                options={{
+                    title: "Home",
+                    tabBarInactiveTintColor: "#0A152F",
+                    tabBarActiveTintColor: "white",
+                    tabBarLabelStyle: { fontSize: 13 },
+                    tabBarIcon: ({ focused }) => (
+                        <MaterialIcons
+                            name={"home"}
+                            color={focused ? "white" : "#0A152F"}
+                            size={24}
+                        />
+                    ),
+                }}
             />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="favourite"
-        options={{
-          title: "Favourite",
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? "heart" : "heart-outline"}
-              color={color}
-              size={24}
+            <Tabs.Screen
+                name="favourite"
+                options={{
+                    title: "Favourite",
+                    tabBarInactiveTintColor: "#0A152F",
+                    tabBarActiveTintColor: "white",
+                    tabBarLabelStyle: { fontSize: 13 },
+                    tabBarIcon: ({ focused }) => (
+                        <Ionicons
+                            name={"heart-sharp"}
+                            color={focused ? "white" : "#0A152F"}
+                            size={24}
+                        />
+                    ),
+                }}
             />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="compare"
-        options={{
-          title: "Compare",
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? "swap-horizontal" : "swap-horizontal-outline"}
-              color={color}
-              size={24}
+            <Tabs.Screen
+                name="compare"
+                options={{
+                    title: "Compare",
+                    tabBarInactiveTintColor: "#0A152F",
+                    tabBarActiveTintColor: "white",
+                    tabBarLabelStyle: { fontSize: 13 },
+                    tabBarIcon: ({ focused }) => (
+                        <Ionicons
+                            name={"swap-horizontal-outline"}
+                            color={focused ? "white" : "#0A152F"}
+                            size={24}
+                        />
+                    ),
+                }}
             />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="cart"
-        options={{
-          title: "Cart",
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? "cart" : "cart-outline"}
-              color={color}
-              size={24}
+            <Tabs.Screen
+                name="cart"
+                options={{
+                    title: "Cart",
+                    tabBarInactiveTintColor: "#0A152F",
+                    tabBarActiveTintColor: "white",
+                    tabBarLabelStyle: { fontSize: 13 },
+                    tabBarIcon: ({ focused }) => (
+                        <FontAwesome6
+                            name={"cart-shopping"}
+                            color={focused ? "white" : "#0A152F"}
+                            size={20}
+                        />
+                    ),
+                }}
             />
-          ),
-        }}
-      />
-    </Tabs>
-  );
+        </Tabs>
+    );
 }
 
 const styles = StyleSheet.create({

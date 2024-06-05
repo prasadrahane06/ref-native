@@ -1,4 +1,4 @@
-export const CountryData = [
+export const destinationData = [
     {
         id: "e1a72a2b-d51f-4a37-a9a3-2d78f6743c78",
         country: "France",
