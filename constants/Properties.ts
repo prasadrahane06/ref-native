@@ -10,6 +10,12 @@ export const GLOBAL_TEXT = {
   validate_mobile: "Please provide valid mobile number",
   validate_email: "Please provide valid email",
   enter_pin: "Enter your pin",
+  find_your_destination: "Find your destination for learning English",
+  popular_schools: "Popular Schools",
+  popular_courses: "Popular Courses",
+  choose_your_language: "Choose your language to learn",
+  last_chance_to_apply: "Last Chance to apply",
+
 };
 
 export const SIGNUP_FIELDS = {

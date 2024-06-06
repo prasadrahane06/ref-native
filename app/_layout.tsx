@@ -1,13 +1,13 @@
 import { APP_THEME, COLOR_THEME, TEXT_THEME } from "@/constants/Colors";
 import { RootState, store } from "@/redux/store";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
 import { Link, Stack, useRouter, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import { TouchableOpacity, Text, View, ActivityIndicator } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Provider, useSelector } from "react-redux";
 
@@ -129,6 +129,6 @@ const RootLayoutNav = () => {
 };
 export {
   // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
+  ErrorBoundary
 } from "expo-router";
 export default RootLayoutNav;
