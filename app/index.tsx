@@ -1,5 +1,11 @@
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { TouchableOpacity, View, Image, Platform } from "react-native";
+import {
+  TouchableOpacity,
+  View,
+  Image,
+  Platform,
+  ActivityIndicator,
+} from "react-native";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUISafeAreaView } from "@/components/common/AUISafeAreaView";
 import { AUILinearGradient } from "@/components/common/AUILinearGradient";
@@ -97,6 +103,8 @@ const InitialPage = () => {
             </AUILinearGradient>
           </TouchableOpacity>
         </AUIThemedView>
+
+        <ActivityIndicator size="large" color="#5BD894" />
 
         <AUIThemedView
           style={[initialPageStyles.button, { opacity: profile ? 1 : 0 }]}
