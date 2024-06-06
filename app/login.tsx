@@ -16,8 +16,6 @@ import OTPScreen from "@/components/screenComponents/OTPScreen";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import DropdownComponent from "@/components/common/AUIDropdown";
-// @ts-ignore
-import countryList from "react-select-country-list";
 import { post } from "./services/axiosClient";
 import { API_URL } from "@/constants/urlProperties";
 
@@ -46,7 +44,6 @@ const LoginPage = () => {
 
   const [otpSent, setOtpSent] = useState<boolean>(false);
   const [otp, setOtp] = useState<string>("");
-  const options = useMemo(() => countryList().getValue("India"), []);
   const {
     control,
     handleSubmit,
