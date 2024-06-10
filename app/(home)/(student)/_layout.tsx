@@ -46,7 +46,7 @@ const ShareAppScreen = () => (
 
 const DrawerContent = (props: any) => {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
-
+  // const []
   return (
     <View style={styles.drawerContent}>
       <TouchableOpacity
@@ -125,7 +125,10 @@ const DrawerContent = (props: any) => {
       </View>
       <View style={styles.buttonsMainContainer}>
         {isLoggedIn ? (
-          <TouchableOpacity style={styles.logoutButton} onPress={() => {}}>
+          <TouchableOpacity
+            style={styles.logoutButton}
+            // onPress={() => { router.navigate('/') }}
+          >
             <FontAwesome name="sign-out" style={styles.logOutIcon} />
             <AUIThemedText style={styles.logoutText}>Logout</AUIThemedText>
           </TouchableOpacity>

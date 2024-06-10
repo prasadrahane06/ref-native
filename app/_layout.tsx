@@ -100,7 +100,33 @@ const InitialLayout = () => {
           ),
         }}
       />
+      <Stack.Screen
+        name="details"
+        options={{
+          headerTitle: "",
 
+          headerLeft: () => (
+            <TouchableOpacity onPress={router.back}>
+              <Ionicons
+                name="arrow-back"
+                size={34}
+                color={APP_THEME.ternary.first}
+              />
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <Link href={"/help"} asChild>
+              <TouchableOpacity>
+                <Ionicons
+                  name="help-circle-outline"
+                  size={34}
+                  color={APP_THEME.ternary.first}
+                />
+              </TouchableOpacity>
+            </Link>
+          ),
+        }}
+      />
       <Stack.Screen
         name="help"
         options={{ title: "Help", presentation: "modal" }}

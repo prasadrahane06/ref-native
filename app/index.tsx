@@ -41,7 +41,9 @@ const InitialPage = () => {
     router.navigate("/signup");
   };
   return (
-    <AUISafeAreaView edges={["bottom"]}>
+    <AUISafeAreaView
+    // edges={["bottom"]}
+    >
       <AUIThemedView style={initialPageStyles.container}>
         <AUILinearGradient
           style={
@@ -104,8 +106,6 @@ const InitialPage = () => {
           </TouchableOpacity>
         </AUIThemedView>
 
-        <ActivityIndicator size="large" color="#5BD894" />
-
         <AUIThemedView
           style={[initialPageStyles.button, { opacity: profile ? 1 : 0 }]}
         >
@@ -113,12 +113,12 @@ const InitialPage = () => {
             style={{ width: "45%" }}
             title="Sign in"
             selected
-            onPress={navigateToLogin}
+            onPress={profile ? navigateToLogin : () => null}
           />
           <AUIButton
             title="Create Account"
             style={{ width: "45%" }}
-            onPress={navigateToSignup}
+            onPress={profile ? navigateToSignup : () => null}
           />
         </AUIThemedView>
 

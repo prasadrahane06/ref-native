@@ -1,7 +1,8 @@
+import { APP_THEME } from "@/constants/Colors";
 import React, { useRef, useState } from "react";
 import { View, TextInput, StyleSheet } from "react-native";
 
-const AUIOTPInput = ({ length, onChange }: any) => {
+const AUIOTPInput = ({ length, onChange, disabled }: any) => {
   const [otp, setOtp] = useState(Array(length).fill(""));
   const inputs = useRef([]);
 
@@ -28,17 +29,26 @@ const AUIOTPInput = ({ length, onChange }: any) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container]}>
       {otp.map((digit, index) => (
         <TextInput
           key={index}
           // @ts-ignore
 
           ref={(ref) => (inputs.current[index] = ref)}
-          style={styles.input}
+          style={[
+            styles.input,
+            disabled && {
+              borderColor: "gray",
+              shadowColor: "gray",
+              opacity: 0.5,
+              // backgroundColor: APP_THEME.gray,
+            },
+          ]}
           keyboardType="numeric"
           maxLength={1}
           value={digit}
+          editable={!disabled}
           onChangeText={(text) => handleChange(text, index)}
           onKeyPress={(e) => handleKeyPress(e, index)}
         />
@@ -57,14 +67,14 @@ const styles = StyleSheet.create({
     width: 80,
     height: 50,
     borderWidth: 1,
-    borderColor: "#7A827A",
+    borderColor: APP_THEME.primary.first, //"#7A827A",
     textAlign: "center",
     fontSize: 18,
     backgroundColor: "#FFFFFF",
     borderRadius: 10,
     elevation: 5,
     // IOS
-    shadowColor: "#7A827A",
+    shadowColor: APP_THEME.primary.first,
     shadowOffset: { width: 0, height: 0.5 },
     shadowOpacity: 0.8,
     shadowRadius: 1,
