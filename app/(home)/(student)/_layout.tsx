@@ -2,15 +2,16 @@ import { AUILinearGradient } from "@/components/common/AUILinearGradient";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import {
-  FontAwesome,
   FontAwesome6,
   Ionicons,
   MaterialIcons,
+  MaterialCommunityIcons,
+  FontAwesome,
 } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Tabs } from "expo-router";
 import React, { useState } from "react";
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import "react-native-gesture-handler";
 
 const ProfileScreen = () => (
@@ -55,73 +56,44 @@ const DrawerContent = (props: any) => {
       >
         <Ionicons name="close" size={30} color="black" />
       </TouchableOpacity>
-      <View style={styles.menuItemMainContainer}>
-        <View style={styles.header}>
-          <Image
-            source={{
-              uri: "https://images.unsplash.com/photo-1562788869-4ed32648eb72?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHByb2Zlc3Npb25hbCUyMG1hbnxlbnwwfHwwfHx8MA%3D%3D",
-            }}
-            style={styles.avatar}
-          />
-          <AUIThemedText style={styles.name}>Dinesh Kale</AUIThemedText>
-        </View>
+      <View style={styles.header}>
+        <Image
+          source={{
+            uri: "https://images.unsplash.com/photo-1562788869-4ed32648eb72?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHByb2Zlc3Npb25hbCUyMG1hbnxlbnwwfHwwfHx8MA%3D%3D",
+          }}
+          style={styles.avatar}
+        />
+        <AUIThemedText style={styles.name}>Dinesh Kale</AUIThemedText>
+      </View>
 
-        <View style={styles.menuItemContainer}>
-          <TouchableOpacity
-            style={styles.menuItem}
-            onPress={() => props.navigation.navigate("Profile")}
-          >
-            <FontAwesome name="user" style={styles.menuIcon} />
-            <AUIThemedText style={styles.menuText}>My Profile</AUIThemedText>
-          </TouchableOpacity>
-          <View style={styles.separator} />
-          <TouchableOpacity
-            style={styles.menuItem}
-            onPress={() => props.navigation.navigate("Courses")}
-          >
-            <FontAwesome name="book" style={styles.menuIcon} />
-            <AUIThemedText style={styles.menuText}>My Courses</AUIThemedText>
-          </TouchableOpacity>
-          <View style={styles.separator} />
-          <TouchableOpacity
-            style={styles.menuItem}
-            onPress={() => props.navigation.navigate("Accommodation")}
-          >
-            <FontAwesome name="home" style={styles.menuIcon} />
-            <AUIThemedText style={styles.menuText}>
-              Find Accommodation
-            </AUIThemedText>
-          </TouchableOpacity>
-          <View style={styles.separator} />
-          <TouchableOpacity
-            style={styles.menuItem}
-            onPress={() => props.navigation.navigate("ChangePassword")}
-          >
-            <FontAwesome name="lock" style={styles.menuIcon} />
-            <AUIThemedText style={styles.menuText}>
-              Change Password
-            </AUIThemedText>
-          </TouchableOpacity>
-          <View style={styles.separator} />
-          <TouchableOpacity
-            style={styles.menuItem}
-            onPress={() => props.navigation.navigate("TermsPolicy")}
-          >
-            <FontAwesome name="file-text" style={styles.menuIcon} />
-            <AUIThemedText style={styles.menuText}>
-              Terms and Policy
-            </AUIThemedText>
-          </TouchableOpacity>
-          <View style={styles.separator} />
-          <TouchableOpacity
-            style={styles.menuItem}
-            onPress={() => props.navigation.navigate("ShareApp")}
-          >
-            <FontAwesome name="share-alt" style={styles.menuIcon} />
-            <AUIThemedText style={styles.menuText}>Share the app</AUIThemedText>
-          </TouchableOpacity>
-          <View style={styles.separator} />
-        </View>
+      <View>
+        <TouchableOpacity style={styles.menuItem}>
+          <Ionicons name="person-outline" style={styles.menuIcon} />
+          <Text style={styles.menuText}>My Profile</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem}>
+          <MaterialCommunityIcons
+            name="book-open-page-variant-outline"
+            style={styles.menuIcon}
+          />
+          <Text style={styles.menuText}>My Courses</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem}>
+          <Ionicons name="home-outline" style={styles.menuIcon} />
+          <Text style={styles.menuText}>Find Accommodation</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.changePasswordmenuItem}>
+          <MaterialIcons name="lock-outline" style={styles.menuIcon} />
+          <Text style={styles.menuText}>Change Password</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem}>
+          <Ionicons name="document-text-outline" style={styles.menuIcon} />
+          <Text style={styles.menuText}>Terms and Policy</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem}>
+          <Ionicons name="share-social-outline" style={styles.menuIcon} />
+          <Text style={styles.menuText}>Share the App</Text>
+        </TouchableOpacity>
       </View>
       <View style={styles.buttonsMainContainer}>
         {isLoggedIn ? (
@@ -353,11 +325,11 @@ const styles = StyleSheet.create({
   drawerContent: {
     flex: 1,
     padding: 20,
-    // position: "relative",
+    marginTop: 20,
   },
   closeButton: {
     position: "absolute",
-    top: 30,
+    top: 20,
     right: 10,
   },
   header: {
@@ -369,7 +341,6 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 65,
-    // marginBottom: 10,
   },
   name: {
     fontSize: 18,
@@ -377,41 +348,42 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginTop: 5,
   },
-  menuItemMainContainer: { justifyContent: "flex-start" },
-  menuItemContainer: { justifyContent: "flex-start" },
   menuItem: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "flex-start",
-    height: 50,
-    marginBottom: 1,
-    // marginTop: 5,
-    marginLeft: 7,
-    gap: 10,
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: "#5BD894",
   },
-  menuIcon: { justifyContent: "center", color: "#5BD894", fontSize: 24 },
+  changePasswordmenuItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: "#5BD894",
+  },
   menuText: {
     fontSize: 16,
     color: "black",
     fontWeight: "400",
-    marginLeft: 10,
+    marginLeft: 15,
   },
+  menuIcon: { color: "#5BD894", fontSize: 23 },
   separator: {
     borderBottomColor: "#5BD894",
     borderBottomWidth: 1,
-    // marginVertical: 3,
   },
   buttonsMainContainer: {
     flex: 1,
     position: "relative",
     alignItems: "center",
+    marginBottom: 20,
   },
   logoutButton: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#5BD894",
-    // padding: 10,
     borderRadius: 8,
     marginTop: "auto",
     height: 40,
@@ -431,7 +403,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    // padding: 10,
     borderRadius: 8,
     marginTop: "auto",
     height: 40,
@@ -452,9 +423,5 @@ const styles = StyleSheet.create({
     color: "black",
     fontWeight: "500",
     marginBottom: 3,
-  },
-  AUIButton: {
-    backgroundColor: "#5BD894",
-    width: 100,
   },
 });
