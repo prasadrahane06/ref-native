@@ -17,6 +17,8 @@ export const GLOBAL_TEXT = {
   popular_courses: "Popular Courses",
   choose_your_language: "Choose your language to learn",
   last_chance_to_apply: "Last Chance to apply",
+  My_Favorite_Course: "My Favorite Course",
+  My_Favorite_School: "My Favorite School",
 };
 
 export const SIGNUP_FIELDS = {
