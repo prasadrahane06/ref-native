@@ -1,5 +1,6 @@
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
+import { Link } from "expo-router";
 import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 
@@ -18,6 +19,11 @@ const SectionTitle: React.FC<SectionTitleProps> = ({
     <AUIThemedView style={styles.container}>
       <AUIThemedText style={styles.title}>{children}</AUIThemedText>
       {viewAll && (
+        <Link href={viewAll} style={styles.viewAll}>
+          View All
+        </Link>
+      )}
+      {onViewAllClick && (
         <TouchableOpacity onPress={onViewAllClick}>
           <AUIThemedText style={styles.viewAll}>View All</AUIThemedText>
         </TouchableOpacity>
@@ -32,7 +38,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 15,
-    paddingTop: 10,
+    paddingTop: 15,
   },
   title: {
     fontWeight: "bold",

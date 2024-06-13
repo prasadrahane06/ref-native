@@ -32,10 +32,7 @@ const TabTwoScreen: React.FC = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <AUIThemedView style={styles.courseContainer}>
-        <SectionTitle
-          viewAll={showViewAllCourses && !showAllCourses ? "#" : undefined}
-          onViewAllClick={handleViewAllCoursesClick}
-        >
+        <SectionTitle onViewAllClick={handleViewAllCoursesClick}>
           {GLOBAL_TEXT.My_Favorite_Course}
         </SectionTitle>
         <AllCoursesList
@@ -46,10 +43,7 @@ const TabTwoScreen: React.FC = () => {
       </AUIThemedView>
 
       <AUIThemedView style={styles.schoolContainer}>
-        <SectionTitle
-          viewAll={showViewAllSchools && !showAllSchools ? "#" : undefined}
-          onViewAllClick={handleViewAllSchoolsClick}
-        >
+        <SectionTitle onViewAllClick={handleViewAllSchoolsClick}>
           {GLOBAL_TEXT.My_Favorite_School}
         </SectionTitle>
         <AllSchoolsList
@@ -62,14 +56,7 @@ const TabTwoScreen: React.FC = () => {
       </AUIThemedView>
 
       <AUIThemedView style={styles.countryschoolContainer}>
-        <SectionTitle
-          viewAll={
-            showViewAllCountrySchools && !showAllCountrySchools
-              ? "#"
-              : undefined
-          }
-          onViewAllClick={handleViewAllCountrySchoolsClick}
-        >
+        <SectionTitle onViewAllClick={handleViewAllCountrySchoolsClick}>
           {GLOBAL_TEXT.My_Favorite_School}
         </SectionTitle>
         <AllCountrySchoolsList
