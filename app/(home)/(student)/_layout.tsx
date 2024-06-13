@@ -49,58 +49,84 @@ const DrawerContent = (props: any) => {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   // const []
   return (
-    <View style={styles.drawerContent}>
-      <TouchableOpacity
-        style={styles.closeButton}
-        onPress={() => props.navigation.closeDrawer()}
-      >
-        <Ionicons name="close" size={30} color="black" />
-      </TouchableOpacity>
-      <View style={styles.header}>
-        <Image
-          source={{
-            uri: "https://images.unsplash.com/photo-1562788869-4ed32648eb72?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHByb2Zlc3Npb25hbCUyMG1hbnxlbnwwfHwwfHx8MA%3D%3D",
-          }}
-          style={styles.avatar}
-        />
-        <AUIThemedText style={styles.name}>Dinesh Kale</AUIThemedText>
-      </View>
-
-      <View>
-        <TouchableOpacity style={styles.menuItem}>
-          <Ionicons name="person-outline" style={styles.menuIcon} />
-          <Text style={styles.menuText}>My Profile</Text>
+    <>
+      <View style={styles.drawerContent}>
+        <TouchableOpacity
+          style={styles.closeButton}
+          onPress={() => props.navigation.closeDrawer()}
+        >
+          <Ionicons name="close" size={30} color="black" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
-          <MaterialCommunityIcons
-            name="book-open-page-variant-outline"
-            style={styles.menuIcon}
+        <View style={styles.header}>
+          <Image
+            source={{
+              uri: "https://images.unsplash.com/photo-1562788869-4ed32648eb72?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHByb2Zlc3Npb25hbCUyMG1hbnxlbnwwfHwwfHx8MA%3D%3D",
+            }}
+            style={styles.avatar}
           />
-          <Text style={styles.menuText}>My Courses</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
-          <Ionicons name="home-outline" style={styles.menuIcon} />
-          <Text style={styles.menuText}>Find Accommodation</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.changePasswordmenuItem}>
-          <MaterialIcons name="lock-outline" style={styles.menuIcon} />
-          <Text style={styles.menuText}>Change Password</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
-          <Ionicons name="document-text-outline" style={styles.menuIcon} />
-          <Text style={styles.menuText}>Terms and Policy</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
-          <Ionicons name="share-social-outline" style={styles.menuIcon} />
-          <Text style={styles.menuText}>Share the App</Text>
-        </TouchableOpacity>
+          <AUIThemedText style={styles.name}>Dinesh Kale</AUIThemedText>
+        </View>
+
+        <View style={styles.menuItemContainer}>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => props.navigation.navigate("profile")}
+          >
+            <FontAwesome name="user" style={styles.menuIcon} />
+            <AUIThemedText style={styles.menuText}>My Profile</AUIThemedText>
+          </TouchableOpacity>
+          <View style={styles.separator} />
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => props.navigation.navigate("Courses")}
+          >
+            <FontAwesome name="book" style={styles.menuIcon} />
+            <AUIThemedText style={styles.menuText}>My Courses</AUIThemedText>
+          </TouchableOpacity>
+          <View style={styles.separator} />
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => props.navigation.navigate("Accommodation")}
+          >
+            <FontAwesome name="home" style={styles.menuIcon} />
+            <AUIThemedText style={styles.menuText}>
+              Find Accommodation
+            </AUIThemedText>
+          </TouchableOpacity>
+          <View style={styles.separator} />
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => props.navigation.navigate("ChangePassword")}
+          >
+            <FontAwesome name="lock" style={styles.menuIcon} />
+            <AUIThemedText style={styles.menuText}>
+              Change Password
+            </AUIThemedText>
+          </TouchableOpacity>
+          <View style={styles.separator} />
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => props.navigation.navigate("TermsPolicy")}
+          >
+            <FontAwesome name="file-text" style={styles.menuIcon} />
+            <AUIThemedText style={styles.menuText}>
+              Terms and Policy
+            </AUIThemedText>
+          </TouchableOpacity>
+          <View style={styles.separator} />
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => props.navigation.navigate("ShareApp")}
+          >
+            <FontAwesome name="share-alt" style={styles.menuIcon} />
+            <AUIThemedText style={styles.menuText}>Share the app</AUIThemedText>
+          </TouchableOpacity>
+          <View style={styles.separator} />
+        </View>
       </View>
       <View style={styles.buttonsMainContainer}>
         {isLoggedIn ? (
-          <TouchableOpacity
-            style={styles.logoutButton}
-            // onPress={() => { router.navigate('/') }}
-          >
+          <TouchableOpacity style={styles.logoutButton}>
             <FontAwesome name="sign-out" style={styles.logOutIcon} />
             <AUIThemedText style={styles.logoutText}>Logout</AUIThemedText>
           </TouchableOpacity>
@@ -121,7 +147,7 @@ const DrawerContent = (props: any) => {
           </AUIThemedView>
         )}
       </View>
-    </View>
+    </>
   );
 };
 
@@ -424,4 +450,5 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     marginBottom: 3,
   },
+  menuItemContainer: {},
 });
