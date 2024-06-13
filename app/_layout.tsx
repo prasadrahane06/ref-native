@@ -53,7 +53,7 @@ const InitialLayout = () => {
 
   return (
     <Stack>
-      {/* <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen
         name="signup"
         options={{
@@ -134,7 +134,7 @@ const InitialLayout = () => {
       <Stack.Screen
         name="(home)/(school)"
         options={{ headerShown: false, title: "Home", headerTitle: "Home" }}
-      /> */}
+      />
       <Stack.Screen
         name="(home)/(student)"
         options={{ headerShown: false, title: "Home", headerTitle: "Home" }}

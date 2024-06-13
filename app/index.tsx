@@ -1,25 +1,16 @@
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import {
-  TouchableOpacity,
-  View,
-  Image,
-  Platform,
-  ActivityIndicator,
-} from "react-native";
+import { TouchableOpacity, Image, Platform } from "react-native";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUISafeAreaView } from "@/components/common/AUISafeAreaView";
 import { AUILinearGradient } from "@/components/common/AUILinearGradient";
 import { GLOBAL_TEXT } from "@/constants/Properties";
-import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
+import { APP_THEME } from "@/constants/Colors";
 import { initialPageStyles } from "@/constants/Styles";
 import AUIButton from "@/components/common/AUIButton";
 import { useRouter } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
-import { setTheme, setProfile, setSignInType } from "@/redux/globalSlice";
+import { setProfile, setSignInType } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
-import { useEffect } from "react";
-import axiosClient, { get } from "./services/axiosClient";
-import { API_URL } from "@/constants/urlProperties";
 
 const InitialPage = () => {
   const router = useRouter();
