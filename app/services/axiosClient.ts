@@ -1,3 +1,4 @@
+import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import axios from "axios";
 
 const baseURL = "https://80ebyyswed.execute-api.ap-south-1.amazonaws.com/dev/"; //"http://localhost:4000/dev/"; //process.env.REACT_APP_BASE_URL;
@@ -46,8 +47,17 @@ export const get = async (url: string, params = {}) => {
 export const post = async (url: string, payload: any) => {
   try {
     const response = await axiosClient.post(url, payload);
+
+    if (response.data?.message.toLowerCase().includes("invalid")) {
+      ApiErrorToast(response.data?.message);
+    } else {
+      ApiSuccessToast(response.data?.message);
+    }
+
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
+    ApiErrorToast(error.response?.data?.message);
+
     throw error;
   }
 };

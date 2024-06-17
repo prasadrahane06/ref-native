@@ -3,21 +3,24 @@ import AUIButton from "@/components/common/AUIButton";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { APP_THEME } from "@/constants/Colors";
-import { GLOBAL_TEXT } from "@/constants/Properties";
+import { GLOBAL_TEXT, SIGNUP_FIELDS } from "@/constants/Properties";
 import { loginPageStyles, secondaryButtonStyle } from "@/constants/Styles";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { KeyboardAvoidingView, Platform, View } from "react-native";
 import { useRouter } from "expo-router";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import OTPScreen from "@/components/screenComponents/OTPScreen";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import DropdownComponent from "@/components/common/AUIDropdown";
 import { post } from "./services/axiosClient";
 import { API_URL } from "@/constants/urlProperties";
 import { MaterialIcons } from "@expo/vector-icons";
+import { countriesData } from "@/constants/dummy data/countriesData";
+import { setLoader } from "@/redux/globalSlice";
+import { getUserDeviceData, storeUserData } from "@/constants/RNAsyncStore";
 const schema = Yup.object().shape({
   input: Yup.string().when("selectedButton", {
     is: "mobile",
@@ -30,14 +33,16 @@ const schema = Yup.object().shape({
         .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, GLOBAL_TEXT.validate_email)
         .required(GLOBAL_TEXT.validate_email),
   }),
+  phoneCode: Yup.string(),
   selectedButton: Yup.string().required(),
 });
 
 const LoginPage = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const profile = useSelector((state: RootState) => state.global.profile);
   const signInType = useSelector((state: RootState) => state.global.signInType);
-
+  // const [countryData, setCountryData] = useState(countriesData);
   const signupDetails = useSelector(
     (state: RootState) => state.global.signupDetails
   );
@@ -58,29 +63,43 @@ const LoginPage = () => {
     mode: "onChange",
     defaultValues: {
       input: "",
+      phoneCode: "+91",
       selectedButton: "mobile",
     },
   });
 
   const selectedButton = watch("selectedButton");
   const inputValue = watch("input");
+  const phoneCode = watch("phoneCode");
+  useEffect(() => {
+    countriesData.map((x: any) => {
+      x.iconUri = `https://flagcdn.com/w320/${x.code.toLowerCase()}.png`;
+      return x;
+    });
+  }, []);
 
   const handleSendOtp = () => {
+    let code = phoneCode?.split("+")[1];
+
     let payload =
       selectedButton === "mobile"
         ? {
-            phone: `91${inputValue}`,
+            phone: `${code}${inputValue}`,
           }
         : {
             email: inputValue,
           };
     console.log(payload);
+    dispatch(setLoader(true));
     post(API_URL.login, payload)
       .then((res) => {
         console.log("res", res);
+        dispatch(setLoader(false));
+
         setOtpSent(true);
       })
       .catch((e) => {
+        dispatch(setLoader(false));
         console.log(e.response.data);
       });
   };
@@ -119,9 +138,16 @@ const LoginPage = () => {
       .then((res) => {
         setOtpVerified({
           ...otpVerified,
-          signUpEmail: true,
+          signUpEmail: res?.message.toLowerCase().contains("invalid")
+            ? false
+            : true,
         });
-        if (otpVerified.signUpPhone) {
+        if (
+          otpVerified.signUpPhone &&
+          !res?.message.toLowerCase().contains("invalid")
+        ) {
+          storeUserData({ profile, ...res });
+
           router.push({ pathname: "/details" });
         }
 
@@ -142,9 +168,16 @@ const LoginPage = () => {
       .then((res) => {
         setOtpVerified({
           ...otpVerified,
-          signUpPhone: true,
+          signUpPhone: res?.message.toLowerCase().contains("invalid")
+            ? false
+            : true,
         });
-        if (otpVerified.signUpEmail) {
+        if (
+          otpVerified.signUpEmail &&
+          !res?.message.toLowerCase().contains("invalid")
+        ) {
+          storeUserData({ profile, ...res });
+
           router.push({ pathname: "/details" });
         }
         console.log("res", res);
@@ -154,23 +187,34 @@ const LoginPage = () => {
       });
   };
   const handleSubmitLoginOtp = (newOtp: any) => {
+    let code = phoneCode?.split("+")[1];
+
     let payload = {
-      phone: `91${inputValue}`,
+      phone: `${code}${inputValue}`,
       otp: newOtp,
     };
     console.log(payload);
+    dispatch(setLoader(true));
+
     post(API_URL.verifyOTP, payload)
       .then((res) => {
+        dispatch(setLoader(false));
+
         setOtpVerified({
           ...otpVerified,
-          login: true,
+          login: res?.message.toLowerCase().contains("invalid") ? false : true,
         });
-        router.push({
-          pathname: `(home)/(${profile})`,
-        });
+        if (!res?.message.toLowerCase().contains("invalid")) {
+          storeUserData({ profile, ...res });
+          router.push({
+            pathname: `(home)/(${profile})`,
+          });
+        }
         console.log("res", res);
       })
       .catch((e: any) => {
+        dispatch(setLoader(false));
+
         console.log("e", e.response.data);
         if (e?.response?.data?.statusCode === 500) {
         }
@@ -207,9 +251,6 @@ const LoginPage = () => {
           keyboardVerticalOffset={keyboardVerticalOffset}
         >
           <AUIThemedView style={loginPageStyles.otpViewContainer}>
-            {/* {otpVerified.signUpEmail ? (
-              <OTPVerified label={"Email OTP verified"} />
-            ) : ( */}
             <OTPScreen
               length={4}
               changeLabel={"email"}
@@ -230,9 +271,6 @@ const LoginPage = () => {
           <AUIThemedView
             style={[loginPageStyles.otpViewContainer, { marginTop: 50 }]}
           >
-            {/* {otpVerified.signUpPhone ? (
-              <OTPVerified label={"Phone number OTP verified"} />
-            ) : ( */}
             <OTPScreen
               changeLabel={"mobile number"}
               length={4}
@@ -247,7 +285,6 @@ const LoginPage = () => {
             {otpVerified.signUpPhone && (
               <OTPVerified label={"Mobile number verified"} />
             )}
-            {/* )} */}
           </AUIThemedView>
         </KeyboardAvoidingView>
       </AUIThemedView>
@@ -274,6 +311,7 @@ const LoginPage = () => {
                   // setValue("input", "");
                   reset({
                     input: "",
+                    phoneCode: "+91",
                     selectedButton: "mobile",
                   });
                 }}
@@ -294,28 +332,11 @@ const LoginPage = () => {
               />
             </AUIThemedView>
             <AUIThemedView style={loginPageStyles.sendOtpContainer}>
-              <Controller
-                name="input"
-                control={control}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => {
-                  return (
-                    <AUIInputField
-                      label=""
-                      placeholder={
-                        selectedButton === "mobile"
-                          ? GLOBAL_TEXT.enter_mobile_number
-                          : GLOBAL_TEXT.enter_email_id
-                      }
-                      value={value}
-                      onChangeText={onChange}
-                      error={error?.message}
-                    />
-                  );
-                }}
-              />
+              {selectedButton === "mobile" ? (
+                <ContactNumberField control={control} />
+              ) : (
+                <InputField control={control} />
+              )}
               <View style={secondaryButtonStyle.buttonContainer}>
                 <AUIButton
                   title="Send OTP"
@@ -361,4 +382,96 @@ const OTPVerified = ({ label }: any) => (
     <MaterialIcons name="verified-user" size={24} color="green" />
   </AUIThemedView>
 );
+const ContactNumberField = ({ label, control }: any) => (
+  <AUIThemedView style={{ backgroundColor: "#ffffff" }}>
+    {label && (
+      <AUIThemedText
+        style={{
+          marginBottom: 5,
+          fontSize: 16,
+          fontWeight: "semibold",
+          letterSpacing: -0.32,
+          color: APP_THEME.gray,
+        }}
+      >
+        {label}
+      </AUIThemedText>
+    )}
+    <AUIThemedView
+      style={{
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        gap: 10,
+      }}
+    >
+      <Controller
+        name="phoneCode"
+        control={control}
+        render={({ field: { onChange, value } }) => {
+          return (
+            <DropdownComponent
+              style={{ flex: 1.3 }}
+              // @ts-ignore
+              list={countriesData}
+              // @ts-ignore
+              value={value}
+              setValue={({ dialling_code }: { dialling_code: string }) =>
+                onChange(dialling_code)
+              }
+              labelField="name"
+              valueField="dialling_code"
+              listWithIcon
+              renderLeftIcon
+            />
+          );
+        }}
+      />
+      <Controller
+        name="input"
+        control={control}
+        render={({ field: { onChange, value }, fieldState: { error } }) => {
+          return (
+            <AUIInputField
+              style={{ flex: 2 }}
+              value={value}
+              onChangeText={onChange}
+              placeholder={SIGNUP_FIELDS.phone.placeholder}
+            />
+          );
+        }}
+      />
+    </AUIThemedView>
+    <Controller
+      name="input"
+      control={control}
+      render={({ fieldState: { error } }) => {
+        return (
+          <AUIThemedText style={{ color: "red", fontSize: 14 }}>
+            {error?.message || ""}
+          </AUIThemedText>
+        );
+      }}
+    />
+  </AUIThemedView>
+);
+const InputField = ({ control }: any) => (
+  <Controller
+    name="input"
+    control={control}
+    render={({ field: { onChange, value }, fieldState: { error } }) => {
+      return (
+        <>
+          <AUIInputField
+            value={value}
+            onChangeText={onChange}
+            placeholder={SIGNUP_FIELDS.email.placeholder}
+            error={error?.message}
+          />
+        </>
+      );
+    }}
+  />
+);
+
 export default LoginPage;

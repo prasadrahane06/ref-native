@@ -11,6 +11,8 @@ import { useRouter } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 import { setProfile, setSignInType } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
+import AUIImage from "@/components/common/AUIImage";
+import { Asset } from "expo-asset";
 
 const InitialPage = () => {
   const router = useRouter();
@@ -67,9 +69,15 @@ const InitialPage = () => {
               locations={[0, 1]}
               colors={["#EFFFFA", "#EFFFFA"]}
             >
-              <Image
-                source={require("../assets/images/initialPage/student.png")}
+              <AUIImage
+                icon
+                path={
+                  Asset.fromModule(
+                    require("@/assets/images/initialPage/student.png")
+                  ).uri
+                }
               />
+
               <AUIThemedText style={initialPageStyles.optionLabel}>
                 {GLOBAL_TEXT.student}
               </AUIThemedText>
@@ -87,9 +95,15 @@ const InitialPage = () => {
               locations={[0, 1]}
               colors={["#EFFFFA", "#EFFFFA"]}
             >
-              <Image
-                source={require("../assets/images/initialPage/school.png")}
+              <AUIImage
+                icon
+                path={
+                  Asset.fromModule(
+                    require("@/assets/images/initialPage/school.png")
+                  ).uri
+                }
               />
+
               <AUIThemedText style={initialPageStyles.optionLabel}>
                 {GLOBAL_TEXT.school}
               </AUIThemedText>
@@ -114,9 +128,11 @@ const InitialPage = () => {
         </AUIThemedView>
 
         <AUIThemedView style={initialPageStyles.imageContainer}>
-          <Image
-            resizeMode="contain"
-            source={require("../assets/images/initialPage/home.png")}
+          <AUIImage
+            path={
+              Asset.fromModule(require("@/assets/images/initialPage/home.png"))
+                .uri
+            }
           />
         </AUIThemedView>
         <AUIThemedView style={initialPageStyles.bottomLayout} />

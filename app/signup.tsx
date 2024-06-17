@@ -6,25 +6,25 @@ import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { APP_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT, SIGNUP_FIELDS } from "@/constants/Properties";
-import { loginPageStyles, signupPageStyles } from "@/constants/Styles";
+import { signupPageStyles } from "@/constants/Styles";
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
-import Toast from "react-native-root-toast";
-import {
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  View,
-} from "react-native";
-import DATA from "@/app/services/data.json";
+import { useState } from "react";
+import { KeyboardAvoidingView, Platform } from "react-native";
 import { post } from "./services/axiosClient";
 import { API_URL } from "@/constants/urlProperties";
 import { useDispatch, useSelector } from "react-redux";
-import { setSignupDetails } from "@/redux/globalSlice";
+import {
+  setLoader,
+  setSignInType,
+  setSignupDetails,
+} from "@/redux/globalSlice";
 import { countriesData } from "@/constants/dummy data/countriesData";
 import { RootState } from "@/redux/store";
+import {
+  ApiErrorToast,
+  ApiSuccessToast,
+  FormValidateToast,
+} from "@/components/common/AUIToast";
 const SignupPage = () => {
   const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
   const router = useRouter();
@@ -48,6 +48,7 @@ const SignupPage = () => {
         ...errors,
         email: GLOBAL_TEXT.validate_email,
       });
+      FormValidateToast().email;
       return;
     }
     // @ts-ignore
@@ -56,6 +57,8 @@ const SignupPage = () => {
         ...errors,
         phone: GLOBAL_TEXT.validate_mobile,
       });
+      FormValidateToast().phone;
+
       return;
     }
     setErrors({});
@@ -67,14 +70,28 @@ const SignupPage = () => {
       registerType: profile,
     };
     dispatch(setSignupDetails(payload));
+    dispatch(setLoader(true));
+
     console.log(payload);
     post(API_URL.register, payload)
       .then((res) => {
+        dispatch(setLoader(false));
+
+        const { data, message } = res;
         console.log("res", res);
-        router.navigate("/login");
+        ApiSuccessToast(message);
+        if (
+          Object.keys(data).includes("emailSent") &&
+          Object.keys(data).includes("smsSent")
+        ) {
+          router.navigate("/login");
+        }
       })
       .catch((e) => {
-        console.log(e);
+        dispatch(setLoader(false));
+
+        console.log(e.response.data);
+        ApiErrorToast(e.response?.data?.message);
       });
   };
   const handleOnChange = (val: any, item: string) => {
@@ -106,6 +123,10 @@ const SignupPage = () => {
       phoneCode: val?.dialling_code,
     });
   };
+  const navigateToLogin = () => {
+    dispatch(setSignInType("exist"));
+    router.navigate("/login");
+  };
   return (
     <AUISafeAreaView edges={["bottom"]}>
       <AUIThemedView style={signupPageStyles.container}>
@@ -117,8 +138,6 @@ const SignupPage = () => {
           behavior="padding"
           keyboardVerticalOffset={keyboardVerticalOffset}
         >
-          <Toast visible>Thanks for subscribing!</Toast>
-
           <AUIThemedView style={signupPageStyles.formLayout}>
             <AUIThemedView style={signupPageStyles.fieldContainer}>
               {Object.keys(SIGNUP_FIELDS).map((item, i) => (
@@ -154,7 +173,7 @@ const SignupPage = () => {
                 </AUIThemedView>
               ))}
             </AUIThemedView>
-            <AUIThemedView style={{ marginTop: 20 }}>
+            <AUIThemedView style={signupPageStyles.section}>
               <AUIButton
                 title={GLOBAL_TEXT.continue_n_verify}
                 disabled={!Object.values(signupValues).every((x) => x)}
@@ -162,6 +181,17 @@ const SignupPage = () => {
                 icon={"arrowright"}
                 onPress={handleOnSave}
               />
+            </AUIThemedView>
+            <AUIThemedView
+              style={[signupPageStyles.section, signupPageStyles.signInLink]}
+            >
+              <AUIThemedText>Already have an account?</AUIThemedText>
+              <AUIThemedText
+                onPress={navigateToLogin}
+                style={signupPageStyles.link}
+              >
+                Sign in
+              </AUIThemedText>
             </AUIThemedView>
           </AUIThemedView>
         </KeyboardAvoidingView>

@@ -12,6 +12,7 @@ import {
 } from "@/constants/Colors";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import AUIImage from "./AUIImage";
 
 interface DropdownItem {
   label: string;
@@ -27,6 +28,9 @@ type Props = {
   style?: any;
   placeholder?: string;
   position?: "auto" | "bottom" | "top";
+  listWithIcon?: boolean;
+  iconField?: string;
+  renderLeftIcon?: any;
 };
 
 const DropdownComponent = ({
@@ -34,16 +38,20 @@ const DropdownComponent = ({
   list,
   value,
   setValue,
-  labelField,
-  valueField,
+  labelField = "label",
+  valueField = "value",
   style,
+  listWithIcon,
   placeholder,
   position = "bottom",
+  iconField = "iconUri",
+  renderLeftIcon,
 }: Props) => {
   const [isFocus, setIsFocus] = useState(false);
   const theme = useSelector(
     (state: RootState) => state.global.theme
   ) as ThemeType;
+  // @ts-ignore
 
   return (
     <AUIThemedView
@@ -51,6 +59,7 @@ const DropdownComponent = ({
     >
       {label && (
         <AUIThemedText
+          numberOfLines={1}
           style={[
             styles.label,
             // isFocus && { color: TEXT_THEME[theme].primary },
@@ -67,6 +76,7 @@ const DropdownComponent = ({
         placeholderStyle={styles.placeholderStyle}
         selectedTextStyle={styles.selectedTextStyle}
         inputSearchStyle={styles.inputSearchStyle}
+        // itemTextStyle={{ borderWidth: 1, width: "100%" }}
         iconStyle={styles.iconStyle}
         data={list}
         search
@@ -83,14 +93,36 @@ const DropdownComponent = ({
           setIsFocus(false);
         }}
         dropdownPosition={position}
-        // renderLeftIcon={() => (
-        //   <AntDesign
-        //     style={styles.icon}
-        //     color={isFocus ? "blue" : "black"}
-        //     name="Safety"
-        //     size={20}
-        //   />
-        // )}
+        renderLeftIcon={
+          renderLeftIcon
+            ? () => (
+                <AUIImage
+                  icon
+                  style={{
+                    borderRadius: 50,
+                    width: 30,
+                    height: 30,
+                    marginRight: 3,
+                  }}
+                  path={
+                    // @ts-ignore
+                    list.find((x: any) => x[valueField] === value)[iconField]
+                  }
+                />
+              )
+            : () => null
+        }
+        renderItem={(item) =>
+          listWithIcon ? (
+            <RenderItemWithIcon
+              item={item}
+              labelField={labelField}
+              iconField={iconField}
+            />
+          ) : (
+            <RenderDefaultItem item={item} labelField={labelField} />
+          )
+        }
       />
     </AUIThemedView>
   );
@@ -98,6 +130,31 @@ const DropdownComponent = ({
 
 export default DropdownComponent;
 
+const RenderItemWithIcon = ({ item, labelField, iconField }: any) => (
+  <AUIThemedView
+    style={{
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 3,
+      marginVertical: 5,
+      backgroundColor: "#ffffff",
+    }}
+  >
+    <AUIImage
+      icon
+      style={{
+        borderRadius: 50,
+        width: 30,
+        height: 30,
+        marginRight: 3,
+      }}
+      path={item[iconField]}
+    />
+    <AUIThemedText>{item[labelField]}</AUIThemedText>
+  </AUIThemedView>
+);
+
+const RenderDefaultItem = ({ item, labelField }: any) => item[labelField];
 const styles = StyleSheet.create({
   dropdown: {
     height: 50,
@@ -105,7 +162,7 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
     borderWidth: 2,
     borderRadius: 5,
-    paddingHorizontal: 10,
+    paddingHorizontal: 5,
   },
 
   icon: {

@@ -222,46 +222,6 @@ export const inputFieldStyle = StyleSheet.create({
   },
 });
 
-export const dropdownStyle = StyleSheet.create({
-  container: {
-    padding: 10,
-  },
-  picker: {
-    width: "100%",
-    height: 40,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    justifyContent: "center",
-  },
-});
-
-export const splitOTPInputContainer = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-  },
-});
-export const splitOTPinputFieldStyle = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  input: {
-    borderWidth: 2,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    textAlign: "center",
-    fontSize: 18,
-    width: 40,
-    height: 40,
-    marginHorizontal: 5,
-  },
-});
 export const signupPageStyles = StyleSheet.create({
   container: {
     flex: 1,
@@ -294,5 +254,46 @@ export const signupPageStyles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     gap: 5,
+  },
+  section: {
+    marginTop: 20,
+  },
+  signInLink: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    backgroundColor: "#ffffff",
+  },
+  link: {
+    color: "blue",
+    textDecorationLine: "underline",
+  },
+});
+
+export const loaderStyles = StyleSheet.create({
+  container: {
+    position: "absolute",
+    flex: 1,
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    // top: "50%",
+    // left: "45%",
+    backgroundColor: "gray",
+    width: "100%",
+    opacity: 0.5,
+    display: "none",
+    zIndex: 1000,
+  },
+});
+
+export const imageStyles = StyleSheet.create({
+  defaultIcon: {
+    height: 50,
+    width: 50,
+  },
+  defaultPreview: {
+    height: 300,
+    width: "100%",
   },
 });

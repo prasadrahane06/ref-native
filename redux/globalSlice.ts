@@ -7,6 +7,7 @@ export interface GlobalState {
   theme: ThemeType;
   signInType: string;
   signupDetails: any;
+  loader: boolean;
 }
 
 const initialState: GlobalState = {
@@ -14,6 +15,7 @@ const initialState: GlobalState = {
   theme: "light",
   signInType: "",
   signupDetails: null,
+  loader: false,
 };
 
 export const globalSlice = createSlice({
@@ -37,11 +39,19 @@ export const globalSlice = createSlice({
     setTheme: (state, action: PayloadAction<ThemeType>) => {
       state.theme = action.payload;
     },
+    setLoader: (state, action: PayloadAction<boolean>) => {
+      state.loader = action.payload;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setProfile, setTheme, setSignInType, setSignupDetails } =
-  globalSlice.actions;
+export const {
+  setProfile,
+  setTheme,
+  setSignInType,
+  setSignupDetails,
+  setLoader,
+} = globalSlice.actions;
 
 export default globalSlice.reducer;

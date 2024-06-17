@@ -33,8 +33,8 @@ const AUIOTPInput = ({ length, onChange, disabled }: any) => {
       {otp.map((digit, index) => (
         <TextInput
           key={index}
+          autoFocus={index === 0}
           // @ts-ignore
-
           ref={(ref) => (inputs.current[index] = ref)}
           style={[
             styles.input,
