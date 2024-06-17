@@ -136,16 +136,12 @@ const LoginPage = () => {
     console.log(payload);
     post(API_URL.verifyOTP, payload)
       .then((res) => {
+        console.log(res);
         setOtpVerified({
           ...otpVerified,
-          signUpEmail: res?.message.toLowerCase().contains("invalid")
-            ? false
-            : true,
+          signUpEmail: res?.data?.emailVerified,
         });
-        if (
-          otpVerified.signUpPhone &&
-          !res?.message.toLowerCase().contains("invalid")
-        ) {
+        if (res?.data?.accessToken) {
           storeUserData({ profile, ...res });
 
           router.push({ pathname: "/details" });
@@ -166,16 +162,13 @@ const LoginPage = () => {
     console.log(payload);
     post(API_URL.verifyOTP, payload)
       .then((res) => {
+        console.log(res);
+
         setOtpVerified({
           ...otpVerified,
-          signUpPhone: res?.message.toLowerCase().contains("invalid")
-            ? false
-            : true,
+          signUpPhone: res?.data?.phoneVerified,
         });
-        if (
-          otpVerified.signUpEmail &&
-          !res?.message.toLowerCase().contains("invalid")
-        ) {
+        if (res?.data?.accessToken) {
           storeUserData({ profile, ...res });
 
           router.push({ pathname: "/details" });
@@ -198,19 +191,20 @@ const LoginPage = () => {
 
     post(API_URL.verifyOTP, payload)
       .then((res) => {
+        console.log("res otp", res);
         dispatch(setLoader(false));
 
         setOtpVerified({
           ...otpVerified,
-          login: res?.message.toLowerCase().contains("invalid") ? false : true,
+          login: res?.data?.accessToken,
         });
-        if (!res?.message.toLowerCase().contains("invalid")) {
+        if (res?.data?.accessToken) {
+          console.log("token got");
           storeUserData({ profile, ...res });
           router.push({
             pathname: `(home)/(${profile})`,
           });
         }
-        console.log("res", res);
       })
       .catch((e: any) => {
         dispatch(setLoader(false));

@@ -1,29 +1,14 @@
 import AUIButton from "@/components/common/AUIButton";
 import DropdownComponent from "@/components/common/AUIDropdown";
-import AUIInputField from "@/components/common/AUIInputField";
 import { AUISafeAreaView } from "@/components/common/AUISafeAreaView";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { APP_THEME } from "@/constants/Colors";
-import {
-  DETAILS_FIELDS,
-  GLOBAL_TEXT,
-  SIGNUP_FIELDS,
-} from "@/constants/Properties";
-import { loginPageStyles, signupPageStyles } from "@/constants/Styles";
+import { DETAILS_FIELDS, GLOBAL_TEXT } from "@/constants/Properties";
+import { signupPageStyles } from "@/constants/Styles";
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  View,
-} from "react-native";
+import { useState } from "react";
+import { KeyboardAvoidingView, Platform } from "react-native";
 import DATA from "@/app/services/data.json";
-import { post } from "./services/axiosClient";
-import { API_URL } from "@/constants/urlProperties";
 import { useDispatch, useSelector } from "react-redux";
 import { setSignupDetails } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
