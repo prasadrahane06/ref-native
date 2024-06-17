@@ -1,10 +1,10 @@
-import React from "react";
 import { APP_THEME } from "@/constants/Colors";
+import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { AUIThemedText } from "./common/AUIThemedText";
 import { AUIThemedView } from "./common/AUIThemedView";
-import { MaterialIcons } from "@expo/vector-icons";
 
 interface CourseProps {
     title: string;

@@ -5,6 +5,7 @@ import {
     StyleSheet,
     TextStyle,
     TouchableOpacity,
+    ViewStyle,
 } from "react-native";
 import { AUIThemedText } from "./common/AUIThemedText";
 import { AUIThemedView } from "./common/AUIThemedView";
@@ -13,7 +14,7 @@ interface AUIInfoCardProps {
     title: string;
     subtitle: string;
     navigation?: string;
-    cardStyle?: any;
+    cardStyle?: ViewStyle;
     titleStyle?: TextStyle;
     subtitleStyle?: TextStyle;
 }

@@ -148,6 +148,24 @@ const InitialLayout = () => {
                     headerTitle: "Home",
                 }}
             />
+
+            <Stack.Screen
+                name="(home)/courseDetails/[id]"
+                options={{
+                    headerTransparent: true,
+                    headerTitle: "",
+                    headerLeft: () => (
+                        <TouchableOpacity onPress={router.back}>
+                            <Ionicons
+                                name="arrow-back"
+                                size={34}
+                                color={"white"}
+                            />
+                        </TouchableOpacity>
+                    ),
+                }}
+            />
+
             <Stack.Screen
                 name="(home)/schoolDetails/[id]"
                 options={{

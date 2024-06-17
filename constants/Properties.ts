@@ -25,6 +25,11 @@ export const GLOBAL_TEXT = {
     enquire_now: "Enquire Now",
     My_Favorite_Course: "My Favorite Course",
     My_Favorite_School: "My Favorite School",
+    course_details: "Course Details",
+    select_your_plan: "Select your plan",
+    book_your_seat: "Book your seat",
+    buy_now: "Buy Now",
+    similar_courses: "Similar Courses",
 };
 
 export const SIGNUP_FIELDS = {
