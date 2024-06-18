@@ -23,7 +23,7 @@ import { destinationData } from "@/constants/dummy data/destinationData";
 import { lastChanceData } from "@/constants/dummy data/lastChance";
 import { schoolsData } from "@/constants/dummy data/schoolsData";
 import { Octicons } from "@expo/vector-icons";
-import { Link } from "expo-router";
+import { Link, useNavigation } from "expo-router";
 import { useState } from "react";
 import {
   FlatList,
@@ -40,6 +40,7 @@ import PagerView from "react-native-pager-view";
 export default function HomeScreen() {
   const [selectedPage, setSelectedPage] = useState(0);
   const [selectedLanguage, setSelectedLanguage] = useState("");
+  const navigation = useNavigation();
 
   return (
     <ScrollView>
@@ -71,7 +72,9 @@ export default function HomeScreen() {
         </AUIThemedView>
 
         <AUIThemedView>
-          <SectionTitle viewAll="#">{GLOBAL_TEXT.popular_schools}</SectionTitle>
+          <SectionTitle viewAll="(home)/school/AllSchoolsScreen">
+            {GLOBAL_TEXT.popular_schools}
+          </SectionTitle>
           <SchoolList data={schoolsData} />
         </AUIThemedView>
 

@@ -5,4 +5,5 @@ export const API_URL = {
   register: "auth/register",
   login: "auth/login",
   resendOTP: "auth/resend-otp",
+  popularSchool: "school",
 };

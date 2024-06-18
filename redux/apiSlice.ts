@@ -1,24 +1,27 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface ApiState {
-    [key: string]: any;
+  popularSchools: { docs: any[] };
+  [key: string]: any;
 }
 
 interface SetResponsePayload {
-    storeName: string;
-    data: any;
+  storeName: string;
+  data: any;
 }
 
-const initialState: ApiState = {};
+const initialState: ApiState = {
+  popularSchools: { docs: [] },
+};
 
 const apiSlice = createSlice({
-    name: "api",
-    initialState,
-    reducers: {
-        setResponse(state, action: PayloadAction<SetResponsePayload>) {
-            state[action.payload.storeName] = action.payload.data;
-        },
+  name: "api",
+  initialState,
+  reducers: {
+    setResponse(state, action: PayloadAction<SetResponsePayload>) {
+      state[action.payload.storeName] = action.payload.data;
     },
+  },
 });
 
 export const { setResponse } = apiSlice.actions;
