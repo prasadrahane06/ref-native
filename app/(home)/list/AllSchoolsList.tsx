@@ -59,6 +59,6 @@ const styles = StyleSheet.create({
   },
   schoolItem: {
     width: "48%",
-    marginVertical: 4,
+    marginVertical: 5,
   },
 });

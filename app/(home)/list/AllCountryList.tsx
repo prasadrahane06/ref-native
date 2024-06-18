@@ -1,34 +1,37 @@
 import React from "react";
 import { StyleSheet, FlatList, View, ListRenderItem } from "react-native";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import School from "@/components/School";
+import Destination from "@/components/Destination";
 
-interface CountrySchoolData {
+interface CountryData {
   id: string;
-  name: string;
+  country: string;
   image: any;
   favorite?: boolean;
 }
 
-interface CountrySchoolListProps {
-  data: CountrySchoolData[];
-  schoolWidth: number;
-  schoolHeight: number;
+interface CountryListProps {
+  data: CountryData[];
+  countryWidth: number;
+  countryHeight: number;
+  countryTopPosition: number;
 }
 
-const AllCountrySchoolsList: React.FC<CountrySchoolListProps> = ({
+const AllCountryList: React.FC<CountryListProps> = ({
   data,
-  schoolWidth,
-  schoolHeight,
+  countryWidth,
+  countryHeight,
+  countryTopPosition,
 }) => {
-  const renderItem: ListRenderItem<CountrySchoolData> = ({ item }) => (
+  const renderItem: ListRenderItem<CountryData> = ({ item }) => (
     <View style={styles.courseItem}>
-      <School
-        title={item.name}
+      <Destination
+        title={item.country}
         image={item.image}
         favorite={item.favorite}
-        schoolWidth={schoolWidth}
-        schoolHeight={schoolHeight}
+        countryWidth={countryWidth}
+        countryHeight={countryHeight}
+        countryTopPosition={countryTopPosition}
       />
     </View>
   );
@@ -46,7 +49,7 @@ const AllCountrySchoolsList: React.FC<CountrySchoolListProps> = ({
   );
 };
 
-export default AllCountrySchoolsList;
+export default AllCountryList;
 
 const styles = StyleSheet.create({
   courseContainer: {
@@ -56,6 +59,6 @@ const styles = StyleSheet.create({
   },
   courseItem: {
     width: "48%",
-    marginVertical: 5,
+    marginVertical: -3,
   },
 });

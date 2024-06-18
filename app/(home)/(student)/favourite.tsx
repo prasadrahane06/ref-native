@@ -6,18 +6,14 @@ import AllCoursesList from "../list/AllCoursesList";
 import { FavoriteCourseData } from "@/constants/dummy data/FavoriteCourseData";
 import { FavoriteSchoolData } from "@/constants/dummy data/FavoriteSchoolData";
 import AllSchoolsList from "../list/AllSchoolsList";
-import AllCountrySchoolsList from "../list/AllCountrySchoolsList";
-import { FavoriteCountrySchoolData } from "@/constants/dummy data/FavoriteCountrySchoolData";
+import AllCountryList from "../list/AllCountryList";
 import SectionTitle from "@/components/home/common/SectionTitle";
+import { destinationData } from "@/constants/dummy data/destinationData";
 
 const TabTwoScreen: React.FC = () => {
   const [showAllCourses, setShowAllCourses] = useState(false);
   const [showAllSchools, setShowAllSchools] = useState(false);
-  const [showAllCountrySchools, setShowAllCountrySchools] = useState(false);
-
-  const showViewAllCourses = FavoriteCourseData.length > 6;
-  const showViewAllSchools = FavoriteSchoolData.length > 6;
-  const showViewAllCountrySchools = FavoriteCountrySchoolData.length > 6;
+  const [showAllCountries, setShowAllCountries] = useState(false);
 
   const handleViewAllCoursesClick = () => {
     setShowAllCourses(true);
@@ -26,7 +22,7 @@ const TabTwoScreen: React.FC = () => {
     setShowAllSchools(true);
   };
   const handleViewAllCountrySchoolsClick = () => {
-    setShowAllCountrySchools(true);
+    setShowAllCountries(true);
   };
 
   return (
@@ -59,14 +55,13 @@ const TabTwoScreen: React.FC = () => {
         <SectionTitle onViewAllClick={handleViewAllCountrySchoolsClick}>
           {GLOBAL_TEXT.My_Favorite_School}
         </SectionTitle>
-        <AllCountrySchoolsList
+        <AllCountryList
           data={
-            showAllCountrySchools
-              ? FavoriteCountrySchoolData
-              : FavoriteCountrySchoolData.slice(0, 6)
+            showAllCountries ? destinationData : destinationData.slice(0, 6)
           }
-          schoolWidth={165}
-          schoolHeight={150}
+          countryWidth={165}
+          countryHeight={150}
+          countryTopPosition={110}
         />
       </AUIThemedView>
     </ScrollView>

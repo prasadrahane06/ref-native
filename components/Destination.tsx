@@ -2,30 +2,63 @@ import { LinearGradient } from "expo-linear-gradient";
 import { ImageBackground, StyleSheet } from "react-native";
 import { AUIThemedText } from "./common/AUIThemedText";
 import { AUIThemedView } from "./common/AUIThemedView";
+import { MaterialIcons } from "@expo/vector-icons";
 
-const Destination = ({ title, image }: any) => (
-  <AUIThemedView style={styles.item}>
-    <AUIThemedView style={styles.imageContainer}>
-      <ImageBackground style={styles.image} source={image}>
-        <LinearGradient
-          colors={[
-            "rgba(72,77,72, 1)",
-            "rgba(149,207,156, 0.5)",
-            "rgba(149,207,156, 0.3)",
-            "rgba(149,207,156, 0.2)",
-            "transparent",
-          ]}
-          style={styles.gradient}
-          start={{ x: 0, y: 1 }}
-          end={{ x: 0, y: 0 }}
-        />
-        <AUIThemedText style={styles.destinationImageText}>
-          {title}
-        </AUIThemedText>
-      </ImageBackground>
+const Destination = ({
+  title,
+  image,
+  countryWidth,
+  countryHeight,
+  countryTopPosition,
+  favorite,
+}: any) => {
+  console.log("favorite---", favorite);
+  return (
+    <AUIThemedView style={styles.item}>
+      <AUIThemedView
+        style={[
+          styles.imageContainer,
+          countryWidth && countryHeight && countryTopPosition
+            ? { width: countryWidth, height: countryHeight }
+            : {},
+        ]}
+      >
+        <ImageBackground style={styles.image} source={image}>
+          <LinearGradient
+            colors={[
+              "rgba(72,77,72, 1)",
+              "rgba(149,207,156, 0.5)",
+              "rgba(149,207,156, 0.3)",
+              "rgba(149,207,156, 0.2)",
+              "transparent",
+            ]}
+            style={styles.gradient}
+            start={{ x: 0, y: 1 }}
+            end={{ x: 0, y: 0 }}
+          />
+          <AUIThemedText
+            style={[
+              styles.destinationImageText,
+              countryTopPosition ? { top: countryTopPosition } : {},
+            ]}
+          >
+            {title}
+          </AUIThemedText>
+          {favorite && (
+            <AUIThemedView style={styles.iconContainer}>
+              <MaterialIcons
+                name="favorite"
+                size={18}
+                color="red"
+                style={styles.icon}
+              />
+            </AUIThemedView>
+          )}
+        </ImageBackground>
+      </AUIThemedView>
     </AUIThemedView>
-  </AUIThemedView>
-);
+  );
+};
 
 const styles = StyleSheet.create({
   item: {
@@ -58,6 +91,17 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 15,
     fontWeight: "600",
+  },
+  iconContainer: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    backgroundColor: "rgba(255, 0, 0, 0.2)",
+    borderRadius: 20,
+    padding: 5,
+  },
+  icon: {
+    alignSelf: "center",
   },
 });
 
