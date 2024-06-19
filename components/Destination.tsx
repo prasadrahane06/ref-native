@@ -3,6 +3,7 @@ import { ImageBackground, StyleSheet } from "react-native";
 import { AUIThemedText } from "./common/AUIThemedText";
 import { AUIThemedView } from "./common/AUIThemedView";
 import { MaterialIcons } from "@expo/vector-icons";
+import AUIBackgroundImage from "./common/AUIBackgroundImage";
 
 const Destination = ({
   title,
@@ -12,7 +13,6 @@ const Destination = ({
   countryTopPosition,
   favorite,
 }: any) => {
-  console.log("favorite---", favorite);
   return (
     <AUIThemedView style={styles.item}>
       <AUIThemedView
@@ -23,7 +23,7 @@ const Destination = ({
             : {},
         ]}
       >
-        <ImageBackground style={styles.image} source={image}>
+        <AUIBackgroundImage style={styles.image} path={image}>
           <LinearGradient
             colors={[
               "rgba(72,77,72, 1)",
@@ -54,7 +54,7 @@ const Destination = ({
               />
             </AUIThemedView>
           )}
-        </ImageBackground>
+        </AUIBackgroundImage>
       </AUIThemedView>
     </AUIThemedView>
   );
