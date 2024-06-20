@@ -1,37 +1,27 @@
-import School from "@/components/School";
+import PhotoGallary from "@/components/PhotoGallary";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
+import { APP_THEME } from "@/constants/Colors";
 import React from "react";
 import { FlatList, StyleSheet } from "react-native";
-
-interface SchoolListProps {
+interface PhotoGallaryListProps {
   data: any[];
 }
-
-const SchoolList: React.FC<SchoolListProps> = ({ data }) => {
+const PhotoGallaryList: React.FC<PhotoGallaryListProps> = ({ data }) => {
   return (
     <AUIThemedView style={styles.container}>
       <FlatList
         horizontal
         data={data}
-        renderItem={({ item }) => (
-          <School
-            title={item.school}
-            image={item.image}
-            caption={item.caption}
-            schoolWidth={270}
-            schoolHeight={160}
-          />
-        )}
+        renderItem={({ item }) => <PhotoGallary image={item.image} />}
         keyExtractor={(item) => item.id}
       />
     </AUIThemedView>
   );
 };
-
+export default PhotoGallaryList;
 const styles = StyleSheet.create({
   container: {
     paddingLeft: 14,
+    backgroundColor: APP_THEME.background,
   },
 });
-
-export default SchoolList;
