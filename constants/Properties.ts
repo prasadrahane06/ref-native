@@ -30,6 +30,9 @@ export const GLOBAL_TEXT = {
     book_your_seat: "Book your seat",
     buy_now: "Buy Now",
     similar_courses: "Similar Courses",
+    plan_one: "Plan 1",
+    plan_two: "Plan 2",
+    plan_three: "Plan 3",
 };
 
 export const SIGNUP_FIELDS = {
@@ -42,6 +45,49 @@ export const SIGNUP_FIELDS = {
     phone: {
         label: "Mobile Number",
         placeholder: "Enter your phone number",
+        type: "INPUT",
+    },
+};
+
+export const ENQUIRY_FIELDS = {
+    name: {
+        label: "Enter your name",
+        placeholder: "e.g John Doe",
+        type: "INPUT",
+    },
+    nationality: {
+        label: "Nationality",
+        placeholder: "Please specify",
+        type: "DROPDOWN",
+    },
+    phone: {
+        label: "Phone Number",
+        placeholder: "Enter your number",
+        type: "INPUT",
+    },
+    email: {
+        label: "Mail ID",
+        placeholder: "e.g john.doe@gmail.com",
+        type: "INPUT",
+    },
+    date: {
+        label: "When you want to start course?",
+        placeholder: "DD/MM/YY",
+        type: "INPUT",
+    },
+    language: {
+        label: "Select Language to learn",
+        placeholder: "Please specify",
+        type: "DROPDOWN",
+    },
+    accommodation: {
+        label: "Select your accommodation",
+        placeholder: "Please specify",
+        type: "DROPDOWN",
+    },
+    comment: {
+        label: "Add comment",
+        placeholder: "Enter your message",
         type: "INPUT",
     },
 };

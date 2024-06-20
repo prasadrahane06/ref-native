@@ -7,7 +7,7 @@ import { Link, Stack, useRouter, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import { TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Provider, useSelector } from "react-redux";
 import Toast from "react-native-toast-message";
@@ -175,13 +175,7 @@ const InitialLayout = () => {
       <Stack.Screen
         name="(home)/courseDetails/[id]"
         options={{
-          headerTransparent: true,
-          headerTitle: "",
-          headerLeft: () => (
-            <TouchableOpacity onPress={router.back}>
-              <Ionicons name="arrow-back" size={34} color={"white"} />
-            </TouchableOpacity>
-          ),
+						headerTitle: ''
         }}
       />
       <Stack.Screen

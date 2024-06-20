@@ -1,15 +1,150 @@
+import AUIImage from "@/components/common/AUIImage";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
+import PlanComponent from "@/components/home/courseDetails/PlanComponent";
 import { APP_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
-import { useLocalSearchParams } from "expo-router";
-import React from "react";
-import { Image, ScrollView, StyleSheet } from "react-native";
-import CoursePlanTabs from "./(tabs)/_layout";
+import { planOne } from "@/constants/dummy data/planOne";
+import { planThree } from "@/constants/dummy data/planThree";
+import { planTwo } from "@/constants/dummy data/planTwo";
+import { similarCoursesData } from "@/constants/dummy data/similarCoursesData";
+import { Ionicons } from "@expo/vector-icons";
+import { Asset } from "expo-asset";
+import { useLocalSearchParams, useNavigation } from "expo-router";
+import React, { useLayoutEffect, useState } from "react";
+import { Pressable, StyleSheet } from "react-native";
+import Animated, {
+    interpolate,
+    useAnimatedRef,
+    useAnimatedStyle,
+    useScrollViewOffset,
+} from "react-native-reanimated";
+
+function CoursePlanTabs({ courseId }: { courseId: string }) {
+    const [selectedPlan, setSelectedPlan] = useState(GLOBAL_TEXT.plan_one);
+
+    const handlePlanClick = (planName: string) => {
+        setSelectedPlan(planName);
+    };
+
+    return (
+        <AUIThemedView style={{ marginBottom: 20 }}>
+            <AUIThemedView style={planTabsStyles.tabsContainer}>
+                <Pressable
+                    onPress={() => handlePlanClick(GLOBAL_TEXT.plan_one)}
+                    style={
+                        selectedPlan === GLOBAL_TEXT.plan_one
+                            ? planTabsStyles.activeTab
+                            : planTabsStyles.inactiveTab
+                    }
+                >
+                    <AUIThemedText
+                        style={[
+                            planTabsStyles.tabLabel,
+                            {
+                                color:
+                                    selectedPlan === GLOBAL_TEXT.plan_one
+                                        ? "#fff"
+                                        : "#000",
+                            },
+                        ]}
+                    >
+                        {GLOBAL_TEXT.plan_one}
+                    </AUIThemedText>
+                </Pressable>
+
+                <Pressable
+                    onPress={() => handlePlanClick(GLOBAL_TEXT.plan_two)}
+                    style={
+                        selectedPlan === GLOBAL_TEXT.plan_two
+                            ? planTabsStyles.activeTab
+                            : planTabsStyles.inactiveTab
+                    }
+                >
+                    <AUIThemedText
+                        style={[
+                            planTabsStyles.tabLabel,
+                            {
+                                color:
+                                    selectedPlan === GLOBAL_TEXT.plan_two
+                                        ? "#fff"
+                                        : "#000",
+                            },
+                        ]}
+                    >
+                        {GLOBAL_TEXT.plan_two}
+                    </AUIThemedText>
+                </Pressable>
+
+                <Pressable
+                    onPress={() => handlePlanClick(GLOBAL_TEXT.plan_three)}
+                    style={
+                        selectedPlan === GLOBAL_TEXT.plan_three
+                            ? planTabsStyles.activeTab
+                            : planTabsStyles.inactiveTab
+                    }
+                >
+                    <AUIThemedText
+                        style={[
+                            planTabsStyles.tabLabel,
+                            {
+                                color:
+                                    selectedPlan === GLOBAL_TEXT.plan_three
+                                        ? "#fff"
+                                        : "#000",
+                            },
+                        ]}
+                    >
+                        {GLOBAL_TEXT.plan_three}
+                    </AUIThemedText>
+                </Pressable>
+            </AUIThemedView>
+            <AUIThemedView>
+                {selectedPlan === GLOBAL_TEXT.plan_one && (
+                    <PlanComponent
+                        courseId={courseId}
+                        plan={planOne}
+                        scheduleDescription="All courses are Monday to Friday, with morning and afternoon classes"
+                        lessonDescription="45-minute lessons"
+                        similarCourses={similarCoursesData}
+                    />
+                )}
+                {selectedPlan === GLOBAL_TEXT.plan_two && (
+                    <PlanComponent
+                        courseId={courseId}
+                        plan={planTwo}
+                        scheduleDescription="All courses are Monday to Friday, with morning and afternoon classes"
+                        lessonDescription="45-minute lessons"
+                        similarCourses={similarCoursesData}
+                    />
+                )}
+                {selectedPlan === GLOBAL_TEXT.plan_three && (
+                    <PlanComponent
+                        courseId={courseId}
+                        plan={planThree}
+                        scheduleDescription="All courses are Monday to Friday, with morning and afternoon classes"
+                        lessonDescription="45-minute lessons"
+                        similarCourses={similarCoursesData}
+                    />
+                )}
+            </AUIThemedView>
+        </AUIThemedView>
+    );
+}
 
 export default function CourseDetails() {
     const { id } = useLocalSearchParams<{ id: string }>();
     console.log(id);
+
+    if (!id) {
+        return (
+            <AUIThemedView
+                style={{ justifyContent: "center", alignItems: "center" }}
+            >
+                <AUIThemedText>Course not found</AUIThemedText>
+            </AUIThemedView>
+        );
+    }
 
     // const { requestFn } = useApiRequest();
 
@@ -24,20 +159,111 @@ export default function CourseDetails() {
 
     // console.log("courseDetails", courseDetails);
 
+    const scrollRef = useAnimatedRef<Animated.ScrollView>();
+    const navigation = useNavigation();
+    const scrollOffset = useScrollViewOffset(scrollRef);
+
+    const headerBackgroundAnimatedStyle = useAnimatedStyle(() => {
+        return {
+            opacity: interpolate(
+                scrollOffset.value,
+                [0, IMG_HEIGHT / 1.5],
+                [0, 1]
+            ),
+        };
+    }, []);
+
+    const headerTitleAnimatedStyle = useAnimatedStyle(() => {
+        return {
+            opacity: interpolate(
+                scrollOffset.value,
+                [IMG_HEIGHT / 2, IMG_HEIGHT],
+                [0, 1]
+            ),
+        };
+    }, []);
+
+    const imageAnimatedStyle = useAnimatedStyle(() => {
+        return {
+            transform: [
+                {
+                    translateY: interpolate(
+                        scrollOffset.value,
+                        [-IMG_HEIGHT, 0, IMG_HEIGHT, IMG_HEIGHT],
+                        [-IMG_HEIGHT / 2, 0, IMG_HEIGHT * 0.75]
+                    ),
+                },
+                {
+                    scale: interpolate(
+                        scrollOffset.value,
+                        [-IMG_HEIGHT, 0, IMG_HEIGHT],
+                        [2, 1, 1]
+                    ),
+                },
+            ],
+        };
+    });
+
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerTransparent: true,
+
+            headerBackground: () => (
+                <Animated.View
+                    style={[headerBackgroundAnimatedStyle, styles.screenHeader]}
+                />
+            ),
+
+            headerLeft: () => (
+                <Ionicons
+                    name="arrow-back"
+                    size={30}
+                    color={"#fff"}
+                    style={{
+                        position: "absolute",
+                        left: -57,
+                        alignItems: "center",
+                        justifyContent: "center",
+                    }}
+                    onPress={() => navigation.goBack()}
+                />
+            ),
+
+            headerTitle: () => (
+                <Animated.Text
+                    style={[headerTitleAnimatedStyle, styles.screenTitle]}
+                >
+                    Exam preparation course
+                </Animated.Text>
+            ),
+        });
+    }, []);
+
     return (
         <AUIThemedView>
-            <ScrollView>
+            <Animated.ScrollView ref={scrollRef} scrollEventThrottle={16}>
                 <AUIThemedView style={styles.container}>
-                    <Image
-                        source={require("@/assets/images/studentHomePage/popularSchools/school-1.png")}
-                        style={styles.image}
+                    <Animated.Image
+                        source={{
+                            uri: Asset.fromModule(
+                                require("@/assets/images/studentHomePage/popularSchools/school-1.png")
+                            ).uri,
+                        }}
+                        style={[styles.image, imageAnimatedStyle]}
+                        resizeMode="cover"
                     />
 
                     <AUIThemedView style={styles.infoContainer}>
                         <AUIThemedView style={styles.headerContainer}>
                             <AUIThemedView style={styles.header}>
-                                <Image
-                                    source={require("@/assets/icons/course.png")}
+                                <AUIImage
+                                    path={
+                                        Asset.fromModule(
+                                            require("@/assets/icons/course.png")
+                                        ).uri
+                                    }
+                                    icon
+                                    style={{ width: 40 }}
                                 />
                                 <AUIThemedView style={styles.courseInfo}>
                                     <AUIThemedText style={styles.title}>
@@ -50,8 +276,14 @@ export default function CourseDetails() {
                             </AUIThemedView>
 
                             <AUIThemedView style={styles.cartIconContainer}>
-                                <Image
-                                    source={require("@/assets/icons/cart.png")}
+                                <AUIImage
+                                    path={
+                                        Asset.fromModule(
+                                            require("@/assets/icons/cart.png")
+                                        ).uri
+                                    }
+                                    icon
+                                    style={{ width: 20, height: 20 }}
                                 />
                             </AUIThemedView>
                         </AUIThemedView>
@@ -62,20 +294,61 @@ export default function CourseDetails() {
                             {GLOBAL_TEXT.select_your_plan}
                         </AUIThemedText>
 
-                        <CoursePlanTabs />
+                        <CoursePlanTabs courseId={id} />
                     </AUIThemedView>
                 </AUIThemedView>
-            </ScrollView>
+            </Animated.ScrollView>
         </AUIThemedView>
     );
 }
 
+const planTabsStyles = StyleSheet.create({
+    tabsContainer: {
+        flexDirection: "row",
+        justifyContent: "space-evenly",
+        marginHorizontal: 12,
+        marginVertical: 10,
+        gap: 10,
+    },
+    tabLabel: { fontWeight: "500", paddingHorizontal: 25 },
+    activeTab: {
+        paddingHorizontal: 10,
+        paddingVertical: 8,
+        backgroundColor: "#0A152F",
+        borderRadius: 7,
+        borderWidth: 1,
+        borderColor: "#0A152F",
+    },
+    inactiveTab: {
+        paddingHorizontal: 10,
+        paddingVertical: 8,
+        backgroundColor: "#fff",
+        borderRadius: 7,
+        borderWidth: 1,
+        borderColor: "#0A152F",
+    },
+});
+
+const IMG_HEIGHT = 200;
+
 const styles = StyleSheet.create({
+    screenHeader: {
+        backgroundColor: APP_THEME.primary.first,
+        height: 100,
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderColor: APP_THEME.gray,
+    },
+    screenTitle: {
+        fontSize: 18,
+        fontWeight: "bold",
+        color: "#fff",
+    },
+
     container: {
         flex: 1,
     },
     image: {
-        height: 200,
+        height: IMG_HEIGHT,
         width: "auto",
     },
     infoContainer: {

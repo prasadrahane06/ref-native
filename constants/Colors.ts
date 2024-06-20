@@ -76,7 +76,7 @@ const APP_THEME: AppTheme = {
 };
 
 const COLOR_THEME: ColorThemes = {
-  light: { backgound: "#f8f9fa" },
+  light: { backgound: "#fff" },
   dark: { backgound: "#343a40" },
 };
 

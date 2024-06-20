@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
         width: "100%",
         position: "absolute",
         bottom: 0,
-        borderWidth: 0.6,
+        borderWidth: StyleSheet.hairlineWidth,
         borderColor: APP_THEME.primary.first,
     },
 });
