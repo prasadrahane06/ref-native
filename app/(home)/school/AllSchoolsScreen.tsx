@@ -16,7 +16,7 @@ const AllSchoolsScreen = () => {
   const schoolsData = schoolsResponse.docs || [];
 
   useEffect(() => {
-    requestFn(get(API_URL.popularSchool), "popularSchools");
+    requestFn(get(API_URL.popularSchool , {limit : 6}), "popularSchools");
   }, [requestFn]);
 
   return (
@@ -25,7 +25,7 @@ const AllSchoolsScreen = () => {
         data={schoolsData.map((school) => ({
           id: school._id,
           name: school.name,
-          image: school.logo,
+          image: school.banner,
           caption: school.description,
           favorite: false,
         }))}

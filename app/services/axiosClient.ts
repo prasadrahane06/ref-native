@@ -1,7 +1,11 @@
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import axios from "axios";
 
-const baseURL = "https://80ebyyswed.execute-api.ap-south-1.amazonaws.com/dev/"; //"http://localhost:4000/dev/"; //process.env.REACT_APP_BASE_URL;
+const baseURL = " https://d318-2402-e280-3e7b-220-556c-9458-3d6a-ce98.ngrok-free.app/dev/"; //"http://localhost:4000/dev/"; //process.env.REACT_APP_BASE_URL;
+
+// Define the token
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzSW4iOjE3MzQ0MTk2MDUsImlkIjoiNjY2MmRiMTYyMzI0YmRmMGYwMzM2NDZjIiwiY2xpZW50IjoiNjY2MmRiMTYyMzI0YmRmMGYwMzM2NDZiIiwidHlwZSI6InNjaG9vbCIsImVtYWlsIjoiYXNoaXQxNTQwQGdtYWlsLmNvbSIsInBob25lIjoiOTE5MTY5NjE1NTAwIiwiaWF0IjoxNzE4ODY3NjA1fQ.4zoZB65jH8HpOoTq9Vu0gbDSk7qOWmWPLzXtoD7kZWs';
+
 // Create an Axios instance
 const axiosClient = axios.create({
   baseURL,
@@ -14,7 +18,7 @@ const axiosClient = axios.create({
 axiosClient.interceptors.request.use(
   (config) => {
     // Modify config here (e.g., add authorization token if available)
-    // config.headers.Authorization = `Bearer ${token}`;
+    config.headers.Authorization = `Bearer ${token}`;
     return config;
   },
   (error) => {
@@ -35,11 +39,13 @@ axiosClient.interceptors.response.use(
 
 export default axiosClient;
 
-export const get = async (url: string, params = {}) => {
+export const get = async ( url : string, query = {}) => {
   try {
-    const response = await axiosClient.get(url, { params });
+    const queryString = new URLSearchParams(query).toString();
+    const response = await axiosClient.get(`${url}?${queryString}`);
     return response.data;
   } catch (error) {
+    console.error('Error in get request: ', error);
     throw error;
   }
 };

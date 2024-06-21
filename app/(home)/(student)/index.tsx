@@ -1,3 +1,4 @@
+import { get, post } from "@/app/services/axiosClient";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import CarouselSlide from "@/components/home/common/CarouselSlide";
 import CourseList from "@/components/home/common/CourseList";
@@ -14,17 +15,42 @@ import { destinationData } from "@/constants/dummy data/destinationData";
 import { languagesData } from "@/constants/dummy data/languagesData";
 import { lastChanceData } from "@/constants/dummy data/lastChance";
 import { schoolsData } from "@/constants/dummy data/schoolsData";
-import { useState } from "react";
+import { API_URL } from "@/constants/urlProperties";
+import useApiRequest from "@/customHooks/useApiRequest";
+import { setLoader } from "@/redux/globalSlice";
+import { RootState } from "@/redux/store";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
   View
 } from "react-native";
 import PagerView from "react-native-pager-view";
+import { useSelector } from "react-redux";
 
 export default function HomeScreen() {
   const [selectedPage, setSelectedPage] = useState(0);
   const [selectedLanguage, setSelectedLanguage] = useState(languagesData[0].code);
+  const {requestFn} = useApiRequest()
+  const schoolsResponse = useSelector(
+    (state: RootState) => state.api.school || {}
+  );
+  const courseResponse = useSelector(
+    (state: RootState) => state.api.course || {}
+  );
+
+  useEffect(() => {
+    dispatch(setLoader(true))
+    requestFn(get(API_URL.popularSchool , {limit : 4 }) , "school")
+    dispatch(setLoader(false))
+    // requestFn(get(API_URL.course, {limit : 4}) , "course")
+  }, [])
+
+  useEffect(()=>{
+    console.log("schoolsResponse", schoolsResponse)
+  },[schoolsResponse])
+
 
   return (
     <ScrollView>
@@ -58,7 +84,7 @@ export default function HomeScreen() {
           <SectionTitle viewAll="(home)/school/AllSchoolsScreen" style={{paddingBottom: 10}}>
             {GLOBAL_TEXT.popular_schools}
           </SectionTitle>
-          <SchoolList data={schoolsData} />
+          <SchoolList data={schoolsResponse.docs} dummyData={schoolsData} />
         </AUIThemedView>
 
         <AUIThemedView>
@@ -98,3 +124,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
 });
+function dispatch(arg0: any) {
+  throw new Error("Function not implemented.");
+}
+

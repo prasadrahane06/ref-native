@@ -133,10 +133,11 @@ export function TabLayout() {
                 name="index"
                 options={{
                     title: "Home",
-                    tabBarIcon: ({ color, focused }) => (
-                        <TabBarIcon
-                            name={focused ? "home" : "home-outline"}
+                    tabBarIcon: ({ focused }) => (
+                        <MaterialIcons
+                            name={"home"}
                             color={focused ? "white" : "#0A152F"}
+                            size={24}
                         />
                     ),
                 }}
@@ -145,10 +146,11 @@ export function TabLayout() {
                 name="studentTab"
                 options={{
                     title: "Student",
-                    tabBarIcon: ({ color, focused }) => (
-                        <TabBarIcon
-                            name={focused ? "code-slash" : "code-slash-outline"}
+                    tabBarIcon: ({ focused }) => (
+                        <Ionicons
+                            name={"person"}
                             color={focused ? "white" : "#0A152F"}
+                            size={24}
                         />
                     ),
                 }}
@@ -171,7 +173,7 @@ export function TabLayout() {
                     title: "Facilities",
                     tabBarIcon: ({ color, focused }) => (
                         <TabBarIcon
-                            name={focused ? "code-slash" : "code-slash-outline"}
+                            name={focused ? "business-sharp" : "business-sharp"}
                             color={focused ? "white" : "#0A152F"}
                         />
                     ),

@@ -165,7 +165,7 @@ export default function CityDetails() {
             <SectionTitle viewAll="#" style={{paddingVertical: 10}}>
               {GLOBAL_TEXT.popular_schools}
             </SectionTitle>
-            <SchoolList data={schoolsData} />
+            <SchoolList data={schoolsData} dummyData={schoolsData}/>
           </AUIThemedView>
         </AUIThemedView>
       </ScrollView>

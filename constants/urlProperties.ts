@@ -6,4 +6,5 @@ export const API_URL = {
   login: "auth/login",
   resendOTP: "auth/resend-otp",
   popularSchool: "school",
+  course : "course"
 };

@@ -5,19 +5,19 @@ import { FlatList, StyleSheet } from "react-native";
 
 interface SchoolListProps {
   data: any[];
+  dummyData: any[];
 }
-
-const SchoolList: React.FC<SchoolListProps> = ({ data }) => {
+const SchoolList: React.FC<SchoolListProps> = ({ data , dummyData }) => {
   return (
     <AUIThemedView style={styles.container}>
       <FlatList
         horizontal
         data={data}
-        renderItem={({ item }) => (
+        renderItem={({ item , index }) => (
           <School
-            title={item.school}
-            image={item.image}
-            caption={item.caption}
+            title={item.name}
+            image={item.banner ? item.banner : dummyData[index].image} 
+            caption={dummyData[index].caption}
             schoolWidth={270}
             schoolHeight={160}
           />

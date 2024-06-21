@@ -43,7 +43,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
                         <View
                             style={[
                                 styles.legendColorBox,
-                                { backgroundColor: "rgba(255, 99, 132, 1)" },
+                                { backgroundColor: "rgba(144, 238, 144, 1)" }, // Faint green
                             ]}
                         />
                         <Text style={styles.legendText}>Pending Payments</Text>
@@ -52,7 +52,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
                         <View
                             style={[
                                 styles.legendColorBox,
-                                { backgroundColor: "rgba(54, 162, 235, 1)" },
+                                { backgroundColor: "rgba(0, 100, 0, 1)" }, // Dark green
                             ]}
                         />
                         <Text style={styles.legendText}>Done Payments</Text>
@@ -65,13 +65,13 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
                             {
                                 data: pendingData,
                                 color: (opacity = 1) =>
-                                    `rgba(255, 99, 132, ${opacity})`, // Color for pending payments
+                                    `rgba(144, 238, 144, ${opacity})`, // Faint green for pending payments
                                 strokeWidth: 2,
                             },
                             {
                                 data: doneData,
                                 color: (opacity = 1) =>
-                                    `rgba(54, 162, 235, ${opacity})`, // Color for done payments
+                                    `rgba(0, 100, 0, ${opacity})`, // Dark green for done payments
                                 strokeWidth: 2,
                             },
                         ],
