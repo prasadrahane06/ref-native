@@ -3,7 +3,6 @@ import { AUIThemedView } from "@/components/common/AUIThemedView";
 import CourseList from "@/components/home/common/CourseList";
 import ChartComponent from "@/components/home/common/LinearChart";
 import SectionTitle from "@/components/home/common/SectionTitle";
-import { APP_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
 import { coursesData } from "@/constants/dummy data/coursesData";
 import React from "react";

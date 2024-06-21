@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import { ScrollView, StyleSheet, FlatList, ListRenderItem } from "react-native";
+import Course from "@/components/Course";
+import Destination from "@/components/Destination";
+import School from "@/components/School";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
+import SectionTitle from "@/components/home/common/SectionTitle";
+import { APP_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
 import { FavoriteCourseData } from "@/constants/dummy data/FavoriteCourseData";
 import { FavoriteSchoolData } from "@/constants/dummy data/FavoriteSchoolData";
-import SectionTitle from "@/components/home/common/SectionTitle";
 import { destinationData } from "@/constants/dummy data/destinationData";
-import Course from "@/components/Course";
-import School from "@/components/School";
-import Destination from "@/components/Destination";
-import { APP_THEME } from "@/constants/Colors";
+import React, { useState } from "react";
+import { FlatList, ListRenderItem, ScrollView, StyleSheet } from "react-native";
 
 interface CourseData {
   title: string;

@@ -5,7 +5,7 @@ export const reviewsData = [
         id: "a1",
         name: "Sasha Perry",
         image: Asset.fromModule(
-            require("@/assets/images/studentDetailsPage/overview/reviews/pic-1.png")
+            require("@/assets/images/schoolDetailsPage/overview/reviews/pic-1.png")
         ).uri,
         role: "Student",
         comment:
@@ -15,7 +15,7 @@ export const reviewsData = [
         id: "a2",
         name: "Jane Doe",
         image: Asset.fromModule(
-            require("@/assets/images/studentDetailsPage/overview/reviews/pic-2.png")
+            require("@/assets/images/schoolDetailsPage/overview/reviews/pic-2.png")
         ).uri,
         role: "Student",
         comment:

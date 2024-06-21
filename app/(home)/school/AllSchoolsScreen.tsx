@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
-import { AUIThemedView } from "@/components/common/AUIThemedView";
-import AllSchoolsList from "../list/AllSchoolsList";
-import { StyleSheet } from "react-native";
 import { get } from "@/app/services/axiosClient";
+import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
-import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import React, { useEffect } from "react";
+import { StyleSheet } from "react-native";
+import { useSelector } from "react-redux";
+import AllSchoolsList from "../list/AllSchoolsList";
 
 const AllSchoolsScreen = () => {
   const { requestFn } = useApiRequest();

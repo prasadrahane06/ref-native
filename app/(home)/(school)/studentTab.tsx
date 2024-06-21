@@ -1,7 +1,6 @@
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { StyleSheet, Image, Platform } from "react-native";
-import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
+import { AUIThemedView } from "@/components/common/AUIThemedView";
+import { StyleSheet } from "react-native";
 
 export default function TabTwoScreen() {
   return (

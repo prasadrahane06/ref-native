@@ -8,7 +8,6 @@ import SectionTitle from "@/components/home/common/SectionTitle";
 import CourseDetailsComponent from "@/components/home/courseDetails/CourseDetailsComponent";
 import ScheduleAndLesson from "@/components/home/courseDetails/ScheduleAndLesson";
 import SimilarCoursesList from "@/components/home/courseDetails/SimilarCourses";
-import { FacilitiesList } from "@/components/home/studentDetails/FacilitiesList";
 import { APP_THEME } from "@/constants/Colors";
 import { ENQUIRY_FIELDS, GLOBAL_TEXT } from "@/constants/Properties";
 import { inputFieldStyle } from "@/constants/Styles";
@@ -31,6 +30,7 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
+import { FacilitiesList } from "../schoolDetails/FacilitiesList";
 
 interface PlanComponentProps {
     courseId: string;

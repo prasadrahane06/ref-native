@@ -1,5 +1,7 @@
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
+import CoursesTab from "@/components/home/schoolDetails/Courses";
+import OverviewTab from "@/components/home/schoolDetails/Overview";
 import { APP_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
 import {
@@ -7,25 +9,20 @@ import {
     Ionicons,
     MaterialCommunityIcons,
 } from "@expo/vector-icons";
+import { Asset } from "expo-asset";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useLayoutEffect, useState } from "react";
 import {
-    Image,
     Pressable,
-    ScrollView,
     StyleSheet,
-    TouchableOpacity,
+    TouchableOpacity
 } from "react-native";
 import Animated, {
     interpolate,
-    interpolateColor,
     useAnimatedRef,
     useAnimatedStyle,
-    useScrollViewOffset,
+    useScrollViewOffset
 } from "react-native-reanimated";
-import { Asset } from "expo-asset";
-import OverviewTab from "@/components/home/schoolDetails/Overview";
-import CoursesTab from "@/components/home/schoolDetails/Courses";
 
 function StudentDetailsTabs() {
     const [selectedTab, setSelectedTab] = useState("overview");

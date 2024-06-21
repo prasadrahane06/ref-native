@@ -1,26 +1,25 @@
-import React, { useState } from "react";
-import {
-  StyleSheet,
-  Image,
-  ScrollView,
-  View,
-  TouchableOpacity,
-} from "react-native";
-import { useLocalSearchParams } from "expo-router";
-import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
-import { APP_THEME } from "@/constants/Colors";
+import { AUIThemedView } from "@/components/common/AUIThemedView";
+import SchoolList from "@/components/home/common/SchoolList";
 import SectionTitle from "@/components/home/common/SectionTitle";
+import { APP_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
 import { schoolsData } from "@/constants/dummy data/schoolsData";
-import SchoolList from "@/components/home/common/SchoolList";
+import { useLocalSearchParams } from "expo-router";
+import React, { useState } from "react";
+import {
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View
+} from "react-native";
 // import PhotoGallaryList from "@/components/home/common/PhotoGallaryList";
 // import { PhotoGallaryData } from "@/constants/dummy data/PhotoGallaryData";
 import AUIImage from "@/components/common/AUIImage";
-import { Asset } from "expo-asset";
-import { MaterialIcons } from "@expo/vector-icons";
-import { PhotoGallaryData } from "@/constants/dummy data/PhotoGallaryData";
 import PhotoGallaryList from "@/components/home/common/PhotoGallaryList";
+import { PhotoGallaryData } from "@/constants/dummy data/PhotoGallaryData";
+import { MaterialIcons } from "@expo/vector-icons";
+import { Asset } from "expo-asset";
 
 export default function CityDetails() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -156,14 +155,14 @@ export default function CityDetails() {
           <AUIThemedView style={styles.photoGalleryContainer}>
             <AUIThemedView style={styles.photoGalleryheader}>
               <AUIThemedText style={styles.photoGalleryText}>
-                {GLOBAL_TEXT.Photo_Gallary}
+                {GLOBAL_TEXT.photo_gallery}
               </AUIThemedText>
             </AUIThemedView>
             <PhotoGallaryList data={PhotoGallaryData} />
           </AUIThemedView>
 
           <AUIThemedView style={styles.popularSchoolsContainer}>
-            <SectionTitle viewAll="#">
+            <SectionTitle viewAll="#" style={{paddingVertical: 10}}>
               {GLOBAL_TEXT.popular_schools}
             </SectionTitle>
             <SchoolList data={schoolsData} />
@@ -284,6 +283,7 @@ const styles = StyleSheet.create({
     paddingLeft: 14,
     fontSize: 16,
     fontWeight: "bold",
+    paddingVertical: 5
   },
   popularSchoolsContainer: {
     backgroundColor: APP_THEME.background,

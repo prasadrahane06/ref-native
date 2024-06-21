@@ -1,3 +1,4 @@
+import { AUIThemedView } from "@/components/common/AUIThemedView";
 import CarouselSlide from "@/components/home/common/CarouselSlide";
 import CourseList from "@/components/home/common/CourseList";
 import DestinationList from "@/components/home/common/DestinationList";
@@ -8,35 +9,18 @@ import SchoolList from "@/components/home/common/SchoolList";
 import SectionTitle from "@/components/home/common/SectionTitle";
 import { GLOBAL_TEXT } from "@/constants/Properties";
 import { carouselData } from "@/constants/dummy data/carouselData";
-import Course from "@/components/Course";
-import Destination from "@/components/Destination";
-import Flag from "@/components/Flag";
-import LastChance from "@/components/LastChance";
-import School from "@/components/School";
-import { AUIThemedText } from "@/components/common/AUIThemedText";
-import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { LinearGradient } from "expo-linear-gradient";
-import { APP_THEME } from "@/constants/Colors";
-import { countriesData } from "@/constants/dummy data/countriesData";
 import { coursesData } from "@/constants/dummy data/coursesData";
 import { destinationData } from "@/constants/dummy data/destinationData";
+import { languagesData } from "@/constants/dummy data/languagesData";
 import { lastChanceData } from "@/constants/dummy data/lastChance";
 import { schoolsData } from "@/constants/dummy data/schoolsData";
-import { Octicons } from "@expo/vector-icons";
-import { Link, useNavigation } from "expo-router";
 import { useState } from "react";
 import {
-  FlatList,
-  Image,
-  ImageBackground,
   ScrollView,
   StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import PagerView from "react-native-pager-view";
-import { languagesData } from "@/constants/dummy data/languagesData";
 
 export default function HomeScreen() {
   const [selectedPage, setSelectedPage] = useState(0);

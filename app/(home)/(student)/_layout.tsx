@@ -3,17 +3,16 @@ import { AUILinearGradient } from "@/components/common/AUILinearGradient";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import {
+    FontAwesome,
     FontAwesome6,
     Ionicons,
-    MaterialIcons,
-    MaterialCommunityIcons,
-    FontAwesome,
+    MaterialIcons
 } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Asset } from "expo-asset";
 import { Tabs } from "expo-router";
 import React, { useState } from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import "react-native-gesture-handler";
 
 const ProfileScreen = () => (
@@ -313,13 +312,12 @@ export function TabLayout() {
                     title: "Home",
                     tabBarInactiveTintColor: "#0A152F",
                     tabBarActiveTintColor: "white",
-                    tabBarLabelStyle: { fontSize: 13, marginBottom: 5 },
+                    tabBarLabelStyle: { fontSize: 13 },
                     tabBarIcon: ({ focused }) => (
                         <MaterialIcons
                             name={"home"}
                             color={focused ? "white" : "#0A152F"}
                             size={24}
-                            style={{ marginBottom: -10 }}
                         />
                     ),
                 }}
@@ -330,13 +328,12 @@ export function TabLayout() {
                     title: "Favourite",
                     tabBarInactiveTintColor: "#0A152F",
                     tabBarActiveTintColor: "white",
-                    tabBarLabelStyle: { fontSize: 13, marginBottom: 5 },
+                    tabBarLabelStyle: { fontSize: 13 },
                     tabBarIcon: ({ focused }) => (
                         <Ionicons
                             name={"heart-sharp"}
                             color={focused ? "white" : "#0A152F"}
                             size={24}
-                            style={{ marginBottom: -10 }}
                         />
                     ),
                 }}
@@ -347,13 +344,12 @@ export function TabLayout() {
                     title: "Compare",
                     tabBarInactiveTintColor: "#0A152F",
                     tabBarActiveTintColor: "white",
-                    tabBarLabelStyle: { fontSize: 13, marginBottom: 5 },
+                    tabBarLabelStyle: { fontSize: 13 },
                     tabBarIcon: ({ focused }) => (
                         <Ionicons
                             name={"swap-horizontal-outline"}
                             color={focused ? "white" : "#0A152F"}
                             size={24}
-                            style={{ marginBottom: -10 }}
                         />
                     ),
                 }}
@@ -364,13 +360,12 @@ export function TabLayout() {
                     title: "Cart",
                     tabBarInactiveTintColor: "#0A152F",
                     tabBarActiveTintColor: "white",
-                    tabBarLabelStyle: { fontSize: 13, marginBottom: 5 },
+                    tabBarLabelStyle: { fontSize: 13 },
                     tabBarIcon: ({ focused }) => (
                         <FontAwesome6
                             name={"cart-shopping"}
                             color={focused ? "white" : "#0A152F"}
                             size={20}
-                            style={{ marginBottom: -10 }}
                         />
                     ),
                 }}

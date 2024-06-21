@@ -1,16 +1,16 @@
 import AUIFilter from "@/components/common/AUIFilter";
 import AUISearchBar from "@/components/common/AUISearchBar";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { AvailableCoursesList } from "@/components/home/studentDetails/AvailableCoursesList";
 import { Asset } from "expo-asset";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
+import { AvailableCoursesList } from "./AvailableCoursesList";
 
 export const data = [
     {
         id: "1",
         image: Asset.fromModule(
-            require("@/assets/images/studentDetailsPage/courses/image-1.png")
+            require("@/assets/images/schoolDetailsPage/courses/image-1.png")
         ).uri,
         courseTitle: "Exam preparation course",
         courseDesciption:
@@ -19,7 +19,7 @@ export const data = [
     {
         id: "2",
         image: Asset.fromModule(
-            require("@/assets/images/studentDetailsPage/courses/image-1.png")
+            require("@/assets/images/schoolDetailsPage/courses/image-1.png")
         ).uri,
         courseTitle: "Long term English courses",
         courseDesciption:
@@ -28,7 +28,7 @@ export const data = [
     {
         id: "3",
         image: Asset.fromModule(
-            require("@/assets/images/studentDetailsPage/courses/image-1.png")
+            require("@/assets/images/schoolDetailsPage/courses/image-1.png")
         ).uri,
         courseTitle: "English courses of flexible length",
         courseDesciption:
@@ -37,7 +37,7 @@ export const data = [
     {
         id: "4",
         image: Asset.fromModule(
-            require("@/assets/images/studentDetailsPage/courses/image-1.png")
+            require("@/assets/images/schoolDetailsPage/courses/image-1.png")
         ).uri,
         courseTitle: "Online English course",
         courseDesciption: "Learn a language no matter where you are",
@@ -45,7 +45,7 @@ export const data = [
     {
         id: "5",
         image: Asset.fromModule(
-            require("@/assets/images/studentDetailsPage/courses/image-1.png")
+            require("@/assets/images/schoolDetailsPage/courses/image-1.png")
         ).uri,
         courseTitle: "Online English course",
         courseDesciption: "Learn a language no matter where you are",

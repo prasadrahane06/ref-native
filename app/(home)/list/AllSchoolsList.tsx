@@ -1,7 +1,7 @@
-import React from "react";
-import { StyleSheet, FlatList, View, ListRenderItem } from "react-native";
-import { AUIThemedView } from "@/components/common/AUIThemedView";
 import School from "@/components/School";
+import { AUIThemedView } from "@/components/common/AUIThemedView";
+import React from "react";
+import { FlatList, ListRenderItem, StyleSheet, View } from "react-native";
 
 interface SchoolData {
   id: string;
