@@ -4,6 +4,7 @@ import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { APP_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
 import { AntDesign } from "@expo/vector-icons";
+import { router } from "expo-router";
 import { Image, StyleSheet, TouchableOpacity } from "react-native";
 
 export const AvailableCourses = ({
@@ -41,7 +42,14 @@ export const AvailableCourses = ({
                             20-06-2024
                         </AUIThemedText>
                     </AUIThemedText>
-                    <TouchableOpacity style={styles.button}>
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={() =>
+                            router.push({
+                                pathname: `(home)/courseDetails/1`,
+                            })
+                        }
+                    >
                         <AUIThemedText style={styles.buttonText}>
                             {GLOBAL_TEXT.explore_more}
                         </AUIThemedText>

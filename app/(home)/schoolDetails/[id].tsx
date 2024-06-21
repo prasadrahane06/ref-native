@@ -12,11 +12,7 @@ import {
 import { Asset } from "expo-asset";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useLayoutEffect, useState } from "react";
-import {
-    Pressable,
-    StyleSheet,
-    TouchableOpacity
-} from "react-native";
+import { Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import Animated, {
     interpolate,
     useAnimatedRef,
@@ -24,7 +20,7 @@ import Animated, {
     useScrollViewOffset
 } from "react-native-reanimated";
 
-function StudentDetailsTabs() {
+function StudentDetailsTabs({ schoolId }: { schoolId: string }) {
     const [selectedTab, setSelectedTab] = useState("overview");
 
     const handleTabClick = (tabName: string) => {
@@ -90,7 +86,9 @@ function StudentDetailsTabs() {
             </AUIThemedView>
 
             <AUIThemedView>
-                {selectedTab === "overview" && <OverviewTab />}
+                {selectedTab === "overview" && (
+                    <OverviewTab schoolId={schoolId} />
+                )}
                 {selectedTab === "courses" && <CoursesTab />}
             </AUIThemedView>
         </AUIThemedView>

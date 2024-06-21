@@ -1,6 +1,7 @@
 import { Asset } from "expo-asset";
 
 export const planOne = {
+    name: "Plan 1",
     duration: "1 - 2 years",
     fee: "9.99$",
     book: "50$",

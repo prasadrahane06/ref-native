@@ -136,15 +136,15 @@ export default function CourseDetails() {
     const { id } = useLocalSearchParams<{ id: string }>();
     console.log(id);
 
-    if (!id) {
-        return (
-            <AUIThemedView
-                style={{ justifyContent: "center", alignItems: "center" }}
-            >
-                <AUIThemedText>Course not found</AUIThemedText>
-            </AUIThemedView>
-        );
-    }
+    // if (!id) {
+    //     return (
+    //         <AUIThemedView
+    //             style={{ justifyContent: "center", alignItems: "center" }}
+    //         >
+    //             <AUIThemedText>Course not found</AUIThemedText>
+    //         </AUIThemedView>
+    //     );
+    // }
 
     // const { requestFn } = useApiRequest();
 

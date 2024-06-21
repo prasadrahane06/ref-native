@@ -6,7 +6,7 @@ import {
   FontAwesome,
   FontAwesome6,
   Ionicons,
-  MaterialIcons,
+  MaterialIcons
 } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Asset } from "expo-asset";
@@ -265,79 +265,85 @@ export default function AUIDrawer() {
 }
 
 export function TabLayout() {
-  return (
-    <Tabs
-      screenOptions={{
-        headerShown: false,
-        tabBarBackground: () => (
-          <AUILinearGradient
-            colors={["rgba(118, 250,178, 1)", "rgba(91, 216,148, 1)"]}
-            style={{ flex: 1 }}
-          />
-        ),
-        tabBarStyle: { height: 60 },
-      }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "Home",
-          tabBarInactiveTintColor: "#0A152F",
-          tabBarActiveTintColor: "white",
-          tabBarLabelStyle: { fontSize: 13 },
-          tabBarIcon: ({ focused }) => (
-            <MaterialIcons
-              name={"home"}
-              color={focused ? "white" : "#0A152F"}
-              size={24}
+    return (
+        <Tabs
+            screenOptions={{
+                headerShown: false,
+                tabBarBackground: () => (
+                    <AUILinearGradient
+                        colors={[
+                            "rgba(118, 250,178, 1)",
+                            "rgba(91, 216,148, 1)",
+                        ]}
+                        style={{ flex: 1 }}
+                    />
+                ),
+                tabBarStyle: { height: 60 },
+            }}
+        >
+            <Tabs.Screen
+                name="index"
+                options={{
+                    title: "Home",
+                    tabBarInactiveTintColor: "#0A152F",
+                    tabBarActiveTintColor: "white",
+                    tabBarLabelStyle: { fontSize: 13 },
+                    tabBarIcon: ({ focused }) => (
+                        <MaterialIcons
+                            name={"home"}
+                            color={focused ? "white" : "#0A152F"}
+                            size={24}
+                        />
+                    ),
+                }}
             />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="favourite"
-        options={{
-          title: "Favourite",
-          tabBarInactiveTintColor: "#0A152F",
-          tabBarActiveTintColor: "white",
-          tabBarLabelStyle: { fontSize: 13 },
-          tabBarIcon: ({ focused }) => (
-            <Ionicons
-              name={"heart-sharp"}
-              color={focused ? "white" : "#0A152F"}
-              size={24}
+            <Tabs.Screen
+                name="favourite"
+                options={{
+                    title: "Favourite",
+                    tabBarInactiveTintColor: "#0A152F",
+                    tabBarActiveTintColor: "white",
+                    tabBarLabelStyle: { fontSize: 13 },
+                    tabBarIcon: ({ focused }) => (
+                        <Ionicons
+                            name={"heart-sharp"}
+                            color={focused ? "white" : "#0A152F"}
+                            size={24}
+                        />
+                    ),
+                }}
             />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="compare"
-        options={{
-          title: "Compare",
-          tabBarInactiveTintColor: "#0A152F",
-          tabBarActiveTintColor: "white",
-          tabBarLabelStyle: { fontSize: 13 },
-          tabBarIcon: ({ focused }) => (
-            <Ionicons
-              name={"swap-horizontal-outline"}
-              color={focused ? "white" : "#0A152F"}
-              size={24}
+            <Tabs.Screen
+                name="compare"
+                options={{
+                    title: "Compare",
+                    tabBarInactiveTintColor: "#0A152F",
+                    tabBarActiveTintColor: "white",
+                    tabBarLabelStyle: { fontSize: 13 },
+                    tabBarIcon: ({ focused }) => (
+                        <Ionicons
+                            name={"swap-horizontal-outline"}
+                            color={focused ? "white" : "#0A152F"}
+                            size={24}
+                        />
+                    ),
+                }}
             />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="cart"
-        options={{
-          title: "Cart",
-          tabBarInactiveTintColor: "#0A152F",
-          tabBarActiveTintColor: "white",
-          tabBarLabelStyle: { fontSize: 13 },
-          tabBarIcon: ({ focused }) => (
-            <FontAwesome6
-              name={"cart-shopping"}
-              color={focused ? "white" : "#0A152F"}
-              size={20}
+            <Tabs.Screen
+                name="cart"
+                options={{
+                    title: "Cart",
+                    tabBarInactiveTintColor: "#0A152F",
+                    tabBarActiveTintColor: "white",
+                    tabBarLabelStyle: { fontSize: 13 },
+                    tabBarIcon: ({ focused }) => (
+                        <FontAwesome6
+                            name={"cart-shopping"}
+                            color={focused ? "white" : "#0A152F"}
+                            size={20}
+                        />
+                    ),
+                }}
             />
           ),
         }}

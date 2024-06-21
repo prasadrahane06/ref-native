@@ -1,5 +1,6 @@
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
+import { Asset } from "expo-asset";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import { FlatList, ImageBackground, StyleSheet } from "react-native";
@@ -16,7 +17,12 @@ interface SimilarCoursesListProps {
 function SimilarCourses({ title, subtitle, image }: SimilarCoursesProps) {
     return (
         <AUIThemedView style={similarCoursesStyle.item}>
-            <ImageBackground source={image} style={similarCoursesStyle.image}>
+            <ImageBackground
+                source={{
+                    uri: image,
+                }}
+                style={similarCoursesStyle.image}
+            >
                 <LinearGradient
                     colors={[
                         "transparent",

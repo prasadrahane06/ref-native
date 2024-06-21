@@ -31,6 +31,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import { FacilitiesList } from "../schoolDetails/FacilitiesList";
+import { router } from "expo-router";
 
 interface PlanComponentProps {
     courseId: string;
@@ -46,7 +47,7 @@ interface EnquireNowModalProps {
     content: React.ReactNode;
     onSave: () => void;
     onClear: () => void;
-    isSaveDisabled: boolean;
+    isSaveDisabled?: boolean;
 }
 
 function EnquireNowModal({
@@ -270,6 +271,7 @@ export default function PlanComponent({
                                     labelField="dialling_code"
                                     valueField="dialling_code"
                                     listWithIcon
+                                    renderLeftIcon
                                 />
                             )}
                         />
@@ -606,12 +608,19 @@ export default function PlanComponent({
                     </AUIThemedText>
                 </AUIThemedView>
 
-                <AUIThemedView style={styles.buyContainer}>
+                <Pressable
+                    style={styles.buyContainer}
+                    onPress={() =>
+                        router.push({
+                            pathname: `(home)/courseDetails/purchase`,
+                        })
+                    }
+                >
                     <Ionicons name="bag-outline" size={24} color="#fff" />
                     <AUIThemedText style={styles.whiteBoldText}>
                         {GLOBAL_TEXT.buy_now}
                     </AUIThemedText>
-                </AUIThemedView>
+                </Pressable>
             </AUIThemedView>
 
             <AUIThemedView>
@@ -646,7 +655,7 @@ export default function PlanComponent({
                 content={<EnquiryForm control={control} />}
                 onSave={handleSubmit(onSave)}
                 onClear={() => reset()}
-                isSaveDisabled={!formState.isValid}
+                // isSaveDisabled={!formState.isValid}
             />
         </AUIThemedView>
     );

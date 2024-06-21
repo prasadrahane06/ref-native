@@ -405,7 +405,7 @@ const ContactNumberField = ({ label, control }: any) => (
         render={({ field: { onChange, value } }) => {
           return (
             <DropdownComponent
-              style={{ flex: 1.3 }}
+              style={{ flex: 0.8 }}
               // @ts-ignore
               list={countriesData}
               // @ts-ignore

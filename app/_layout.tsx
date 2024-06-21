@@ -180,6 +180,18 @@ const InitialLayout = () => {
         }}
       />
       <Stack.Screen
+        name="(home)/courseDetails/purchase/index"
+        options={{
+						headerTitle: '',
+            headerShown: true,
+            headerLeft: () => (
+              <TouchableOpacity onPress={router.back}>
+                <Ionicons name="arrow-back" size={34} color={"#000"} />
+              </TouchableOpacity>
+            ),
+        }}
+      />
+      <Stack.Screen
         name="(home)/schoolDetails/[id]"
         options={{
           headerTitle: "",

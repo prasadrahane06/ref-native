@@ -42,6 +42,9 @@ export const GLOBAL_TEXT = {
     overview: "Overview",
     courses: "Courses",
     photo_gallery: "Photo Gallery",
+    your_selected_plan: "Your selected plan is",
+    select_payment_mode: "Select Payment Mode",
+    confirm_your_payment: "Confirm your payment",
 };
 
 export const SIGNUP_FIELDS = {
