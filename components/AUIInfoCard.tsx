@@ -62,10 +62,10 @@ const AUIInfoCard: React.FC<AUIInfoCardProps> = ({
 
 const styles = StyleSheet.create({
     card: {
-        backgroundColor: "#e5fff1",
+        backgroundColor: "#D3FFE7",
         padding: 20,
         borderRadius: 10,
-        margin: 10,
+        margin: 5,
     },
     title: {
         fontSize: 24,

@@ -182,32 +182,7 @@ const InitialLayout = () => {
       <Stack.Screen
         name="(home)/schoolDetails/[id]"
         options={{
-          headerTransparent: true,
           headerTitle: "",
-          headerLeft: () => (
-            <TouchableOpacity onPress={router.back}>
-              <Ionicons name="arrow-back" size={34} color={"white"} />
-            </TouchableOpacity>
-          ),
-          headerRight: () => (
-            <TouchableOpacity onPress={router.back}>
-              <AUIThemedView
-                style={{
-                  backgroundColor: "rgba(91, 216, 148, 0.3)",
-                  borderRadius: 50,
-                  padding: 10,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Ionicons
-                  name="heart"
-                  size={24}
-                  color={APP_THEME.secondary.first}
-                />
-              </AUIThemedView>
-            </TouchableOpacity>
-          ),
         }}
       />
       <Stack.Screen

@@ -57,24 +57,22 @@ export default function CoursesTab() {
     const [clicked, setClicked] = useState(false);
 
     return (
-        <ScrollView nestedScrollEnabled>
-            <AUIThemedView>
-                <AUIThemedView style={styles.container}>
-                    <AUISearchBar
-                        searchPhrase={searchPhrase}
-                        setSearchPhrase={setSearchPhrase}
-                        clicked={clicked}
-                        setClicked={setClicked}
-                    />
+        <AUIThemedView>
+            <AUIThemedView style={styles.container}>
+                <AUISearchBar
+                    searchPhrase={searchPhrase}
+                    setSearchPhrase={setSearchPhrase}
+                    clicked={clicked}
+                    setClicked={setClicked}
+                />
 
-                    <AUIFilter />
-                </AUIThemedView>
-
-                <AUIThemedView>
-                    <AvailableCoursesList data={data} />
-                </AUIThemedView>
+                <AUIFilter />
             </AUIThemedView>
-        </ScrollView>
+
+            <AUIThemedView>
+                <AvailableCoursesList data={data} />
+            </AUIThemedView>
+        </AUIThemedView>
     );
 }
 
