@@ -1,192 +1,185 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
-  Image,
+  TextInput,
   StyleSheet,
-  Dimensions,
-  Pressable,
+  TouchableOpacity,
+  Platform,
+  ScrollView,
 } from "react-native";
-import { FontAwesome, Ionicons } from "@expo/vector-icons";
-import { AUIThemedText } from "@/components/common/AUIThemedText";
-import { AUIThemedView } from "@/components/common/AUIThemedView";
-
-const { height: screenHeight } = Dimensions.get("window");
-
-type InfoRowProps = {
-  iconType:
-    | "email"
-    | "phone"
-    | "qualification"
-    | "year"
-    | "language"
-    | "country"
-    | "city"
-    | "state";
-  text: string;
-  value: string;
-};
-
-const InfoRow: React.FC<InfoRowProps> = ({ iconType, text, value }) => {
-  let icon = null;
-
-  switch (iconType) {
-    case "email":
-      icon = <FontAwesome name="envelope" size={24} color="#5BD894" />;
-      break;
-    case "phone":
-      icon = <Ionicons name="call" size={24} color="#5BD894" />;
-      break;
-    case "qualification":
-      icon = <Ionicons name="document-text" size={24} color="#5BD894" />;
-      break;
-    case "year":
-      icon = <Ionicons name="calendar" size={24} color="#5BD894" />;
-      break;
-    case "language":
-      icon = <Ionicons name="language" size={24} color="#5BD894" />;
-      break;
-    case "country":
-      icon = <Ionicons name="earth" size={24} color="#5BD894" />;
-      break;
-    case "city":
-      icon = <Ionicons name="location" size={24} color="#5BD894" />;
-      break;
-    case "state":
-      icon = <Ionicons name="map" size={24} color="#5BD894" />;
-      break;
-    default:
-      icon = null;
-      break;
-  }
-
-  return (
-    <AUIThemedView style={styles.infoRowContainer}>
-      <View style={styles.infoRow}>
-        {icon}
-        <AUIThemedText style={styles.infoText}>{text}</AUIThemedText>
-      </View>
-      <AUIThemedText style={styles.infoValue} numberOfLines={1}>
-        {value}
-      </AUIThemedText>
-    </AUIThemedView>
-  );
-};
+import { FontAwesome } from "@expo/vector-icons";
+import DateTimePicker, {
+  DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
+import AUIImage from "@/components/common/AUIImage";
 
 const Profile: React.FC = () => {
+  const [date, setDate] = useState<Date>(new Date());
+  const [show, setShow] = useState<boolean>(false);
+
+  const [name, setName] = useState<string>("");
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [mailID, setMailID] = useState<string>("");
+  const [gender, setGender] = useState<string>("");
+  const [qualification, setQualification] = useState<string>("");
+  const [academicSession, setAcademicSession] = useState<string>("");
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("");
+
+  const onChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === "ios");
+    setDate(currentDate);
+  };
+
   return (
-    <AUIThemedView style={styles.container}>
-      <AUIThemedView style={styles.profileContainer}>
+    <ScrollView>
+      <View style={styles.container}>
         <View style={styles.header}>
-          <Image
-            source={{
-              uri: "https://images.unsplash.com/photo-1562788869-4ed32648eb72?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHByb2Zlc3Npb25hbCUyMG1hbnxlbnwwfHwwfHx8MA%3D%3D",
-            }}
-            style={styles.avatar}
-          />
-          <AUIThemedText style={styles.name}>Dinesh Kale</AUIThemedText>
+          <Text style={styles.headerText}>My Profile</Text>
+          <TouchableOpacity style={styles.editIcon}>
+            <FontAwesome name="edit" size={20} color="#5BD894" />
+          </TouchableOpacity>
         </View>
 
-        <Pressable style={styles.editIconContainer}>
-          <Ionicons
-            name="pencil"
-            style={styles.editIcon}
-            size={16}
-            color="#5BD894"
+        <View style={styles.profileImageContainer}>
+          <AUIImage
+            icon
+            path={
+              "https://linguest-assets-dev.s3.ap-south-1.amazonaws.com/1718884990288-6296.jpeg"
+            }
+            style={styles.profileImage}
           />
-          <AUIThemedText style={styles.editText}>Edit</AUIThemedText>
-        </Pressable>
-      </AUIThemedView>
+        </View>
+        <Text style={styles.label}>Enter your name</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Yazeed"
+          value={name}
+          onChangeText={(text) => setName(text)}
+        />
 
-      <AUIThemedView
-        style={[styles.infoContainer, { height: screenHeight * 0.7 }]}
-      >
-        <InfoRow iconType="email" text="Email" value="email@gmail.com" />
-        <InfoRow iconType="phone" text="Phone" value="1234567890" />
-        <InfoRow iconType="qualification" text="Qualification" value="B.com" />
-        <InfoRow iconType="year" text="Academic year" value="2024" />
-        <InfoRow iconType="language" text="Language" value="English" />
-        <InfoRow iconType="country" text="Country" value="India" />
-        <InfoRow iconType="state" text="State" value="Maharashtra" />
-        <InfoRow iconType="city" text="City" value="Mumbai" />
-      </AUIThemedView>
-    </AUIThemedView>
+        <Text style={styles.label}>Phone Number</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="+44-395 335 2894"
+          value={phoneNumber}
+          onChangeText={(text) => setPhoneNumber(text)}
+        />
+
+        <Text style={styles.label}>Mail ID</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="yazeed652@gmail.com"
+          value={mailID}
+          onChangeText={(text) => setMailID(text)}
+        />
+
+        <Text style={styles.label}>Date of Birth</Text>
+        <TouchableOpacity
+          onPress={() => setShow(true)}
+          style={styles.datePicker}
+        >
+          <Text>{date.toLocaleDateString()}</Text>
+          <FontAwesome name="calendar" size={20} color="#5BD894" />
+        </TouchableOpacity>
+
+        {show && (
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={date}
+            mode="date"
+            display="default"
+            onChange={onChange}
+          />
+        )}
+
+        <Text style={styles.label}>Select your gender</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Please specify"
+          value={gender}
+          onChangeText={(text) => setGender(text)}
+        />
+
+        <Text style={styles.label}>My Qualification is</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Certificate/ Diploma"
+          value={qualification}
+          onChangeText={(text) => setQualification(text)}
+        />
+
+        <Text style={styles.label}>Academic Session</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="2023-2024"
+          value={academicSession}
+          onChangeText={(text) => setAcademicSession(text)}
+        />
+        <Text style={styles.label}>Select Language</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="2023-2024"
+          value={selectedLanguage}
+          onChangeText={(text) => setSelectedLanguage(text)}
+        />
+      </View>
+    </ScrollView>
   );
 };
-
-export default Profile;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 5,
-    alignItems: "center",
-    // marginTop: 25,
-    height: 100,
-  },
-  profileContainer: {
-    alignItems: "center",
-    position: "relative",
+    padding: 20,
+    backgroundColor: "#fff",
   },
   header: {
-    alignItems: "center",
-    justifyContent: "flex-start",
-    marginBottom: 5,
-  },
-  avatar: {
-    width: 120,
-    height: 120,
-    borderRadius: 65,
-    // marginBottom: 10,
-  },
-  name: {
-    fontSize: 18,
-    color: "#5BD894",
-    fontWeight: "bold",
-    marginTop: 5,
-  },
-  editIconContainer: {
-    position: "absolute",
-    bottom: 0,
-    left: 155,
     flexDirection: "row",
-    alignItems: "center",
-    borderRadius: 15,
-    padding: 5,
-    cursor: "pointer",
-  },
-  editText: {
-    marginLeft: 5,
-    fontWeight: "500",
-    color: "blue",
-  },
-  editIcon: { color: "blue" },
-  infoContainer: {
-    marginTop: 10,
-    height: 500,
-    width: 300,
-  },
-  infoRowContainer: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: "#DCDCDC",
-    paddingHorizontal: 10,
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  headerText: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  editIcon: {
+    top: 8,
+  },
+  profileImageContainer: {
+    alignItems: "flex-start",
+    marginBottom: 20,
+  },
+  profileImage: {
+    height: 100,
+    width: 100,
+    borderRadius: 50,
+  },
+  label: {
+    fontSize: 13,
+    fontWeight: "500",
+    marginBottom: 5,
+    color: "#333",
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ddd",
     borderRadius: 8,
-    marginVertical: 3,
+    padding: 7,
+    marginBottom: 15,
   },
-  infoRow: { flexDirection: "row", alignItems: "center", flexShrink: 1 },
-  infoText: {
-    marginLeft: 10,
-    marginRight: 20,
-  },
-  infoValue: {
-    marginLeft: 10,
-    fontWeight: "700",
-    flex: 1,
-    flexShrink: 1,
-    flexWrap: "wrap",
-    textAlign: "right",
+  datePicker: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 20,
   },
 });
+
+export default Profile;
