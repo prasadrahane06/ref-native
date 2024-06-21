@@ -1,11 +1,12 @@
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { StyleSheet, Image, Platform } from "react-native";
+import { StyleSheet } from "react-native";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 
 export default function TabThreeScreen() {
   return (
-    <AUIThemedView style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
+    <AUIThemedView
+      style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+    >
       <AUIThemedText>compare</AUIThemedText>
     </AUIThemedView>
   );

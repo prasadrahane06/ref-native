@@ -24,5 +24,5 @@ export const FacilitiesList: React.FC<FacilitiesListProps> = ({ data }) => {
 };
 
 const facilitiesListStyles = StyleSheet.create({
-    container: { paddingVertical: 5 },
+    container: { paddingVertical: 10 },
 });

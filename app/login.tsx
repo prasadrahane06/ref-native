@@ -413,7 +413,7 @@ const ContactNumberField = ({ label, control }: any) => (
               setValue={({ dialling_code }: { dialling_code: string }) =>
                 onChange(dialling_code)
               }
-              labelField="name"
+              labelField="dialling_code"
               valueField="dialling_code"
               listWithIcon
               renderLeftIcon

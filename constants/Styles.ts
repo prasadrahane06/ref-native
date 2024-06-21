@@ -4,7 +4,7 @@ import { APP_THEME } from "./Colors";
 export const defaultStyles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
-    marginTop: StatusBar.currentHeight,
+    // marginTop: StatusBar.currentHeight,
   },
 });
 
@@ -12,6 +12,7 @@ export const initialPageStyles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "space-between",
+    marginTop: StatusBar.currentHeight,
   },
   iosIndexHeader: {
     marginLeft: -25,
@@ -73,7 +74,6 @@ export const initialPageStyles = StyleSheet.create({
     justifyContent: "center",
   },
   optionLabel: {
-    color: APP_THEME.primary.first,
     // fontFamily: FontFamily.interSemiBold,
     fontSize: 16,
     textAlign: "left",

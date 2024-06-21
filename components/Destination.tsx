@@ -76,9 +76,9 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     position: "relative",
-    width: 90,
+    width: 100,
     height: 90,
-    borderRadius: 7,
+    borderRadius: 10,
     overflow: "hidden",
   },
   image: {

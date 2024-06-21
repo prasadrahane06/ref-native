@@ -1,8 +1,12 @@
+import { Asset } from "expo-asset";
+
 export const reviewsData = [
     {
         id: "a1",
         name: "Sasha Perry",
-        image: require("@/assets/images/studentDetailsPage/overview/reviews/pic-1.png"),
+        image: Asset.fromModule(
+            require("@/assets/images/studentDetailsPage/overview/reviews/pic-1.png")
+        ).uri,
         role: "Student",
         comment:
             "Nisi vivamus neque elementum, at pharetra. Cras gravida congue in tincidunt neque, ipsum egestas. Duis risus ipsum dis commodo.",
@@ -10,7 +14,9 @@ export const reviewsData = [
     {
         id: "a2",
         name: "Jane Doe",
-        image: require("@/assets/images/studentDetailsPage/overview/reviews/pic-2.png"),
+        image: Asset.fromModule(
+            require("@/assets/images/studentDetailsPage/overview/reviews/pic-2.png")
+        ).uri,
         role: "Student",
         comment:
             "Nisi vivamus neque elementum, at pharetra. Cras gravida congue in tincidunt neque, ipsum egestas. Duis risus ipsum dis commodo.",

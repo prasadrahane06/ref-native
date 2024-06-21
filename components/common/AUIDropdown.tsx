@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     height: 50,
 
     borderColor: "#ccc",
-    borderWidth: 2,
+    borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 5,
   },
@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
   label: {
     marginBottom: 5,
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: "500",
     letterSpacing: -0.32,
     color: APP_THEME.gray,
   },

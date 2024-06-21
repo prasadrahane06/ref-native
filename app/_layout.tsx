@@ -30,6 +30,7 @@ XMLHttpRequest = _XHR;
 const InitialLayout = () => {
   const [loaded, error] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    // Inter: require("../assets/fonts/Inter/static/Inter-Regular.ttf"),
     ...FontAwesome.font,
   });
   const router = useRouter();

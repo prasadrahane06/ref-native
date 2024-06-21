@@ -6,7 +6,7 @@ import School from "@/components/School";
 interface SchoolData {
   id: string;
   name: string;
-  image: string;
+  image: any;
   caption?: string;
   favorite?: boolean;
 }
@@ -27,7 +27,7 @@ const AllSchoolsList: React.FC<SchoolListProps> = ({
       <School
         title={item.name}
         caption={item.caption}
-        image={{ uri: item.image }}
+        image={item.image}
         favorite={item.favorite}
         schoolWidth={schoolWidth}
         schoolHeight={schoolHeight}
@@ -43,6 +43,7 @@ const AllSchoolsList: React.FC<SchoolListProps> = ({
         keyExtractor={(item) => item.id}
         numColumns={2}
         columnWrapperStyle={styles.schoolContainer}
+        scrollEnabled={false}
       />
     </AUIThemedView>
   );

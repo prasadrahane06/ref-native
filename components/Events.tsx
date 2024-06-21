@@ -3,18 +3,19 @@ import { APP_THEME } from "@/constants/Colors";
 import React from "react";
 import { Image, StyleSheet } from "react-native";
 import { AUIThemedText } from "./common/AUIThemedText";
+import AUIImage from "./common/AUIImage";
 
 export const Events = ({ title, image }: any) => (
     <AUIThemedView>
-        <Image style={eventStyles.image} source={image} />
+        <AUIImage style={eventStyles.image} path={image} />
         <AUIThemedText style={eventStyles.title}>{title}</AUIThemedText>
     </AUIThemedView>
 );
 
 const eventStyles = StyleSheet.create({
     image: {
-        borderTopRightRadius: 8,
-        borderTopLeftRadius: 8,
+        borderRadius: 8,
+        height: 120,
         width: "100%",
         objectFit: "fill",
     },

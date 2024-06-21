@@ -2,21 +2,23 @@ import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { Link } from "expo-router";
 import React from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
 
 interface SectionTitleProps {
   children: React.ReactNode;
   viewAll?: string;
   onViewAllClick?: () => void;
+  style?: ViewStyle;
 }
 
 const SectionTitle: React.FC<SectionTitleProps> = ({
   children,
   viewAll,
   onViewAllClick,
+  style
 }) => {
   return (
-    <AUIThemedView style={styles.container}>
+    <AUIThemedView style={[styles.container, style]}>
       <AUIThemedText style={styles.title}>{children}</AUIThemedText>
       {viewAll && (
         <Link href={viewAll} style={styles.viewAll}>
@@ -46,7 +48,7 @@ const styles = StyleSheet.create({
   },
   viewAll: {
     textDecorationLine: "underline",
-    fontSize: 17,
+    fontSize: 14,
     fontWeight: "500",
   },
 });

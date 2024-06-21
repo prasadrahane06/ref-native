@@ -11,6 +11,8 @@ import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import { Image, ScrollView, StyleSheet } from "react-native";
 import StudentDetailsTabs from "./(tabs)/_layout";
+import { Asset } from "expo-asset";
+import AUIImage from "@/components/common/AUIImage";
 
 export default function SchoolDetails() {
     const { id } = useLocalSearchParams<{ id: string }>();
@@ -20,8 +22,12 @@ export default function SchoolDetails() {
         <AUIThemedView>
             <ScrollView>
                 <AUIThemedView style={styles.container}>
-                    <Image
-                        source={require("@/assets/images/studentHomePage/popularSchools/school-1.png")}
+                    <AUIImage
+                        path={
+                            Asset.fromModule(
+                                require("@/assets/images/studentHomePage/popularSchools/school-1.png")
+                            ).uri
+                        }
                         style={[styles.image]}
                         resizeMode="cover"
                     />

@@ -1,5 +1,62 @@
 export const countriesData = [
     {
+        name: "United States of America",
+        code: "US",
+        language: {
+            code: "en",
+            iso639_2: "eng",
+            name: "English",
+            nativeName: "English",
+        },
+        dialling_code: "+1",
+        isoCode: "840",
+        uniqueId: "united_states_of_america_548352",
+    },
+    {
+        name: "United Kingdom of Great Britain and Northern Ireland",
+        code: "GB",
+        language: {
+            code: "en",
+            name: "English(UK)",
+        },
+        dialling_code: "+44",
+        isoCode: "826",
+        uniqueId: "united_kingdom_of_great_britain_and_northern_ireland_785299",
+    },
+    {
+        name: "Saudi Arabia",
+        code: "SA",
+        language: {
+            code: "ar",
+            name: "Arabic",
+        },
+        dialling_code: "+966",
+        isoCode: "682",
+        uniqueId: "saudi_arabia_944587",
+    },
+    {
+        name: "Iran (Islamic Republic of)",
+        code: "IR",
+        language: {
+            code: "fa",
+            name: "Farsi",
+        },
+        dialling_code: "+98",
+        isoCode: "364",
+        uniqueId: "iran_(islamic_republic_of)_229980",
+    },
+    {
+        name: "Turkey",
+        code: "TR",
+        language: {
+            code: "tr",
+            name: "Turkish",
+        },
+        dialling_code: "+90",
+        isoCode: "792",
+        uniqueId: "turkey_706610",
+    },
+    {
         name: "Afghanistan",
         code: "AF",
         language: {
@@ -2443,30 +2500,6 @@ export const countriesData = [
         dialling_code: "+971",
         isoCode: "784",
         uniqueId: "united_arab_emirates_47208",
-    },
-    {
-        name: "United Kingdom of Great Britain and Northern Ireland",
-        code: "GB",
-        language: {
-            code: "en",
-            name: "English",
-        },
-        dialling_code: "+44",
-        isoCode: "826",
-        uniqueId: "united_kingdom_of_great_britain_and_northern_ireland_785299",
-    },
-    {
-        name: "United States of America",
-        code: "US",
-        language: {
-            code: "en",
-            iso639_2: "eng",
-            name: "English",
-            nativeName: "English",
-        },
-        dialling_code: "+1",
-        isoCode: "840",
-        uniqueId: "united_states_of_america_548352",
     },
     {
         name: "Uruguay",

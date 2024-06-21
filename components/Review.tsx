@@ -3,12 +3,13 @@ import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { AUIThemedText } from "./common/AUIThemedText";
 import { AUIThemedView } from "./common/AUIThemedView";
+import AUIImage from "./common/AUIImage";
 
 export const Review = ({ name, role, image, comment }: any) => (
     <AUIThemedView style={reviewStyle.container}>
         <AUIThemedView style={reviewStyle.item}>
             <AUIThemedView style={reviewStyle.row}>
-                <Image style={reviewStyle.image} source={image} />
+                <AUIImage icon path={image} />
                 <AUIThemedView style={reviewStyle.textContainer}>
                     <AUIThemedText style={reviewStyle.name}>
                         {name}
@@ -43,9 +44,6 @@ const reviewStyle = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         backgroundColor: "#D3FFE7",
-    },
-    image: {
-        borderRadius: 100,
     },
     textContainer: {
         paddingLeft: 10,

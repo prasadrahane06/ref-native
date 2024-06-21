@@ -1,3 +1,4 @@
+import AUIImage from "@/components/common/AUIImage";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { APP_THEME } from "@/constants/Colors";
@@ -14,7 +15,7 @@ export const AvailableCourses = ({
     const isEven = index % 2 === 0;
 
     return (
-        <AUIThemedView style={styles.container}>
+        <AUIThemedView style={styles.container} key={index}>
             <AUIThemedView
                 style={[
                     styles.card,
@@ -47,7 +48,7 @@ export const AvailableCourses = ({
                         <AntDesign name="arrowright" size={20} color="black" />
                     </TouchableOpacity>
                 </AUIThemedView>
-                <Image source={image} style={styles.image} />
+                <AUIImage path={image} style={styles.image} />
             </AUIThemedView>
         </AUIThemedView>
     );

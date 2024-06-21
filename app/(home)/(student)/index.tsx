@@ -36,15 +36,14 @@ import {
   View,
 } from "react-native";
 import PagerView from "react-native-pager-view";
+import { languagesData } from "@/constants/dummy data/languagesData";
 
 export default function HomeScreen() {
   const [selectedPage, setSelectedPage] = useState(0);
-  const [selectedLanguage, setSelectedLanguage] = useState("");
-  const navigation = useNavigation();
+  const [selectedLanguage, setSelectedLanguage] = useState(languagesData[0].code);
 
   return (
     <ScrollView>
-      <AUIThemedView>
         <AUIThemedView>
           <PagerView
             style={styles.pagerView}
@@ -67,12 +66,12 @@ export default function HomeScreen() {
         </AUIThemedView>
 
         <AUIThemedView>
-          <SectionTitle>{GLOBAL_TEXT.find_your_destination}</SectionTitle>
+          <SectionTitle viewAll="#">{GLOBAL_TEXT.find_your_destination}</SectionTitle>
           <DestinationList data={destinationData} />
         </AUIThemedView>
 
         <AUIThemedView>
-          <SectionTitle viewAll="(home)/school/AllSchoolsScreen">
+          <SectionTitle viewAll="(home)/school/AllSchoolsScreen" style={{paddingBottom: 10}}>
             {GLOBAL_TEXT.popular_schools}
           </SectionTitle>
           <SchoolList data={schoolsData} />
@@ -81,7 +80,7 @@ export default function HomeScreen() {
         <AUIThemedView>
           <SectionTitle>{GLOBAL_TEXT.choose_your_language}</SectionTitle>
           <LanguageList
-            data={countriesData}
+            data={languagesData}
             selectedLanguage={selectedLanguage}
             setSelectedLanguage={setSelectedLanguage}
           />
@@ -100,7 +99,6 @@ export default function HomeScreen() {
           </SectionTitle>
           <LastChanceList data={lastChanceData} />
         </AUIThemedView>
-      </AUIThemedView>
     </ScrollView>
   );
 }

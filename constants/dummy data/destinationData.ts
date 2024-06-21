@@ -2,7 +2,39 @@ import { Asset } from "expo-asset";
 
 export const destinationData = [
   {
-    id: "e1a72a2b-d51f-4a37-a9a3-2d78f6743c78",
+    id: "e1a72awwwww2b-d51f-4a37-a9a3-2d78f67dawd43c78",
+    country: "South Africa",
+    image: Asset.fromModule(
+      require("@/assets/images/studentHomePage/popularPlaces/south-africa.png")
+    ).uri,
+    favorite: true,
+  },
+  {
+    id: "e1a72awwwww2b-d51f-4a37-a9a3-2d78f6743c78",
+    country: "England",
+    image: Asset.fromModule(
+      require("@/assets/images/studentHomePage/popularPlaces/tower.png")
+    ).uri,
+    favorite: true,
+  },
+  // {
+  //   id: "e1a72adwa2b-d51f-4a37-a9a3-2awda78f6743c78",
+  //   country: "UK",
+  //   image: Asset.fromModule(
+  //     require("@/assets/images/studentHomePage/popularPlaces/cathedral.png")
+  //   ).uri,
+  //   favorite: true,
+  // },
+  {
+    id: "e3c7d5a8-8c5e-42d9-a1d1-4f2b3e7e5c6a",
+    country: "USA",
+    image: Asset.fromModule(
+      require("@/assets/images/studentHomePage/popularPlaces/usa.png")
+    ).uri,
+    favorite: true,
+  },
+  {
+    id: "e1a72dawdwaadawda2b-d51f-4a37-a9a3-2d78f6743c78",
     country: "France",
     image: Asset.fromModule(
       require("@/assets/images/studentHomePage/popularPlaces/eiffel-tower.png")
@@ -38,14 +70,6 @@ export const destinationData = [
     country: "Brazil",
     image: Asset.fromModule(
       require("@/assets/images/studentHomePage/popularPlaces/christ.png")
-    ).uri,
-    favorite: true,
-  },
-  {
-    id: "e3c7d5a8-8c5e-42d9-a1d1-4f2b3e7e5c6a",
-    country: "USA",
-    image: Asset.fromModule(
-      require("@/assets/images/studentHomePage/popularPlaces/statue-liberty.png")
     ).uri,
     favorite: true,
   },

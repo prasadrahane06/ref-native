@@ -1,7 +1,7 @@
 import LastChance from "@/components/LastChance";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import React from "react";
-import { FlatList } from "react-native";
+import { FlatList, StyleSheet } from "react-native";
 
 interface LastChanceListProps {
     data: any[];
@@ -9,7 +9,7 @@ interface LastChanceListProps {
 
 const LastChanceList: React.FC<LastChanceListProps> = ({ data }) => {
     return (
-        <AUIThemedView style={{ paddingLeft: 10 }}>
+        <AUIThemedView style={styles.container}>
             <FlatList
                 horizontal
                 data={data}
@@ -21,5 +21,11 @@ const LastChanceList: React.FC<LastChanceListProps> = ({ data }) => {
         </AUIThemedView>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        paddingLeft: 14,
+    },
+});
 
 export default LastChanceList;

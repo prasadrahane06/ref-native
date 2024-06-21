@@ -50,7 +50,7 @@ export default function OverviewTab() {
                         scrollEnabled={false}
                         data={courseInfoData}
                         numColumns={2}
-                        renderItem={({ item }) => (
+                        renderItem={({ item, index }) => (
                             <AUIInfoCard
                                 titleStyle={{ fontSize: 21 }}
                                 subtitleStyle={{
@@ -59,6 +59,7 @@ export default function OverviewTab() {
                                 }}
                                 title={item.title}
                                 subtitle={item.subtitle}
+                                key={index}
                             />
                         )}
                         keyExtractor={(item) => item.id}

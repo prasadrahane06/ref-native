@@ -7,11 +7,13 @@ import { DETAILS_FIELDS, GLOBAL_TEXT } from "@/constants/Properties";
 import { signupPageStyles } from "@/constants/Styles";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { KeyboardAvoidingView, Platform } from "react-native";
+import { KeyboardAvoidingView, Platform, ScrollView } from "react-native";
 import DATA from "@/app/services/data.json";
 import { useDispatch, useSelector } from "react-redux";
 import { setSignupDetails } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
+import "react-native-gesture-handler"
+
 const DetailsPage = () => {
   const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
   const router = useRouter();
@@ -45,15 +47,11 @@ const DetailsPage = () => {
 
   return (
     <AUISafeAreaView edges={["bottom"]}>
+      <ScrollView>
       <AUIThemedView style={signupPageStyles.container}>
         <AUIThemedText style={signupPageStyles.heading}>
           {GLOBAL_TEXT.additional_details}
         </AUIThemedText>
-        <KeyboardAvoidingView
-          style={{ flex: 1 }}
-          behavior="padding"
-          keyboardVerticalOffset={keyboardVerticalOffset}
-        >
           <AUIThemedView style={signupPageStyles.formLayout}>
             <AUIThemedView style={signupPageStyles.fieldContainer}>
               {Object.keys(DETAILS_FIELDS).map((item, i) => (
@@ -73,9 +71,9 @@ const DetailsPage = () => {
                     //  @ts-ignore
                     label={DETAILS_FIELDS[item].label}
                     //  @ts-ignore
-
                     placeholder={DETAILS_FIELDS[item].placeholder}
                     position={i > 2 ? "top" : "bottom"}
+                    listWithIcon
                   />
                 </AUIThemedView>
               ))}
@@ -95,8 +93,8 @@ const DetailsPage = () => {
               />
             </AUIThemedView>
           </AUIThemedView>
-        </KeyboardAvoidingView>
       </AUIThemedView>
+      </ScrollView>
     </AUISafeAreaView>
   );
 };

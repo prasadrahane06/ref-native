@@ -1,4 +1,5 @@
 import Flag from "@/components/Flag";
+import { AUIThemedView } from "@/components/common/AUIThemedView";
 import React from "react";
 import { FlatList, StyleSheet } from "react-native";
 
@@ -14,26 +15,27 @@ const LanguageList: React.FC<LanguageListProps> = ({
     setSelectedLanguage,
 }) => {
     return (
-        <FlatList
-            horizontal
-            data={data}
-            renderItem={({ item }) => (
-                <Flag
-                    countryName={item.language.name}
-                    countryCode={item.code}
-                    isSelected={item.code === selectedLanguage}
-                    onSelect={() => setSelectedLanguage(item.code)}
-                />
-            )}
-            contentContainerStyle={styles.container}
-            keyExtractor={(item) => item.uniqueId}
-        />
+        <AUIThemedView style={styles.container}>
+            <FlatList
+                horizontal
+                data={data}
+                renderItem={({ item }) => (
+                    <Flag
+                        countryName={item.language.name}
+                        countryCode={item.code}
+                        isSelected={item.code === selectedLanguage}
+                        onSelect={() => setSelectedLanguage(item.code)}
+                    />
+                )}
+                keyExtractor={(item) => item.uniqueId}
+            />
+        </AUIThemedView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        paddingHorizontal: 10,
+        paddingLeft: 14,
     },
 });
 

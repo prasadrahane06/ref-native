@@ -21,13 +21,13 @@ export const EventsList: React.FC<EventsListProps> = ({ data }) => {
 
 const eventListStyles = StyleSheet.create({
     container: {
-        paddingVertical: 5,
+        paddingVertical: 10,
         flexDirection: "row",
         flexWrap: "wrap",
         justifyContent: "center",
     },
     item: {
         width: "45%",
-        margin: 5,
+        margin: 7,
     },
 });

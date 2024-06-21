@@ -236,8 +236,10 @@ const ContactNumberField = ({
         // @ts-ignore
         value={dropdownValue}
         setValue={handleDropdownChange}
-        labelField="name"
+        labelField="dialling_code"
         valueField="dialling_code"
+        listWithIcon
+        renderLeftIcon
       />
       <AUIInputField
         style={{ flex: 2 }}

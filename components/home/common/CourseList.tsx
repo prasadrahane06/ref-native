@@ -12,7 +12,11 @@ const CourseList: React.FC<CourseListProps> = ({ data }) => {
         <AUIThemedView style={styles.courseContainer}>
             {data.map((item) => (
                 <AUIThemedView key={item.id} style={styles.courseItem}>
-                    <Course title={item.name} image={item.image} />
+                    <Course
+                        title={item.name}
+                        image={item.image}
+                        startingDate={item.startingDate}
+                    />
                 </AUIThemedView>
             ))}
         </AUIThemedView>

@@ -17,6 +17,7 @@ interface AUIInfoCardProps {
     cardStyle?: ViewStyle;
     titleStyle?: TextStyle;
     subtitleStyle?: TextStyle;
+    key? : any
 }
 
 const AUIInfoCard: React.FC<AUIInfoCardProps> = ({
@@ -26,6 +27,7 @@ const AUIInfoCard: React.FC<AUIInfoCardProps> = ({
     cardStyle,
     titleStyle,
     subtitleStyle,
+    key
 }) => {
     const nav = useNavigation();
 
@@ -36,7 +38,7 @@ const AUIInfoCard: React.FC<AUIInfoCardProps> = ({
     };
 
     return (
-        <AUIThemedView>
+        <AUIThemedView key={key}>
             <TouchableOpacity
                 style={[
                     styles.card,

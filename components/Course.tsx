@@ -2,7 +2,7 @@ import { APP_THEME } from "@/constants/Colors";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
-import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { AUIThemedText } from "./common/AUIThemedText";
 import { AUIThemedView } from "./common/AUIThemedView";
 import AUIImage from "./common/AUIImage";
@@ -11,9 +11,15 @@ interface CourseProps {
   title: string;
   image: any;
   favorite?: boolean;
+  startingDate: string;
 }
 
-const Course: React.FC<CourseProps> = ({ title, image, favorite }) => {
+const Course: React.FC<CourseProps> = ({
+  title,
+  image,
+  favorite,
+  startingDate,
+}) => {
   const router = useRouter();
 
   return (
@@ -32,7 +38,7 @@ const Course: React.FC<CourseProps> = ({ title, image, favorite }) => {
             <AUIThemedText style={styles.courseCaption}>
               Starting from:{" "}
             </AUIThemedText>
-            20-04-2024
+            {startingDate}
           </AUIThemedText>
         </AUIThemedView>
         {favorite && (
@@ -65,7 +71,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 8,
     borderTopLeftRadius: 8,
     width: "100%",
-    height: 100,
+    height: 80,
   },
   courseTitle: {
     fontSize: 13,

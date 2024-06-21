@@ -2,11 +2,12 @@ import { AUIThemedView } from "@/components/common/AUIThemedView";
 import React from "react";
 import { Image, StyleSheet } from "react-native";
 import { AUIThemedText } from "./common/AUIThemedText";
+import AUIImage from "./common/AUIImage";
 
 export const Facilities = ({ title, image }: any) => {
     return (
         <AUIThemedView style={facilitiestyles.container}>
-            <Image source={image} />
+            <AUIImage path={image} icon />
             <AUIThemedText style={facilitiestyles.title}>{title}</AUIThemedText>
         </AUIThemedView>
     );

@@ -1,14 +1,37 @@
 import React, { useState } from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet, FlatList, ListRenderItem } from "react-native";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { GLOBAL_TEXT } from "@/constants/Properties";
-import AllCoursesList from "../list/AllCoursesList";
 import { FavoriteCourseData } from "@/constants/dummy data/FavoriteCourseData";
 import { FavoriteSchoolData } from "@/constants/dummy data/FavoriteSchoolData";
-import AllSchoolsList from "../list/AllSchoolsList";
-import AllCountryList from "../list/AllCountryList";
 import SectionTitle from "@/components/home/common/SectionTitle";
 import { destinationData } from "@/constants/dummy data/destinationData";
+import Course from "@/components/Course";
+import School from "@/components/School";
+import Destination from "@/components/Destination";
+import { APP_THEME } from "@/constants/Colors";
+
+interface CourseData {
+  title: string;
+  startingDate: string;
+  image: any;
+  favorite?: boolean;
+}
+
+interface SchoolData {
+  id: string;
+  name: string;
+  image: any;
+  caption?: string;
+  favorite?: boolean;
+}
+
+interface CountryData {
+  id: string;
+  country: string;
+  image: any;
+  favorite?: boolean;
+}
 
 const TabTwoScreen: React.FC = () => {
   const [showAllCourses, setShowAllCourses] = useState(false);
@@ -25,43 +48,93 @@ const TabTwoScreen: React.FC = () => {
     setShowAllCountries(true);
   };
 
+  const renderCourseItem: ListRenderItem<CourseData> = ({ item }) => (
+    <AUIThemedView style={styles.courseItem}>
+      <Course
+        title={item.title}
+        image={item.image}
+        favorite={item.favorite}
+        startingDate={item.startingDate}
+      />
+    </AUIThemedView>
+  );
+
+  const renderSchoolItem: ListRenderItem<SchoolData> = ({ item }) => (
+    <AUIThemedView style={styles.schoolItem}>
+      <School
+        title={item.name}
+        caption={item.caption}
+        image={item.image}
+        favorite={item.favorite}
+        schoolWidth={160}
+        schoolHeight={145}
+      />
+    </AUIThemedView>
+  );
+
+  const renderCountryItem: ListRenderItem<CountryData> = ({ item }) => (
+    <AUIThemedView style={styles.destinationItem}>
+      <Destination
+        title={item.country}
+        image={item.image}
+        favorite={item.favorite}
+        countryWidth={160}
+        countryHeight={145}
+        countryTopPosition={110}
+      />
+    </AUIThemedView>
+  );
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <AUIThemedView style={styles.courseContainer}>
+      <AUIThemedView style={styles.coursesContainer}>
         <SectionTitle onViewAllClick={handleViewAllCoursesClick}>
-          {GLOBAL_TEXT.My_Favorite_Course}
+          {GLOBAL_TEXT.My_Favorite_Courses}
         </SectionTitle>
-        <AllCoursesList
+        <FlatList
           data={
             showAllCourses ? FavoriteCourseData : FavoriteCourseData.slice(0, 6)
           }
+          renderItem={renderCourseItem}
+          keyExtractor={(item, index) => index.toString()}
+          numColumns={2}
+          columnWrapperStyle={styles.courseColumnWrapper}
+          scrollEnabled={false}
         />
       </AUIThemedView>
 
       <AUIThemedView style={styles.schoolContainer}>
-        <SectionTitle onViewAllClick={handleViewAllSchoolsClick}>
-          {GLOBAL_TEXT.My_Favorite_School}
+        <SectionTitle
+          onViewAllClick={handleViewAllSchoolsClick}
+          style={{ paddingBottom: 10 }}
+        >
+          {GLOBAL_TEXT.My_Favorite_Schools}
         </SectionTitle>
-        <AllSchoolsList
+        <FlatList
           data={
             showAllSchools ? FavoriteSchoolData : FavoriteSchoolData.slice(0, 6)
           }
-          schoolWidth={165}
-          schoolHeight={150}
+          renderItem={renderSchoolItem}
+          keyExtractor={(item) => item.id}
+          numColumns={2}
+          columnWrapperStyle={styles.schoolColumnWrapper}
+          scrollEnabled={false}
         />
       </AUIThemedView>
 
-      <AUIThemedView style={styles.countryschoolContainer}>
+      <AUIThemedView style={styles.destinationContainer}>
         <SectionTitle onViewAllClick={handleViewAllCountrySchoolsClick}>
-          {GLOBAL_TEXT.My_Favorite_School}
+          {GLOBAL_TEXT.My_Favorite_Cities}
         </SectionTitle>
-        <AllCountryList
+        <FlatList
           data={
             showAllCountries ? destinationData : destinationData.slice(0, 6)
           }
-          countryWidth={165}
-          countryHeight={150}
-          countryTopPosition={110}
+          renderItem={renderCountryItem}
+          keyExtractor={(item) => item.id}
+          numColumns={2}
+          columnWrapperStyle={styles.destinationColumnWrapper}
+          scrollEnabled={false}
         />
       </AUIThemedView>
     </ScrollView>
@@ -70,33 +143,60 @@ const TabTwoScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
+    paddingHorizontal: 10,
+    backgroundColor: APP_THEME.background,
   },
-  courseContainer: {
+  coursesContainer: {
     borderBottomWidth: 1,
-    borderBottomColor: "#5BD894",
+    borderColor: "#5BD894",
+    paddingBottom: 10,
+    backgroundColor: APP_THEME.background,
   },
   schoolContainer: {
     borderBottomWidth: 1,
-    borderBottomColor: "#5BD894",
+    borderColor: "#5BD894",
+    backgroundColor: APP_THEME.background,
   },
-  countryschoolContainer: {
-    paddingBottom: 10,
+  destinationContainer: {
+    backgroundColor: APP_THEME.background,
+    marginBottom: 10,
   },
-  header: {
-    fontSize: 17,
-    fontWeight: "bold",
-    marginVertical: 5,
-    marginHorizontal: 13,
-  },
-  cardContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-  },
-  gridContainer: {
+  courseItem: {
     width: "48%",
-    marginHorizontal: "1%",
+    marginBottom: 10,
+    backgroundColor: APP_THEME.background,
+  },
+  schoolItem: {
+    justifyContent: "center",
+    marginBottom: 10,
+    width: "50%",
+    marginHorizontal: 7,
+    backgroundColor: APP_THEME.background,
+  },
+  destinationItem: {
+    justifyContent: "center",
+    marginBottom: 10,
+    width: "50%",
+    marginHorizontal: 7,
+    backgroundColor: APP_THEME.background,
+  },
+  courseColumnWrapper: {
+    justifyContent: "space-between",
+    backgroundColor: APP_THEME.background,
+    marginTop: 10,
+    marginBottom: -8,
+  },
+  schoolColumnWrapper: {
+    marginHorizontal: 9,
+    justifyContent: "center",
+    backgroundColor: APP_THEME.background,
+  },
+  destinationColumnWrapper: {
+    marginBottom: -20,
+    backgroundColor: APP_THEME.background,
+    marginHorizontal: 9,
+    justifyContent: "center",
   },
 });
+
 export default TabTwoScreen;
