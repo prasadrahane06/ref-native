@@ -25,6 +25,7 @@ const AllSchoolsList: React.FC<SchoolListProps> = ({
   const renderItem: ListRenderItem<SchoolData> = ({ item }) => (
     <View style={styles.schoolItem}>
       <School
+        id={item.id}
         title={item.name}
         caption={item.caption}
         image={item.image}

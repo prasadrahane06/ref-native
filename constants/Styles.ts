@@ -158,6 +158,13 @@ export const buttonStyle = StyleSheet.create({
     textAlign: "center",
     justifyContent: "center",
   },
+  regularText: {
+    color: "#fff",
+    fontSize: 12,
+    fontWeight: "500",
+    textAlign: "left",
+    justifyContent: "flex-start",
+  },
   // sendOtpButton: {
   //   width: 200,
   // },

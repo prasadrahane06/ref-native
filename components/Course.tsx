@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
   courseItemContainer: {
     paddingLeft: 10,
     width: "100%",
-    height: 50,
+    // height: 50,
     paddingVertical: 4,
     borderBottomWidth: 1,
     borderLeftWidth: 1,

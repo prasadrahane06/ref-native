@@ -4,27 +4,27 @@ import { View, type ViewProps } from "react-native";
 import { useSelector } from "react-redux";
 
 export type ThemedViewProps = ViewProps & {
-    lightColor?: string;
-    darkColor?: string;
+  lightColor?: string;
+  darkColor?: string;
 };
 
 export function AUIThemedView({
-    style,
-    lightColor,
-    darkColor,
-    ...otherProps
+  style,
+  lightColor,
+  darkColor,
+  ...otherProps
 }: ThemedViewProps) {
-    const theme = useSelector((state: RootState) => state.global.theme);
+  const theme = useSelector((state: RootState) => state.global.theme);
 
-    return (
-        <View
-            style={[
-                {
-                    backgroundColor: COLOR_THEME[theme].backgound,
-                },
-                style,
-            ]}
-            {...otherProps}
-        />
-    );
+  return (
+    <View
+      style={[
+        {
+          backgroundColor: COLOR_THEME[theme].backgound,
+        },
+        style,
+      ]}
+      {...otherProps}
+    />
+  );
 }

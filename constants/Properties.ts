@@ -33,6 +33,8 @@ export const GLOBAL_TEXT = {
   similar_courses: "Similar Courses",
   welcome_to_my_school: "Welcome to my school",
   ongoing_courses: "Ongoing Courses",
+  recent_courses: "Recently Added",
+  upcoming_courses: "Upcoming Courses",
   logout: "Logout",
   singup: "Sign Up",
   login: "Login",

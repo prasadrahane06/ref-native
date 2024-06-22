@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import React, { Component } from "react";
 import { AUIThemedView } from "../common/AUIThemedView";
 import AUIImage from "../common/AUIImage";
@@ -14,8 +14,10 @@ import {
   Ionicons,
   MaterialIcons,
 } from "@expo/vector-icons";
+import { useNavigation } from "expo-router";
 
 function Profile() {
+  const navigation = useNavigation();
   const array = [
     {
       id: 1,
@@ -57,11 +59,17 @@ function Profile() {
     <AUIThemedView style={styles.root}>
       <AUIThemedView style={styles.banner}>
         <View style={styles.header}>
-          <Ionicons
-            name="arrow-back-circle-outline"
-            size={30}
-            color={APP_THEME.ternary.first}
-          />
+          <Pressable
+            onPress={() => {
+              navigation.goBack();
+            }}
+          >
+            <Ionicons
+              name="arrow-back-circle-outline"
+              size={30}
+              color={APP_THEME.ternary.first}
+            />
+          </Pressable>
           <FontAwesome name="edit" size={30} color={APP_THEME.ternary.first} />
         </View>
         <View style={styles.avatarContainer}>
@@ -111,7 +119,7 @@ const styles = StyleSheet.create({
   },
   banner: {
     height: 150,
-    backgroundColor: "rgba(91, 216, 148, 0.2)",
+    backgroundColor: "rgba(91, 216, 148, 0.5)",
     elevation: 20,
     shadowColor: APP_THEME.ternary.first,
     shadowOffset: { width: -2, height: 4 },

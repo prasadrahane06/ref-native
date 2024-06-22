@@ -51,6 +51,7 @@ const InitialLayout = () => {
     storeUserDeviceData();
 
     getUserData().then((data) => {
+      console.log(data);
       if (data && Object.keys(data).length > 0) {
         if (data?.profile === "student") {
           router.replace("/(home)/(student)");

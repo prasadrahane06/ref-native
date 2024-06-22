@@ -77,9 +77,7 @@ export default function HomeScreen() {
       </AUIThemedView>
 
       <AUIThemedView>
-        <SectionTitle viewAll="#">
-          {GLOBAL_TEXT.find_your_destination}
-        </SectionTitle>
+        <SectionTitle>{GLOBAL_TEXT.find_your_destination}</SectionTitle>
         <DestinationList data={destinationData} />
       </AUIThemedView>
 
@@ -110,9 +108,7 @@ export default function HomeScreen() {
       </AUIThemedView>
 
       <AUIThemedView>
-        <SectionTitle viewAll="#">
-          {GLOBAL_TEXT.last_chance_to_apply}
-        </SectionTitle>
+        <SectionTitle>{GLOBAL_TEXT.last_chance_to_apply}</SectionTitle>
         <LastChanceList data={lastChanceData} />
       </AUIThemedView>
     </ScrollView>

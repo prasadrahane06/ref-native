@@ -656,7 +656,7 @@ const enquireNowStyles = StyleSheet.create({
   iosModalContent: {
     position: "absolute",
     bottom: 0,
-    height: "80%",
+    height: "90%",
     width: "100%",
     backgroundColor: "#fff",
     borderTopRightRadius: 20,

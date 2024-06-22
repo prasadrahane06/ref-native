@@ -199,7 +199,7 @@ const LoginPage = () => {
           login: res?.data?.accessToken,
         });
         if (res?.data?.accessToken) {
-          console.log("token got");
+          console.log("token got", profile);
           storeUserData({ profile, ...res });
           router.push({
             pathname: `(home)/(${profile})`,

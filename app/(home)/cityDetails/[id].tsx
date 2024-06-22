@@ -5,6 +5,7 @@ import {
   ScrollView,
   View,
   TouchableOpacity,
+  Pressable,
 } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
@@ -33,7 +34,7 @@ export default function CityDetails() {
   );
 
   const [readMore, setReadMore] = useState(false);
-  const aboutText = `Lorem ipsum dolor, sit amet consectetur adipisicing elit. Atque maxime unde doloribus omnis ab, quod quibusdam eligendi similique vitae ipsam.Lorem ipsum dolor, sit amet consectetur adipisicing elit. Atque maxime unde doloribus omnis ab, quod quibusdam eligendi similique vitae ipsam.quibusdam eligendi similique vitae ipsam.quibusdam eligendi similique vitae ipsam. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Atque maxime unde doloribus omnis ab, quod quibusdam eligendi similique vitae ipsam.Lorem ipsum dolor, sit amet consectetur adipisicing elit. Atque maxime unde doloribus omnis ab, quod quibusdam eligendi similique vitae ipsam.quibusdam eligendi similique vitae ipsam.quibusdam eligendi similique vitae ipsam.`;
+  const aboutText = `Craving an academic adventure. Immerse yourself in the heart of Saudi Arabia and master Arabic through real-world experiences. Saudi universities, rapidly climbing the global rankings, offer a prestigious education alongside a unique cultural immersion. From bustling Riyadh to historic Jeddah, explore ancient wonders, connect with a vibrant international student community, and unlock the secrets of Arabic not just by reading, but by living it. This is your chance to boost your employability, unveil a rich history, and embrace the captivating culture of Saudi Arabia - all while mastering a language in demand worldwide.`;
   const wordsLimit = 50;
   const truncatedText = aboutText.split(" ").slice(0, wordsLimit).join(" ");
 
@@ -62,14 +63,17 @@ export default function CityDetails() {
           </AUIThemedView>
 
           <AUIThemedView style={styles.infoContainer}>
-            <AUIThemedText style={styles.name}>Why study in UK</AUIThemedText>
+            <AUIThemedText style={styles.name}>
+              Why study in South Africa
+            </AUIThemedText>
             <AUIThemedView style={styles.headingContainer}>
               <AUIThemedView style={styles.headingImageContainer}>
                 <AUIImage
                   path={
-                    Asset.fromModule(
-                      require("@/assets/images/studentHomePage/cityDetailsPage/fi_5111640.png")
-                    ).uri
+                    // Asset.fromModule(
+                    //   require("@/assets/images/studentHomePage/cityDetailsPage/fi_5111640.png")
+                    // ).uri
+                    "https://cdn.britannica.com/27/4227-050-00DBD10A/Flag-South-Africa.jpg"
                   }
                   style={styles.headingImage}
                   resizeMode="cover"
@@ -99,7 +103,7 @@ export default function CityDetails() {
                 <AUIThemedView style={styles.iconTextContainer}>
                   <AUIThemedText style={styles.iconText}>Capital</AUIThemedText>
                   <AUIThemedText style={styles.iconSubText}>
-                    London
+                    Cape Town
                   </AUIThemedText>
                 </AUIThemedView>
               </View>
@@ -145,15 +149,20 @@ export default function CityDetails() {
             </AUIThemedView>
 
             <AUIThemedView style={styles.aboutContainer}>
-              <AUIThemedText style={styles.aboutTitle}>About UK</AUIThemedText>
+              <AUIThemedText style={styles.aboutTitle}>
+                About South Africa
+              </AUIThemedText>
               <AUIThemedText style={styles.aboutDescription}>
                 {readMore ? aboutText : `${truncatedText} `}
                 {aboutText.split(" ").length > wordsLimit && (
-                  <TouchableOpacity onPress={() => setReadMore(!readMore)}>
+                  <Pressable
+                    onPress={() => setReadMore(!readMore)}
+                    // style={{ paddingTop: 30 }}
+                  >
                     <AUIThemedText style={styles.readMoreText}>
                       {readMore ? "read less" : "read more..."}
                     </AUIThemedText>
-                  </TouchableOpacity>
+                  </Pressable>
                 )}
               </AUIThemedText>
             </AUIThemedView>
@@ -172,7 +181,7 @@ export default function CityDetails() {
             <SectionTitle viewAll="#">
               {GLOBAL_TEXT.popular_schools}
             </SectionTitle>
-            <SchoolList data={schoolsResponse.docs} dummyData={schoolsData}/>
+            <SchoolList data={schoolsResponse.docs} dummyData={schoolsData} />
           </AUIThemedView>
         </AUIThemedView>
       </ScrollView>
@@ -248,6 +257,7 @@ const styles = StyleSheet.create({
   },
   iconTextContainer: {
     marginBottom: 5,
+    // width: 80,
     backgroundColor: "#D3FFE7",
   },
   iconText: {
@@ -277,7 +287,8 @@ const styles = StyleSheet.create({
     color: "green",
     fontSize: 14,
     textDecorationLine: "underline",
-    lineHeight: 25,
+    lineHeight: 7,
+    paddingTop: 10,
   },
   photoGalleryContainer: {
     backgroundColor: APP_THEME.background,

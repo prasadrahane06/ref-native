@@ -26,7 +26,7 @@ export const destinationData = [
   //   favorite: true,
   // },
   {
-    id: "e3c7d5a8-8c5e-42d9-a1d1-4f2b3e7e5c6a",
+    id: "e3c7d5a8-8c5e-42d9-a1d1-4f2b3e7e5c6ajk",
     country: "USA",
     image: Asset.fromModule(
       require("@/assets/images/studentHomePage/popularPlaces/usa.png")

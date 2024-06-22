@@ -43,3 +43,11 @@ export const getUserDeviceData = async () => {
     // error reading value
   }
 };
+export const removeUserData = async () => {
+  try {
+    const jsonValue = await AsyncStorage.removeItem("@user-data");
+    return jsonValue != null ? JSON.parse(jsonValue) : null;
+  } catch (e) {
+    // error reading value
+  }
+};

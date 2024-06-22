@@ -62,6 +62,7 @@ const TabTwoScreen: React.FC = () => {
   const renderSchoolItem: ListRenderItem<SchoolData> = ({ item }) => (
     <AUIThemedView style={styles.schoolItem}>
       <School
+        id={item.id}
         title={item.name}
         caption={item.caption}
         image={item.image}
@@ -88,7 +89,10 @@ const TabTwoScreen: React.FC = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <AUIThemedView style={styles.coursesContainer}>
-        <SectionTitle onViewAllClick={handleViewAllCoursesClick}>
+        <SectionTitle
+          onViewAllClick={handleViewAllCoursesClick}
+          style={{ paddingHorizontal: 5 }}
+        >
           {GLOBAL_TEXT.My_Favorite_Courses}
         </SectionTitle>
         <FlatList
@@ -106,7 +110,7 @@ const TabTwoScreen: React.FC = () => {
       <AUIThemedView style={styles.schoolContainer}>
         <SectionTitle
           onViewAllClick={handleViewAllSchoolsClick}
-          style={{ paddingBottom: 10 }}
+          style={{ paddingBottom: 10, paddingHorizontal: 5 }}
         >
           {GLOBAL_TEXT.My_Favorite_Schools}
         </SectionTitle>
@@ -123,7 +127,10 @@ const TabTwoScreen: React.FC = () => {
       </AUIThemedView>
 
       <AUIThemedView style={styles.destinationContainer}>
-        <SectionTitle onViewAllClick={handleViewAllCountrySchoolsClick}>
+        <SectionTitle
+          onViewAllClick={handleViewAllCountrySchoolsClick}
+          style={{ paddingHorizontal: 5 }}
+        >
           {GLOBAL_TEXT.My_Favorite_Cities}
         </SectionTitle>
         <FlatList
@@ -168,16 +175,18 @@ const styles = StyleSheet.create({
   },
   schoolItem: {
     justifyContent: "center",
+    alignItems: "center",
     marginBottom: 10,
-    width: "50%",
-    marginHorizontal: 7,
+    width: "55%",
+    // marginHorizontal: 7,
     backgroundColor: APP_THEME.background,
   },
   destinationItem: {
     justifyContent: "center",
+    alignItems: "center",
     marginBottom: 10,
-    width: "50%",
-    marginHorizontal: 7,
+    width: "55%",
+    marginLeft: 7,
     backgroundColor: APP_THEME.background,
   },
   courseColumnWrapper: {

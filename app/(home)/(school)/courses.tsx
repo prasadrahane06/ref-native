@@ -1,18 +1,44 @@
 import { StyleSheet } from "react-native";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
+import SectionTitle from "@/components/home/common/SectionTitle";
+import { GLOBAL_TEXT } from "@/constants/Properties";
+import CourseList from "@/components/home/common/CourseList";
+import { coursesData } from "@/constants/dummy data/coursesData";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function TabThreeScreen() {
   return (
-    <AUIThemedView
-      style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-    >
-      <AUIThemedText>compare</AUIThemedText>
+    <AUIThemedView style={styles.root}>
+      <ScrollView>
+        <AUIThemedView style={styles.section}>
+          <SectionTitle viewAll="#" style={{ paddingBottom: 10 }}>
+            {GLOBAL_TEXT.recent_courses}
+          </SectionTitle>
+          <CourseList data={coursesData} />
+        </AUIThemedView>
+        <AUIThemedView style={styles.section}>
+          <SectionTitle viewAll="#" style={{ paddingBottom: 10 }}>
+            {GLOBAL_TEXT.ongoing_courses}
+          </SectionTitle>
+          <CourseList data={coursesData} />
+        </AUIThemedView>
+        <AUIThemedView style={styles.section}>
+          <SectionTitle viewAll="#" style={{ paddingBottom: 10 }}>
+            {GLOBAL_TEXT.upcoming_courses}
+          </SectionTitle>
+          <CourseList data={coursesData} />
+        </AUIThemedView>
+      </ScrollView>
     </AUIThemedView>
   );
 }
 
 const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: "#ffffff",
+  },
   headerImage: {
     color: "#808080",
     bottom: -90,
@@ -23,4 +49,5 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 8,
   },
+  section: {},
 });

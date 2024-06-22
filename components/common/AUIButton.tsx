@@ -18,6 +18,7 @@ interface ButtonProps extends TouchableOpacityProps {
   selected?: boolean;
   disabled?: boolean;
   icon?: any;
+  regularText?: boolean;
 }
 /**
  *AUIPrimaryButton is a custom button component that displays a title and an icon.
@@ -35,6 +36,7 @@ const AUIButton: React.FC<ButtonProps> = ({
   style,
   icon,
   disabled,
+  regularText,
 }) => {
   return (
     <Pressable
@@ -42,7 +44,12 @@ const AUIButton: React.FC<ButtonProps> = ({
       onPress={disabled ? () => null : onPress}
     >
       {selected ? (
-        <HighlightedBtn disabled={disabled} title={title} icon={icon} />
+        <HighlightedBtn
+          disabled={disabled}
+          title={title}
+          icon={icon}
+          regularText={regularText}
+        />
       ) : (
         <DefaultBtn disabled={disabled} title={title} icon={icon} />
       )}
@@ -50,7 +57,7 @@ const AUIButton: React.FC<ButtonProps> = ({
   );
 };
 
-const HighlightedBtn = ({ disabled, title, icon }: any) => (
+const HighlightedBtn = ({ disabled, title, icon, regularText }: any) => (
   <AUILinearGradient
     style={buttonStyle.buttonInner}
     colors={
@@ -59,7 +66,11 @@ const HighlightedBtn = ({ disabled, title, icon }: any) => (
         : [APP_THEME.primary.first, APP_THEME.primary.first]
     }
   >
-    <Text style={buttonStyle.buttonText}>{title}</Text>
+    <Text
+      style={[buttonStyle.buttonText, regularText && buttonStyle.regularText]}
+    >
+      {title}
+    </Text>
     {icon && <AntDesign name={icon} size={24} color="#ffffff" />}
   </AUILinearGradient>
 );
