@@ -160,6 +160,22 @@ const InitialLayout = () => {
         }}
       />
       <Stack.Screen
+        name="(home)/compare/searchSchool"
+        options={{
+          headerShown: true,
+          title: "search_school",
+          headerTitle: "Add to compare (select school)",
+        }}
+      />
+      <Stack.Screen
+        name="(home)/compare/compareSchools"
+        options={{
+          headerShown: true,
+          title: "compare school",
+          headerTitle: "Compare Schools",
+        }}
+      />
+      <Stack.Screen
         name="(home)/school/AllSchoolsScreen"
         options={{
           headerShown: true,

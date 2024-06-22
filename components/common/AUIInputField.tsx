@@ -15,6 +15,7 @@ import { inputFieldStyle } from "@/constants/Styles";
 interface CustomInputProps extends TextInputProps {
   label?: string;
   error?: string;
+  inputStyle?: object;
 }
 
 const AUIInputField: React.FC<CustomInputProps> = ({
@@ -24,6 +25,7 @@ const AUIInputField: React.FC<CustomInputProps> = ({
   onChangeText,
   error,
   style,
+  inputStyle,
   ...props
 }) => {
   return (
@@ -34,6 +36,7 @@ const AUIInputField: React.FC<CustomInputProps> = ({
           inputFieldStyle.input,
           // @ts-ignore
           error && { borderWidth: 1, borderColor: "red" },
+          inputStyle,
         ]}
         placeholder={placeholder}
         placeholderTextColor={"gray"}
