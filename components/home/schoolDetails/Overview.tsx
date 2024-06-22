@@ -16,7 +16,6 @@ import { accommodationData } from "@/constants/dummy data/accommodationData";
 import { countriesData } from "@/constants/dummy data/countriesData";
 import { eventsData } from "@/constants/dummy data/eventsData";
 import { facilitiesData } from "@/constants/dummy data/facilitiesData";
-import { lessCountryData } from "@/constants/dummy data/lessCountryData";
 import { nationalityData } from "@/constants/dummy data/nationalityData";
 import { reviewsData } from "@/constants/dummy data/reviewsData";
 import { addEnquiry } from "@/redux/enquiryformSlice";
@@ -274,9 +273,8 @@ export default function OverviewTab({ schoolId }: { schoolId: string }) {
               render={({ field: { onChange, value } }) => (
                 <DropdownComponent
                   style={enquiryFormStyles.phoneCode}
-                  // list={countriesData}
                   // @ts-ignore
-                  list={lessCountryData}
+                  list={countriesData}
                   // @ts-ignore
                   value={value}
                   setValue={({ dialling_code }: { dialling_code: string }) =>
@@ -315,6 +313,132 @@ export default function OverviewTab({ schoolId }: { schoolId: string }) {
                       {error.message}
                     </AUIThemedText>
                   )}
+                  <AUIThemedView style={enquiryFormStyles.dateContainer}>
+                    <AUIThemedText style={inputFieldStyle.label}>
+                      From
+                    </AUIThemedText>
+                    <Controller
+                      name="startDate"
+                      control={control}
+                      render={({
+                        field: { value, onChange },
+                        fieldState: { error },
+                      }) => (
+                        <AUIThemedView
+                          style={{
+                            flex: 1,
+                            flexDirection: "row",
+                            alignItems: "center",
+                            borderWidth: 2,
+                            borderColor: "#ccc",
+                            borderRadius: 6,
+                          }}
+                        >
+                          <Pressable
+                            onPress={() => setShowStartDatePicker(true)}
+                            style={{
+                              flex: 1,
+                              flexDirection: "row",
+                              alignItems: "center",
+                              paddingHorizontal: 10,
+                            }}
+                          >
+                            {showStartDatePicker && (
+                              <DateTimePicker
+                                value={startDate}
+                                mode="date"
+                                display="default"
+                                onChange={onChangeStartDate}
+                                minimumDate={new Date()}
+                              />
+                            )}
+                            <TextInput
+                              style={{
+                                flex: 1,
+                                paddingVertical: 10,
+                                color: "#000",
+                              }}
+                              value={formatDate(value)}
+                              editable={false}
+                              onChangeText={onChange}
+                            />
+                            <Ionicons
+                              name="calendar-clear"
+                              size={20}
+                              color={APP_THEME.primary.first}
+                            />
+                          </Pressable>
+                          {error && (
+                            <AUIThemedText style={enquiryFormStyles.fieldError}>
+                              {error.message}
+                            </AUIThemedText>
+                          )}
+                        </AUIThemedView>
+                      )}
+                    />
+                    <AUIThemedText style={inputFieldStyle.label}>
+                      To
+                    </AUIThemedText>
+                    <Controller
+                      name="endDate"
+                      control={control}
+                      render={({
+                        field: { value, onChange },
+                        fieldState: { error },
+                      }) => (
+                        <AUIThemedView
+                          style={{
+                            flex: 1,
+                            flexDirection: "row",
+                            alignItems: "center",
+                            borderWidth: 2,
+                            borderColor: "#ccc",
+                            borderRadius: 6,
+                          }}
+                        >
+                          <Pressable
+                            onPress={() => setShowEndDatePicker(true)}
+                            style={{
+                              flex: 1,
+                              flexDirection: "row",
+                              alignItems: "center",
+                              paddingHorizontal: 10,
+                            }}
+                          >
+                            <TextInput
+                              style={{
+                                flex: 1,
+                                paddingVertical: 10,
+                                color: "#000",
+                              }}
+                              value={formatDate(value)}
+                              editable={false}
+                              onChangeText={onChange}
+                            />
+                            <Ionicons
+                              name="calendar-clear"
+                              size={20}
+                              color={APP_THEME.primary.first}
+                            />
+                          </Pressable>
+                          {error && (
+                            <AUIThemedText style={enquiryFormStyles.fieldError}>
+                              {error.message}
+                            </AUIThemedText>
+                          )}
+                          {showEndDatePicker && (
+                            <DateTimePicker
+                              value={endDate}
+                              mode="date"
+                              display="default"
+                              onChange={onChangeEndDate}
+                              minimumDate={new Date()}
+                            />
+                          )}
+                        </AUIThemedView>
+                      )}
+                    />
+                  </AUIThemedView>
                 </AUIThemedView>
               )}
             />
@@ -355,7 +479,7 @@ export default function OverviewTab({ schoolId }: { schoolId: string }) {
               </AUIThemedText>
               {/* @ts-ignore */}
               <DropdownComponent
-                list={lessCountryData.map((country) => ({
+                list={countriesData.map((country) => ({
                   label: country.language.name,
                   value: country.language.name,
                 }))}

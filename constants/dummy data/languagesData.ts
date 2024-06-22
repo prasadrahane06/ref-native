@@ -704,6 +704,17 @@ export const languagesData = [
         uniqueId: "côte_d'ivoire_695980",
     },
     {
+        name: "Iran (Islamic Republic of)",
+        code: "IR",
+        language: {
+            code: "fa",
+            name: "Persian (Farsi)",
+        },
+        dialling_code: "+98",
+        isoCode: "364",
+        uniqueId: "iran_(islamic_republic_of)_229980",
+    },
+    {
         name: "Ireland",
         code: "IE",
         language: {

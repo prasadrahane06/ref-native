@@ -21,7 +21,6 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { countriesData } from "@/constants/dummy data/countriesData";
 import { setLoader } from "@/redux/globalSlice";
 import { getUserDeviceData, storeUserData } from "@/constants/RNAsyncStore";
-import { lessCountryData } from "@/constants/dummy data/lessCountryData";
 const schema = Yup.object().shape({
   input: Yup.string().when("selectedButton", {
     is: "mobile",
@@ -72,14 +71,8 @@ const LoginPage = () => {
   const selectedButton = watch("selectedButton");
   const inputValue = watch("input");
   const phoneCode = watch("phoneCode");
-  // useEffect(() => {
-  //   countriesData.map((x: any) => {
-  //     x.iconUri = `https://flagcdn.com/w320/${x.code.toLowerCase()}.png`;
-  //     return x;
-  //   });
-  // }, []);
   useEffect(() => {
-    lessCountryData.map((x: any) => {
+    countriesData.map((x: any) => {
       x.iconUri = `https://flagcdn.com/w320/${x.code.toLowerCase()}.png`;
       return x;
     });
@@ -413,9 +406,8 @@ const ContactNumberField = ({ label, control }: any) => (
           return (
             <DropdownComponent
               style={{ flex: 0.8 }}
-              // list={countriesData}
               // @ts-ignore
-              list={lessCountryData}
+              list={countriesData}
               // @ts-ignore
               value={value}
               setValue={({ dialling_code }: { dialling_code: string }) =>

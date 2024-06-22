@@ -25,7 +25,6 @@ import {
   ApiSuccessToast,
   FormValidateToast,
 } from "@/components/common/AUIToast";
-import { lessCountryData } from "@/constants/dummy data/lessCountryData";
 const SignupPage = () => {
   const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
   const router = useRouter();
@@ -232,9 +231,8 @@ const ContactNumberField = ({
     >
       <DropdownComponent
         style={{ flex: 1 }}
-        // list={countriesData}
         // @ts-ignore
-        list={lessCountryData}
+        list={countriesData}
         // @ts-ignore
         value={dropdownValue}
         setValue={handleDropdownChange}

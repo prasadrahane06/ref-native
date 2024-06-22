@@ -24,7 +24,6 @@ import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import PagerView from "react-native-pager-view";
 import { useDispatch, useSelector } from "react-redux";
-import { lessLanguagesData } from "@/constants/dummy data/lessLanguagesData";
 
 export default function HomeScreen() {
   const dispatch = useDispatch();
@@ -95,7 +94,7 @@ export default function HomeScreen() {
       <AUIThemedView>
         <SectionTitle>{GLOBAL_TEXT.choose_your_language}</SectionTitle>
         <LanguageList
-          data={lessLanguagesData}
+          data={languagesData}
           selectedLanguage={selectedLanguage}
           setSelectedLanguage={setSelectedLanguage}
         />
