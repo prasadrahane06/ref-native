@@ -17,7 +17,7 @@ import Animated, {
     interpolate,
     useAnimatedRef,
     useAnimatedStyle,
-    useScrollViewOffset
+    useScrollViewOffset,
 } from "react-native-reanimated";
 
 function StudentDetailsTabs({ schoolId }: { schoolId: string }) {
@@ -33,25 +33,18 @@ function StudentDetailsTabs({ schoolId }: { schoolId: string }) {
                 <Pressable
                     onPress={() => handleTabClick("overview")}
                     style={[
+                        tabStyles.tab,
                         selectedTab === "overview"
                             ? tabStyles.activeTab
                             : tabStyles.inactiveTab,
-                        {
-                            borderTopLeftRadius: 7,
-                            borderBottomLeftRadius: 7,
-                            flex: 1,
-                        },
                     ]}
                 >
                     <AUIThemedText
                         style={[
                             tabStyles.tabLabel,
-                            {
-                                color:
-                                    selectedTab === "overview"
-                                        ? "#fff"
-                                        : "#000",
-                            },
+                            selectedTab === "overview"
+                                ? tabStyles.activeTabLabel
+                                : tabStyles.inactiveTabLabel,
                         ]}
                     >
                         {GLOBAL_TEXT.overview}
@@ -61,23 +54,18 @@ function StudentDetailsTabs({ schoolId }: { schoolId: string }) {
                 <Pressable
                     onPress={() => handleTabClick("courses")}
                     style={[
+                        tabStyles.tab,
                         selectedTab === "courses"
                             ? tabStyles.activeTab
                             : tabStyles.inactiveTab,
-                        {
-                            borderTopRightRadius: 7,
-                            borderBottomRightRadius: 7,
-                            flex: 1,
-                        },
                     ]}
                 >
                     <AUIThemedText
                         style={[
                             tabStyles.tabLabel,
-                            {
-                                color:
-                                    selectedTab === "courses" ? "#fff" : "#000",
-                            },
+                            selectedTab === "courses"
+                                ? tabStyles.activeTabLabel
+                                : tabStyles.inactiveTabLabel,
                         ]}
                     >
                         {GLOBAL_TEXT.courses}
@@ -298,24 +286,37 @@ const tabStyles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        marginHorizontal: 12,
+        borderBottomColor: APP_THEME.primary.first,
+        borderBottomWidth: 1,
     },
-    tabLabel: { fontSize: 17, fontWeight: "500", paddingHorizontal: 25 },
-    activeTab: {
+    tab: {
+        flex: 1,
         justifyContent: "center",
         alignItems: "center",
         paddingVertical: 8,
-        backgroundColor: "#0A152F",
-        borderWidth: 1,
-        borderColor: "#0A152F",
+    },
+    activeTab: {
+        borderTopLeftRadius: 7,
+        borderBottomWidth: 2,
+        borderBottomColor: APP_THEME.primary.first,
+        backgroundColor: "#D3FFE7",
     },
     inactiveTab: {
-        justifyContent: "center",
-        alignItems: "center",
-        paddingVertical: 8,
+        borderTopRightRadius: 7,
+        borderBottomWidth: 0,
+        borderBottomColor: "#000",
         backgroundColor: "#fff",
-        borderWidth: 1,
-        borderColor: "#0A152F",
+    },
+    tabLabel: {
+        fontSize: 17,
+        fontWeight: "500",
+        paddingHorizontal: 25,
+    },
+    activeTabLabel: {
+        color: "#000",
+    },
+    inactiveTabLabel: {
+        color: "#ccc",
     },
 });
 

@@ -345,9 +345,6 @@ export function TabLayout() {
                     ),
                 }}
             />
-          ),
-        }}
-      />
     </Tabs>
   );
 }
