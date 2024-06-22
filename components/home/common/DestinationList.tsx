@@ -4,28 +4,27 @@ import React from "react";
 import { FlatList, StyleSheet } from "react-native";
 
 interface DestinationListProps {
-    data: any[];
+  data: any[];
 }
 
 const DestinationList: React.FC<DestinationListProps> = ({ data }) => {
-    return (
-        <AUIThemedView style={styles.container}>
-            <FlatList
-                horizontal
-                data={data}
-                renderItem={({ item }) => (
-                    <Destination title={item.country} image={item.image} />
-                )}
-                keyExtractor={(item) => item.id}
-            />
-        </AUIThemedView>
-    );
+  return (
+    <FlatList
+      horizontal
+      data={data}
+      renderItem={({ item }) => (
+        <Destination title={item.country} image={item.image} />
+      )}
+      keyExtractor={(item) => item.id}
+      contentContainerStyle={styles.container}
+    />
+  );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        paddingLeft: 14,
-    },
+  container: {
+    paddingHorizontal: 10,
+  },
 });
 
 export default DestinationList;

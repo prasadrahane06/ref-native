@@ -74,6 +74,14 @@ export const destinationData = [
     favorite: true,
   },
   {
+    id: "e3c7d5a8-8c5e-42d9-a1d1-4f2b3e7e5c6a",
+    country: "USA",
+    image: Asset.fromModule(
+      require("@/assets/images/studentHomePage/popularPlaces/statue-liberty.png")
+    ).uri,
+    favorite: true,
+  },
+  {
     id: "c1a2e3b7-5d6f-4c8e-9b5a-3f4d2d7c6b1e",
     country: "China",
     image: Asset.fromModule(

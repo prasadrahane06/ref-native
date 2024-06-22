@@ -54,7 +54,7 @@ const TabTwoScreen: React.FC = () => {
         title={item.title}
         image={item.image}
         favorite={item.favorite}
-        startingDate={item.startingDate}
+        // startingDate={item.startingDate}
       />
     </AUIThemedView>
   );

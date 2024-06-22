@@ -1,25 +1,26 @@
-import { AUIThemedText } from "@/components/common/AUIThemedText";
-import { AUIThemedView } from "@/components/common/AUIThemedView";
-import SchoolList from "@/components/home/common/SchoolList";
-import SectionTitle from "@/components/home/common/SectionTitle";
-import { APP_THEME } from "@/constants/Colors";
-import { GLOBAL_TEXT } from "@/constants/Properties";
-import { schoolsData } from "@/constants/dummy data/schoolsData";
-import { useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
 import {
-  ScrollView,
   StyleSheet,
+  Image,
+  ScrollView,
+  View,
   TouchableOpacity,
-  View
 } from "react-native";
+import { useLocalSearchParams } from "expo-router";
+import { AUIThemedView } from "@/components/common/AUIThemedView";
+import { AUIThemedText } from "@/components/common/AUIThemedText";
+import { APP_THEME } from "@/constants/Colors";
+import SectionTitle from "@/components/home/common/SectionTitle";
+import { GLOBAL_TEXT } from "@/constants/Properties";
+import { schoolsData } from "@/constants/dummy data/schoolsData";
+import SchoolList from "@/components/home/common/SchoolList";
 // import PhotoGallaryList from "@/components/home/common/PhotoGallaryList";
 // import { PhotoGallaryData } from "@/constants/dummy data/PhotoGallaryData";
 import AUIImage from "@/components/common/AUIImage";
-import PhotoGallaryList from "@/components/home/common/PhotoGallaryList";
-import { PhotoGallaryData } from "@/constants/dummy data/PhotoGallaryData";
-import { MaterialIcons } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
+import { MaterialIcons } from "@expo/vector-icons";
+import { PhotoGallaryData } from "@/constants/dummy data/PhotoGallaryData";
+import PhotoGallaryList from "@/components/home/common/PhotoGallaryList";
 
 export default function CityDetails() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -162,7 +163,7 @@ export default function CityDetails() {
           </AUIThemedView>
 
           <AUIThemedView style={styles.popularSchoolsContainer}>
-            <SectionTitle viewAll="#" style={{paddingVertical: 10}}>
+            <SectionTitle viewAll="#">
               {GLOBAL_TEXT.popular_schools}
             </SectionTitle>
             <SchoolList data={schoolsData} dummyData={schoolsData}/>
@@ -283,7 +284,7 @@ const styles = StyleSheet.create({
     paddingLeft: 14,
     fontSize: 16,
     fontWeight: "bold",
-    paddingVertical: 5
+    paddingVertical: 5,
   },
   popularSchoolsContainer: {
     backgroundColor: APP_THEME.background,

@@ -11,19 +11,15 @@ interface CourseProps {
   title: string;
   image: any;
   favorite?: boolean;
-  startingDate: string;
+  style?: object;
 }
 
-const Course: React.FC<CourseProps> = ({
-  title,
-  image,
-  favorite,
-  startingDate,
-}) => {
+const Course: React.FC<CourseProps> = ({ title, image, favorite, style }) => {
   const router = useRouter();
 
   return (
     <TouchableOpacity
+      style={[styles.courseContainer, style]}
       onPress={() =>
         router.push({
           pathname: `(home)/courseDetails/1`,
@@ -38,7 +34,7 @@ const Course: React.FC<CourseProps> = ({
             <AUIThemedText style={styles.courseCaption}>
               Starting from:{" "}
             </AUIThemedText>
-            {startingDate}
+            20-04-2024
           </AUIThemedText>
         </AUIThemedView>
         {favorite && (
@@ -57,8 +53,11 @@ const Course: React.FC<CourseProps> = ({
 };
 
 const styles = StyleSheet.create({
+  courseContainer: {},
   courseItemContainer: {
     paddingLeft: 10,
+    width: "100%",
+    height: 50,
     paddingVertical: 4,
     borderBottomWidth: 1,
     borderLeftWidth: 1,
@@ -71,7 +70,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 8,
     borderTopLeftRadius: 8,
     width: "100%",
-    height: 80,
+    height: 70,
   },
   courseTitle: {
     fontSize: 13,

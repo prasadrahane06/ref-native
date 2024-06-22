@@ -1,22 +1,22 @@
-import { get } from "@/app/services/axiosClient";
-import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { API_URL } from "@/constants/urlProperties";
-import useApiRequest from "@/customHooks/useApiRequest";
-import { RootState } from "@/redux/store";
 import React, { useEffect } from "react";
-import { StyleSheet } from "react-native";
-import { useSelector } from "react-redux";
+import { AUIThemedView } from "@/components/common/AUIThemedView";
+import { FlatList, StyleSheet } from "react-native";
+import { FavoriteSchoolData } from "@/constants/dummy data/FavoriteSchoolData";
+import School from "@/components/School";
+import { schoolsData } from "@/constants/dummy data/schoolsData";
+import { API_URL } from "@/constants/urlProperties";
 import AllSchoolsList from "../list/AllSchoolsList";
+import useApiRequest from "@/customHooks/useApiRequest";
+import { get } from "@/app/services/axiosClient";
 
-const AllSchoolsScreen = () => {
+interface SchoolListProps {
+  data: any[];
+}
+const AllSchoolsScreen: React.FC<SchoolListProps> = ({ data }) => {
   const { requestFn } = useApiRequest();
-  const schoolsResponse = useSelector(
-    (state: RootState) => state.api.popularSchools || {}
-  );
-  const schoolsData = schoolsResponse.docs || [];
 
   useEffect(() => {
-    requestFn(get(API_URL.popularSchool , {limit : 6}), "popularSchools");
+    requestFn(get(API_URL.popularSchool, { limit: 6 }), "popularSchools");
   }, [requestFn]);
 
   return (
@@ -43,5 +43,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    padding: 10,
+  },
+  column: {
+    justifyContent: "space-between",
+    marginBottom: 10,
   },
 });

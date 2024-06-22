@@ -38,7 +38,7 @@ export const FavoriteSchoolData = [
     favorite: true,
   },
   {
-    id: "1dawdada",
+    id: "5",
     name: "The Manchester School",
     caption: "250+ Cources",
     image: Asset.fromModule(
@@ -47,7 +47,7 @@ export const FavoriteSchoolData = [
     favorite: true,
   },
   {
-    id: "2dasdasdsad",
+    id: "6",
     name: "Henley Business School",
     caption: "250+ Cources",
     image: Asset.fromModule(
@@ -56,7 +56,7 @@ export const FavoriteSchoolData = [
     favorite: true,
   },
   {
-    id: "dawdad3",
+    id: "7",
     name: "The Manchester School",
     caption: "250+ Cources",
     image: Asset.fromModule(
@@ -65,7 +65,7 @@ export const FavoriteSchoolData = [
     favorite: true,
   },
   {
-    id: "4dawdawda",
+    id: "8",
     name: "Henley Business School",
     caption: "250+ Cources",
     image: Asset.fromModule(

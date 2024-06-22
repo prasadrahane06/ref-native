@@ -6,7 +6,7 @@ import { FlatList, ListRenderItem, StyleSheet, View } from "react-native";
 interface SchoolData {
   id: string;
   name: string;
-  image: any;
+  image: string;
   caption?: string;
   favorite?: boolean;
 }
@@ -27,7 +27,7 @@ const AllSchoolsList: React.FC<SchoolListProps> = ({
       <School
         title={item.name}
         caption={item.caption}
-        image={item.image}
+        image={{ uri: item.image }}
         favorite={item.favorite}
         schoolWidth={schoolWidth}
         schoolHeight={schoolHeight}

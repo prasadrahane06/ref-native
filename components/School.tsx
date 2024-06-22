@@ -78,7 +78,7 @@ const School: React.FC<SchoolProps> = ({
 };
 
 const styles = StyleSheet.create({
-  schoolContainer: { marginRight: 18 },
+  schoolContainer: { marginRight: 10 },
   schoolItem: {
     borderRadius: 10,
     overflow: "hidden",
