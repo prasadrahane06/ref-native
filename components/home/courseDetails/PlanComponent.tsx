@@ -23,6 +23,7 @@ import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
   Modal,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -60,7 +61,14 @@ function EnquireNowModal({
 }: EnquireNowModalProps) {
   return (
     <Modal animationType="slide" transparent={true} visible={isVisible}>
-      <AUIThemedView style={enquireNowStyles.modalContent}>
+      <AUIThemedView
+        // style={[enquireNowStyles.andoridModalContent, { Platform }]}
+        style={
+          Platform.OS === "ios"
+            ? enquireNowStyles.iosModalContent
+            : enquireNowStyles.andoridModalContent
+        }
+      >
         <AUIThemedView style={enquireNowStyles.titleContainer}>
           <AUIThemedText style={enquireNowStyles.title}>
             {GLOBAL_TEXT.enquire_now}
@@ -641,8 +649,17 @@ const enquiryFormStyles = StyleSheet.create({
 });
 
 const enquireNowStyles = StyleSheet.create({
-  modalContent: {
+  andoridModalContent: {
     height: "100%",
+    width: "100%",
+    backgroundColor: "#fff",
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
+  },
+  iosModalContent: {
+    position: "absolute",
+    bottom: 0,
+    height: "80%",
     width: "100%",
     backgroundColor: "#fff",
     borderTopRightRadius: 20,

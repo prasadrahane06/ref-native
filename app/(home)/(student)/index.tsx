@@ -28,11 +28,12 @@ import { useDispatch, useSelector } from "react-redux";
 export default function HomeScreen() {
   const dispatch = useDispatch();
   const [selectedPage, setSelectedPage] = useState(0);
-  const navigation = useNavigation();
-  const displayedCourses = coursesData.slice(0, 4);
   const [selectedLanguage, setSelectedLanguage] = useState(
     languagesData[0].code
   );
+  const navigation = useNavigation();
+  const displayedCourses = coursesData.slice(0, 4);
+
   const { requestFn } = useApiRequest();
   const schoolsResponse = useSelector(
     (state: RootState) => state.api.school || {}

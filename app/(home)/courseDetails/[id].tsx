@@ -1,6 +1,7 @@
 import AUIImage from "@/components/common/AUIImage";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
+import { ApiSuccessToast } from "@/components/common/AUIToast";
 import PlanComponent from "@/components/home/courseDetails/PlanComponent";
 import { APP_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
@@ -8,17 +9,19 @@ import { planOne } from "@/constants/dummy data/planOne";
 import { planThree } from "@/constants/dummy data/planThree";
 import { planTwo } from "@/constants/dummy data/planTwo";
 import { similarCoursesData } from "@/constants/dummy data/similarCoursesData";
+import { addItemToCart } from "@/redux/cartSlice";
 import { Ionicons } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useLayoutEffect, useState } from "react";
-import { Pressable, StyleSheet } from "react-native";
+import { Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import Animated, {
     interpolate,
     useAnimatedRef,
     useAnimatedStyle,
     useScrollViewOffset,
 } from "react-native-reanimated";
+import { useDispatch } from "react-redux";
 
 function CoursePlanTabs({ courseId }: { courseId: string }) {
     const [selectedPlan, setSelectedPlan] = useState(GLOBAL_TEXT.plan_one);
@@ -133,6 +136,7 @@ function CoursePlanTabs({ courseId }: { courseId: string }) {
 }
 
 export default function CourseDetails() {
+    const dispatch = useDispatch();
     const { id } = useLocalSearchParams<{ id: string }>();
     console.log(id);
 
@@ -239,6 +243,22 @@ export default function CourseDetails() {
         });
     }, []);
 
+    const handleAddToCart = () => {
+        // Replace with actual course details
+        const courseDetails = {
+            courseId: Math.random().toString(36).substring(7),
+            title: "Exam preparation course",
+            startingDate: "20-06-2024",
+            image: Asset.fromModule(
+                require("@/assets/images/studentHomePage/popularSchools/school-1.png")
+            ).uri,
+        };
+        // @ts-ignore
+        dispatch(addItemToCart(courseDetails));
+        console.log("Item added to cart");
+        ApiSuccessToast("✅ Added to cart");
+    };
+
     return (
         <AUIThemedView>
             <Animated.ScrollView ref={scrollRef} scrollEventThrottle={16}>
@@ -274,18 +294,19 @@ export default function CourseDetails() {
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
-
-                            <AUIThemedView style={styles.cartIconContainer}>
-                                <AUIImage
-                                    path={
-                                        Asset.fromModule(
-                                            require("@/assets/icons/cart.png")
-                                        ).uri
-                                    }
-                                    icon
-                                    style={{ width: 20, height: 20 }}
-                                />
-                            </AUIThemedView>
+                            <TouchableOpacity onPress={handleAddToCart}>
+                                <AUIThemedView style={styles.cartIconContainer}>
+                                    <AUIImage
+                                        path={
+                                            Asset.fromModule(
+                                                require("@/assets/icons/cart.png")
+                                            ).uri
+                                        }
+                                        icon
+                                        style={{ width: 20, height: 20 }}
+                                    />
+                                </AUIThemedView>
+                            </TouchableOpacity>
                         </AUIThemedView>
                     </AUIThemedView>
 
@@ -294,6 +315,8 @@ export default function CourseDetails() {
                             {GLOBAL_TEXT.select_your_plan}
                         </AUIThemedText>
 
+                        {/* remove this ignore after API integration */}
+                        {/* @ts-ignore */}
                         <CoursePlanTabs courseId={id} />
                     </AUIThemedView>
                 </AUIThemedView>

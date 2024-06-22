@@ -45,6 +45,8 @@ export const GLOBAL_TEXT = {
   your_selected_plan: "Your selected plan is",
   select_payment_mode: "Select Payment Mode",
   confirm_your_payment: "Confirm your payment",
+  my_added_courses_in_cart: "My added courses in cart",
+  your_cart_is_empty: "Your cart is empty",
 };
 
 export const SIGNUP_FIELDS = {

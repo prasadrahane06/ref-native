@@ -6,16 +6,38 @@ import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { AUIThemedText } from "./common/AUIThemedText";
 import { AUIThemedView } from "./common/AUIThemedView";
 import AUIImage from "./common/AUIImage";
+import { removeCourseFromCart } from "@/redux/cartSlice";
+import { useDispatch } from "react-redux";
+import { ApiSuccessToast } from "./common/AUIToast";
 
 interface CourseProps {
   title: string;
   image: any;
   favorite?: boolean;
+  startingDate: string;
+  cart?: boolean;
+  courseId?: string;
   style?: object;
 }
 
-const Course: React.FC<CourseProps> = ({ title, image, favorite, style }) => {
+const Course: React.FC<CourseProps> = ({
+  title,
+  image,
+  favorite,
+  startingDate,
+  cart,
+  courseId,
+  style,
+}) => {
   const router = useRouter();
+  const dispatch = useDispatch();
+
+  const handleRemoveFromCart = () => {
+    //@ts-ignore
+    dispatch(removeCourseFromCart(courseId));
+    console.log("Item removed from cart");
+    ApiSuccessToast("🗑️ Removed from cart");
+  };
 
   return (
     <TouchableOpacity
@@ -46,6 +68,19 @@ const Course: React.FC<CourseProps> = ({ title, image, favorite, style }) => {
               style={styles.icon}
             />
           </AUIThemedView>
+        )}
+        {cart && (
+          <TouchableOpacity
+            onPress={handleRemoveFromCart}
+            style={styles.cartIconContainer}
+          >
+            <MaterialIcons
+              name="shopping-cart"
+              size={18}
+              color="#fff"
+              style={styles.icon}
+            />
+          </TouchableOpacity>
         )}
       </AUIThemedView>
     </TouchableOpacity>
@@ -85,6 +120,14 @@ const styles = StyleSheet.create({
     top: 10,
     right: 10,
     backgroundColor: "rgba(255, 0, 0, 0.2)",
+    borderRadius: 20,
+    padding: 5,
+  },
+  cartIconContainer: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    backgroundColor: APP_THEME.primary.first,
     borderRadius: 20,
     padding: 5,
   },
