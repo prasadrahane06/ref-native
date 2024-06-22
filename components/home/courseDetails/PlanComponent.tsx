@@ -33,6 +33,7 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import { FacilitiesList } from "../schoolDetails/FacilitiesList";
 import { router } from "expo-router";
+import { lessCountryData } from "@/constants/dummy data/lessCountryData";
 
 interface PlanComponentProps {
   courseId: string;
@@ -254,8 +255,9 @@ export default function PlanComponent({
               render={({ field: { onChange, value } }) => (
                 <DropdownComponent
                   style={enquiryFormStyles.phoneCode}
+                  // list={countriesData}
                   // @ts-ignore
-                  list={countriesData}
+                  list={lessCountryData}
                   // @ts-ignore
                   value={value}
                   setValue={({ dialling_code }: { dialling_code: string }) =>
@@ -334,7 +336,7 @@ export default function PlanComponent({
               </AUIThemedText>
               {/* @ts-ignore */}
               <DropdownComponent
-                list={countriesData.map((country) => ({
+                list={lessCountryData.map((country) => ({
                   label: country.language.name,
                   value: country.language.name,
                 }))}

@@ -1,0 +1,147 @@
+export const lessLanguagesData = [
+    {
+        name: "United States of America",
+        code: "US",
+        language: {
+            code: "en",
+            iso639_2: "eng",
+            name: "English",
+            nativeName: "English",
+        },
+        dialling_code: "+1",
+        isoCode: "840",
+        uniqueId: "united_states_of_america_548352",
+    },
+    {
+        name: "United Kingdom of Great Britain and Northern Ireland",
+        code: "GB",
+        language: {
+            code: "en",
+            name: "English(UK)",
+        },
+        dialling_code: "+44",
+        isoCode: "826",
+        uniqueId: "united_kingdom_of_great_britain_and_northern_ireland_785299",
+    },
+    {
+        name: "Saudi Arabia",
+        code: "SA",
+        language: {
+            code: "ar",
+            name: "Arabic",
+        },
+        dialling_code: "+966",
+        isoCode: "682",
+        uniqueId: "saudi_arabia_944587",
+    },
+    {
+        name: "Iran (Islamic Republic of)",
+        code: "IR",
+        language: {
+            code: "fa",
+            name: "Farsi",
+        },
+        dialling_code: "+98",
+        isoCode: "364",
+        uniqueId: "iran_(islamic_republic_of)_229980",
+    },
+    {
+        name: "Turkey",
+        code: "TR",
+        language: {
+            code: "tr",
+            name: "Turkish",
+        },
+        dialling_code: "+90",
+        isoCode: "792",
+        uniqueId: "turkey_706610",
+    },
+    {
+        name: "Afghanistan",
+        code: "AF",
+        language: {
+            code: "ps",
+            name: "Pashto",
+        },
+        dialling_code: "+93",
+        isoCode: "004",
+        uniqueId: "afghanistan_35779",
+    },
+    {
+        name: "Albania",
+        code: "AL",
+        language: {
+            code: "sq",
+            name: "Albanian",
+        },
+        dialling_code: "+355",
+        isoCode: "008",
+        uniqueId: "albania_339069",
+    },
+    {
+        name: "Andorra",
+        code: "AD",
+        language: {
+            code: "ca",
+            name: "Catalan",
+        },
+        dialling_code: "+376",
+        isoCode: "020",
+        uniqueId: "andorra_235109",
+    },
+    {
+        name: "Angola",
+        code: "AO",
+        language: {
+            code: "pt",
+            name: "Portuguese",
+        },
+        dialling_code: "+244",
+        isoCode: "024",
+        uniqueId: "angola_289902",
+    },
+    {
+        name: "Argentina",
+        code: "AR",
+        language: {
+            code: "es",
+            name: "Spanish",
+        },
+        dialling_code: "+54",
+        isoCode: "032",
+        uniqueId: "argentina_509654",
+    },
+    {
+        name: "Armenia",
+        code: "AM",
+        language: {
+            code: "hy",
+            name: "Armenian",
+        },
+        dialling_code: "+374",
+        isoCode: "051",
+        uniqueId: "armenia_379990",
+    },
+    {
+        name: "Aruba",
+        code: "AW",
+        language: {
+            code: "nl",
+            name: "Dutch",
+        },
+        dialling_code: "+297",
+        isoCode: "533",
+        uniqueId: "aruba_275550",
+    },
+    {
+        name: "Azerbaijan",
+        code: "AZ",
+        language: {
+            code: "az",
+            name: "Azerbaijani",
+        },
+        dialling_code: "+994",
+        isoCode: "031",
+        uniqueId: "azerbaijan_224911",
+    },
+];
