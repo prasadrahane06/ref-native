@@ -53,7 +53,12 @@ export default function TabFourScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 20, flex: 1, backgroundColor: "#ffffff" },
+  container: {
+    padding: 20,
+    flex: 1,
+    backgroundColor: "#ffffff",
+    height: "100%",
+  },
   title: {
     fontSize: 20,
     fontWeight: "bold",
@@ -61,7 +66,10 @@ const styles = StyleSheet.create({
   },
 
   coursesContainer: {
+    flex: 1,
+    backgroundColor: "#ffffff",
     paddingBottom: 10,
+    height: "100%",
   },
   courseItem: {
     width: "48%",

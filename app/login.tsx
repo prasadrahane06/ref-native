@@ -436,7 +436,7 @@ const ContactNumberField = ({ label, control }: any) => (
         }}
       />
     </AUIThemedView>
-    <Controller
+    {/* <Controller
       name="input"
       control={control}
       render={({ fieldState: { error } }) => {
@@ -446,7 +446,7 @@ const ContactNumberField = ({ label, control }: any) => (
           </AUIThemedText>
         );
       }}
-    />
+    /> */}
   </AUIThemedView>
 );
 const InputField = ({ control }: any) => (
@@ -460,7 +460,7 @@ const InputField = ({ control }: any) => (
             value={value}
             onChangeText={onChange}
             placeholder={SIGNUP_FIELDS.email.placeholder}
-            error={error?.message}
+            // error={error?.message}
           />
         </>
       );

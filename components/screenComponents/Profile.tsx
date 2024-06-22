@@ -76,7 +76,8 @@ function Profile() {
           <AUIImage
             path={
               Asset.fromModule(
-                "https://linguest-assets-dev.s3.ap-south-1.amazonaws.com/1718884990288-6296.jpeg"
+                require("@/assets/images/user.png")
+                // "https://linguest-assets-dev.s3.ap-south-1.amazonaws.com/1718884990288-6296.jpeg"
               ).uri
             }
             style={styles.avatar}

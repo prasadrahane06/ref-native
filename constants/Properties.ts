@@ -25,7 +25,7 @@ export const GLOBAL_TEXT = {
   enquire_now: "Enquire Now",
   My_Favorite_Courses: "My Favorite Courses",
   My_Favorite_Schools: "My Favorite Schools",
-  My_Favorite_Cities: "My Favorite Cities",
+  My_Favorite_Cities: "My Favorite Countries",
   course_details: "Course Details",
   select_your_plan: "Select your plan",
   book_your_seat: "Book your seat",
