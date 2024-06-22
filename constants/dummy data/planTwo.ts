@@ -3,9 +3,9 @@ import { Asset } from "expo-asset";
 export const planTwo = {
     id: "2",
     name: "Plan 2",
-    duration: "2-4 years",
-    fee: "19.99",
-    book: "150",
+    duration: "2 - 4 Weeks",
+    fee: "£ 199.99",
+    book: "£ 80",
     rating: "2.3",
     facilities: [
         {

@@ -439,10 +439,6 @@ export default function OverviewTab({ schoolId }: { schoolId: string }) {
                                                 display="default"
                                                 onChange={onChangeStartDate}
                                                 minimumDate={new Date()}
-                                                style={{
-                                                    backgroundColor:
-                                                        APP_THEME.primary.first, // iOS only
-                                                }}
                                             />
                                         )}
                                         <TextInput
@@ -529,7 +525,7 @@ export default function OverviewTab({ schoolId }: { schoolId: string }) {
                                         <DateTimePicker
                                             value={endDate}
                                             mode="date"
-                                            display="spinner"
+                                            display="default"
                                             onChange={onChangeEndDate}
                                             minimumDate={new Date()}
                                         />

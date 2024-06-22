@@ -389,9 +389,6 @@ export default function PlanComponent({
                         display="default"
                         onChange={onChangeStartDate}
                         minimumDate={new Date()}
-                        style={{
-                          backgroundColor: APP_THEME.primary.first, // iOS only
-                        }}
                       />
                     )}
                     <TextInput
@@ -470,7 +467,7 @@ export default function PlanComponent({
                     <DateTimePicker
                       value={endDate}
                       mode="date"
-                      display="spinner"
+                      display="default"
                       onChange={onChangeEndDate}
                       minimumDate={new Date()}
                     />
