@@ -23,9 +23,10 @@ import { RootState } from "@/redux/store";
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import PagerView from "react-native-pager-view";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function HomeScreen() {
+  const dispatch = useDispatch();
   const [selectedPage, setSelectedPage] = useState(0);
   const navigation = useNavigation();
   const displayedCourses = coursesData.slice(0, 4);
@@ -128,6 +129,3 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
 });
-function dispatch(arg0: any) {
-  throw new Error("Function not implemented.");
-}

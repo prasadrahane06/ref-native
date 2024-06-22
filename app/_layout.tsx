@@ -188,6 +188,20 @@ const InitialLayout = () => {
         }}
       />
       <Stack.Screen
+        name="(home)/course/AllCoursesScreen"
+        options={{
+          headerShown: true,
+          title: "Courses",
+          headerTitle: "Popular Courses",
+          headerTransparent: false,
+          headerLeft: () => (
+            <TouchableOpacity onPress={router.back}>
+              <Ionicons name="arrow-back" size={34} color={"white"} />
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Stack.Screen
         name="(home)/courseDetails/[id]"
         options={{
           headerTitle: "",
@@ -196,13 +210,13 @@ const InitialLayout = () => {
       <Stack.Screen
         name="(home)/courseDetails/purchase/index"
         options={{
-						headerTitle: '',
-            headerShown: true,
-            headerLeft: () => (
-              <TouchableOpacity onPress={router.back}>
-                <Ionicons name="arrow-back" size={34} color={"#000"} />
-              </TouchableOpacity>
-            ),
+          headerTitle: "",
+          headerShown: true,
+          headerLeft: () => (
+            <TouchableOpacity onPress={router.back}>
+              <Ionicons name="arrow-back" size={34} color={"#000"} />
+            </TouchableOpacity>
+          ),
         }}
       />
       <Stack.Screen
