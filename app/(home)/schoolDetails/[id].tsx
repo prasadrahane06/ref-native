@@ -1,9 +1,13 @@
+import { get } from "@/app/services/axiosClient";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import CoursesTab from "@/components/home/schoolDetails/Courses";
 import OverviewTab from "@/components/home/schoolDetails/Overview";
 import { APP_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
+import { API_URL } from "@/constants/urlProperties";
+import useApiRequest from "@/customHooks/useApiRequest";
+import { RootState } from "@/redux/store";
 import {
     FontAwesome,
     Ionicons,
@@ -11,7 +15,7 @@ import {
 } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import Animated, {
     interpolate,
@@ -19,6 +23,7 @@ import Animated, {
     useAnimatedStyle,
     useScrollViewOffset,
 } from "react-native-reanimated";
+import { useSelector } from "react-redux";
 
 function StudentDetailsTabs({ schoolId }: { schoolId: string }) {
     const [selectedTab, setSelectedTab] = useState("overview");
@@ -86,6 +91,23 @@ function StudentDetailsTabs({ schoolId }: { schoolId: string }) {
 export default function SchoolDetails() {
     const { id } = useLocalSearchParams<{ id: string }>();
     console.log(id);
+    
+    const {requestFn} = useApiRequest()
+    const schoolsResponse = useSelector(
+        (state: RootState) => state.api.individualSchool || {}
+    );
+    useEffect(()=>{
+     console.log("res of school " , schoolsResponse)
+    },[schoolsResponse])
+    
+
+    
+  useEffect(() => {
+
+    requestFn(get(API_URL.popularSchool , { id : id ? id : {}}) , "individualSchool")
+   
+   
+  }, [])
 
     const scrollRef = useAnimatedRef<Animated.ScrollView>();
     const navigation = useNavigation();
@@ -181,7 +203,9 @@ export default function SchoolDetails() {
                 <Animated.Text
                     style={[headerTitleAnimatedStyle, styles.screenTitle]}
                 >
-                    The Manchester School
+                    {
+                                schoolsResponse?.name || "The Manchester School"
+                            }
                 </Animated.Text>
             ),
         });
@@ -191,19 +215,21 @@ export default function SchoolDetails() {
         <AUIThemedView>
             <Animated.ScrollView ref={scrollRef} scrollEventThrottle={16}>
                 <AUIThemedView style={styles.container}>
-                    <Animated.Image
-                        source={{
-                            uri: Asset.fromModule(
-                                require("@/assets/images/schoolDetailsPage/school.png")
-                            ).uri,
-                        }}
-                        style={[styles.image, imageAnimatedStyle]}
-                        resizeMode="cover"
-                    />
+                <Animated.Image
+    source={
+        schoolsResponse?.banner 
+            ? { uri: schoolsResponse.banner } 
+            : { uri: Asset.fromModule(require("@/assets/images/schoolDetailsPage/school.png")).uri }
+    }
+    style={[styles.image, imageAnimatedStyle]}
+    resizeMode="cover"
+/>
 
                     <AUIThemedView style={styles.infoContainer}>
                         <AUIThemedText style={styles.name}>
-                            The Manchester School
+                            {
+                                schoolsResponse?.name || "The Manchester School"
+                            }
                         </AUIThemedText>
 
                         <AUIThemedView style={styles.ratingsContainer}>
@@ -243,7 +269,9 @@ export default function SchoolDetails() {
                                             { fontWeight: "bold" },
                                         ]}
                                     >
-                                        +44 987-986-5443
+                                        {
+                                            schoolsResponse?.phone || "+44 987-986-5443"
+                                        }
                                     </AUIThemedText>
                                 </AUIThemedView>
 
@@ -254,7 +282,10 @@ export default function SchoolDetails() {
                                         color={APP_THEME.primary.first}
                                     />
                                     <AUIThemedText style={styles.contactText}>
-                                        connecto@mancha.com
+                                       {
+                                            schoolsResponse?.email || "connecto@mancha.com"
+                                        
+                                       }
                                     </AUIThemedText>
                                 </AUIThemedView>
 
@@ -265,7 +296,10 @@ export default function SchoolDetails() {
                                         color={APP_THEME.primary.first}
                                     />
                                     <AUIThemedText style={styles.contactText}>
-                                        www.manchesterschool.com
+                                        {
+                                            schoolsResponse?.website || "www.manchesterschool.com"
+                                        
+                                        }
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>

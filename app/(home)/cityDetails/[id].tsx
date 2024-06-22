@@ -21,10 +21,16 @@ import { Asset } from "expo-asset";
 import { MaterialIcons } from "@expo/vector-icons";
 import { PhotoGallaryData } from "@/constants/dummy data/PhotoGallaryData";
 import PhotoGallaryList from "@/components/home/common/PhotoGallaryList";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 export default function CityDetails() {
   const { id } = useLocalSearchParams<{ id: string }>();
   console.log(id);
+
+  const schoolsResponse = useSelector(
+    (state: RootState) => state.api.school || {}
+  );
 
   const [readMore, setReadMore] = useState(false);
   const aboutText = `Lorem ipsum dolor, sit amet consectetur adipisicing elit. Atque maxime unde doloribus omnis ab, quod quibusdam eligendi similique vitae ipsam.Lorem ipsum dolor, sit amet consectetur adipisicing elit. Atque maxime unde doloribus omnis ab, quod quibusdam eligendi similique vitae ipsam.quibusdam eligendi similique vitae ipsam.quibusdam eligendi similique vitae ipsam. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Atque maxime unde doloribus omnis ab, quod quibusdam eligendi similique vitae ipsam.Lorem ipsum dolor, sit amet consectetur adipisicing elit. Atque maxime unde doloribus omnis ab, quod quibusdam eligendi similique vitae ipsam.quibusdam eligendi similique vitae ipsam.quibusdam eligendi similique vitae ipsam.`;
@@ -166,7 +172,7 @@ export default function CityDetails() {
             <SectionTitle viewAll="#">
               {GLOBAL_TEXT.popular_schools}
             </SectionTitle>
-            <SchoolList data={schoolsData} dummyData={schoolsData}/>
+            <SchoolList data={schoolsResponse.docs} dummyData={schoolsData}/>
           </AUIThemedView>
         </AUIThemedView>
       </ScrollView>

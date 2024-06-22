@@ -14,13 +14,16 @@ const SchoolList: React.FC<SchoolListProps> = ({ data , dummyData }) => {
         horizontal
         data={data}
         renderItem={({ item , index }) => (
-          <School
+         <AUIThemedView key={index}>
+            <School
+            id={item._id}
             title={item.name}
             image={item.banner ? item.banner : dummyData[index].image} 
             caption={dummyData[index].caption}
             schoolWidth={270}
             schoolHeight={160}
           />
+         </AUIThemedView>
         )}
         keyExtractor={(item) => item.id}
       />

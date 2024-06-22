@@ -9,6 +9,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import AUIBackgroundImage from "./common/AUIBackgroundImage";
 
 interface SchoolProps {
+  id: string; 
   title: string;
   image: any;
   caption?: string;
@@ -18,6 +19,7 @@ interface SchoolProps {
 }
 
 const School: React.FC<SchoolProps> = ({
+  id,
   title,
   image,
   caption,
@@ -31,7 +33,7 @@ const School: React.FC<SchoolProps> = ({
     <TouchableOpacity
       onPress={() =>
         router.push({
-          pathname: `(home)/schoolDetails/1`,
+          pathname: `(home)/schoolDetails/${id}`,
         })
       }
     >

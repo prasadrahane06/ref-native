@@ -8,21 +8,27 @@ import { API_URL } from "@/constants/urlProperties";
 import AllSchoolsList from "../list/AllSchoolsList";
 import useApiRequest from "@/customHooks/useApiRequest";
 import { get } from "@/app/services/axiosClient";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 interface SchoolListProps {
   data: any[];
 }
 const AllSchoolsScreen: React.FC<SchoolListProps> = ({ data }) => {
   const { requestFn } = useApiRequest();
+  const schoolsResponse = useSelector(
+    (state: RootState) => state.api.moreSchool || {}
+  );
 
   useEffect(() => {
-    requestFn(get(API_URL.popularSchool, { limit: 6 }), "popularSchools");
-  }, [requestFn]);
+    requestFn(get(API_URL.popularSchool , {limit : 6}), "moreSchool");
+  }, []);
+  
 
   return (
     <AUIThemedView style={styles.container}>
       <AllSchoolsList
-        data={schoolsData.map((school) => ({
+        data={schoolsResponse.docs.map((school : any ) => ({
           id: school._id,
           name: school.name,
           image: school.banner,
