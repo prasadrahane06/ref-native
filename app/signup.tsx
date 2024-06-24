@@ -52,7 +52,7 @@ const SignupPage = () => {
       return;
     }
     // @ts-ignore
-    if (!/^[0-9]{10}$/.test(signupValues.phone)) {
+    if (!/^[0-9]{9}$/.test(signupValues.phone)) {
       setErrors({
         ...errors,
         phone: GLOBAL_TEXT.validate_mobile,
@@ -108,7 +108,7 @@ const SignupPage = () => {
       return;
     }
     // @ts-ignore
-    if (item === "phone" && !/^[0-9]{10}$/.test(val)) {
+    if (item === "phone" && !/^[0-9]{9}$/.test(val)) {
       setErrors({
         ...errors,
         phone: GLOBAL_TEXT.validate_mobile,

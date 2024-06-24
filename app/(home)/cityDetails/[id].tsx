@@ -34,7 +34,7 @@ export default function CityDetails() {
   );
 
   const [readMore, setReadMore] = useState(false);
-  const aboutText = `Craving an academic adventure. Immerse yourself in the heart of Saudi Arabia and master Arabic through real-world experiences. Saudi universities, rapidly climbing the global rankings, offer a prestigious education alongside a unique cultural immersion. From bustling Riyadh to historic Jeddah, explore ancient wonders, connect with a vibrant international student community, and unlock the secrets of Arabic not just by reading, but by living it. This is your chance to boost your employability, unveil a rich history, and embrace the captivating culture of Saudi Arabia - all while mastering a language in demand worldwide.`;
+  const aboutText = `Craving an academic adventure? Immerse yourself in the vibrant landscapes of South Africa and master English through real-world experiences. South African universities, known for their academic excellence and diverse programs, offer a prestigious education alongside a unique cultural immersion. From the bustling streets of Johannesburg to the historic charm of Cape Town, explore breathtaking natural wonders, connect with a dynamic international student community, and unlock the secrets of English not just by reading, but by living it. This is your chance to boost your employability, delve into a rich history, and embrace the captivating culture of South Africa - all while mastering a language in demand worldwide.`;
   const wordsLimit = 50;
   const truncatedText = aboutText.split(" ").slice(0, wordsLimit).join(" ");
 
