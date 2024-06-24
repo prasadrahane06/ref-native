@@ -8,11 +8,7 @@ import { GLOBAL_TEXT } from "@/constants/Properties";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import { RootState } from "@/redux/store";
-import {
-    FontAwesome,
-    Ionicons,
-    MaterialCommunityIcons,
-} from "@expo/vector-icons";
+import { FontAwesome, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useEffect, useLayoutEffect, useState } from "react";
@@ -39,9 +35,7 @@ function StudentDetailsTabs({ schoolId }: { schoolId: string }) {
                     onPress={() => handleTabClick("overview")}
                     style={[
                         tabStyles.tab,
-                        selectedTab === "overview"
-                            ? tabStyles.activeTab
-                            : tabStyles.inactiveTab,
+                        selectedTab === "overview" ? tabStyles.activeTab : tabStyles.inactiveTab,
                     ]}
                 >
                     <AUIThemedText
@@ -60,9 +54,7 @@ function StudentDetailsTabs({ schoolId }: { schoolId: string }) {
                     onPress={() => handleTabClick("courses")}
                     style={[
                         tabStyles.tab,
-                        selectedTab === "courses"
-                            ? tabStyles.activeTab
-                            : tabStyles.inactiveTab,
+                        selectedTab === "courses" ? tabStyles.activeTab : tabStyles.inactiveTab,
                     ]}
                 >
                     <AUIThemedText
@@ -79,9 +71,7 @@ function StudentDetailsTabs({ schoolId }: { schoolId: string }) {
             </AUIThemedView>
 
             <AUIThemedView>
-                {selectedTab === "overview" && (
-                    <OverviewTab schoolId={schoolId} />
-                )}
+                {selectedTab === "overview" && <OverviewTab schoolId={schoolId} />}
                 {selectedTab === "courses" && <CoursesTab />}
             </AUIThemedView>
         </AUIThemedView>
@@ -91,23 +81,16 @@ function StudentDetailsTabs({ schoolId }: { schoolId: string }) {
 export default function SchoolDetails() {
     const { id } = useLocalSearchParams<{ id: string }>();
     console.log(id);
-    
-    const {requestFn} = useApiRequest()
-    const schoolsResponse = useSelector(
-        (state: RootState) => state.api.individualSchool || {}
-    );
-    useEffect(()=>{
-     console.log("res of school " , schoolsResponse)
-    },[schoolsResponse])
-    
 
-    
-  useEffect(() => {
+    const { requestFn } = useApiRequest();
+    const schoolsResponse = useSelector((state: RootState) => state.api.individualSchool || {});
+    useEffect(() => {
+        console.log("res of school ", schoolsResponse);
+    }, [schoolsResponse]);
 
-    requestFn(get(API_URL.popularSchool , { id : id ? id : {}}) , "individualSchool")
-   
-   
-  }, [])
+    useEffect(() => {
+        requestFn(get(API_URL.popularSchool, { id: id ? id : {} }), "individualSchool");
+    }, []);
 
     const scrollRef = useAnimatedRef<Animated.ScrollView>();
     const navigation = useNavigation();
@@ -115,21 +98,13 @@ export default function SchoolDetails() {
 
     const headerBackgroundAnimatedStyle = useAnimatedStyle(() => {
         return {
-            opacity: interpolate(
-                scrollOffset.value,
-                [0, IMG_HEIGHT / 1.5],
-                [0, 1]
-            ),
+            opacity: interpolate(scrollOffset.value, [0, IMG_HEIGHT / 1.5], [0, 1]),
         };
     }, []);
 
     const headerTitleAnimatedStyle = useAnimatedStyle(() => {
         return {
-            opacity: interpolate(
-                scrollOffset.value,
-                [IMG_HEIGHT / 2, IMG_HEIGHT],
-                [0, 1]
-            ),
+            opacity: interpolate(scrollOffset.value, [IMG_HEIGHT / 2, IMG_HEIGHT], [0, 1]),
         };
     }, []);
 
@@ -144,11 +119,7 @@ export default function SchoolDetails() {
                     ),
                 },
                 {
-                    scale: interpolate(
-                        scrollOffset.value,
-                        [-IMG_HEIGHT, 0, IMG_HEIGHT],
-                        [2, 1, 1]
-                    ),
+                    scale: interpolate(scrollOffset.value, [-IMG_HEIGHT, 0, IMG_HEIGHT], [2, 1, 1]),
                 },
             ],
         };
@@ -159,9 +130,7 @@ export default function SchoolDetails() {
             headerTransparent: true,
 
             headerBackground: () => (
-                <Animated.View
-                    style={[headerBackgroundAnimatedStyle, styles.screenHeader]}
-                />
+                <Animated.View style={[headerBackgroundAnimatedStyle, styles.screenHeader]} />
             ),
 
             headerLeft: () => (
@@ -190,22 +159,14 @@ export default function SchoolDetails() {
                             alignItems: "center",
                         }}
                     >
-                        <Ionicons
-                            name="heart"
-                            size={24}
-                            color={APP_THEME.secondary.first}
-                        />
+                        <Ionicons name="heart" size={24} color={APP_THEME.secondary.first} />
                     </AUIThemedView>
                 </TouchableOpacity>
             ),
 
             headerTitle: () => (
-                <Animated.Text
-                    style={[headerTitleAnimatedStyle, styles.screenTitle]}
-                >
-                    {
-                                schoolsResponse?.name || "The Manchester School"
-                            }
+                <Animated.Text style={[headerTitleAnimatedStyle, styles.screenTitle]}>
+                    {schoolsResponse?.name || "The Manchester School"}
                 </Animated.Text>
             ),
         });
@@ -215,35 +176,29 @@ export default function SchoolDetails() {
         <AUIThemedView>
             <Animated.ScrollView ref={scrollRef} scrollEventThrottle={16}>
                 <AUIThemedView style={styles.container}>
-                <Animated.Image
-    source={
-        schoolsResponse?.banner 
-            ? { uri: schoolsResponse.banner } 
-            : { uri: Asset.fromModule(require("@/assets/images/schoolDetailsPage/school.png")).uri }
-    }
-    style={[styles.image, imageAnimatedStyle]}
-    resizeMode="cover"
-/>
+                    <Animated.Image
+                        source={
+                            schoolsResponse?.banner
+                                ? { uri: schoolsResponse.banner }
+                                : {
+                                      uri: Asset.fromModule(
+                                          require("@/assets/images/schoolDetailsPage/school.png")
+                                      ).uri,
+                                  }
+                        }
+                        style={[styles.image, imageAnimatedStyle]}
+                        resizeMode="cover"
+                    />
 
                     <AUIThemedView style={styles.infoContainer}>
                         <AUIThemedText style={styles.name}>
-                            {
-                                schoolsResponse?.name || "The Manchester School"
-                            }
+                            {schoolsResponse?.name || "The Manchester School"}
                         </AUIThemedText>
 
                         <AUIThemedView style={styles.ratingsContainer}>
-                            <Ionicons
-                                name="star"
-                                size={20}
-                                color={APP_THEME.primary.first}
-                            />
-                            <AUIThemedText style={styles.ratingsText}>
-                                4.0
-                            </AUIThemedText>
-                            <AUIThemedText style={styles.viewsText}>
-                                150 Views
-                            </AUIThemedText>
+                            <Ionicons name="star" size={20} color={APP_THEME.primary.first} />
+                            <AUIThemedText style={styles.ratingsText}>4.0</AUIThemedText>
+                            <AUIThemedText style={styles.viewsText}>150 Views</AUIThemedText>
                         </AUIThemedView>
 
                         <AUIThemedView style={styles.contactsContainer}>
@@ -264,14 +219,9 @@ export default function SchoolDetails() {
                                         color={APP_THEME.primary.first}
                                     />
                                     <AUIThemedText
-                                        style={[
-                                            styles.contactText,
-                                            { fontWeight: "bold" },
-                                        ]}
+                                        style={[styles.contactText, { fontWeight: "bold" }]}
                                     >
-                                        {
-                                            schoolsResponse?.phone || "+44 987-986-5443"
-                                        }
+                                        {schoolsResponse?.phone || "+44 987-986-5443"}
                                     </AUIThemedText>
                                 </AUIThemedView>
 
@@ -282,10 +232,7 @@ export default function SchoolDetails() {
                                         color={APP_THEME.primary.first}
                                     />
                                     <AUIThemedText style={styles.contactText}>
-                                       {
-                                            schoolsResponse?.email || "connecto@mancha.com"
-                                        
-                                       }
+                                        {schoolsResponse?.email || "connecto@mancha.com"}
                                     </AUIThemedText>
                                 </AUIThemedView>
 
@@ -296,10 +243,7 @@ export default function SchoolDetails() {
                                         color={APP_THEME.primary.first}
                                     />
                                     <AUIThemedText style={styles.contactText}>
-                                        {
-                                            schoolsResponse?.website || "www.manchesterschool.com"
-                                        
-                                        }
+                                        {schoolsResponse?.website || "www.manchesterschool.com"}
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>

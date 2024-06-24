@@ -1,9 +1,9 @@
 import { APP_THEME } from "@/constants/Colors";
 import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
+import AUIImage from "./common/AUIImage";
 import { AUIThemedText } from "./common/AUIThemedText";
 import { AUIThemedView } from "./common/AUIThemedView";
-import AUIImage from "./common/AUIImage";
 
 export const Review = ({ name, role, image, comment }: any) => (
     <AUIThemedView style={reviewStyle.container}>
@@ -11,18 +11,12 @@ export const Review = ({ name, role, image, comment }: any) => (
             <AUIThemedView style={reviewStyle.row}>
                 <AUIImage icon path={image} />
                 <AUIThemedView style={reviewStyle.textContainer}>
-                    <AUIThemedText style={reviewStyle.name}>
-                        {name}
-                    </AUIThemedText>
-                    <AUIThemedText style={reviewStyle.role}>
-                        {role}
-                    </AUIThemedText>
+                    <AUIThemedText style={reviewStyle.name}>{name}</AUIThemedText>
+                    <AUIThemedText style={reviewStyle.role}>{role}</AUIThemedText>
                 </AUIThemedView>
             </AUIThemedView>
             <AUIThemedView>
-                <AUIThemedText style={reviewStyle.comment}>
-                    {comment}
-                </AUIThemedText>
+                <AUIThemedText style={reviewStyle.comment}>{comment}</AUIThemedText>
             </AUIThemedView>
         </AUIThemedView>
     </AUIThemedView>

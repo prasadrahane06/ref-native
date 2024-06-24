@@ -1,12 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import {
-    Dimensions,
-    StyleSheet,
-    TextStyle,
-    TouchableOpacity,
-    ViewStyle,
-} from "react-native";
+import { Dimensions, StyleSheet, TextStyle, TouchableOpacity, ViewStyle } from "react-native";
 import { AUIThemedText } from "./common/AUIThemedText";
 import { AUIThemedView } from "./common/AUIThemedView";
 
@@ -17,7 +11,7 @@ interface AUIInfoCardProps {
     cardStyle?: ViewStyle;
     titleStyle?: TextStyle;
     subtitleStyle?: TextStyle;
-    key? : any
+    key?: any;
 }
 
 const AUIInfoCard: React.FC<AUIInfoCardProps> = ({
@@ -27,7 +21,7 @@ const AUIInfoCard: React.FC<AUIInfoCardProps> = ({
     cardStyle,
     titleStyle,
     subtitleStyle,
-    key
+    key,
 }) => {
     const nav = useNavigation();
 
@@ -40,21 +34,13 @@ const AUIInfoCard: React.FC<AUIInfoCardProps> = ({
     return (
         <AUIThemedView key={key}>
             <TouchableOpacity
-                style={[
-                    styles.card,
-                    { width: Dimensions.get("window").width / 2 - 24 },
-                    cardStyle,
-                ]}
+                style={[styles.card, { width: Dimensions.get("window").width / 2 - 24 }, cardStyle]}
                 onPress={handlePress}
                 activeOpacity={navigation ? 0.7 : 1}
                 disabled={!navigation}
             >
-                <AUIThemedText style={[styles.title, titleStyle]}>
-                    {title}
-                </AUIThemedText>
-                <AUIThemedText style={[styles.subtitle, subtitleStyle]}>
-                    {subtitle}
-                </AUIThemedText>
+                <AUIThemedText style={[styles.title, titleStyle]}>{title}</AUIThemedText>
+                <AUIThemedText style={[styles.subtitle, subtitleStyle]}>{subtitle}</AUIThemedText>
             </TouchableOpacity>
         </AUIThemedView>
     );

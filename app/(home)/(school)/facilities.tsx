@@ -3,22 +3,22 @@ import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { StyleSheet } from "react-native";
 
 export default function TabFourScreen() {
-  return (
-    <AUIThemedView style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
-      <AUIThemedText>cart</AUIThemedText>
-    </AUIThemedView>
-  );
+    return (
+        <AUIThemedView style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+            <AUIThemedText>cart</AUIThemedText>
+        </AUIThemedView>
+    );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: "#808080",
-    bottom: -90,
-    left: -35,
-    position: "absolute",
-  },
-  titleContainer: {
-    flexDirection: "row",
-    gap: 8,
-  },
+    headerImage: {
+        color: "#808080",
+        bottom: -90,
+        left: -35,
+        position: "absolute",
+    },
+    titleContainer: {
+        flexDirection: "row",
+        gap: 8,
+    },
 });

@@ -1,6 +1,6 @@
 import { APP_THEME } from "@/constants/Colors";
 import React from "react";
-import { View, Text, Dimensions, StyleSheet } from "react-native";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 
 interface ChartComponentProps {
@@ -64,14 +64,12 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
                         datasets: [
                             {
                                 data: pendingData,
-                                color: (opacity = 1) =>
-                                    `rgba(144, 238, 144, ${opacity})`, // Faint green for pending payments
+                                color: (opacity = 1) => `rgba(144, 238, 144, ${opacity})`, // Faint green for pending payments
                                 strokeWidth: 2,
                             },
                             {
                                 data: doneData,
-                                color: (opacity = 1) =>
-                                    `rgba(0, 100, 0, ${opacity})`, // Dark green for done payments
+                                color: (opacity = 1) => `rgba(0, 100, 0, ${opacity})`, // Dark green for done payments
                                 strokeWidth: 2,
                             },
                         ],

@@ -12,20 +12,11 @@ interface SearchBarProps {
     setClicked: (value: boolean) => void;
 }
 
-const AUISearchBar = ({
-    clicked,
-    searchPhrase,
-    setSearchPhrase,
-    setClicked,
-}: SearchBarProps) => {
+const AUISearchBar = ({ clicked, searchPhrase, setSearchPhrase, setClicked }: SearchBarProps) => {
     return (
         <AUIThemedView style={styles.container}>
             <AUIThemedView
-                style={
-                    clicked
-                        ? styles.searchBar__clicked
-                        : styles.searchBar__unclicked
-                }
+                style={clicked ? styles.searchBar__clicked : styles.searchBar__unclicked}
             >
                 {/* Input field */}
                 <TextInput
@@ -37,13 +28,7 @@ const AUISearchBar = ({
                     }}
                 />
                 {/* search Icon */}
-                {!clicked && (
-                    <Feather
-                        name="search"
-                        size={25}
-                        color={APP_THEME.primary.first}
-                    />
-                )}
+                {!clicked && <Feather name="search" size={25} color={APP_THEME.primary.first} />}
 
                 {/* cross Icon, depending on whether the search bar is clicked or not */}
                 {clicked && (

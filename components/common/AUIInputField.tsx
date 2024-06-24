@@ -1,6 +1,6 @@
-import React from "react";
-import { View, TextInput, Text, TextInputProps, Platform } from "react-native";
 import { inputFieldStyle } from "@/constants/Styles";
+import React from "react";
+import { Text, TextInput, TextInputProps, View } from "react-native";
 
 /**
  * AUIInputField is a custom component of input field.
@@ -13,40 +13,40 @@ import { inputFieldStyle } from "@/constants/Styles";
  */
 
 interface CustomInputProps extends TextInputProps {
-  label?: string;
-  error?: string;
-  inputStyle?: object;
+    label?: string;
+    error?: string;
+    inputStyle?: object;
 }
 
 const AUIInputField: React.FC<CustomInputProps> = ({
-  label,
-  placeholder,
-  value,
-  onChangeText,
-  error,
-  style,
-  inputStyle,
-  ...props
+    label,
+    placeholder,
+    value,
+    onChangeText,
+    error,
+    style,
+    inputStyle,
+    ...props
 }) => {
-  return (
-    <View style={[inputFieldStyle.container, style]}>
-      {label && <Text style={inputFieldStyle.label}>{label}</Text>}
-      <TextInput
-        style={[
-          inputFieldStyle.input,
-          // @ts-ignore
-          error && { borderWidth: 1, borderColor: "red" },
-          inputStyle,
-        ]}
-        placeholder={placeholder}
-        placeholderTextColor={"gray"}
-        value={value}
-        onChangeText={onChangeText}
-        {...props}
-      />
-      {error && <Text style={inputFieldStyle.error}>{error}</Text>}
-    </View>
-  );
+    return (
+        <View style={[inputFieldStyle.container, style]}>
+            {label && <Text style={inputFieldStyle.label}>{label}</Text>}
+            <TextInput
+                style={[
+                    inputFieldStyle.input,
+                    // @ts-ignore
+                    error && { borderWidth: 1, borderColor: "red" },
+                    inputStyle,
+                ]}
+                placeholder={placeholder}
+                placeholderTextColor={"gray"}
+                value={value}
+                onChangeText={onChangeText}
+                {...props}
+            />
+            {error && <Text style={inputFieldStyle.error}>{error}</Text>}
+        </View>
+    );
 };
 
 export default AUIInputField;

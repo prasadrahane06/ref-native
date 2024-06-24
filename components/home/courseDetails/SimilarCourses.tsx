@@ -1,6 +1,5 @@
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { Asset } from "expo-asset";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import { FlatList, ImageBackground, StyleSheet } from "react-native";
@@ -34,12 +33,8 @@ function SimilarCourses({ title, subtitle, image }: SimilarCoursesProps) {
                     start={{ x: 0.5, y: 0 }}
                     end={{ x: 0.5, y: 1 }}
                 />
-                <AUIThemedText style={similarCoursesStyle.title}>
-                    {title}
-                </AUIThemedText>
-                <AUIThemedText style={similarCoursesStyle.subtitle}>
-                    {subtitle}
-                </AUIThemedText>
+                <AUIThemedText style={similarCoursesStyle.title}>{title}</AUIThemedText>
+                <AUIThemedText style={similarCoursesStyle.subtitle}>{subtitle}</AUIThemedText>
             </ImageBackground>
         </AUIThemedView>
     );

@@ -13,12 +13,8 @@ const LastChance = ({ title, subTitle }: any) => (
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
             />
-            <AUIThemedText style={styles.lastChanceTitle}>
-                {title}
-            </AUIThemedText>
-            <AUIThemedText style={styles.lastChanceSubTitle}>
-                {subTitle}
-            </AUIThemedText>
+            <AUIThemedText style={styles.lastChanceTitle}>{title}</AUIThemedText>
+            <AUIThemedText style={styles.lastChanceSubTitle}>{subTitle}</AUIThemedText>
         </AUIThemedView>
     </AUIThemedView>
 );

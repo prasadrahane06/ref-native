@@ -1,8 +1,8 @@
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import React from "react";
-import { Image, StyleSheet } from "react-native";
-import { AUIThemedText } from "./common/AUIThemedText";
+import { StyleSheet } from "react-native";
 import AUIImage from "./common/AUIImage";
+import { AUIThemedText } from "./common/AUIThemedText";
 
 export const Facilities = ({ title, image }: any) => {
     return (

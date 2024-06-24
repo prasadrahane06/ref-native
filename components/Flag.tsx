@@ -11,12 +11,7 @@ const Flag = ({ countryName, countryCode, isSelected, onSelect }: any) => (
                 marginRight: 10,
             }}
         >
-            <AUIThemedView
-                style={[
-                    styles.flagImageContainer,
-                    isSelected && styles.selectedFlag,
-                ]}
-            >
+            <AUIThemedView style={[styles.flagImageContainer, isSelected && styles.selectedFlag]}>
                 <Image
                     source={{
                         uri: `https://flagcdn.com/w320/${countryCode.toLowerCase()}.png`,
@@ -24,9 +19,7 @@ const Flag = ({ countryName, countryCode, isSelected, onSelect }: any) => (
                     style={[styles.flagImage]}
                 />
             </AUIThemedView>
-            <AUIThemedText style={styles.flagNames}>
-                {countryName}
-            </AUIThemedText>
+            <AUIThemedText style={styles.flagNames}>{countryName}</AUIThemedText>
         </AUIThemedView>
     </TouchableOpacity>
 );

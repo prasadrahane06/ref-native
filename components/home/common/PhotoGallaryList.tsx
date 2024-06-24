@@ -4,24 +4,24 @@ import { APP_THEME } from "@/constants/Colors";
 import React from "react";
 import { FlatList, StyleSheet } from "react-native";
 interface PhotoGallaryListProps {
-  data: any[];
+    data: any[];
 }
 const PhotoGallaryList: React.FC<PhotoGallaryListProps> = ({ data }) => {
-  return (
-    <AUIThemedView style={styles.container}>
-      <FlatList
-        horizontal
-        data={data}
-        renderItem={({ item }) => <PhotoGallary image={item.image} />}
-        keyExtractor={(item) => item.id}
-      />
-    </AUIThemedView>
-  );
+    return (
+        <AUIThemedView style={styles.container}>
+            <FlatList
+                horizontal
+                data={data}
+                renderItem={({ item }) => <PhotoGallary image={item.image} />}
+                keyExtractor={(item) => item.id}
+            />
+        </AUIThemedView>
+    );
 };
 export default PhotoGallaryList;
 const styles = StyleSheet.create({
-  container: {
-    paddingLeft: 14,
-    backgroundColor: APP_THEME.background,
-  },
+    container: {
+        paddingLeft: 14,
+        backgroundColor: APP_THEME.background,
+    },
 });

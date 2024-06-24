@@ -1,9 +1,9 @@
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { APP_THEME } from "@/constants/Colors";
 import React from "react";
-import { Image, StyleSheet } from "react-native";
-import { AUIThemedText } from "./common/AUIThemedText";
+import { StyleSheet } from "react-native";
 import AUIImage from "./common/AUIImage";
+import { AUIThemedText } from "./common/AUIThemedText";
 
 export const Events = ({ title, image }: any) => (
     <AUIThemedView>

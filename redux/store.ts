@@ -1,8 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import globalSlice from "./globalSlice";
 import apiSlice from "./apiSlice";
-import enquiryformSlice from "./enquiryformSlice";
 import cartSlice from "./cartSlice";
+import enquiryformSlice from "./enquiryformSlice";
+import globalSlice from "./globalSlice";
 
 export const store = configureStore({
     reducer: {

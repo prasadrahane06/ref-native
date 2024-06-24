@@ -7,9 +7,7 @@ interface AvailableCoursesProps {
     data: any[];
 }
 
-export const AvailableCoursesList: React.FC<AvailableCoursesProps> = ({
-    data,
-}) => {
+export const AvailableCoursesList: React.FC<AvailableCoursesProps> = ({ data }) => {
     return (
         <AUIThemedView>
             <FlatList

@@ -30,9 +30,7 @@ export const cartSlice = createSlice({
         },
 
         removeCourseFromCart: (state, action: PayloadAction<string>) => {
-            state.items = state.items.filter(
-                (course) => course.courseId !== action.payload
-            );
+            state.items = state.items.filter((course) => course.courseId !== action.payload);
         },
     },
 });

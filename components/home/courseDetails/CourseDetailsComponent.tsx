@@ -8,39 +8,23 @@ export default function CourseDetailsComponent({ data }: any) {
     return (
         <AUIThemedView style={styles.container}>
             <AUIThemedView style={styles.detailsContainer}>
-                <AUIThemedText style={styles.marginBottom15}>
-                    Total Duration
-                </AUIThemedText>
-                <AUIThemedText style={styles.primaryText}>
-                    {data.duration}
-                </AUIThemedText>
+                <AUIThemedText style={styles.marginBottom15}>Total Duration</AUIThemedText>
+                <AUIThemedText style={styles.primaryText}>{data.duration}</AUIThemedText>
             </AUIThemedView>
 
             <AUIThemedView style={styles.detailsContainer}>
-                <AUIThemedText style={styles.marginBottom15}>
-                    Total Fee
-                </AUIThemedText>
-                <AUIThemedText style={styles.primaryText}>
-                    {data.fee}
-                </AUIThemedText>
+                <AUIThemedText style={styles.marginBottom15}>Total Fee</AUIThemedText>
+                <AUIThemedText style={styles.primaryText}>{data.fee}</AUIThemedText>
             </AUIThemedView>
 
             <AUIThemedView style={styles.detailsContainer}>
-                <AUIThemedText style={styles.marginBottom15}>
-                    Book your seat
-                </AUIThemedText>
-                <AUIThemedText style={styles.primaryText}>
-                    {data.book}
-                </AUIThemedText>
+                <AUIThemedText style={styles.marginBottom15}>Book your seat</AUIThemedText>
+                <AUIThemedText style={styles.primaryText}>{data.book}</AUIThemedText>
             </AUIThemedView>
 
             <AUIThemedView style={styles.ratingsContainer}>
-                <AUIThemedText style={styles.marginBottom15}>
-                    Rating
-                </AUIThemedText>
-                <AUIThemedText style={styles.primaryText}>
-                    {data.rating}
-                </AUIThemedText>
+                <AUIThemedText style={styles.marginBottom15}>Rating</AUIThemedText>
+                <AUIThemedText style={styles.primaryText}>{data.rating}</AUIThemedText>
             </AUIThemedView>
 
             <AUIThemedView style={styles.borderBottom} />
