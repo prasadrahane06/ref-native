@@ -17,7 +17,10 @@ const AUIAccordion: React.FC<AccordionProps> = ({ title, children, icon }) => {
 
     return (
         <AUIThemedView style={styles.accordionContainer}>
-            <TouchableOpacity style={styles.accordionHeader} onPress={() => setExpanded(!expanded)}>
+            <TouchableOpacity
+                style={[styles.accordionHeader, expanded && styles.accordionHeaderExpanded]}
+                onPress={() => setExpanded(!expanded)}
+            >
                 <AUIThemedView style={styles.accordionTitle}>
                     {icon ? (
                         <AUIImage style={styles.icon} path={icon} resizeMode="cover" />
@@ -42,7 +45,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "#5BD894",
         borderRadius: 10,
-        marginBottom: 10,
+        marginBottom: 12,
         overflow: "hidden",
         backgroundColor: APP_THEME.background,
     },
@@ -51,6 +54,8 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center",
         padding: 15,
+    },
+    accordionHeaderExpanded: {
         borderBottomWidth: 2,
         borderBottomColor: "#ddd",
     },
@@ -65,7 +70,7 @@ const styles = StyleSheet.create({
         fontWeight: "600",
     },
     accordionContent: {
-        padding: 10,
+        paddingBottom: 10,
         // backgroundColor: "#f9f9f9",
     },
     icon: {
@@ -73,5 +78,4 @@ const styles = StyleSheet.create({
         height: 24,
     },
 });
-
 export default AUIAccordion;

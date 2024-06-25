@@ -3,12 +3,16 @@ import AUIImage from "@/components/common/AUIImage";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { APP_THEME } from "@/constants/Colors";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome, FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
 import { router } from "expo-router";
+import { useState } from "react";
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 
 const CompareSchools: React.FC = () => {
+    const [date, setDate] = useState<Date>(new Date());
+    const [show, setShow] = useState<boolean>(false);
+
     return (
         <ScrollView>
             <AUIThemedView style={styles.container}>
@@ -33,9 +37,9 @@ const CompareSchools: React.FC = () => {
                                 East, Academy The East, 60 Grey Mare Ln, ...
                             </AUIThemedText>
                         </View>
-                        <View style={styles.customShape}>
-                            <Ionicons name="close" size={20} color="#5BD894" />
-                        </View>
+                        {/* <View style={styles.customShape}>
+              <Ionicons name="close" size={20} color="#5BD894" />
+            </View> */}
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.card}
@@ -59,21 +63,29 @@ const CompareSchools: React.FC = () => {
                             ).uri
                         }
                     >
-                        <AUIThemedView style={styles.schoolTypelabelContainer}>
+                        <AUIThemedView>
                             <AUIThemedView style={styles.row}>
-                                <AUIThemedText style={styles.label}>Private</AUIThemedText>
                                 <AUIThemedText style={styles.value}>Ownership</AUIThemedText>
-                                <AUIThemedText style={styles.label2}>Private</AUIThemedText>
+                                <AUIThemedView style={styles.rowContainer}>
+                                    <AUIThemedText style={styles.label}>Private</AUIThemedText>
+                                    <AUIThemedText style={styles.label2}>Private</AUIThemedText>
+                                </AUIThemedView>
                             </AUIThemedView>
                             <AUIThemedView style={styles.row}>
-                                <AUIThemedText style={styles.label}>Day School</AUIThemedText>
                                 <AUIThemedText style={styles.value}>School Time</AUIThemedText>
-                                <AUIThemedText style={styles.label2}>Day School</AUIThemedText>
+                                <AUIThemedView style={styles.rowContainer}>
+                                    <AUIThemedText style={styles.label}>Day School</AUIThemedText>
+                                    <AUIThemedText style={styles.label2}>Day School</AUIThemedText>
+                                </AUIThemedView>
                             </AUIThemedView>
-                            <AUIThemedView style={styles.row3}>
-                                <AUIThemedText style={styles.label}>Co-Education</AUIThemedText>
+                            <AUIThemedView style={styles.row2}>
                                 <AUIThemedText style={styles.value}>Co-Ed status</AUIThemedText>
-                                <AUIThemedText style={styles.label2}>Co-Education</AUIThemedText>
+                                <AUIThemedView style={styles.rowContainer}>
+                                    <AUIThemedText style={styles.label}>Co-Education</AUIThemedText>
+                                    <AUIThemedText style={styles.label2}>
+                                        Co-Education
+                                    </AUIThemedText>
+                                </AUIThemedView>
                             </AUIThemedView>
                         </AUIThemedView>
                     </AUIAccordion>
@@ -86,30 +98,33 @@ const CompareSchools: React.FC = () => {
                             ).uri
                         }
                     >
-                        <AUIThemedView style={styles.schoolTypelabelContainer}>
+                        <AUIThemedView>
                             <AUIThemedView style={styles.row}>
-                                <AUIThemedText style={styles.label}>English, French</AUIThemedText>
                                 <AUIThemedText style={styles.value}>
                                     Language to learn
                                 </AUIThemedText>
-                                <AUIThemedText style={styles.label2}>
-                                    English, French and Dutch
-                                </AUIThemedText>
+                                <AUIThemedView style={styles.rowContainer}>
+                                    <AUIThemedText style={styles.label}>
+                                        English, French
+                                    </AUIThemedText>
+                                    <AUIThemedText style={styles.label2}>
+                                        English, French and Dutch
+                                    </AUIThemedText>
+                                </AUIThemedView>
                             </AUIThemedView>
-                            <AUIThemedView style={styles.row3}>
-                                <AUIThemedText style={styles.label}>April to march</AUIThemedText>
-                                <AUIThemedText style={styles.value}>Acadamic Session</AUIThemedText>
-                                <AUIThemedText style={styles.academicsLabel2}>
-                                    June to May
+
+                            <AUIThemedView style={styles.row2}>
+                                <AUIThemedText style={styles.value}>
+                                    {" "}
+                                    Acadamic Session
                                 </AUIThemedText>
+                                <AUIThemedView style={styles.rowContainer}>
+                                    <AUIThemedText style={styles.label}>
+                                        April to march
+                                    </AUIThemedText>
+                                    <AUIThemedText style={styles.label2}>June to May</AUIThemedText>
+                                </AUIThemedView>
                             </AUIThemedView>
-                            {/* <AUIThemedView style={styles.row3}>
-                <AUIThemedText style={styles.label}>Co-Education</AUIThemedText>
-                <AUIThemedText style={styles.value}>Co-Ed status</AUIThemedText>
-                <AUIThemedText style={styles.label2}>
-                  Co-Education
-                </AUIThemedText>
-              </AUIThemedView> */}
                         </AUIThemedView>
                     </AUIAccordion>
 
@@ -126,7 +141,11 @@ const CompareSchools: React.FC = () => {
                                 Please select your location to calculate the distance
                             </AUIThemedText>
                             <TouchableOpacity style={styles.locationButton}>
-                                <Ionicons name="locate-outline" size={24} color="#5BD894" />
+                                <FontAwesome6
+                                    name="location-crosshairs"
+                                    size={30}
+                                    color="#5BD894"
+                                />
                                 <AUIThemedText style={styles.locationButtonText}>
                                     Use my current location
                                 </AUIThemedText>
@@ -134,21 +153,53 @@ const CompareSchools: React.FC = () => {
                         </AUIThemedView>
                     </AUIAccordion>
 
-                    <AUIAccordion title="Fee Structure">
-                        <AUIThemedView style={styles.schoolTypelabelContainer}>
+                    <AUIAccordion
+                        title="Fee Structure"
+                        icon={
+                            Asset.fromModule(
+                                require("@/assets/images/compareScreen/compareSchoolsPage/fi_6926264.png")
+                            ).uri
+                        }
+                    >
+                        <AUIThemedView>
                             <AUIThemedView style={styles.row}>
-                                <AUIThemedText style={styles.label}>€ 500</AUIThemedText>
                                 <AUIThemedText style={styles.value}>
                                     Total cost of new admission
                                 </AUIThemedText>
-                                <AUIThemedText style={styles.label2}>€ 700</AUIThemedText>
+                                <AUIThemedView style={styles.rowContainer}>
+                                    <AUIThemedView style={styles.feeLabelContainer}>
+                                        <AUIThemedText style={styles.label}>£ 500</AUIThemedText>
+                                        <AUIThemedText style={styles.feeLabelLabelText}>
+                                            Check Calculation
+                                        </AUIThemedText>
+                                    </AUIThemedView>
+                                    <AUIThemedView style={styles.feeLabelContaine2}>
+                                        <AUIThemedText style={styles.label}>£ 700</AUIThemedText>
+                                        <AUIThemedText style={styles.feeLabelLabelText2}>
+                                            Check Calculation
+                                        </AUIThemedText>
+                                    </AUIThemedView>
+                                </AUIThemedView>
                             </AUIThemedView>
-                            <AUIThemedView style={styles.row3}>
-                                <AUIThemedText style={styles.label}></AUIThemedText>
+
+                            <AUIThemedView style={styles.feeRow2}>
                                 <AUIThemedText style={styles.value}>
-                                    Total monthly cost
+                                    Total Monthly Cost
                                 </AUIThemedText>
-                                <AUIThemedText style={styles.label2}>€ 700</AUIThemedText>
+                                <AUIThemedView style={styles.rowContainer}>
+                                    <AUIThemedView style={styles.feeLabelContainer}>
+                                        <AUIThemedText style={styles.label}>£ 500</AUIThemedText>
+                                        <AUIThemedText style={styles.feeLabelLabelText}>
+                                            Check Calculation
+                                        </AUIThemedText>
+                                    </AUIThemedView>
+                                    <AUIThemedView style={styles.feeLabelContaine2}>
+                                        <AUIThemedText style={styles.label}>£ 700</AUIThemedText>
+                                        <AUIThemedText style={styles.feeLabelLabelText2}>
+                                            Check Calculation
+                                        </AUIThemedText>
+                                    </AUIThemedView>
+                                </AUIThemedView>
                             </AUIThemedView>
                         </AUIThemedView>
                     </AUIAccordion>
@@ -161,21 +212,47 @@ const CompareSchools: React.FC = () => {
                             ).uri
                         }
                     >
-                        <AUIThemedView style={styles.schoolTypelabelContainer}>
+                        <AUIThemedView>
                             <AUIThemedView style={styles.row}>
-                                <AUIThemedText style={styles.label}>Private</AUIThemedText>
-                                <AUIThemedText style={styles.value}>Ownership</AUIThemedText>
-                                <AUIThemedText style={styles.label2}>Private</AUIThemedText>
+                                <AUIThemedText style={styles.value}>Campus type</AUIThemedText>
+                                <AUIThemedView style={styles.rowContainer}>
+                                    <AUIThemedText style={styles.label}>Urban</AUIThemedText>
+                                    <AUIThemedText style={styles.label2}>Urban</AUIThemedText>
+                                </AUIThemedView>
                             </AUIThemedView>
+
                             <AUIThemedView style={styles.row}>
-                                <AUIThemedText style={styles.label}>Day School</AUIThemedText>
-                                <AUIThemedText style={styles.value}>School Time</AUIThemedText>
-                                <AUIThemedText style={styles.label2}>Day School</AUIThemedText>
+                                <AUIThemedText style={styles.value}>Total facilities</AUIThemedText>
+                                <AUIThemedView style={styles.rowContainer}>
+                                    <AUIThemedText style={styles.label}>3</AUIThemedText>
+                                    <AUIThemedText style={styles.label2}>5</AUIThemedText>
+                                </AUIThemedView>
                             </AUIThemedView>
-                            <AUIThemedView style={styles.row3}>
-                                <AUIThemedText style={styles.label}>Co-Education</AUIThemedText>
-                                <AUIThemedText style={styles.value}>Co-Ed status</AUIThemedText>
-                                <AUIThemedText style={styles.label2}>Co-Education</AUIThemedText>
+
+                            <AUIThemedView style={styles.row}>
+                                <AUIThemedText style={styles.value}>Total Faculty</AUIThemedText>
+                                <AUIThemedView style={styles.rowContainer}>
+                                    <AUIThemedText style={styles.label}>4</AUIThemedText>
+                                    <AUIThemedText style={styles.label2}>6</AUIThemedText>
+                                </AUIThemedView>
+                            </AUIThemedView>
+
+                            <AUIThemedView style={styles.row}>
+                                <AUIThemedText style={styles.value}>Number of Seats</AUIThemedText>
+                                <AUIThemedView style={styles.rowContainer}>
+                                    <AUIThemedText style={styles.label}>40</AUIThemedText>
+                                    <AUIThemedText style={styles.label2}>70</AUIThemedText>
+                                </AUIThemedView>
+                            </AUIThemedView>
+
+                            <AUIThemedView style={styles.row2}>
+                                <AUIThemedText style={styles.value}>
+                                    Form availability
+                                </AUIThemedText>
+                                <AUIThemedView style={styles.rowContainer}>
+                                    <AUIThemedText style={styles.label}>Online</AUIThemedText>
+                                    <AUIThemedText style={styles.label2}>Online</AUIThemedText>
+                                </AUIThemedView>
                             </AUIThemedView>
                         </AUIThemedView>
                     </AUIAccordion>
@@ -188,21 +265,55 @@ const CompareSchools: React.FC = () => {
                             ).uri
                         }
                     >
-                        <AUIThemedView style={styles.schoolTypelabelContainer}>
-                            <AUIThemedView style={styles.row}>
-                                <AUIThemedText style={styles.label}>Private</AUIThemedText>
-                                <AUIThemedText style={styles.value}>Ownership</AUIThemedText>
-                                <AUIThemedText style={styles.label2}>Private</AUIThemedText>
+                        <AUIThemedView>
+                            <AUIThemedView style={styles.admissionRow1}>
+                                <AUIThemedText style={styles.acadamicSessionText}>
+                                    Select your acadamic session
+                                </AUIThemedText>
+                                <AUIThemedView style={styles.datePickerRowContainer}>
+                                    <TouchableOpacity
+                                        onPress={() => setShow(true)}
+                                        style={styles.datePickerContainer}
+                                    >
+                                        <AUIThemedText style={styles.dateText}>
+                                            {date.toLocaleDateString()}
+                                        </AUIThemedText>
+                                        <FontAwesome name="calendar" style={styles.calenderIcon} />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={() => setShow(true)}
+                                        style={styles.datePickerContainer}
+                                    >
+                                        <AUIThemedText style={styles.dateText}>
+                                            {date.toLocaleDateString()}
+                                        </AUIThemedText>
+                                        <FontAwesome name="calendar" style={styles.calenderIcon} />
+                                    </TouchableOpacity>
+                                </AUIThemedView>
+                                <AUIThemedText style={styles.label2}></AUIThemedText>
                             </AUIThemedView>
                             <AUIThemedView style={styles.row}>
-                                <AUIThemedText style={styles.label}>Day School</AUIThemedText>
-                                <AUIThemedText style={styles.value}>School Time</AUIThemedText>
-                                <AUIThemedText style={styles.label2}>Day School</AUIThemedText>
+                                <AUIThemedText style={styles.value}>Age eligibility</AUIThemedText>
+                                <AUIThemedView style={styles.rowContainer}>
+                                    <AUIThemedText style={styles.label}>12 to 40</AUIThemedText>
+                                    <AUIThemedText style={styles.label2}>12 to 40+</AUIThemedText>
+                                </AUIThemedView>
                             </AUIThemedView>
-                            <AUIThemedView style={styles.row3}>
-                                <AUIThemedText style={styles.label}>Co-Education</AUIThemedText>
-                                <AUIThemedText style={styles.value}>Co-Ed status</AUIThemedText>
-                                <AUIThemedText style={styles.label2}>Co-Education</AUIThemedText>
+
+                            <AUIThemedView style={styles.row}>
+                                <AUIThemedText style={styles.value}>Total Faculty</AUIThemedText>
+                                <AUIThemedView style={styles.rowContainer}>
+                                    <AUIThemedText style={styles.label}>4</AUIThemedText>
+                                    <AUIThemedText style={styles.label2}>6</AUIThemedText>
+                                </AUIThemedView>
+                            </AUIThemedView>
+
+                            <AUIThemedView style={styles.row2}>
+                                <AUIThemedText style={styles.value}>Number of seats</AUIThemedText>
+                                <AUIThemedView style={styles.rowContainer}>
+                                    <AUIThemedText style={styles.label}>40</AUIThemedText>
+                                    <AUIThemedText style={styles.label2}>70</AUIThemedText>
+                                </AUIThemedView>
                             </AUIThemedView>
                         </AUIThemedView>
                     </AUIAccordion>
@@ -250,7 +361,8 @@ const styles = StyleSheet.create({
     },
     textContainer: {
         width: "100%",
-        padding: 5,
+        // padding: 4,
+        paddingVertical: 5,
         alignItems: "center",
     },
     cardTitle: {
@@ -296,39 +408,67 @@ const styles = StyleSheet.create({
     accordionSection: {
         width: "100%",
     },
-    schoolTypelabelContainer: {
-        width: "100%",
-    },
-    row: {
+    rowContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
-        paddingVertical: 10,
-        borderBottomWidth: 2,
-        borderBottomColor: "#ddd",
-    },
-    row3: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        paddingVertical: 10,
     },
     label: {
         flex: 1,
-        textAlign: "left",
+        textAlign: "center",
         fontWeight: "500",
-        fontSize: 12,
+        fontSize: 14,
+        marginRight: 50,
+        paddingVertical: 3,
+    },
+    label2: {
+        flex: 1,
+        textAlign: "center",
+        fontWeight: "500",
+        fontSize: 14,
+        marginLeft: 50,
+        paddingVertical: 3,
+    },
+    feeLabelContainer: {
+        flex: 1,
+        flexDirection: "column",
+        textAlign: "center",
+        fontWeight: "500",
+        fontSize: 14,
+        marginRight: 50,
+        paddingVertical: 3,
+    },
+    feeLabelContaine2: {
+        flex: 1,
+        flexDirection: "column",
+        textAlign: "center",
+        fontWeight: "500",
+        fontSize: 14,
+        marginLeft: 50,
+        paddingVertical: 3,
+    },
+    feeLabelLabelText: {
+        flex: 1,
+        textAlign: "center",
+        fontWeight: "500",
+        color: "#5BD894",
+        fontSize: 14,
+        // marginRight: 50,
+        paddingVertical: 3,
+    },
+    feeLabelLabelText2: {
+        flex: 1,
+        textAlign: "center",
+        fontWeight: "500",
+        color: "#5BD894",
+        fontSize: 14,
+        // marginRight: 50,
+        paddingVertical: 3,
     },
     value: {
         textAlign: "center",
         color: "#9DA1AC",
-        fontWeight: "500",
-        fontSize: 12,
-    },
-    label2: { flex: 1, textAlign: "right", fontWeight: "500", fontSize: 12 },
-    academicsLabel2: {
-        flex: 1,
-        textAlign: "right",
-        fontWeight: "500",
-        fontSize: 12,
+        fontWeight: "400",
+        fontSize: 14,
     },
     academicsContainer: {
         padding: 3,
@@ -353,6 +493,57 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         fontSize: 16,
         color: "#5BD894",
+    },
+    admissionRow1: {
+        flexDirection: "column",
+        justifyContent: "space-between",
+        borderBottomWidth: 2,
+        borderBottomColor: "#ddd",
+        padding: 5,
+        paddingHorizontal: 10,
+    },
+    row: {
+        flexDirection: "column",
+        justifyContent: "space-between",
+        borderBottomWidth: 2,
+        borderBottomColor: "#ddd",
+        padding: 5,
+    },
+    row2: {
+        flexDirection: "column",
+        justifyContent: "space-between",
+    },
+    acadamicSessionText: {
+        textAlign: "center",
+        color: "#9DA1AC",
+        fontWeight: "400",
+        fontSize: 14,
+    },
+    datePickerRowContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+    },
+    datePickerContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        borderWidth: 1,
+        borderColor: "#9DA1AC",
+        borderRadius: 3,
+        paddingHorizontal: 7,
+        paddingVertical: 1,
+        marginTop: 10,
+    },
+    dateText: {
+        color: "#9DA1AC",
+        fontWeight: "400",
+        fontSize: 14,
+        paddingHorizontal: 6,
+    },
+    calenderIcon: { fontSize: 14, color: "#5BD894" },
+    feeRow2: {
+        flexDirection: "column",
+        justifyContent: "space-between",
     },
 });
 
