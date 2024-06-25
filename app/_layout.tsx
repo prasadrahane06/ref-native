@@ -2,6 +2,7 @@ import AUILoader from "@/components/common/AUILoader";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { APP_THEME, COLOR_THEME, TEXT_THEME } from "@/constants/Colors";
 import { getUserData, storeUserDeviceData } from "@/constants/RNAsyncStore";
+import { setToken } from "@/redux/globalSlice";
 import { RootState, store } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -13,7 +14,7 @@ import { useEffect } from "react";
 import { TouchableOpacity } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
-import { Provider, useSelector } from "react-redux";
+import { Provider, useDispatch, useSelector } from "react-redux";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -45,16 +46,20 @@ const InitialLayout = () => {
         }
     }, [loaded]);
 
+    const dispatch = useDispatch();
     const theme = useSelector((state: RootState) => state.global.theme);
 
     useEffect(() => {
         storeUserDeviceData();
 
         getUserData().then((data) => {
-            console.log(data);
+            // console.log("user-data", data);
             if (data && Object.keys(data).length > 0) {
                 if (data?.profile === "student") {
                     router.replace("/(home)/(student)");
+
+                    // saving token in redux
+                    dispatch(setToken(data?.data?.accessToken));
                 }
                 if (data?.profile === "school") {
                     router.replace("/(home)/(school)");
@@ -255,6 +260,6 @@ const RootLayoutNav = () => {
 };
 export {
     // Catch any errors thrown by the Layout component.
-    ErrorBoundary
+    ErrorBoundary,
 } from "expo-router";
 export default RootLayoutNav;

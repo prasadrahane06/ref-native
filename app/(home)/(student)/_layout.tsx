@@ -168,7 +168,7 @@ export default function AUIDrawer() {
                 component={AccommodationScreen}
                 options={{
                     drawerIcon: ({ color }) => (
-                        <FontAwesome6 name="house-chimney-window" size={24} color={color} />
+                        <FontAwesome6 name="house-chimney-window" size={20} color={color} />
                     ),
                 }}
             />
@@ -228,7 +228,7 @@ export function TabLayout() {
                         <MaterialIcons
                             name={"home"}
                             color={focused ? "white" : "#0A152F"}
-                            size={24}
+                            size={27}
                         />
                     ),
                 }}

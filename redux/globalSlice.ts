@@ -8,6 +8,7 @@ export interface GlobalState {
     signInType: string;
     signupDetails: any;
     loader: boolean;
+    token: string;
 }
 
 const initialState: GlobalState = {
@@ -16,6 +17,7 @@ const initialState: GlobalState = {
     signInType: "",
     signupDetails: null,
     loader: false,
+    token: "",
 };
 
 export const globalSlice = createSlice({
@@ -42,11 +44,14 @@ export const globalSlice = createSlice({
         setLoader: (state, action: PayloadAction<boolean>) => {
             state.loader = action.payload;
         },
+        setToken: (state, action: PayloadAction<string>) => {
+            state.token = action.payload;
+        },
     },
 });
 
 // Action creators are generated for each case reducer function
-export const { setProfile, setTheme, setSignInType, setSignupDetails, setLoader } =
+export const { setProfile, setTheme, setSignInType, setSignupDetails, setLoader, setToken } =
     globalSlice.actions;
 
 export default globalSlice.reducer;

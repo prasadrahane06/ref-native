@@ -101,14 +101,15 @@ const AUIDrawerContent = (props: any) => {
                         ios_backgroundColor={APP_THEME.ternary.first}
                         onValueChange={toggleSwitch}
                         value={isThemeEnabled}
-                        style={{ transform: [{ scaleX: 0.9 }, { scaleY: 0.9 }] }}
+                        style={{ transform: [{ scaleX: 1.1 }, { scaleY: 1.1 }] }}
                     />
                     <AUIThemedText
                         style={{
                             fontSize: 15,
+                            marginLeft: 5,
                         }}
                     >
-                        {isThemeEnabled ? "Light Mode" : "Dark Mode"}
+                        Dark Mode
                     </AUIThemedText>
                 </AUIThemedView>
                 <AUIThemedView style={styles.switchTextContainer}>
@@ -118,11 +119,12 @@ const AUIDrawerContent = (props: any) => {
                         ios_backgroundColor={APP_THEME.ternary.first}
                         onValueChange={togglePositionSwitch}
                         value={isPositionEnabled}
-                        style={{ transform: [{ scaleX: 0.9 }, { scaleY: 0.9 }] }}
+                        style={{ transform: [{ scaleX: 1.1 }, { scaleY: 1.1 }] }}
                     />
                     <AUIThemedText
                         style={{
                             fontSize: 15,
+                            marginLeft: 5,
                         }}
                     >
                         {isPositionEnabled ? "Standard" : "RTL"}

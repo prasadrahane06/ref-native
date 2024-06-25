@@ -1,11 +1,10 @@
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
+import { RootState } from "@/redux/store";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
-const baseURL = "https://0daf-58-84-60-89.ngrok-free.app/dev/"; //"http://localhost:4000/dev/"; //process.env.REACT_APP_BASE_URL;
-
-// Define the token
-const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzSW4iOjE3MzQ0MTk2MDUsImlkIjoiNjY2MmRiMTYyMzI0YmRmMGYwMzM2NDZjIiwiY2xpZW50IjoiNjY2MmRiMTYyMzI0YmRmMGYwMzM2NDZiIiwidHlwZSI6InNjaG9vbCIsImVtYWlsIjoiYXNoaXQxNTQwQGdtYWlsLmNvbSIsInBob25lIjoiOTE5MTY5NjE1NTAwIiwiaWF0IjoxNzE4ODY3NjA1fQ.4zoZB65jH8HpOoTq9Vu0gbDSk7qOWmWPLzXtoD7kZWs";
+// const baseURL = "https://o30dx07h3h.execute-api.ap-south-1.amazonaws.com/dev/"; //"http://localhost:4000/dev/"; //process.env.REACT_APP_BASE_URL;
+const baseURL = "http://localhost:4000/dev/";
 
 // Create an Axios instance
 const axiosClient = axios.create({
@@ -19,6 +18,9 @@ const axiosClient = axios.create({
 axiosClient.interceptors.request.use(
     (config) => {
         // Modify config here (e.g., add authorization token if available)
+
+        const token = useSelector((state: RootState) => state.global.token);
+        // console.log("token-inStore", token);
         config.headers.Authorization = `Bearer ${token}`;
         return config;
     },

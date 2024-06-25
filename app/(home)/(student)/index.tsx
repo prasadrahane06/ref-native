@@ -3,11 +3,11 @@ import { AUIThemedView } from "@/components/common/AUIThemedView";
 import CarouselSlide from "@/components/home/common/CarouselSlide";
 import CourseList from "@/components/home/common/CourseList";
 import DestinationList from "@/components/home/common/DestinationList";
-import DotIndicator from "@/components/home/common/DotsIndicator";
 import LanguageList from "@/components/home/common/LanguageList";
 import LastChanceList from "@/components/home/common/LastChanceList";
 import SchoolList from "@/components/home/common/SchoolList";
 import SectionTitle from "@/components/home/common/SectionTitle";
+import { APP_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
 import { carouselData } from "@/constants/dummy data/carouselData";
 import { coursesData } from "@/constants/dummy data/coursesData";
@@ -19,20 +19,22 @@ import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import { setLoader } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
-import { useNavigation } from "expo-router";
-import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
-import PagerView from "react-native-pager-view";
+import React, { useEffect, useRef, useState } from "react";
+import { Dimensions, ScrollView, StyleSheet } from "react-native";
+import { useSharedValue } from "react-native-reanimated";
+import Carousel, { ICarouselInstance, Pagination } from "react-native-reanimated-carousel";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function HomeScreen() {
     const dispatch = useDispatch();
-    const [selectedPage, setSelectedPage] = useState(0);
+    const { requestFn } = useApiRequest();
+    const width = Dimensions.get("window").width;
+    const progress = useSharedValue<number>(0);
+    const ref = useRef<ICarouselInstance>(null);
+
     const [selectedLanguage, setSelectedLanguage] = useState(languagesData[0].code);
-    const navigation = useNavigation();
     const displayedCourses = coursesData.slice(0, 4);
 
-    const { requestFn } = useApiRequest();
     const schoolsResponse = useSelector((state: RootState) => state.api.school || {});
     const courseResponse = useSelector((state: RootState) => state.api.course || {});
 
@@ -47,27 +49,42 @@ export default function HomeScreen() {
         console.log("schoolsResponse", schoolsResponse);
     }, [schoolsResponse]);
 
+    const onPressPagination = (index: number) => {
+        ref.current?.scrollTo({
+            count: index - progress.value,
+            animated: true,
+        });
+    };
+
     return (
         <ScrollView>
             <AUIThemedView>
-                <PagerView
-                    style={styles.pagerView}
-                    initialPage={0}
-                    onPageSelected={(e) => setSelectedPage(e.nativeEvent.position)}
-                >
-                    {carouselData.map((slide) => (
+                <Carousel
+                    ref={ref}
+                    loop
+                    width={width}
+                    height={width / 2}
+                    autoPlay={true}
+                    autoPlayInterval={5000}
+                    onProgressChange={progress}
+                    scrollAnimationDuration={1000}
+                    data={carouselData}
+                    renderItem={({ item }) => (
                         <CarouselSlide
-                            key={slide.key}
-                            imageSource={slide.imageSource}
-                            text={slide.text}
+                            key={item.id}
+                            imageSource={item.imageSource}
+                            text={item.text}
                         />
-                    ))}
-                </PagerView>
-                <View style={styles.dotsContainer}>
-                    {carouselData.map((_, index) => (
-                        <DotIndicator key={index} selected={selectedPage === index} />
-                    ))}
-                </View>
+                    )}
+                />
+                <Pagination.Basic
+                    progress={progress}
+                    data={carouselData}
+                    containerStyle={styles.dotsContainer}
+                    dotStyle={styles.dot}
+                    activeDotStyle={styles.activeDot}
+                    onPress={onPressPagination}
+                />
             </AUIThemedView>
 
             <AUIThemedView>
@@ -110,13 +127,11 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-    pagerView: {
-        height: 200,
-    },
     dotsContainer: {
         position: "absolute",
-        bottom: -5,
-        left: 140,
-        flexDirection: "row",
+        bottom: "5%",
+        gap: 10,
     },
+    dot: { backgroundColor: "#fff", borderRadius: 100, width: 20, height: 3 },
+    activeDot: { backgroundColor: APP_THEME.primary.first },
 });
