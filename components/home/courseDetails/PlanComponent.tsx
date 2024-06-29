@@ -16,16 +16,25 @@ import { countriesData } from "@/constants/dummy data/countriesData";
 import { nationalityData } from "@/constants/dummy data/nationalityData";
 import { addEnquiry } from "@/redux/enquiryformSlice";
 import { RootState } from "@/redux/store";
-import { AntDesign, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { AntDesign, Feather, FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Modal, Platform, Pressable, ScrollView, StyleSheet, TextInput } from "react-native";
+import {
+    Linking,
+    Modal,
+    Platform,
+    Pressable,
+    ScrollView,
+    StyleSheet,
+    TextInput,
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import { FacilitiesList } from "../schoolDetails/FacilitiesList";
+import ContactNow from "../schoolDetails/ContactNow";
 
 interface PlanComponentProps {
     courseId: string;
@@ -117,6 +126,7 @@ export default function PlanComponent({
     const [showEndDatePicker, setShowEndDatePicker] = useState(false);
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
+    const [isSeatBooked, setIsSeatBooked] = useState(false);
 
     const dispatch = useDispatch();
     const enquiryData = useSelector((state: RootState) => state.enquiryForm);
@@ -175,6 +185,22 @@ export default function PlanComponent({
         setShowEndDatePicker(!showEndDatePicker);
         setEndDate(currentDate);
         setValue("endDate", currentDate.toISOString());
+    };
+
+    const handleBookSeat = () => {
+        setIsSeatBooked(true);
+    };
+
+    const handlePhonePress = () => {
+        Linking.openURL("tel:+1234567890");
+    };
+
+    const handleEmailPress = () => {
+        Linking.openURL("mailto:example@example.com");
+    };
+
+    const handleWebPress = () => {
+        Linking.openURL("https://example.com");
     };
 
     const EnquiryForm = ({ control }: any) => {
@@ -517,16 +543,26 @@ export default function PlanComponent({
                 <CourseDetailsComponent data={plan} />
             </AUIThemedView>
 
-            <AUIThemedView>
-                <ScheduleAndLesson
-                    scheduleDescription={scheduleDescription}
-                    lessonDescription={lessonDescription}
-                />
-            </AUIThemedView>
-
-            <AUIThemedView>
+            <AUIThemedView style={styles.facilityContainer}>
                 <SectionTitle>{GLOBAL_TEXT.facilities}</SectionTitle>
                 <FacilitiesList data={plan.facilities} />
+            </AUIThemedView>
+
+            <AUIThemedView style={styles.contactNowContainer}>
+                <SectionTitle>{GLOBAL_TEXT.contact_now}</SectionTitle>
+                <AUIThemedView style={styles.contactNowIconContainer}>
+                    <ContactNow
+                        name="phone"
+                        IconComponent={FontAwesome}
+                        onPress={handlePhonePress}
+                    />
+                    <ContactNow
+                        name="envelope"
+                        IconComponent={FontAwesome}
+                        onPress={handleEmailPress}
+                    />
+                    <ContactNow name="globe" IconComponent={Feather} onPress={handleWebPress} />
+                </AUIThemedView>
             </AUIThemedView>
 
             <AUIThemedView style={styles.btnContainer}>
@@ -537,6 +573,7 @@ export default function PlanComponent({
                     </AUIThemedText>
                 </AUIThemedView>
 
+                {/* {isSeatBooked && ( */}
                 <Pressable
                     style={styles.buyContainer}
                     onPress={() =>
@@ -545,18 +582,19 @@ export default function PlanComponent({
                         })
                     }
                 >
-                    <Ionicons name="bag-outline" size={24} color="#fff" />
+                    <Ionicons name="bag-handle-outline" size={24} color="black" />
                     <AUIThemedText style={styles.whiteBoldText}>
                         {GLOBAL_TEXT.buy_now}
                     </AUIThemedText>
                 </Pressable>
+                {/* )} */}
             </AUIThemedView>
 
             <AUIThemedView>
                 <AUIButton
                     title={GLOBAL_TEXT.enquire_now}
-                    selected
                     style={styles.enquireButton}
+                    borderColor="#5BD894"
                     onPress={() => setIsModalVisible(true)}
                 />
             </AUIThemedView>
@@ -677,6 +715,19 @@ const styles = StyleSheet.create({
         borderWidth: StyleSheet.hairlineWidth,
         borderColor: APP_THEME.primary.first,
     },
+    facilityContainer: {
+        borderBottomWidth: 1,
+        borderColor: "#9DA1AC",
+    },
+    contactNowContainer: {
+        flexDirection: "column",
+    },
+    contactNowIconContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        gap: 10,
+        paddingHorizontal: 40,
+    },
     btnContainer: {
         flexDirection: "row",
         gap: 10,
@@ -711,7 +762,7 @@ const styles = StyleSheet.create({
     },
     whiteBoldText: {
         fontWeight: "bold",
-        color: "#fff",
+        color: "black",
     },
     enquireButton: {
         paddingHorizontal: 15,

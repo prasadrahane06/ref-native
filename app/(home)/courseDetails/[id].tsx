@@ -16,10 +16,10 @@ import { useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useLayoutEffect, useState } from "react";
 import { Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import Animated, {
-	interpolate,
-	useAnimatedRef,
-	useAnimatedStyle,
-	useScrollViewOffset,
+    interpolate,
+    useAnimatedRef,
+    useAnimatedStyle,
+    useScrollViewOffset,
 } from "react-native-reanimated";
 import { useDispatch } from "react-redux";
 
@@ -45,7 +45,7 @@ function CoursePlanTabs({ courseId }: { courseId: string }) {
                         style={[
                             planTabsStyles.tabLabel,
                             {
-                                color: selectedPlan === GLOBAL_TEXT.plan_one ? "#fff" : "#000",
+                                color: selectedPlan === GLOBAL_TEXT.plan_one ? "#fff" : "#5BD894",
                             },
                         ]}
                     >
@@ -65,7 +65,7 @@ function CoursePlanTabs({ courseId }: { courseId: string }) {
                         style={[
                             planTabsStyles.tabLabel,
                             {
-                                color: selectedPlan === GLOBAL_TEXT.plan_two ? "#fff" : "#000",
+                                color: selectedPlan === GLOBAL_TEXT.plan_two ? "#fff" : "#5BD894",
                             },
                         ]}
                     >
@@ -85,7 +85,7 @@ function CoursePlanTabs({ courseId }: { courseId: string }) {
                         style={[
                             planTabsStyles.tabLabel,
                             {
-                                color: selectedPlan === GLOBAL_TEXT.plan_three ? "#fff" : "#000",
+                                color: selectedPlan === GLOBAL_TEXT.plan_three ? "#fff" : "#5BD894",
                             },
                         ]}
                     >
@@ -281,7 +281,7 @@ export default function CourseDetails() {
                             </TouchableOpacity>
                         </AUIThemedView>
                     </AUIThemedView>
-                    <AUIThemedView style={{ paddingHorizontal: 15, marginBottom: 10 }}>
+                    {/* <AUIThemedView style={{ paddingHorizontal: 15, marginBottom: 10 }}>
                         <AUIThemedText
                             style={[
                                 styles.startingDate,
@@ -295,7 +295,7 @@ export default function CourseDetails() {
                         >
                             Live like a Parisian, sip coffee, speak French, become a local.
                         </AUIThemedText>
-                    </AUIThemedView>
+                    </AUIThemedView> */}
                     <AUIThemedView style={styles.planContainer}>
                         <AUIThemedText style={styles.planText}>
                             {GLOBAL_TEXT.select_your_plan}
@@ -323,10 +323,10 @@ const planTabsStyles = StyleSheet.create({
     activeTab: {
         paddingHorizontal: 10,
         paddingVertical: 8,
-        backgroundColor: "#0A152F",
+        backgroundColor: "#5BD894",
         borderRadius: 7,
         borderWidth: 1,
-        borderColor: "#0A152F",
+        borderColor: "#5BD894",
     },
     inactiveTab: {
         paddingHorizontal: 10,
@@ -334,7 +334,7 @@ const planTabsStyles = StyleSheet.create({
         backgroundColor: "#fff",
         borderRadius: 7,
         borderWidth: 1,
-        borderColor: "#0A152F",
+        borderColor: "#5BD894",
     },
 });
 
@@ -369,7 +369,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        paddingVertical: 15,
+        paddingVertical: 10,
         backgroundColor: APP_THEME.background,
     },
     header: {
@@ -396,6 +396,7 @@ const styles = StyleSheet.create({
     },
     planContainer: {
         backgroundColor: APP_THEME.background,
+        paddingVertical: 10,
     },
     planText: {
         fontWeight: "bold",

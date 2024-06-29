@@ -22,13 +22,10 @@ const AUIAccordion: React.FC<AccordionProps> = ({ title, children, icon }) => {
                 onPress={() => setExpanded(!expanded)}
             >
                 <AUIThemedView style={styles.accordionTitle}>
-                    {icon ? (
-                        <AUIImage style={styles.icon} path={icon} resizeMode="cover" />
-                    ) : (
-                        <Ionicons name="school-outline" size={24} color="#5BD894" />
-                    )}
+                    <AUIImage style={styles.icon} path={icon} resizeMode="cover" />
                     <AUIThemedText style={styles.accordionTitleText}>{title}</AUIThemedText>
                 </AUIThemedView>
+
                 <Ionicons
                     name={expanded ? "chevron-up-outline" : "chevron-down-outline"}
                     size={24}

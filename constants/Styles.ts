@@ -175,7 +175,7 @@ export const secondaryButtonStyle = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        marginTop: 10,
+        marginTop: 30,
     },
     button: {
         width: "50%",
@@ -263,7 +263,7 @@ export const signupPageStyles = StyleSheet.create({
         gap: 5,
     },
     section: {
-        marginTop: 20,
+        marginTop: 30,
     },
     signInLink: {
         flexDirection: "row",

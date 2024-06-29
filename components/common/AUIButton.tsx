@@ -12,6 +12,7 @@ interface ButtonProps extends TouchableOpacityProps {
     disabled?: boolean;
     icon?: any;
     regularText?: boolean;
+    borderColor?: string;
 }
 /**
  *AUIPrimaryButton is a custom button component that displays a title and an icon.
@@ -30,6 +31,7 @@ const AUIButton: React.FC<ButtonProps> = ({
     icon,
     disabled,
     regularText,
+    borderColor,
 }) => {
     return (
         <Pressable style={[buttonStyle.button, style]} onPress={disabled ? () => null : onPress}>
@@ -41,7 +43,12 @@ const AUIButton: React.FC<ButtonProps> = ({
                     regularText={regularText}
                 />
             ) : (
-                <DefaultBtn disabled={disabled} title={title} icon={icon} />
+                <DefaultBtn
+                    disabled={disabled}
+                    title={title}
+                    icon={icon}
+                    borderColor={borderColor}
+                />
             )}
         </Pressable>
     );
@@ -60,11 +67,11 @@ const HighlightedBtn = ({ disabled, title, icon, regularText }: any) => (
         {icon && <AntDesign name={icon} size={24} color="#ffffff" />}
     </AUILinearGradient>
 );
-const DefaultBtn = ({ disabled, title, icon }: any) => (
+const DefaultBtn = ({ disabled, title, icon, borderColor }: any) => (
     <AUILinearGradient
         style={[
             buttonStyle.buttonInner,
-            !disabled && { borderWidth: 1, borderColor: APP_THEME.gray },
+            !disabled && { borderWidth: 1, borderColor: borderColor || APP_THEME.gray },
         ]}
         colors={
             disabled

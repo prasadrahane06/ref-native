@@ -12,7 +12,7 @@ import { FontAwesome, Ionicons, MaterialCommunityIcons } from "@expo/vector-icon
 import { Asset } from "expo-asset";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import { Pressable, StyleSheet, TouchableOpacity } from "react-native";
+import { Pressable, StyleSheet, TouchableOpacity, Linking } from "react-native";
 import Animated, {
     interpolate,
     useAnimatedRef,
@@ -125,6 +125,14 @@ export default function SchoolDetails() {
         };
     });
 
+    const handlePhonePress = (phoneNumber: string) => {
+        Linking.openURL(`tel:${phoneNumber}`);
+    };
+
+    const handleEmailPress = (emailAddress: string) => {
+        Linking.openURL(`mailto:${emailAddress}`);
+    };
+
     useLayoutEffect(() => {
         navigation.setOptions({
             headerTransparent: true,
@@ -191,62 +199,27 @@ export default function SchoolDetails() {
                     />
 
                     <AUIThemedView style={styles.infoContainer}>
-                        <AUIThemedText style={styles.name}>
-                            {schoolsResponse?.name || "The Manchester School"}
-                        </AUIThemedText>
-
-                        <AUIThemedView style={styles.ratingsContainer}>
-                            <Ionicons name="star" size={20} color={APP_THEME.primary.first} />
-                            <AUIThemedText style={styles.ratingsText}>4.0</AUIThemedText>
+                        <AUIThemedView style={styles.headerContainer}>
+                            <AUIThemedText style={styles.name}>
+                                {schoolsResponse?.name || "The Manchester School"}
+                            </AUIThemedText>
                             <AUIThemedText style={styles.viewsText}>150 Views</AUIThemedText>
                         </AUIThemedView>
 
+                        <AUIThemedView style={styles.ratingsContainer}>
+                            <Ionicons name="star" size={20} color={APP_THEME.primary.first} />
+                            <AUIThemedText style={styles.ratingsText}>4.6</AUIThemedText>
+                            <AUIThemedText style={styles.rankText}>QS Rank 276</AUIThemedText>
+                        </AUIThemedView>
+
                         <AUIThemedView style={styles.contactsContainer}>
-                            <AUIThemedText style={styles.contact}>
-                                {GLOBAL_TEXT.contact_details}
+                            <AUIThemedText>
+                                <AUIThemedText style={styles.description}>
+                                    The Manchester School, UK, is proud to offer dynamic selection
+                                    of language program design to ignite your fashion for
+                                    communication and open doors to new cultures.
+                                </AUIThemedText>
                             </AUIThemedText>
-
-                            <AUIThemedView
-                                style={{
-                                    paddingVertical: 5,
-                                    backgroundColor: APP_THEME.background,
-                                }}
-                            >
-                                <AUIThemedView style={styles.contacts}>
-                                    <FontAwesome
-                                        name="phone"
-                                        size={20}
-                                        color={APP_THEME.primary.first}
-                                    />
-                                    <AUIThemedText
-                                        style={[styles.contactText, { fontWeight: "bold" }]}
-                                    >
-                                        {schoolsResponse?.phone || "+44 987-986-5443"}
-                                    </AUIThemedText>
-                                </AUIThemedView>
-
-                                <AUIThemedView style={styles.contacts}>
-                                    <MaterialCommunityIcons
-                                        name="email"
-                                        size={20}
-                                        color={APP_THEME.primary.first}
-                                    />
-                                    <AUIThemedText style={styles.contactText}>
-                                        {schoolsResponse?.email || "connecto@mancha.com"}
-                                    </AUIThemedText>
-                                </AUIThemedView>
-
-                                <AUIThemedView style={styles.contacts}>
-                                    <Ionicons
-                                        name="globe-outline"
-                                        size={20}
-                                        color={APP_THEME.primary.first}
-                                    />
-                                    <AUIThemedText style={styles.contactText}>
-                                        {schoolsResponse?.website || "www.manchesterschool.com"}
-                                    </AUIThemedText>
-                                </AUIThemedView>
-                            </AUIThemedView>
                         </AUIThemedView>
                     </AUIThemedView>
 
@@ -321,6 +294,10 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
         paddingHorizontal: 20,
     },
+    headerContainer: {
+        flexDirection: "row",
+        gap: 10,
+    },
     name: {
         fontSize: 22,
         fontWeight: "bold",
@@ -328,9 +305,8 @@ const styles = StyleSheet.create({
     contactsContainer: {
         paddingTop: 15,
     },
-    contact: {
+    description: {
         fontSize: 15,
-        fontWeight: "bold",
     },
     contacts: {
         flexDirection: "row",
@@ -343,13 +319,19 @@ const styles = StyleSheet.create({
     },
     ratingsContainer: {
         flexDirection: "row",
-        gap: 8,
+        gap: 5,
         marginTop: 10,
         alignItems: "center",
     },
     ratingsText: {
         fontSize: 16,
-        fontWeight: "600",
+        fontWeight: "700",
+    },
+    rankText: {
+        fontSize: 16,
+        fontWeight: "700",
+        color: "#5BD894",
+        textDecorationLine: "underline",
     },
     viewsText: {
         fontSize: 16,

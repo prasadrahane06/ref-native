@@ -4,18 +4,20 @@ import { Text, TextInput, TextInputProps, View } from "react-native";
 
 /**
  * AUIInputField is a custom component of input field.
- *@param {string} [label]
+ * @param {string} [label]
  * @param {string} [placeholder]
  * @param {string} value
  * @param {string} onChangeText
- *@param {string} [error]
- *
+ * @param {string} [error]
+ * @param {boolean} [autoFocus]
+ * @param {string} [keyboardType]
  */
 
 interface CustomInputProps extends TextInputProps {
     label?: string;
     error?: string;
     inputStyle?: object;
+    autoFocus?: boolean;
 }
 
 const AUIInputField: React.FC<CustomInputProps> = ({
@@ -26,6 +28,8 @@ const AUIInputField: React.FC<CustomInputProps> = ({
     error,
     style,
     inputStyle,
+    autoFocus,
+    keyboardType,
     ...props
 }) => {
     return (
@@ -42,6 +46,8 @@ const AUIInputField: React.FC<CustomInputProps> = ({
                 placeholderTextColor={"gray"}
                 value={value}
                 onChangeText={onChangeText}
+                autoFocus={autoFocus}
+                keyboardType={keyboardType}
                 {...props}
             />
             {error && <Text style={inputFieldStyle.error}>{error}</Text>}

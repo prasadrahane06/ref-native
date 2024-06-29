@@ -20,6 +20,7 @@ export const GLOBAL_TEXT = {
     explore_more: "Explore More",
     latest_events: "Latest Events",
     facilities: "Facilities",
+    contact_now: "Contact Now",
     ratings_and_review: "Ratings and review",
     contact_details: "Contact Details",
     enquire_now: "Enquire Now",

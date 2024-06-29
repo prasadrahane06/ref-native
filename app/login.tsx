@@ -17,7 +17,13 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { KeyboardAvoidingView, Platform, View } from "react-native";
+import {
+    KeyboardAvoidingView,
+    Platform,
+    View,
+    TouchableWithoutFeedback,
+    Keyboard,
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import { post } from "./services/axiosClient";
@@ -56,9 +62,10 @@ const LoginPage = () => {
         signUpPhone: false,
         login: false,
     });
-    const { watch, reset, setValue, control } = useForm({
+    const { watch, reset, setValue, control, formState, trigger } = useForm({
         resolver: yupResolver(schema),
-        mode: "onChange",
+        mode: "onBlur",
+        criteriaMode: "all",
         defaultValues: {
             input: "",
             phoneCode: "+91",
@@ -274,85 +281,93 @@ const LoginPage = () => {
             </AUIThemedView>
         );
     }
-    return (
-        <AUIThemedView style={loginPageStyles.container}>
-            <AUIThemedText style={loginPageStyles.heading}>
-                {otpSent ? GLOBAL_TEXT.enter_pin : GLOBAL_TEXT.login_to_continue}
-            </AUIThemedText>
-            <KeyboardAvoidingView
-                style={{ flex: 1, backgroundColor: "#ffffff" }}
-                behavior="padding"
-                keyboardVerticalOffset={keyboardVerticalOffset}
-            >
-                {!otpSent && (
-                    <>
-                        <AUIThemedView style={loginPageStyles.mobileEmailButtonContainer}>
-                            <AUIButton
-                                style={{ width: "50%" }}
-                                title="Mobile Number"
-                                onPress={() => {
-                                    setValue("selectedButton", "mobile");
-                                    // setValue("input", "");
-                                    reset({
-                                        input: "",
-                                        phoneCode: "+91",
-                                        selectedButton: "mobile",
-                                    });
-                                }}
-                                selected={selectedButton === "mobile"}
-                            />
-                            <AUIButton
-                                style={{ width: "50%" }}
-                                title="Email ID"
-                                onPress={() => {
-                                    setValue("selectedButton", "email");
-                                    // setValue("input", "");
-                                    reset({
-                                        input: "",
-                                        selectedButton: "email",
-                                    });
-                                }}
-                                selected={selectedButton === "email"}
-                            />
-                        </AUIThemedView>
-                        <AUIThemedView style={loginPageStyles.sendOtpContainer}>
-                            {selectedButton === "mobile" ? (
-                                <ContactNumberField control={control} />
-                            ) : (
-                                <InputField control={control} />
-                            )}
-                            <View style={secondaryButtonStyle.buttonContainer}>
-                                <AUIButton
-                                    title="Send OTP"
-                                    disabled={!inputValue}
-                                    selected
-                                    icon={"arrowright"}
-                                    style={{ width: "50%" }}
-                                    background={APP_THEME.primary.first}
-                                    onPress={handleSendOtp}
-                                />
-                            </View>
-                        </AUIThemedView>
-                    </>
-                )}
 
-                {otpSent && (
-                    <>
-                        <AUIThemedView style={loginPageStyles.otpViewContainer}>
-                            <OTPScreen
-                                length={4}
-                                onChange={(val: any) => handleOTPChange(val, "login")}
-                                onBackToInput={handleBackToInput}
-                                onResendOtp={() => handleOnResendOtp(inputValue, "phone")}
-                                disabled={otpVerified.login}
-                                inputValue={inputValue}
-                            />
-                            {otpVerified.login && <OTPVerified label={"OTP verified"} />}
-                        </AUIThemedView>
-                    </>
-                )}
-            </KeyboardAvoidingView>
-        </AUIThemedView>
+    const dismissKeyboard = () => {
+        Keyboard.dismiss();
+        trigger("input");
+    };
+
+    return (
+        <TouchableWithoutFeedback onPress={dismissKeyboard}>
+            <AUIThemedView style={loginPageStyles.container}>
+                <AUIThemedText style={loginPageStyles.heading}>
+                    {otpSent ? GLOBAL_TEXT.enter_pin : GLOBAL_TEXT.login_to_continue}
+                </AUIThemedText>
+                <KeyboardAvoidingView
+                    style={{ flex: 1, backgroundColor: "#ffffff" }}
+                    behavior="padding"
+                    keyboardVerticalOffset={keyboardVerticalOffset}
+                >
+                    {!otpSent && (
+                        <>
+                            <AUIThemedView style={loginPageStyles.mobileEmailButtonContainer}>
+                                <AUIButton
+                                    style={{ width: "50%" }}
+                                    title="Mobile Number"
+                                    onPress={() => {
+                                        setValue("selectedButton", "mobile");
+                                        // setValue("input", "");
+                                        reset({
+                                            input: "",
+                                            phoneCode: "+91",
+                                            selectedButton: "mobile",
+                                        });
+                                    }}
+                                    selected={selectedButton === "mobile"}
+                                />
+                                <AUIButton
+                                    style={{ width: "50%" }}
+                                    title="Email ID"
+                                    onPress={() => {
+                                        setValue("selectedButton", "email");
+                                        // setValue("input", "");
+                                        reset({
+                                            input: "",
+                                            selectedButton: "email",
+                                        });
+                                    }}
+                                    selected={selectedButton === "email"}
+                                />
+                            </AUIThemedView>
+                            <AUIThemedView style={loginPageStyles.sendOtpContainer}>
+                                {selectedButton === "mobile" ? (
+                                    <ContactNumberField control={control} trigger={trigger} />
+                                ) : (
+                                    <InputField control={control} trigger={trigger} />
+                                )}
+                                <View style={secondaryButtonStyle.buttonContainer}>
+                                    <AUIButton
+                                        title="Send OTP"
+                                        disabled={!formState.isValid}
+                                        selected
+                                        icon={"arrowright"}
+                                        style={{ width: "50%" }}
+                                        background={APP_THEME.primary.first}
+                                        onPress={handleSendOtp}
+                                    />
+                                </View>
+                            </AUIThemedView>
+                        </>
+                    )}
+
+                    {otpSent && (
+                        <>
+                            <AUIThemedView style={loginPageStyles.otpViewContainer}>
+                                <OTPScreen
+                                    length={4}
+                                    onChange={(val: any) => handleOTPChange(val, "login")}
+                                    onBackToInput={handleBackToInput}
+                                    onResendOtp={() => handleOnResendOtp(inputValue, "phone")}
+                                    disabled={otpVerified.login}
+                                    inputValue={inputValue}
+                                />
+                                {otpVerified.login && <OTPVerified label={"OTP verified"} />}
+                            </AUIThemedView>
+                        </>
+                    )}
+                </KeyboardAvoidingView>
+            </AUIThemedView>
+        </TouchableWithoutFeedback>
     );
 };
 
@@ -417,22 +432,26 @@ const ContactNumberField = ({ label, control }: any) => (
                             value={value}
                             onChangeText={onChange}
                             placeholder={SIGNUP_FIELDS.phone.placeholder}
+                            keyboardType="numeric"
+                            autoFocus={true}
                         />
                     );
                 }}
             />
         </AUIThemedView>
-        {/* <Controller
-      name="input"
-      control={control}
-      render={({ fieldState: { error } }) => {
-        return (
-          <AUIThemedText style={{ color: "red", fontSize: 14 }}>
-            {error?.message || ""}
-          </AUIThemedText>
-        );
-      }}
-    /> */}
+        <Controller
+            name="input"
+            control={control}
+            render={({ fieldState: { error } }) => {
+                return (
+                    <AUIThemedText
+                        style={{ position: "absolute", color: "red", fontSize: 14, marginTop: 52 }}
+                    >
+                        {error?.message || ""}
+                    </AUIThemedText>
+                );
+            }}
+        />
     </AUIThemedView>
 );
 const InputField = ({ control }: any) => (
@@ -446,8 +465,20 @@ const InputField = ({ control }: any) => (
                         value={value}
                         onChangeText={onChange}
                         placeholder={SIGNUP_FIELDS.email.placeholder}
-                        // error={error?.message}
+                        autoFocus={true}
                     />
+                    {error && (
+                        <AUIThemedText
+                            style={{
+                                position: "absolute",
+                                color: "red",
+                                fontSize: 14,
+                                marginTop: 52,
+                            }}
+                        >
+                            {error.message}
+                        </AUIThemedText>
+                    )}
                 </>
             );
         }}

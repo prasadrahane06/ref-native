@@ -13,10 +13,17 @@ import { API_URL } from "@/constants/urlProperties";
 import { setLoader, setSignInType, setSignupDetails } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
 import { useRouter } from "expo-router";
-import { useState } from "react";
-import { KeyboardAvoidingView, Platform } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import {
+    Keyboard,
+    KeyboardAvoidingView,
+    Platform,
+    TouchableWithoutFeedback,
+    View,
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { post } from "./services/axiosClient";
+
 const SignupPage = () => {
     const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
     const router = useRouter();
@@ -25,11 +32,21 @@ const SignupPage = () => {
 
     const [errors, setErrors] = useState({});
     const [signupValues, setSignupValues] = useState({
-        name: null,
-        email: null,
-        phone: null,
+        name: "",
+        email: "",
+        phone: "",
         phoneCode: "+91",
     });
+    const [isButtonEnabled, setIsButtonEnabled] = useState(false);
+
+    const emailInputRef = useRef(null);
+    const phoneInputRef = useRef(null);
+
+    useEffect(() => {
+        const isValid =
+            Object.values(signupValues).every((x) => x) && Object.keys(errors).length === 0;
+        setIsButtonEnabled(isValid);
+    }, [signupValues, errors]);
 
     const handleOnSave = () => {
         console.log(signupValues);
@@ -86,11 +103,15 @@ const SignupPage = () => {
                 ApiErrorToast(e.response?.data?.message);
             });
     };
+
     const handleOnChange = (val: any, item: string) => {
         setSignupValues({
             ...signupValues,
             [item]: val,
         });
+    };
+
+    const validateField = (val: any, item: string) => {
         // @ts-ignore
         if (item === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
             setErrors({
@@ -109,84 +130,119 @@ const SignupPage = () => {
         }
         setErrors({});
     };
+
     const handleDropdownChange = (val: any) => {
         setSignupValues({
             ...signupValues,
             phoneCode: val?.dialling_code,
         });
     };
+
     const navigateToLogin = () => {
         dispatch(setSignInType("exist"));
         router.navigate("/login");
     };
-    return (
-        <AUISafeAreaView edges={["bottom"]}>
-            <AUIThemedView style={signupPageStyles.container}>
-                <AUIThemedText style={signupPageStyles.heading}>
-                    {GLOBAL_TEXT.tell_about_yourself}
-                </AUIThemedText>
-                <KeyboardAvoidingView
-                    style={{ flex: 1 }}
-                    behavior="padding"
-                    keyboardVerticalOffset={keyboardVerticalOffset}
-                >
-                    <AUIThemedView style={signupPageStyles.formLayout}>
-                        <AUIThemedView style={signupPageStyles.fieldContainer}>
-                            {Object.keys(SIGNUP_FIELDS).map((item, i) => (
-                                <AUIThemedView key={i}>
-                                    {item === "phone" ? (
-                                        <ContactNumberField
-                                            label={SIGNUP_FIELDS[item].label}
-                                            placeholder={SIGNUP_FIELDS[item].placeholder}
-                                            value={signupValues[item]}
-                                            dropdownValue={signupValues.phoneCode}
-                                            handleDropdownChange={handleDropdownChange}
-                                            handleOnChange={(val: any) => handleOnChange(val, item)}
-                                            error={
-                                                // @ts-ignore
-                                                Object.keys(errors).length > 0 ? errors[item] : ""
-                                            }
-                                        />
-                                    ) : (
-                                        <AUIInputField
-                                            // @ts-ignore
-                                            label={SIGNUP_FIELDS[item].label}
-                                            // @ts-ignore
-                                            placeholder={SIGNUP_FIELDS[item].placeholder}
-                                            // @ts-ignore
 
-                                            value={signupValues[item]}
-                                            onChangeText={(val: any) => handleOnChange(val, item)}
-                                            error={
-                                                // @ts-ignore
-                                                Object.keys(errors).length > 0 ? errors[item] : ""
-                                            }
-                                        />
-                                    )}
-                                </AUIThemedView>
-                            ))}
+    const handleTouchOutside = () => {
+        Keyboard.dismiss();
+
+        validateField(signupValues.email, "email");
+        validateField(signupValues.phone, "phone");
+    };
+
+    return (
+        <TouchableWithoutFeedback onPress={handleTouchOutside}>
+            <AUISafeAreaView edges={["bottom"]}>
+                <AUIThemedView style={signupPageStyles.container}>
+                    <AUIThemedText style={signupPageStyles.heading}>
+                        {GLOBAL_TEXT.tell_about_yourself}
+                    </AUIThemedText>
+                    <KeyboardAvoidingView
+                        style={{ flex: 1 }}
+                        behavior="padding"
+                        keyboardVerticalOffset={keyboardVerticalOffset}
+                    >
+                        <AUIThemedView style={signupPageStyles.formLayout}>
+                            <AUIThemedView style={signupPageStyles.fieldContainer}>
+                                {Object.keys(SIGNUP_FIELDS).map((item, i) => (
+                                    <AUIThemedView key={i}>
+                                        {item === "phone" ? (
+                                            <ContactNumberField
+                                                label={SIGNUP_FIELDS[item].label}
+                                                placeholder={SIGNUP_FIELDS[item].placeholder}
+                                                value={signupValues[item]}
+                                                dropdownValue={signupValues.phoneCode}
+                                                handleDropdownChange={handleDropdownChange}
+                                                handleOnChange={(val: any) =>
+                                                    handleOnChange(val, item)
+                                                }
+                                                error={
+                                                    // @ts-ignore
+                                                    Object.keys(errors).length > 0
+                                                        ? errors[item]
+                                                        : ""
+                                                }
+                                                onBlur={() =>
+                                                    validateField(signupValues[item], item)
+                                                }
+                                            />
+                                        ) : (
+                                            <View
+                                                ref={
+                                                    item === "email" ? emailInputRef : phoneInputRef
+                                                }
+                                            >
+                                                <AUIInputField
+                                                    // @ts-ignore
+                                                    label={SIGNUP_FIELDS[item].label}
+                                                    // @ts-ignore
+                                                    placeholder={SIGNUP_FIELDS[item].placeholder}
+                                                    // @ts-ignore
+
+                                                    value={signupValues[item]}
+                                                    onChangeText={(val: any) =>
+                                                        handleOnChange(val, item)
+                                                    }
+                                                    error={
+                                                        // @ts-ignore
+                                                        Object.keys(errors).length > 0
+                                                            ? errors[item]
+                                                            : ""
+                                                    }
+                                                    onBlur={() =>
+                                                        validateField(signupValues[item], item)
+                                                    }
+                                                />
+                                            </View>
+                                        )}
+                                    </AUIThemedView>
+                                ))}
+                            </AUIThemedView>
+                            <AUIThemedView style={signupPageStyles.section}>
+                                <AUIButton
+                                    title={GLOBAL_TEXT.continue_n_verify}
+                                    disabled={!isButtonEnabled}
+                                    selected
+                                    icon={"arrowright"}
+                                    onPress={handleOnSave}
+                                />
+                            </AUIThemedView>
+                            <AUIThemedView
+                                style={[signupPageStyles.section, signupPageStyles.signInLink]}
+                            >
+                                <AUIThemedText>Already have an account?</AUIThemedText>
+                                <AUIThemedText
+                                    onPress={navigateToLogin}
+                                    style={signupPageStyles.link}
+                                >
+                                    Sign in
+                                </AUIThemedText>
+                            </AUIThemedView>
                         </AUIThemedView>
-                        <AUIThemedView style={signupPageStyles.section}>
-                            <AUIButton
-                                title={GLOBAL_TEXT.continue_n_verify}
-                                disabled={!Object.values(signupValues).every((x) => x)}
-                                selected
-                                icon={"arrowright"}
-                                onPress={handleOnSave}
-                            />
-                        </AUIThemedView>
-                        <AUIThemedView
-                            style={[signupPageStyles.section, signupPageStyles.signInLink]}
-                        >
-                            <AUIThemedText>Already have an account?</AUIThemedText>
-                            <AUIThemedText onPress={navigateToLogin} style={signupPageStyles.link}>
-                                Sign in
-                            </AUIThemedText>
-                        </AUIThemedView>
-                    </AUIThemedView>
-                </KeyboardAvoidingView>
-            </AUIThemedView>
-        </AUISafeAreaView>
+                    </KeyboardAvoidingView>
+                </AUIThemedView>
+            </AUISafeAreaView>
+        </TouchableWithoutFeedback>
     );
 };
 
@@ -198,6 +254,7 @@ const ContactNumberField = ({
     dropdownValue,
     handleDropdownChange,
     placeholder,
+    onBlur,
 }: any) => (
     <AUIThemedView style={{ backgroundColor: "#ffffff" }}>
         <AUIThemedText
@@ -237,9 +294,17 @@ const ContactNumberField = ({
                 placeholder={placeholder}
                 value={value}
                 onChangeText={handleOnChange}
+                keyboardType="numeric"
+                onBlur={onBlur}
             />
         </AUIThemedView>
-        {error && <AUIThemedText style={{ color: "red", fontSize: 14 }}>{error}</AUIThemedText>}
+        {error && (
+            <AUIThemedText
+                style={{ position: "absolute", color: "red", fontSize: 14, marginTop: 78 }}
+            >
+                {error}
+            </AUIThemedText>
+        )}
     </AUIThemedView>
 );
 

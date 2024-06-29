@@ -78,7 +78,7 @@ const InitialPage = () => {
                                 path={
                                     profile === "student"
                                         ? Asset.fromModule(
-                                              require("@/assets/images/initialPage/student-white.png")
+                                              require("@/assets/images/initialPage/fi_3135773 (1).png")
                                           ).uri
                                         : Asset.fromModule(
                                               require("@/assets/images/initialPage/student.png")
