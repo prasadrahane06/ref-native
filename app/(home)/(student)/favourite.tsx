@@ -54,7 +54,7 @@ const TabTwoScreen: React.FC = () => {
                 title={item.title}
                 image={item.image}
                 favorite={item.favorite}
-                // startingDate={item.startingDate}
+                startingDate={item.startingDate}
             />
         </AUIThemedView>
     );
@@ -81,7 +81,6 @@ const TabTwoScreen: React.FC = () => {
                 favorite={item.favorite}
                 countryWidth={160}
                 countryHeight={145}
-                countryTopPosition={110}
             />
         </AUIThemedView>
     );
@@ -144,9 +143,10 @@ const TabTwoScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
     container: {
-        paddingHorizontal: 10,
+        paddingHorizontal: 12,
         backgroundColor: APP_THEME.background,
     },
+
     coursesContainer: {
         borderBottomWidth: 1,
         borderColor: "#5BD894",
@@ -156,33 +156,34 @@ const styles = StyleSheet.create({
     schoolContainer: {
         borderBottomWidth: 1,
         borderColor: "#5BD894",
+        paddingBottom: 3,
         backgroundColor: APP_THEME.background,
     },
     destinationContainer: {
-        backgroundColor: APP_THEME.background,
-        marginBottom: 10,
+        // backgroundColor: "red",
+        bottom: 10,
     },
+
     courseItem: {
         width: "48%",
         marginBottom: 10,
         backgroundColor: APP_THEME.background,
     },
     schoolItem: {
-        justifyContent: "center",
-        alignItems: "center",
+        width: "48%",
         marginBottom: 10,
-        width: "55%",
-        // marginHorizontal: 7,
+        marginTop: -10,
+        paddingHorizontal: 1,
         backgroundColor: APP_THEME.background,
     },
     destinationItem: {
-        justifyContent: "center",
-        alignItems: "center",
-        marginBottom: 10,
-        width: "55%",
-        marginLeft: 7,
-        backgroundColor: APP_THEME.background,
+        width: "48%",
+        // backgroundColor: APP_THEME.background,
+        // backgroundColor: "blue",
+        top: 6,
+        marginVertical: -6,
     },
+
     courseColumnWrapper: {
         justifyContent: "space-between",
         backgroundColor: APP_THEME.background,
@@ -190,15 +191,13 @@ const styles = StyleSheet.create({
         marginBottom: -8,
     },
     schoolColumnWrapper: {
-        marginHorizontal: 9,
-        justifyContent: "center",
+        justifyContent: "space-between",
         backgroundColor: APP_THEME.background,
+        marginTop: 10,
     },
     destinationColumnWrapper: {
-        marginBottom: -20,
-        backgroundColor: APP_THEME.background,
-        marginHorizontal: 9,
-        justifyContent: "center",
+        justifyContent: "space-between",
+        // backgroundColor: APP_THEME.background,
     },
 });
 

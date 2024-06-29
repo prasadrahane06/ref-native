@@ -6,14 +6,7 @@ import AUIBackgroundImage from "./common/AUIBackgroundImage";
 import { AUIThemedText } from "./common/AUIThemedText";
 import { AUIThemedView } from "./common/AUIThemedView";
 
-const Destination = ({
-    title,
-    image,
-    countryWidth,
-    countryHeight,
-    countryTopPosition,
-    favorite,
-}: any) => {
+const Destination = ({ title, image, countryWidth, countryHeight, favorite }: any) => {
     return (
         <TouchableOpacity
             onPress={() =>
@@ -26,7 +19,7 @@ const Destination = ({
                 <AUIThemedView
                     style={[
                         styles.imageContainer,
-                        countryWidth && countryHeight && countryTopPosition
+                        countryWidth && countryHeight
                             ? { width: countryWidth, height: countryHeight }
                             : {},
                     ]}
@@ -44,14 +37,7 @@ const Destination = ({
                             start={{ x: 0, y: 1 }}
                             end={{ x: 0, y: 0 }}
                         />
-                        <AUIThemedText
-                            style={[
-                                styles.destinationImageText,
-                                countryTopPosition ? { top: countryTopPosition } : {},
-                            ]}
-                        >
-                            {title}
-                        </AUIThemedText>
+                        <AUIThemedText style={styles.destinationImageText}>{title}</AUIThemedText>
                         {favorite && (
                             <AUIThemedView style={styles.iconContainer}>
                                 <MaterialIcons
@@ -71,12 +57,12 @@ const Destination = ({
 
 const styles = StyleSheet.create({
     item: {
-        paddingVertical: 10,
-        marginRight: 18,
+        margin: 10,
+        alignItems: "center",
     },
     imageContainer: {
         position: "relative",
-        width: 100,
+        width: 90,
         height: 90,
         borderRadius: 10,
         overflow: "hidden",
@@ -95,11 +81,14 @@ const styles = StyleSheet.create({
         borderRadius: 7,
     },
     destinationImageText: {
+        position: "absolute",
+        bottom: 10,
+        left: 0,
+        right: 0,
         color: "white",
-        top: 60,
-        textAlign: "center",
-        fontSize: 15,
         fontWeight: "600",
+        fontSize: 16,
+        textAlign: "center",
     },
     iconContainer: {
         position: "absolute",
