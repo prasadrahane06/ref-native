@@ -6,14 +6,11 @@ import { Asset } from "expo-asset";
 import React from "react";
 import { StyleSheet } from "react-native";
 
-export default function CourseDetailsComponent({ data }: any) {
+export default function CourseDetailsComponent({ plan }: any) {
+    console.log("plan", plan);
+
     return (
         <AUIThemedView style={styles.container}>
-            <AUIThemedView style={styles.detailsContainer}>
-                <AUIThemedText style={styles.marginBottom15}>Total Duration</AUIThemedText>
-                <AUIThemedText style={styles.primaryText}>{data.duration}</AUIThemedText>
-            </AUIThemedView>
-
             <AUIThemedView style={styles.accordionSection}>
                 <AUIAccordion title="Introduction to french">
                     <AUIThemedView>
@@ -92,17 +89,17 @@ export default function CourseDetailsComponent({ data }: any) {
                 <AUIThemedText style={styles.courseDetailsText}>Course Fees</AUIThemedText>
                 <AUIThemedView style={styles.detailsHeader}>
                     <AUIThemedText style={styles.courseLabel}>Total Fee</AUIThemedText>
-                    <AUIThemedText style={styles.primaryText}>{data.duration}</AUIThemedText>
+                    <AUIThemedText style={styles.primaryText}>{plan.duration}</AUIThemedText>
                 </AUIThemedView>
 
                 <AUIThemedView style={styles.detailsHeader}>
                     <AUIThemedText style={styles.courseLabel}>Book your seet</AUIThemedText>
-                    <AUIThemedText style={styles.primaryText}>{data.duration}</AUIThemedText>
+                    <AUIThemedText style={styles.primaryText}>{plan.duration}</AUIThemedText>
                 </AUIThemedView>
 
                 <AUIThemedView style={styles.detailsHeader}>
                     <AUIThemedText style={styles.courseLabel}>Rating</AUIThemedText>
-                    <AUIThemedText style={styles.primaryText}>{data.duration}</AUIThemedText>
+                    <AUIThemedText style={styles.primaryText}>{plan.duration}</AUIThemedText>
                 </AUIThemedView>
             </AUIThemedView>
 

@@ -1,6 +1,7 @@
-import { get } from "@/app/services/axiosClient";
+import useAxios from "@/app/services/axiosClient";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
+import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import CoursesTab from "@/components/home/schoolDetails/Courses";
 import OverviewTab from "@/components/home/schoolDetails/Overview";
 import { APP_THEME } from "@/constants/Colors";
@@ -21,7 +22,8 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSelector } from "react-redux";
 
-function StudentDetailsTabs({ schoolId }: { schoolId: string }) {
+function StudentDetailsTabs({ courseId }: { courseId: string }) {
+    const schoolsResponse = useSelector((state: RootState) => state.api.individualSchool || {});
     const [selectedTab, setSelectedTab] = useState("overview");
 
     const handleTabClick = (tabName: string) => {
@@ -71,8 +73,10 @@ function StudentDetailsTabs({ schoolId }: { schoolId: string }) {
             </AUIThemedView>
 
             <AUIThemedView>
-                {selectedTab === "overview" && <OverviewTab schoolId={schoolId} />}
-                {selectedTab === "courses" && <CoursesTab />}
+                {selectedTab === "overview" && (
+                    <OverviewTab schoolOverView={schoolsResponse[0]} courseId={courseId} />
+                )}
+                {selectedTab === "courses" && <CoursesTab schoolCourses={schoolsResponse[0]} />}
             </AUIThemedView>
         </AUIThemedView>
     );
@@ -81,15 +85,26 @@ function StudentDetailsTabs({ schoolId }: { schoolId: string }) {
 export default function SchoolDetails() {
     const { id } = useLocalSearchParams<{ id: string }>();
     console.log(id);
+    if (!id) {
+        return (
+            <AUIThemedView>
+                <AUIThemedText>course not found</AUIThemedText>
+            </AUIThemedView>
+        );
+    }
 
+    const { post } = useAxios();
     const { requestFn } = useApiRequest();
-    const schoolsResponse = useSelector((state: RootState) => state.api.individualSchool || {});
+
+    const school = useSelector((state: RootState) => state.api.individualSchool || {});
+    const schoolsResponse = school[0];
     useEffect(() => {
         console.log("res of school ", schoolsResponse);
+        // console.log("res of school ", school);
     }, [schoolsResponse]);
 
     useEffect(() => {
-        requestFn(get(API_URL.popularSchool, { id: id ? id : {} }), "individualSchool");
+        requestFn(API_URL.schoolOverview, "individualSchool", { id: id ? id : {} });
     }, []);
 
     const scrollRef = useAnimatedRef<Animated.ScrollView>();
@@ -125,6 +140,20 @@ export default function SchoolDetails() {
         };
     });
 
+    const handleFavoriteClick = (id: string, type: string) => {
+        post(API_URL.favorite, { id: id, type: type })
+            .then((res: any) => {
+                ApiSuccessToast(res.message);
+                console.log("response ", res.data);
+            })
+            .catch((e: any) => {
+                ApiErrorToast(e.response?.data?.message);
+                console.log(e);
+            });
+
+        console.log(id, type);
+    };
+
     const handlePhonePress = (phoneNumber: string) => {
         Linking.openURL(`tel:${phoneNumber}`);
     };
@@ -157,7 +186,11 @@ export default function SchoolDetails() {
             ),
 
             headerRight: () => (
-                <TouchableOpacity onPress={router.back}>
+                <TouchableOpacity
+                    onPress={() => {
+                        handleFavoriteClick(id, "client");
+                    }}
+                >
                     <AUIThemedView
                         style={{
                             backgroundColor: "rgba(91, 216, 148, 0.3)",
@@ -224,7 +257,7 @@ export default function SchoolDetails() {
                     </AUIThemedView>
 
                     <AUIThemedView>
-                        <StudentDetailsTabs />
+                        <StudentDetailsTabs courseId={id} />
                     </AUIThemedView>
                 </AUIThemedView>
             </Animated.ScrollView>

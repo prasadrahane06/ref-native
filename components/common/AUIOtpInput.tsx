@@ -30,7 +30,7 @@ const AUIOTPInput = ({ length, onChange, disabled }: any) => {
 
     return (
         <View style={[styles.container]}>
-            {otp.map((digit, index) => (
+            {otp?.map((digit, index) => (
                 <TextInput
                     key={index}
                     autoFocus={index === 0}

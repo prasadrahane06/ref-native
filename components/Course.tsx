@@ -16,7 +16,7 @@ interface CourseProps {
     favorite?: boolean;
     startingDate: string;
     cart?: boolean;
-    courseId?: string;
+    courseId: string;
     style?: object;
 }
 
@@ -44,7 +44,7 @@ const Course: React.FC<CourseProps> = ({
             style={[styles.courseContainer, style]}
             onPress={() =>
                 router.push({
-                    pathname: `(home)/courseDetails/1`,
+                    pathname: `(home)/courseDetails/${courseId}`,
                 })
             }
         >

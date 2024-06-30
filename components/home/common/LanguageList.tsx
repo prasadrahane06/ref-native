@@ -19,15 +19,18 @@ const LanguageList: React.FC<LanguageListProps> = ({
             <FlatList
                 horizontal
                 data={data}
-                renderItem={({ item }) => (
-                    <Flag
-                        countryName={item.language.name}
-                        countryCode={item.code}
-                        isSelected={item.code === selectedLanguage}
-                        onSelect={() => setSelectedLanguage(item.code)}
-                    />
-                )}
-                keyExtractor={(item) => item.uniqueId}
+                renderItem={({ item }) => {
+                    // console.log("item", item.language.name);
+                    return (
+                        <Flag
+                            countryName={item.language.name}
+                            countryCode={item.code}
+                            isSelected={item.code === selectedLanguage}
+                            onSelect={() => setSelectedLanguage(item.language.name)}
+                        />
+                    );
+                }}
+                keyExtractor={(item) => item.uniqueId.toString()}
             />
         </AUIThemedView>
     );

@@ -1,4 +1,3 @@
-import { get } from "@/app/services/axiosClient";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
@@ -7,16 +6,18 @@ import React, { useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
 import AllSchoolsList from "../list/AllSchoolsList";
+import useAxios from "@/app/services/axiosClient";
 
 interface SchoolListProps {
     data: any[];
 }
 const AllSchoolsScreen: React.FC<SchoolListProps> = ({ data }) => {
+    const { get } = useAxios();
     const { requestFn } = useApiRequest();
     const schoolsResponse = useSelector((state: RootState) => state.api.moreSchool || {});
 
     useEffect(() => {
-        requestFn(get(API_URL.popularSchool, { limit: 6 }), "moreSchool");
+        requestFn(API_URL.popularSchool, "moreSchool", { limit: 6 });
     }, []);
 
     return (

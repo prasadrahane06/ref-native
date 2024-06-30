@@ -3,26 +3,29 @@ import DropdownComponent from "@/components/common/AUIDropdown";
 import AUIInputField from "@/components/common/AUIInputField";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { ApiSuccessToast } from "@/components/common/AUIToast";
+import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import SectionTitle from "@/components/home/common/SectionTitle";
 import CourseDetailsComponent from "@/components/home/courseDetails/CourseDetailsComponent";
 import ScheduleAndLesson from "@/components/home/courseDetails/ScheduleAndLesson";
 import SimilarCoursesList from "@/components/home/courseDetails/SimilarCourses";
 import { APP_THEME } from "@/constants/Colors";
 import { ENQUIRY_FIELDS, GLOBAL_TEXT } from "@/constants/Properties";
+import { getUserData } from "@/constants/RNAsyncStore";
 import { inputFieldStyle } from "@/constants/Styles";
 import { accommodationData } from "@/constants/dummy data/accommodationData";
 import { countriesData } from "@/constants/dummy data/countriesData";
 import { nationalityData } from "@/constants/dummy data/nationalityData";
-import { addEnquiry } from "@/redux/enquiryformSlice";
+import { API_URL } from "@/constants/urlProperties";
+import { setLoader } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
 import { AntDesign, Feather, FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { router } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useId, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
+    KeyboardAvoidingView,
     Linking,
     Modal,
     Platform,
@@ -34,10 +37,13 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import { FacilitiesList } from "../schoolDetails/FacilitiesList";
+import useAxios from "@/app/services/axiosClient";
 import ContactNow from "../schoolDetails/ContactNow";
 
 interface PlanComponentProps {
     courseId: string;
+    clientId: string;
+    planId: string;
     plan: any;
     scheduleDescription: string;
     lessonDescription: string;
@@ -47,56 +53,10 @@ interface PlanComponentProps {
 interface EnquireNowModalProps {
     isVisible: boolean;
     onClose: () => void;
-    content: React.ReactNode;
-    onSave: () => void;
-    onClear: () => void;
-    isSaveDisabled?: boolean;
-}
-
-function EnquireNowModal({
-    isVisible,
-    onClose,
-    content,
-    onSave,
-    onClear,
-    isSaveDisabled,
-}: EnquireNowModalProps) {
-    return (
-        <Modal animationType="slide" transparent={true} visible={isVisible}>
-            <AUIThemedView
-                // style={[enquireNowStyles.andoridModalContent, { Platform }]}
-                style={
-                    Platform.OS === "ios"
-                        ? enquireNowStyles.iosModalContent
-                        : enquireNowStyles.andoridModalContent
-                }
-            >
-                <AUIThemedView style={enquireNowStyles.titleContainer}>
-                    <AUIThemedText style={enquireNowStyles.title}>
-                        {GLOBAL_TEXT.enquire_now}
-                    </AUIThemedText>
-                    <Pressable onPress={onClose} style={{ padding: 10 }}>
-                        <MaterialIcons name="close" color="#000" size={22} />
-                    </Pressable>
-                </AUIThemedView>
-
-                {content}
-
-                <AUIThemedView style={enquireNowStyles.footerContainer}>
-                    <AUIThemedView style={enquireNowStyles.buttonContainer}>
-                        <AUIButton title="Clear" onPress={onClear} style={{ width: "48%" }} />
-                        <AUIButton
-                            title={"Save"}
-                            selected
-                            onPress={onSave}
-                            disabled={isSaveDisabled}
-                            style={{ width: "48%" }}
-                        />
-                    </AUIThemedView>
-                </AUIThemedView>
-            </AUIThemedView>
-        </Modal>
-    );
+    courseId: string;
+    clientId: string;
+    userId: string;
+    planId: string;
 }
 
 const schema = Yup.object().shape({
@@ -114,19 +74,25 @@ const schema = Yup.object().shape({
     comment: Yup.string().required("Comment is required"),
 });
 
-export default function PlanComponent({
+function EnquireNowModal({
+    isVisible,
+    onClose,
     courseId,
-    plan,
-    scheduleDescription,
-    lessonDescription,
-    similarCourses,
-}: PlanComponentProps) {
-    const [isModalVisible, setIsModalVisible] = useState(false);
+    userId,
+    clientId,
+    planId,
+}: EnquireNowModalProps) {
     const [showStartDatePicker, setShowStartDatePicker] = useState(false);
     const [showEndDatePicker, setShowEndDatePicker] = useState(false);
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
-    const [isSeatBooked, setIsSeatBooked] = useState(false);
+
+    const today = new Date();
+    const tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+    const oneWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7);
+
+    const [startDate, setStartDate] = useState(tomorrow);
+    const [endDate, setEndDate] = useState(oneWeek);
+
+    const { post } = useAxios();
 
     const dispatch = useDispatch();
     const enquiryData = useSelector((state: RootState) => state.enquiryForm);
@@ -142,8 +108,8 @@ export default function PlanComponent({
             phoneNumber: "",
             email: "",
             language: "English",
-            startDate: new Date().toISOString(),
-            endDate: new Date().toISOString(),
+            startDate: tomorrow.toISOString(),
+            endDate: oneWeek.toISOString(),
             accommodation: "",
             comment: "",
         },
@@ -156,21 +122,6 @@ export default function PlanComponent({
         const year = date.getFullYear().toString().slice(-2);
 
         return `${day}/${month}/${year}`;
-    };
-
-    const onSave = (data: any) => {
-        console.log("formdata", data);
-
-        const enquiry = {
-            ...data,
-            courseId,
-            plan,
-        };
-
-        dispatch(addEnquiry(enquiry));
-        ApiSuccessToast("Enquiry Send 🎉. We will contact you soon!");
-        setIsModalVisible(false);
-        reset();
     };
 
     const onChangeStartDate = (event: any, selectedDate?: Date) => {
@@ -186,6 +137,463 @@ export default function PlanComponent({
         setEndDate(currentDate);
         setValue("endDate", currentDate.toISOString());
     };
+
+    const onSave = (data: any) => {
+        dispatch(setLoader(true));
+
+        console.log("formdata", data);
+        const phone = data.phoneCode + data.phoneNumber;
+        const startDate = new Date(data.startDate).toISOString();
+        const endDate = new Date(data.endDate).toISOString();
+
+        const enquiry = {
+            user: userId,
+            course: courseId,
+            client: clientId,
+            nationality: data.nationality,
+            phone: phone,
+            email: data.email,
+            languageToLearn: data.language,
+            startDate: startDate,
+            endDate: endDate,
+            accommodation: data.accommodation,
+            comment: data.comment,
+            plan: planId,
+            type: "course",
+        };
+
+        console.log("enquiry-data", JSON.stringify(enquiry));
+
+        post(API_URL.enquiry, enquiry)
+            .then((res) => {
+                console.log("Enquiry Res =>", res);
+                const { data, message, statusCode } = res;
+
+                // dispatch(addEnquiry(enquiry));
+
+                if (statusCode === 200) {
+                    dispatch(setLoader(false));
+                    ApiSuccessToast(message);
+                    onClose();
+                    reset();
+                }
+            })
+            .catch((e) => {
+                dispatch(setLoader(false));
+                console.log("Enquiry Error =>", e.response.data);
+                ApiErrorToast(e.response?.data?.message);
+                onClose();
+                reset();
+            });
+    };
+
+    const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
+
+    return (
+        <Modal animationType="slide" transparent={true} visible={isVisible}>
+            <AUIThemedView
+                style={
+                    Platform.OS === "ios"
+                        ? enquireNowStyles.iosModalContent
+                        : enquireNowStyles.andoridModalContent
+                }
+            >
+                <AUIThemedView style={enquireNowStyles.titleContainer}>
+                    <AUIThemedText style={enquireNowStyles.title}>
+                        {GLOBAL_TEXT.enquire_now}
+                    </AUIThemedText>
+                    <Pressable onPress={onClose} style={{ padding: 10 }}>
+                        <MaterialIcons name="close" color="#000" size={22} />
+                    </Pressable>
+                </AUIThemedView>
+
+                <KeyboardAvoidingView
+                    style={{ flex: 1, backgroundColor: "#ffffff" }}
+                    behavior="padding"
+                    keyboardVerticalOffset={keyboardVerticalOffset}
+                >
+                    <ScrollView style={enquiryFormStyles.container}>
+                        <Controller
+                            name="name"
+                            control={control}
+                            render={({ field: { onChange, value }, fieldState: { error } }) => (
+                                <AUIThemedView style={enquiryFormStyles.fieldContainer}>
+                                    <AUIInputField
+                                        value={value}
+                                        onChangeText={onChange}
+                                        placeholder={ENQUIRY_FIELDS.name.placeholder}
+                                        label={ENQUIRY_FIELDS.name.label}
+                                    />
+                                    <AUIThemedView>
+                                        {error && (
+                                            <AUIThemedText style={enquiryFormStyles.fieldError}>
+                                                {error.message}
+                                            </AUIThemedText>
+                                        )}
+                                    </AUIThemedView>
+                                </AUIThemedView>
+                            )}
+                        />
+                        <Controller
+                            name="nationality"
+                            control={control}
+                            render={({ field: { onChange, value }, fieldState: { error } }) => (
+                                <AUIThemedView
+                                    style={{
+                                        paddingBottom: 20,
+                                    }}
+                                >
+                                    <AUIThemedText style={[inputFieldStyle.label]}>
+                                        {ENQUIRY_FIELDS.nationality.label}
+                                    </AUIThemedText>
+                                    <DropdownComponent
+                                        // @ts-ignore
+                                        list={nationalityData}
+                                        // @ts-ignore
+                                        value={value}
+                                        setValue={({ nationality }: { nationality: string }) =>
+                                            onChange(nationality)
+                                        }
+                                        labelField="nationality"
+                                        valueField="nationality"
+                                        placeholder={ENQUIRY_FIELDS.nationality.placeholder}
+                                        listWithIcon
+                                    />
+                                </AUIThemedView>
+                            )}
+                        />
+
+                        <AUIThemedView style={{ paddingBottom: 30 }}>
+                            <AUIThemedText style={inputFieldStyle.label}>
+                                {ENQUIRY_FIELDS.phone.label}
+                            </AUIThemedText>
+                            <AUIThemedView style={enquiryFormStyles.phoneContainer}>
+                                <Controller
+                                    name="phoneCode"
+                                    control={control}
+                                    render={({ field: { onChange, value } }) => (
+                                        <DropdownComponent
+                                            style={enquiryFormStyles.phoneCode}
+                                            // @ts-ignore
+                                            list={countriesData}
+                                            // @ts-ignore
+                                            value={value}
+                                            setValue={({
+                                                dialling_code,
+                                            }: {
+                                                dialling_code: string;
+                                            }) => onChange(dialling_code)}
+                                            labelField="dialling_code"
+                                            valueField="dialling_code"
+                                            listWithIcon
+                                            renderLeftIcon
+                                        />
+                                    )}
+                                />
+                                <Controller
+                                    name="phoneNumber"
+                                    control={control}
+                                    render={({
+                                        field: { onChange, value },
+                                        fieldState: { error },
+                                    }) => (
+                                        <AUIThemedView style={enquiryFormStyles.phoneNumber}>
+                                            <AUIInputField
+                                                value={value}
+                                                onChangeText={onChange}
+                                                placeholder={ENQUIRY_FIELDS.phone.placeholder}
+                                            />
+                                            {error && (
+                                                <AUIThemedText
+                                                    style={[
+                                                        enquiryFormStyles.fieldError,
+                                                        {
+                                                            position: "absolute",
+                                                            bottom: -30,
+                                                        },
+                                                    ]}
+                                                >
+                                                    {error.message}
+                                                </AUIThemedText>
+                                            )}
+                                        </AUIThemedView>
+                                    )}
+                                />
+                            </AUIThemedView>
+                        </AUIThemedView>
+
+                        <Controller
+                            name="email"
+                            control={control}
+                            render={({ field: { onChange, value }, fieldState: { error } }) => (
+                                <AUIThemedView style={enquiryFormStyles.fieldContainer}>
+                                    <AUIThemedText style={enquiryFormStyles.fieldLabel}>
+                                        {ENQUIRY_FIELDS.email.label}
+                                    </AUIThemedText>
+                                    <AUIInputField
+                                        value={value}
+                                        onChangeText={onChange}
+                                        placeholder={ENQUIRY_FIELDS.email.placeholder}
+                                    />
+                                    <AUIThemedView>
+                                        {error && (
+                                            <AUIThemedText style={enquiryFormStyles.fieldError}>
+                                                {error.message}
+                                            </AUIThemedText>
+                                        )}
+                                    </AUIThemedView>
+                                </AUIThemedView>
+                            )}
+                        />
+
+                        <Controller
+                            name="language"
+                            control={control}
+                            render={({ field: { onChange, value }, fieldState: { error } }) => (
+                                <AUIThemedView style={enquiryFormStyles.fieldContainer}>
+                                    <AUIThemedText style={[inputFieldStyle.label]}>
+                                        {ENQUIRY_FIELDS.language.label}
+                                    </AUIThemedText>
+                                    {/* @ts-ignore */}
+                                    <DropdownComponent
+                                        list={countriesData.map((country) => ({
+                                            label: country.language.name,
+                                            value: country.language.name,
+                                        }))}
+                                        //@ts-ignore
+                                        value={value}
+                                        //@ts-ignore
+                                        setValue={({ value }) => onChange(value)}
+                                        labelField="label"
+                                        valueField="value"
+                                        listWithIcon
+                                    />
+                                </AUIThemedView>
+                            )}
+                        />
+
+                        <AUIThemedView style={{ paddingBottom: 30 }}>
+                            <AUIThemedText style={inputFieldStyle.label}>
+                                {ENQUIRY_FIELDS.date.label}
+                            </AUIThemedText>
+                            <AUIThemedView style={enquiryFormStyles.dateContainer}>
+                                <AUIThemedText style={inputFieldStyle.label}>From</AUIThemedText>
+                                <Controller
+                                    name="startDate"
+                                    control={control}
+                                    render={({
+                                        field: { value, onChange },
+                                        fieldState: { error },
+                                    }) => (
+                                        <AUIThemedView
+                                            style={{
+                                                flex: 1,
+                                                flexDirection: "row",
+                                                alignItems: "center",
+                                                borderWidth: 2,
+                                                borderColor: "#ccc",
+                                                borderRadius: 6,
+                                            }}
+                                        >
+                                            <Pressable
+                                                onPress={() => setShowStartDatePicker(true)}
+                                                style={{
+                                                    flex: 1,
+                                                    flexDirection: "row",
+                                                    alignItems: "center",
+                                                    paddingHorizontal: 10,
+                                                }}
+                                            >
+                                                {showStartDatePicker && (
+                                                    <DateTimePicker
+                                                        value={startDate}
+                                                        mode="date"
+                                                        display="default"
+                                                        onChange={onChangeStartDate}
+                                                        minimumDate={tomorrow}
+                                                    />
+                                                )}
+                                                <TextInput
+                                                    style={{
+                                                        flex: 1,
+                                                        paddingVertical: 10,
+                                                        color: "#000",
+                                                    }}
+                                                    value={formatDate(value)}
+                                                    editable={false}
+                                                    onChangeText={onChange}
+                                                />
+                                                <Ionicons
+                                                    name="calendar-clear"
+                                                    size={20}
+                                                    color={APP_THEME.primary.first}
+                                                />
+                                            </Pressable>
+                                            {error && (
+                                                <AUIThemedText style={enquiryFormStyles.fieldError}>
+                                                    {error.message}
+                                                </AUIThemedText>
+                                            )}
+                                        </AUIThemedView>
+                                    )}
+                                />
+                                <AUIThemedText style={inputFieldStyle.label}>To</AUIThemedText>
+                                <Controller
+                                    name="endDate"
+                                    control={control}
+                                    render={({
+                                        field: { value, onChange },
+                                        fieldState: { error },
+                                    }) => (
+                                        <AUIThemedView
+                                            style={{
+                                                flex: 1,
+                                                flexDirection: "row",
+                                                alignItems: "center",
+                                                borderWidth: 2,
+                                                borderColor: "#ccc",
+                                                borderRadius: 6,
+                                            }}
+                                        >
+                                            <Pressable
+                                                onPress={() => setShowEndDatePicker(true)}
+                                                style={{
+                                                    flex: 1,
+                                                    flexDirection: "row",
+                                                    alignItems: "center",
+                                                    paddingHorizontal: 10,
+                                                }}
+                                            >
+                                                <TextInput
+                                                    style={{
+                                                        flex: 1,
+                                                        paddingVertical: 10,
+                                                        color: "#000",
+                                                    }}
+                                                    value={formatDate(value)}
+                                                    editable={false}
+                                                    onChangeText={onChange}
+                                                />
+                                                <Ionicons
+                                                    name="calendar-clear"
+                                                    size={20}
+                                                    color={APP_THEME.primary.first}
+                                                />
+                                            </Pressable>
+                                            {error && (
+                                                <AUIThemedText style={enquiryFormStyles.fieldError}>
+                                                    {error.message}
+                                                </AUIThemedText>
+                                            )}
+                                            {showEndDatePicker && (
+                                                <DateTimePicker
+                                                    value={endDate}
+                                                    mode="date"
+                                                    display="default"
+                                                    onChange={onChangeEndDate}
+                                                    minimumDate={tomorrow}
+                                                />
+                                            )}
+                                        </AUIThemedView>
+                                    )}
+                                />
+                            </AUIThemedView>
+                        </AUIThemedView>
+
+                        <Controller
+                            name="accommodation"
+                            control={control}
+                            render={({ field: { onChange, value }, fieldState: { error } }) => (
+                                <AUIThemedView style={enquiryFormStyles.fieldContainer}>
+                                    <AUIThemedText style={enquiryFormStyles.fieldLabel}>
+                                        {ENQUIRY_FIELDS.accommodation.label}
+                                    </AUIThemedText>
+                                    <DropdownComponent
+                                        //@ts-ignore
+                                        list={accommodationData}
+                                        //@ts-ignore
+                                        value={value}
+                                        //@ts-ignore
+                                        setValue={(selectedItem) => onChange(selectedItem.name)}
+                                        labelField="name"
+                                        valueField="name"
+                                        listWithIcon
+                                        placeholder={ENQUIRY_FIELDS.nationality.placeholder}
+                                        position="top"
+                                    />
+                                </AUIThemedView>
+                            )}
+                        />
+
+                        <Controller
+                            name="comment"
+                            control={control}
+                            render={({ field: { onChange, value }, fieldState: { error } }) => (
+                                <AUIThemedView style={{ paddingBottom: 40 }}>
+                                    <AUIThemedText style={enquiryFormStyles.fieldLabel}>
+                                        {ENQUIRY_FIELDS.comment.label}
+                                    </AUIThemedText>
+                                    <AUIInputField
+                                        multiline
+                                        numberOfLines={4}
+                                        value={value}
+                                        onChangeText={onChange}
+                                        placeholder={ENQUIRY_FIELDS.comment.placeholder}
+                                    />
+                                    <AUIThemedView>
+                                        {error && (
+                                            <AUIThemedText style={enquiryFormStyles.fieldError}>
+                                                {error.message}
+                                            </AUIThemedText>
+                                        )}
+                                    </AUIThemedView>
+                                </AUIThemedView>
+                            )}
+                        />
+                    </ScrollView>
+                </KeyboardAvoidingView>
+
+                <AUIThemedView style={enquireNowStyles.footerContainer}>
+                    <AUIThemedView style={enquireNowStyles.buttonContainer}>
+                        <AUIButton title="Clear" onPress={() => reset()} style={{ width: "48%" }} />
+                        <AUIButton
+                            title={"Save"}
+                            selected
+                            onPress={handleSubmit(onSave)}
+                            disabled={!formState.isValid}
+                            style={{ width: "48%" }}
+                        />
+                    </AUIThemedView>
+                </AUIThemedView>
+            </AUIThemedView>
+        </Modal>
+    );
+}
+
+export default function PlanComponent({
+    courseId,
+    clientId,
+    planId,
+    plan,
+    scheduleDescription,
+    lessonDescription,
+    similarCourses,
+}: PlanComponentProps) {
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [userId, setUserId] = useState("");
+
+    const [isSeatBooked, setIsSeatBooked] = useState(false);
+
+    useEffect(() => {
+        getUserData().then((data) => {
+            if (data && Object.keys(data).length > 0) {
+                console.log("user-data", data.data.user._id);
+                setUserId(data.data.user._id);
+            } else {
+                console.log("no data found in user-data");
+            }
+        });
+    }, []);
 
     const handleBookSeat = () => {
         setIsSeatBooked(true);
@@ -203,344 +611,11 @@ export default function PlanComponent({
         Linking.openURL("https://example.com");
     };
 
-    const EnquiryForm = ({ control }: any) => {
-        return (
-            <ScrollView style={enquiryFormStyles.container}>
-                <Controller
-                    name="name"
-                    control={control}
-                    render={({ field: { onChange, value }, fieldState: { error } }) => (
-                        <AUIThemedView style={enquiryFormStyles.fieldContainer}>
-                            <AUIInputField
-                                value={value}
-                                onChangeText={onChange}
-                                placeholder={ENQUIRY_FIELDS.name.placeholder}
-                                label={ENQUIRY_FIELDS.name.label}
-                            />
-                            <AUIThemedView>
-                                {error && (
-                                    <AUIThemedText style={enquiryFormStyles.fieldError}>
-                                        {error.message}
-                                    </AUIThemedText>
-                                )}
-                            </AUIThemedView>
-                        </AUIThemedView>
-                    )}
-                />
-                <Controller
-                    name="nationality"
-                    control={control}
-                    render={({ field: { onChange, value }, fieldState: { error } }) => (
-                        <AUIThemedView
-                            style={{
-                                paddingBottom: 20,
-                            }}
-                        >
-                            <AUIThemedText style={[inputFieldStyle.label]}>
-                                {ENQUIRY_FIELDS.nationality.label}
-                            </AUIThemedText>
-                            <DropdownComponent
-                                // @ts-ignore
-                                list={nationalityData}
-                                // @ts-ignore
-                                value={value}
-                                setValue={({ nationality }: { nationality: string }) =>
-                                    onChange(nationality)
-                                }
-                                labelField="nationality"
-                                valueField="nationality"
-                                placeholder={ENQUIRY_FIELDS.nationality.placeholder}
-                                listWithIcon
-                            />
-                        </AUIThemedView>
-                    )}
-                />
-
-                <AUIThemedView style={{ paddingBottom: 30 }}>
-                    <AUIThemedText style={inputFieldStyle.label}>
-                        {ENQUIRY_FIELDS.phone.label}
-                    </AUIThemedText>
-                    <AUIThemedView style={enquiryFormStyles.phoneContainer}>
-                        <Controller
-                            name="phoneCode"
-                            control={control}
-                            render={({ field: { onChange, value } }) => (
-                                <DropdownComponent
-                                    style={enquiryFormStyles.phoneCode}
-                                    // @ts-ignore
-                                    list={countriesData}
-                                    // @ts-ignore
-                                    value={value}
-                                    setValue={({ dialling_code }: { dialling_code: string }) =>
-                                        onChange(dialling_code)
-                                    }
-                                    labelField="dialling_code"
-                                    valueField="dialling_code"
-                                    listWithIcon
-                                    renderLeftIcon
-                                />
-                            )}
-                        />
-                        <Controller
-                            name="phoneNumber"
-                            control={control}
-                            render={({ field: { onChange, value }, fieldState: { error } }) => (
-                                <AUIThemedView style={enquiryFormStyles.phoneNumber}>
-                                    <AUIInputField
-                                        value={value}
-                                        onChangeText={onChange}
-                                        placeholder={ENQUIRY_FIELDS.phone.placeholder}
-                                    />
-                                    {error && (
-                                        <AUIThemedText
-                                            style={[
-                                                enquiryFormStyles.fieldError,
-                                                {
-                                                    position: "absolute",
-                                                    bottom: -30,
-                                                },
-                                            ]}
-                                        >
-                                            {error.message}
-                                        </AUIThemedText>
-                                    )}
-                                </AUIThemedView>
-                            )}
-                        />
-                    </AUIThemedView>
-                </AUIThemedView>
-
-                <Controller
-                    name="email"
-                    control={control}
-                    render={({ field: { onChange, value }, fieldState: { error } }) => (
-                        <AUIThemedView style={enquiryFormStyles.fieldContainer}>
-                            <AUIThemedText style={enquiryFormStyles.fieldLabel}>
-                                {ENQUIRY_FIELDS.email.label}
-                            </AUIThemedText>
-                            <AUIInputField
-                                value={value}
-                                onChangeText={onChange}
-                                placeholder={ENQUIRY_FIELDS.email.placeholder}
-                            />
-                            <AUIThemedView>
-                                {error && (
-                                    <AUIThemedText style={enquiryFormStyles.fieldError}>
-                                        {error.message}
-                                    </AUIThemedText>
-                                )}
-                            </AUIThemedView>
-                        </AUIThemedView>
-                    )}
-                />
-
-                <Controller
-                    name="language"
-                    control={control}
-                    render={({ field: { onChange, value }, fieldState: { error } }) => (
-                        <AUIThemedView style={enquiryFormStyles.fieldContainer}>
-                            <AUIThemedText style={[inputFieldStyle.label]}>
-                                {ENQUIRY_FIELDS.language.label}
-                            </AUIThemedText>
-                            {/* @ts-ignore */}
-                            <DropdownComponent
-                                list={countriesData.map((country) => ({
-                                    label: country.language.name,
-                                    value: country.language.name,
-                                }))}
-                                //@ts-ignore
-                                value={value}
-                                //@ts-ignore
-                                setValue={({ value }) => onChange(value)}
-                                labelField="label"
-                                valueField="value"
-                                listWithIcon
-                            />
-                        </AUIThemedView>
-                    )}
-                />
-
-                <AUIThemedView style={{ paddingBottom: 30 }}>
-                    <AUIThemedText style={inputFieldStyle.label}>
-                        {ENQUIRY_FIELDS.date.label}
-                    </AUIThemedText>
-                    <AUIThemedView style={enquiryFormStyles.dateContainer}>
-                        <AUIThemedText style={inputFieldStyle.label}>From</AUIThemedText>
-                        <Controller
-                            name="startDate"
-                            control={control}
-                            render={({ field: { value, onChange }, fieldState: { error } }) => (
-                                <AUIThemedView
-                                    style={{
-                                        flex: 1,
-                                        flexDirection: "row",
-                                        alignItems: "center",
-                                        borderWidth: 2,
-                                        borderColor: "#ccc",
-                                        borderRadius: 6,
-                                    }}
-                                >
-                                    <Pressable
-                                        onPress={() => setShowStartDatePicker(true)}
-                                        style={{
-                                            flex: 1,
-                                            flexDirection: "row",
-                                            alignItems: "center",
-                                            paddingHorizontal: 10,
-                                        }}
-                                    >
-                                        {showStartDatePicker && (
-                                            <DateTimePicker
-                                                value={startDate}
-                                                mode="date"
-                                                display="default"
-                                                onChange={onChangeStartDate}
-                                                minimumDate={new Date()}
-                                            />
-                                        )}
-                                        <TextInput
-                                            style={{
-                                                flex: 1,
-                                                paddingVertical: 10,
-                                                color: "#000",
-                                            }}
-                                            value={formatDate(value)}
-                                            editable={false}
-                                            onChangeText={onChange}
-                                        />
-                                        <Ionicons
-                                            name="calendar-clear"
-                                            size={20}
-                                            color={APP_THEME.primary.first}
-                                        />
-                                    </Pressable>
-                                    {error && (
-                                        <AUIThemedText style={enquiryFormStyles.fieldError}>
-                                            {error.message}
-                                        </AUIThemedText>
-                                    )}
-                                </AUIThemedView>
-                            )}
-                        />
-                        <AUIThemedText style={inputFieldStyle.label}>To</AUIThemedText>
-                        <Controller
-                            name="endDate"
-                            control={control}
-                            render={({ field: { value, onChange }, fieldState: { error } }) => (
-                                <AUIThemedView
-                                    style={{
-                                        flex: 1,
-                                        flexDirection: "row",
-                                        alignItems: "center",
-                                        borderWidth: 2,
-                                        borderColor: "#ccc",
-                                        borderRadius: 6,
-                                    }}
-                                >
-                                    <Pressable
-                                        onPress={() => setShowEndDatePicker(true)}
-                                        style={{
-                                            flex: 1,
-                                            flexDirection: "row",
-                                            alignItems: "center",
-                                            paddingHorizontal: 10,
-                                        }}
-                                    >
-                                        <TextInput
-                                            style={{
-                                                flex: 1,
-                                                paddingVertical: 10,
-                                                color: "#000",
-                                            }}
-                                            value={formatDate(value)}
-                                            editable={false}
-                                            onChangeText={onChange}
-                                        />
-                                        <Ionicons
-                                            name="calendar-clear"
-                                            size={20}
-                                            color={APP_THEME.primary.first}
-                                        />
-                                    </Pressable>
-                                    {error && (
-                                        <AUIThemedText style={enquiryFormStyles.fieldError}>
-                                            {error.message}
-                                        </AUIThemedText>
-                                    )}
-                                    {showEndDatePicker && (
-                                        <DateTimePicker
-                                            value={endDate}
-                                            mode="date"
-                                            display="default"
-                                            onChange={onChangeEndDate}
-                                            minimumDate={new Date()}
-                                        />
-                                    )}
-                                </AUIThemedView>
-                            )}
-                        />
-                    </AUIThemedView>
-                </AUIThemedView>
-
-                <Controller
-                    name="accommodation"
-                    control={control}
-                    render={({ field: { onChange, value }, fieldState: { error } }) => (
-                        <AUIThemedView style={enquiryFormStyles.fieldContainer}>
-                            <AUIThemedText style={enquiryFormStyles.fieldLabel}>
-                                {ENQUIRY_FIELDS.accommodation.label}
-                            </AUIThemedText>
-                            <DropdownComponent
-                                //@ts-ignore
-                                list={accommodationData}
-                                //@ts-ignore
-                                value={value}
-                                //@ts-ignore
-                                setValue={(selectedItem) => onChange(selectedItem.name)}
-                                labelField="name"
-                                valueField="name"
-                                listWithIcon
-                                placeholder={ENQUIRY_FIELDS.nationality.placeholder}
-                                position="top"
-                            />
-                        </AUIThemedView>
-                    )}
-                />
-
-                <Controller
-                    name="comment"
-                    control={control}
-                    render={({ field: { onChange, value }, fieldState: { error } }) => (
-                        <AUIThemedView style={{ paddingBottom: 40 }}>
-                            <AUIThemedText style={enquiryFormStyles.fieldLabel}>
-                                {ENQUIRY_FIELDS.comment.label}
-                            </AUIThemedText>
-                            <AUIInputField
-                                multiline
-                                numberOfLines={4}
-                                value={value}
-                                onChangeText={onChange}
-                                placeholder={ENQUIRY_FIELDS.comment.placeholder}
-                            />
-                            <AUIThemedView>
-                                {error && (
-                                    <AUIThemedText style={enquiryFormStyles.fieldError}>
-                                        {error.message}
-                                    </AUIThemedText>
-                                )}
-                            </AUIThemedView>
-                        </AUIThemedView>
-                    )}
-                />
-            </ScrollView>
-        );
-    };
-
     return (
         <AUIThemedView>
             <AUIThemedView style={{ marginTop: 10 }}>
                 <AUIThemedText style={styles.boldText}>{GLOBAL_TEXT.course_details}</AUIThemedText>
-                <CourseDetailsComponent data={plan} />
+                <CourseDetailsComponent plan={plan} />
             </AUIThemedView>
 
             <AUIThemedView style={styles.facilityContainer}>
@@ -616,13 +691,13 @@ export default function PlanComponent({
 
             <EnquireNowModal
                 isVisible={isModalVisible}
+                courseId={courseId}
+                clientId={clientId}
+                planId={planId}
+                userId={userId}
                 onClose={() => {
                     setIsModalVisible(false);
                 }}
-                content={<EnquiryForm control={control} />}
-                onSave={handleSubmit(onSave)}
-                onClear={() => reset()}
-                // isSaveDisabled={!formState.isValid}
             />
         </AUIThemedView>
     );

@@ -8,14 +8,15 @@ interface FacilitiesListProps {
 }
 
 export const FacilitiesList: React.FC<FacilitiesListProps> = ({ data }) => {
+    console.log("facilitydata" , data)
     return (
         <AUIThemedView style={facilitiesListStyles.container}>
             <FlatList
                 scrollEnabled={false}
                 data={data}
                 numColumns={3}
-                renderItem={({ item }) => <Facilities title={item.title} image={item.image} />}
-                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => <Facilities title={item.name} image={item.image} />}
+                keyExtractor={(item) => item._id}
             />
         </AUIThemedView>
     );

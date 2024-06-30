@@ -42,10 +42,10 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import { API_URL } from "@/constants/urlProperties";
-import { post } from "@/app/services/axiosClient";
 import { getUserData } from "@/constants/RNAsyncStore";
 import { setLoader } from "@/redux/globalSlice";
 import ContactNow from "./ContactNow";
+import useAxios from "@/app/services/axiosClient";
 
 interface EnquireNowModalProps {
     isVisible: boolean;
@@ -55,7 +55,7 @@ interface EnquireNowModalProps {
 }
 
 interface OverviewTabProps {
-    schoolId: string;
+    schoolOverView: any;
     courseId: string;
 }
 
@@ -77,6 +77,7 @@ const schema = Yup.object().shape({
 function EnquireNowModal({ isVisible, onClose, courseId, userId }: EnquireNowModalProps) {
     const [showStartDatePicker, setShowStartDatePicker] = useState(false);
     const [showEndDatePicker, setShowEndDatePicker] = useState(false);
+    const { post } = useAxios();
 
     const today = new Date();
     const tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
@@ -579,7 +580,7 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId }: EnquireNowMod
     );
 }
 
-export default function OverviewTab({ schoolId, courseId }: OverviewTabProps) {
+export default function OverviewTab({ schoolOverView, courseId }: OverviewTabProps) {
     const [isModalVisible, setIsModalVisible] = useState(false);
     let userId: string = "";
 
@@ -632,7 +633,7 @@ export default function OverviewTab({ schoolId, courseId }: OverviewTabProps) {
             <AUIThemedView style={{ marginTop: 15, marginHorizontal: "auto" }}>
                 <FlatList
                     scrollEnabled={false}
-                    data={courseInfoData}
+                    data={schoolOverView?.schoolInfo}
                     numColumns={2}
                     renderItem={({ item }) => (
                         <AUIInfoCard
@@ -648,18 +649,22 @@ export default function OverviewTab({ schoolId, courseId }: OverviewTabProps) {
                             }}
                         />
                     )}
-                    keyExtractor={(item) => item.id}
+                    keyExtractor={(item) => item._id}
                 />
             </AUIThemedView>
 
             <AUIThemedView>
-                <SectionTitle>{GLOBAL_TEXT.latest_events}</SectionTitle>
-                <EventsList data={eventsData} />
+                {schoolOverView?.events.length > 0 && (
+                    <SectionTitle>{GLOBAL_TEXT.latest_events}</SectionTitle>
+                )}
+                <EventsList data={schoolOverView?.events} />
             </AUIThemedView>
 
             <AUIThemedView>
-                <SectionTitle>{GLOBAL_TEXT.facilities}</SectionTitle>
-                <FacilitiesList data={facilitiesData} />
+                {schoolOverView?.facilities.length > 0 && (
+                    <SectionTitle>{GLOBAL_TEXT.facilities}</SectionTitle>
+                )}
+                <FacilitiesList data={schoolOverView?.facilities} />
             </AUIThemedView>
 
             <AUIThemedView style={enquireNowStyles.contactNowContainer}>

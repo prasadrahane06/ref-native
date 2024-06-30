@@ -1,17 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface Enquiry {
-    courseId: string;
-    plan: any;
-    name: string;
+    user: string;
+    course: string;
+    client: string;
     nationality: string;
-    phoneCode: string;
-    phoneNumber: string;
+    phone: string;
     email: string;
-    language: string;
+    languageToLearn: string;
     startDate: string;
     endDate: string;
-    accommodation: string;
+    accomodation: string;
     comment: string;
 }
 

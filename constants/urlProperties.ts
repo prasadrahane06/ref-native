@@ -7,5 +7,7 @@ export const API_URL = {
     resendOTP: "auth/resend-otp",
     popularSchool: "school",
     course: "course",
+    schoolOverview: "schoolOverview",
     enquiry: "enquiry",
+    favorite: "favorite",
 };

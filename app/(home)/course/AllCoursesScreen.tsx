@@ -1,20 +1,31 @@
+import useAxios from "@/app/services/axiosClient";
 import Course from "@/components/Course";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { coursesData } from "@/constants/dummy data/coursesData";
-import React from "react";
+import { API_URL } from "@/constants/urlProperties";
+import useApiRequest from "@/customHooks/useApiRequest";
+import { RootState } from "@/redux/store";
+import React, { useEffect } from "react";
 import { FlatList, StyleSheet } from "react-native";
+import { useSelector } from "react-redux";
 
 const AllCoursesScreen = () => {
-    const displayedCourses = coursesData.slice(0, 4);
+    const { requestFn } = useApiRequest();
+    const { get } = useAxios();
+
+    const courseResponse = useSelector((state: RootState) => state.api.popularCourse || {});
+
+    useEffect(() => {
+        requestFn(API_URL.course, "popularCourse");
+    }, []);
 
     return (
         <AUIThemedView style={styles.container}>
             <FlatList
-                data={displayedCourses}
+                data={courseResponse.docs}
                 renderItem={({ item }) => (
-                    <Course title={item.name} image={item.image} style={styles.course} />
+                    <Course title={item.courseName} image={item.image} style={styles.course} id={item._id} />
                 )}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item) => item._id}
                 numColumns={2}
                 columnWrapperStyle={styles.column}
             />

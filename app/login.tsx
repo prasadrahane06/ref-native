@@ -10,7 +10,7 @@ import { storeUserData } from "@/constants/RNAsyncStore";
 import { loginPageStyles, secondaryButtonStyle } from "@/constants/Styles";
 import { countriesData } from "@/constants/dummy data/countriesData";
 import { API_URL } from "@/constants/urlProperties";
-import { setLoader } from "@/redux/globalSlice";
+import { setLoader, setToken } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
 import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -26,7 +26,7 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
-import { post } from "./services/axiosClient";
+import useAxios from "./services/axiosClient";
 const schema = Yup.object().shape({
     input: Yup.string().when("selectedButton", {
         is: "mobile",
@@ -50,6 +50,8 @@ const LoginPage = () => {
     const signInType = useSelector((state: RootState) => state.global.signInType);
     // const [countryData, setCountryData] = useState(countriesData);
     const signupDetails = useSelector((state: RootState) => state.global.signupDetails);
+
+    const { post } = useAxios();
 
     const [otpSent, setOtpSent] = useState<boolean>(false);
     const [otp, setOtp] = useState({
@@ -206,6 +208,11 @@ const LoginPage = () => {
                 if (res?.data?.accessToken) {
                     console.log("token got", profile);
                     storeUserData({ profile, ...res });
+
+                    // saving token in redux
+                    console.log("saving token in login", res?.data?.accessToken);
+                    dispatch(setToken(res?.data?.accessToken));
+
                     router.push({
                         pathname: `(home)/(${profile})`,
                     });

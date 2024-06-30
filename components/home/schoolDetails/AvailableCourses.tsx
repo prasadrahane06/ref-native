@@ -7,14 +7,30 @@ import { AntDesign } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { StyleSheet, TouchableOpacity } from "react-native";
 
-export const AvailableCourses = ({ image, courseTitle, courseDesciption, index }: any) => {
+interface AvailableCoursesProps {
+    index: number;
+    _id: string;
+    courseName: string;
+    courseDesciption: string;
+    image: string;
+    startDate: string;
+}
+
+export const AvailableCourses: React.FC<AvailableCoursesProps> = ({
+    index,
+    _id,
+    courseName,
+    courseDesciption,
+    image,
+    startDate,
+}) => {
     const isEven = index % 2 === 0;
 
     return (
-        <AUIThemedView style={styles.container} key={index}>
+        <AUIThemedView style={styles.container} key={_id}>
             <AUIThemedView style={[styles.card, { flexDirection: isEven ? "row" : "row-reverse" }]}>
                 <AUIThemedView style={styles.textContainer}>
-                    <AUIThemedText style={styles.title}>{courseTitle}</AUIThemedText>
+                    <AUIThemedText style={styles.title}>{courseName}</AUIThemedText>
                     <AUIThemedText style={styles.description}>{courseDesciption}</AUIThemedText>
                     <AUIThemedText
                         style={{
@@ -23,13 +39,20 @@ export const AvailableCourses = ({ image, courseTitle, courseDesciption, index }
                             color: APP_THEME.gray,
                         }}
                     >
-                        Starting from: <AUIThemedText style={styles.date}>20-06-2024</AUIThemedText>
+                        Starting from:{" "}
+                        <AUIThemedText style={styles.date}>
+                            {new Date(startDate).toLocaleDateString("en-US", {
+                                day: "2-digit",
+                                month: "2-digit",
+                                year: "numeric",
+                            })}
+                        </AUIThemedText>
                     </AUIThemedText>
                     <TouchableOpacity
                         style={styles.button}
                         onPress={() =>
                             router.push({
-                                pathname: `(home)/courseDetails/1`,
+                                pathname: `(home)/courseDetails/${_id}`,
                             })
                         }
                     >

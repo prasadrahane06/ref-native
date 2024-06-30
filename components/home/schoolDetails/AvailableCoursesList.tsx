@@ -4,24 +4,39 @@ import { FlatList } from "react-native";
 import { AvailableCourses } from "./AvailableCourses";
 
 interface AvailableCoursesProps {
-    data: any[];
+    courses: Array<{
+        _id: string;
+        courseName: string;
+        description: string;
+        language: string;
+        numberOfSeats: number;
+        image: string;
+        startDate: string;
+        endDate: string;
+        price: number;
+        currencyType: string;
+        category: string;
+        status: number;
+    }>;
 }
 
-export const AvailableCoursesList: React.FC<AvailableCoursesProps> = ({ data }) => {
+export const AvailableCoursesList: React.FC<AvailableCoursesProps> = ({ courses }) => {
     return (
         <AUIThemedView>
             <FlatList
                 scrollEnabled={false}
-                data={data}
+                data={courses}
                 renderItem={({ item, index }) => (
                     <AvailableCourses
-                        courseTitle={item.courseTitle}
-                        courseDesciption={item.courseDesciption}
-                        image={item.image}
                         index={index}
+                        _id={item._id}
+                        courseName={item.courseName}
+                        courseDesciption={item.description}
+                        image={item.image}
+                        startDate={item.startDate}
                     />
                 )}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item) => item.courseName}
             />
         </AUIThemedView>
     );

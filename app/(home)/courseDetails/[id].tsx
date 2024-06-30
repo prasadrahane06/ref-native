@@ -1,19 +1,20 @@
+import useAxios from "@/app/services/axiosClient";
 import AUIImage from "@/components/common/AUIImage";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { ApiSuccessToast } from "@/components/common/AUIToast";
+import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import PlanComponent from "@/components/home/courseDetails/PlanComponent";
 import { APP_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
-import { planOne } from "@/constants/dummy data/planOne";
-import { planThree } from "@/constants/dummy data/planThree";
-import { planTwo } from "@/constants/dummy data/planTwo";
 import { similarCoursesData } from "@/constants/dummy data/similarCoursesData";
+import { API_URL } from "@/constants/urlProperties";
+import useApiRequest from "@/customHooks/useApiRequest";
 import { addItemToCart } from "@/redux/cartSlice";
+import { RootState } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import Animated, {
     interpolate,
@@ -21,10 +22,30 @@ import Animated, {
     useAnimatedStyle,
     useScrollViewOffset,
 } from "react-native-reanimated";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-function CoursePlanTabs({ courseId }: { courseId: string }) {
-    const [selectedPlan, setSelectedPlan] = useState(GLOBAL_TEXT.plan_one);
+interface CoursePlanTabsProps {
+    courseId: string;
+    clientId: string;
+}
+
+function CoursePlanTabs({ courseId, clientId }: CoursePlanTabsProps) {
+    const [plans, setPlans] = useState<any[]>([]);
+    const [selectedPlan, setSelectedPlan] = useState("");
+
+    const individualCourse = useSelector((state: RootState) => state.api.individualCourse);
+
+    useEffect(() => {
+        if (individualCourse && individualCourse.docs && individualCourse.docs.length > 0) {
+            const plans = individualCourse.docs[0].plan;
+            setPlans(plans);
+            if (plans.length > 0) {
+                setSelectedPlan(plans[0].name);
+            }
+        }
+    }, [individualCourse]);
+
+    console.log("res of plans", JSON.stringify(plans));
 
     const handlePlanClick = (planName: string) => {
         setSelectedPlan(planName);
@@ -33,93 +54,45 @@ function CoursePlanTabs({ courseId }: { courseId: string }) {
     return (
         <AUIThemedView style={{ marginBottom: 20 }}>
             <AUIThemedView style={planTabsStyles.tabsContainer}>
-                <Pressable
-                    onPress={() => handlePlanClick(GLOBAL_TEXT.plan_one)}
-                    style={
-                        selectedPlan === GLOBAL_TEXT.plan_one
-                            ? planTabsStyles.activeTab
-                            : planTabsStyles.inactiveTab
-                    }
-                >
-                    <AUIThemedText
-                        style={[
-                            planTabsStyles.tabLabel,
-                            {
-                                color: selectedPlan === GLOBAL_TEXT.plan_one ? "#fff" : "#5BD894",
-                            },
-                        ]}
+                {plans.map((plan: any, index: number) => (
+                    <Pressable
+                        key={plan._id}
+                        onPress={() => handlePlanClick(plan.name)}
+                        style={
+                            selectedPlan === plan.name
+                                ? planTabsStyles.activeTab
+                                : planTabsStyles.inactiveTab
+                        }
                     >
-                        {GLOBAL_TEXT.plan_one}
-                    </AUIThemedText>
-                </Pressable>
-
-                <Pressable
-                    onPress={() => handlePlanClick(GLOBAL_TEXT.plan_two)}
-                    style={
-                        selectedPlan === GLOBAL_TEXT.plan_two
-                            ? planTabsStyles.activeTab
-                            : planTabsStyles.inactiveTab
-                    }
-                >
-                    <AUIThemedText
-                        style={[
-                            planTabsStyles.tabLabel,
-                            {
-                                color: selectedPlan === GLOBAL_TEXT.plan_two ? "#fff" : "#5BD894",
-                            },
-                        ]}
-                    >
-                        {GLOBAL_TEXT.plan_two}
-                    </AUIThemedText>
-                </Pressable>
-
-                <Pressable
-                    onPress={() => handlePlanClick(GLOBAL_TEXT.plan_three)}
-                    style={
-                        selectedPlan === GLOBAL_TEXT.plan_three
-                            ? planTabsStyles.activeTab
-                            : planTabsStyles.inactiveTab
-                    }
-                >
-                    <AUIThemedText
-                        style={[
-                            planTabsStyles.tabLabel,
-                            {
-                                color: selectedPlan === GLOBAL_TEXT.plan_three ? "#fff" : "#5BD894",
-                            },
-                        ]}
-                    >
-                        {GLOBAL_TEXT.plan_three}
-                    </AUIThemedText>
-                </Pressable>
+                        <AUIThemedText
+                            style={[
+                                planTabsStyles.tabLabel,
+                                {
+                                    color: selectedPlan === plan.name ? "#fff" : "#5BD894",
+                                },
+                            ]}
+                        >
+                            {/* {plan.name} */}
+                            {`Plan ` + (index + 1)}
+                        </AUIThemedText>
+                    </Pressable>
+                ))}
             </AUIThemedView>
             <AUIThemedView>
-                {selectedPlan === GLOBAL_TEXT.plan_one && (
-                    <PlanComponent
-                        courseId={courseId}
-                        plan={planOne}
-                        scheduleDescription="All courses are Monday to Friday, with morning and afternoon classes"
-                        lessonDescription="45-minute lessons"
-                        similarCourses={similarCoursesData}
-                    />
-                )}
-                {selectedPlan === GLOBAL_TEXT.plan_two && (
-                    <PlanComponent
-                        courseId={courseId}
-                        plan={planTwo}
-                        scheduleDescription="All courses are Monday to Friday, with morning and afternoon classes"
-                        lessonDescription="45-minute lessons"
-                        similarCourses={similarCoursesData}
-                    />
-                )}
-                {selectedPlan === GLOBAL_TEXT.plan_three && (
-                    <PlanComponent
-                        courseId={courseId}
-                        plan={planThree}
-                        scheduleDescription="All courses are Monday to Friday, with morning and afternoon classes"
-                        lessonDescription="45-minute lessons"
-                        similarCourses={similarCoursesData}
-                    />
+                {plans.map(
+                    (plan: any) =>
+                        selectedPlan === plan.name && (
+                            <PlanComponent
+                                clientId={clientId}
+                                key={plan._id}
+                                planId={plan._id}
+                                courseId={courseId}
+                                plan={plan}
+                                scheduleDescription={plan.schedule}
+                                lessonDescription={plan.lessonsHour}
+                                similarCourses={similarCoursesData}
+                            />
+                        )
                 )}
             </AUIThemedView>
         </AUIThemedView>
@@ -127,32 +100,42 @@ function CoursePlanTabs({ courseId }: { courseId: string }) {
 }
 
 export default function CourseDetails() {
+    const { requestFn } = useApiRequest();
     const dispatch = useDispatch();
+
+    const [course, setCourse] = useState<any>({});
+    const [clientId, setClientId] = useState<any>({});
+
     const { id } = useLocalSearchParams<{ id: string }>();
+    const { post } = useAxios();
     console.log(id);
 
-    // if (!id) {
-    //     return (
-    //         <AUIThemedView
-    //             style={{ justifyContent: "center", alignItems: "center" }}
-    //         >
-    //             <AUIThemedText>Course not found</AUIThemedText>
-    //         </AUIThemedView>
-    //     );
-    // }
+    if (!id) {
+        return (
+            <AUIThemedView style={{ justifyContent: "center", alignItems: "center" }}>
+                <AUIThemedText>Course not found</AUIThemedText>
+            </AUIThemedView>
+        );
+    }
 
-    // const { requestFn } = useApiRequest();
+    useEffect(() => {
+        requestFn(API_URL.course, "individualCourse", { id: id });
+    }, []);
 
-    // requestFn(
-    //     get("http://localhost:4000/dev/school?id=666846b7b1340aee251deff5"),
-    //     "courseDetails"
-    // );
+    const individualCourse = useSelector((state: RootState) => state.api.individualCourse);
 
-    // const courseDetails = useSelector(
-    //     (state: RootState) => state.api.courseDetails
-    // );
+    useEffect(() => {
+        if (individualCourse && individualCourse.docs && individualCourse.docs.length > 0) {
+            const course = individualCourse.docs[0];
+            const clientId = course.client._id;
 
-    // console.log("courseDetails", courseDetails);
+            setCourse(course);
+            setClientId(clientId);
+        }
+    }, [individualCourse]);
+
+    console.log("res of course", JSON.stringify(course));
+    console.log("clientId", JSON.stringify(clientId));
 
     const scrollRef = useAnimatedRef<Animated.ScrollView>();
     const navigation = useNavigation();
@@ -169,6 +152,20 @@ export default function CourseDetails() {
             opacity: interpolate(scrollOffset.value, [IMG_HEIGHT / 2, IMG_HEIGHT], [0, 1]),
         };
     }, []);
+
+    const handleFavoriteClick = (id: string, type: string) => {
+        post(API_URL.favorite, { id: id, type: type })
+            .then((res: any) => {
+                ApiSuccessToast(res.message);
+                console.log("response ", res.data);
+            })
+            .catch((e: any) => {
+                ApiErrorToast(e.response?.data?.message);
+                console.log(e);
+            });
+
+        console.log(id, type);
+    };
 
     const imageAnimatedStyle = useAnimatedStyle(() => {
         return {
@@ -209,10 +206,29 @@ export default function CourseDetails() {
                     onPress={() => navigation.goBack()}
                 />
             ),
+            headerRight: () => (
+                <TouchableOpacity
+                    onPress={() => {
+                        handleFavoriteClick(id, "course");
+                    }}
+                >
+                    <AUIThemedView
+                        style={{
+                            backgroundColor: "rgba(91, 216, 148, 0.3)",
+                            borderRadius: 50,
+                            padding: 10,
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }}
+                    >
+                        <Ionicons name="heart" size={24} color={APP_THEME.secondary.first} />
+                    </AUIThemedView>
+                </TouchableOpacity>
+            ),
 
             headerTitle: () => (
                 <Animated.Text style={[headerTitleAnimatedStyle, styles.screenTitle]}>
-                    Exam preparation course
+                    {course.courseName}
                 </Animated.Text>
             ),
         });
@@ -234,16 +250,19 @@ export default function CourseDetails() {
         ApiSuccessToast("✅ Added to cart");
     };
 
+    const startingDate: string = new Date(course.startDate).toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "2-digit",
+    });
+
     return (
         <AUIThemedView>
             <Animated.ScrollView ref={scrollRef} scrollEventThrottle={16}>
                 <AUIThemedView style={styles.container}>
                     <Animated.Image
                         source={{
-                            uri: Asset.fromModule(
-                                require("@/assets/images/studentHomePage/popularSchools/school-1.png")
-                                // require("@/assets/images/schoolDetailsPage/courses/image-1.png")
-                            ).uri,
+                            uri: course.image,
                         }}
                         style={[styles.image, imageAnimatedStyle]}
                         resizeMode="cover"
@@ -261,10 +280,10 @@ export default function CourseDetails() {
                                 />
                                 <AUIThemedView style={styles.courseInfo}>
                                     <AUIThemedText style={styles.title}>
-                                        Embark on a French Odyssey{" "}
+                                        {course.courseName}
                                     </AUIThemedText>
                                     <AUIThemedText style={styles.startingDate}>
-                                        Starting from: 20-06-2024
+                                        Starting from: {startingDate}
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
@@ -293,7 +312,7 @@ export default function CourseDetails() {
                                 },
                             ]}
                         >
-                            Live like a Parisian, sip coffee, speak French, become a local.
+                            {course.description}
                         </AUIThemedText>
                     </AUIThemedView> */}
                     <AUIThemedView style={styles.planContainer}>
@@ -301,9 +320,7 @@ export default function CourseDetails() {
                             {GLOBAL_TEXT.select_your_plan}
                         </AUIThemedText>
 
-                        {/* remove this ignore after API integration */}
-                        {/* @ts-ignore */}
-                        <CoursePlanTabs courseId={id} />
+                        <CoursePlanTabs courseId={id} clientId={clientId} />
                     </AUIThemedView>
                 </AUIThemedView>
             </Animated.ScrollView>
@@ -339,7 +356,6 @@ const planTabsStyles = StyleSheet.create({
 });
 
 const IMG_HEIGHT = 200;
-
 const styles = StyleSheet.create({
     screenHeader: {
         backgroundColor: APP_THEME.primary.first,

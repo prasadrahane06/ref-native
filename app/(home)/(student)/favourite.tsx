@@ -8,8 +8,12 @@ import { GLOBAL_TEXT } from "@/constants/Properties";
 import { FavoriteCourseData } from "@/constants/dummy data/FavoriteCourseData";
 import { FavoriteSchoolData } from "@/constants/dummy data/FavoriteSchoolData";
 import { destinationData } from "@/constants/dummy data/destinationData";
-import React, { useState } from "react";
+import { API_URL } from "@/constants/urlProperties";
+import useApiRequest from "@/customHooks/useApiRequest";
+import { RootState } from "@/redux/store";
+import React, { useEffect, useState } from "react";
 import { FlatList, ListRenderItem, ScrollView, StyleSheet } from "react-native";
+import { useSelector } from "react-redux";
 
 interface CourseData {
     title: string;
@@ -34,6 +38,7 @@ interface CountryData {
 }
 
 const TabTwoScreen: React.FC = () => {
+    const {requestFn} = useApiRequest()
     const [showAllCourses, setShowAllCourses] = useState(false);
     const [showAllSchools, setShowAllSchools] = useState(false);
     const [showAllCountries, setShowAllCountries] = useState(false);
@@ -48,10 +53,24 @@ const TabTwoScreen: React.FC = () => {
         setShowAllCountries(true);
     };
 
+    const getfavorite = useSelector((state: RootState) => state.api.favorite || {});
+    const fav = getfavorite?.docs[0]
+
+    useEffect(()=>{
+        console.log("getfavorite", JSON.stringify(getfavorite.docs[0]))
+    },[getfavorite])
+    
+
+    useEffect(()=>{
+        requestFn(API_URL.favorite , "favorite" , {user : true})
+    },[])
+
     const renderCourseItem: ListRenderItem<CourseData> = ({ item }) => (
         <AUIThemedView style={styles.courseItem}>
             <Course
-                title={item.title}
+                courseId={item._id}
+
+                title={item.courseName}
                 image={item.image}
                 favorite={item.favorite}
                 startingDate={item.startingDate}
@@ -62,10 +81,10 @@ const TabTwoScreen: React.FC = () => {
     const renderSchoolItem: ListRenderItem<SchoolData> = ({ item }) => (
         <AUIThemedView style={styles.schoolItem}>
             <School
-                id={item.id}
+                id={item._id}
                 title={item.name}
-                caption={item.caption}
-                image={item.image}
+                caption={item.discription}
+                image={item.banner}
                 favorite={item.favorite}
                 schoolWidth={160}
                 schoolHeight={145}
@@ -95,7 +114,7 @@ const TabTwoScreen: React.FC = () => {
                     {GLOBAL_TEXT.My_Favorite_Courses}
                 </SectionTitle>
                 <FlatList
-                    data={showAllCourses ? FavoriteCourseData : FavoriteCourseData.slice(0, 6)}
+                    data={showAllCourses ? fav.courses : fav.courses.slice(0, 6)}
                     renderItem={renderCourseItem}
                     keyExtractor={(item, index) => index.toString()}
                     numColumns={2}
@@ -112,9 +131,9 @@ const TabTwoScreen: React.FC = () => {
                     {GLOBAL_TEXT.My_Favorite_Schools}
                 </SectionTitle>
                 <FlatList
-                    data={showAllSchools ? FavoriteSchoolData : FavoriteSchoolData.slice(0, 6)}
+                    data={showAllSchools ? fav.clients : fav.clients.slice(0, 6)}
                     renderItem={renderSchoolItem}
-                    keyExtractor={(item) => item.id}
+                    keyExtractor={(item) => item._id}
                     numColumns={2}
                     columnWrapperStyle={styles.schoolColumnWrapper}
                     scrollEnabled={false}

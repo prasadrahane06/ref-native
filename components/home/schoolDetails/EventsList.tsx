@@ -10,9 +10,9 @@ interface EventsListProps {
 export const EventsList: React.FC<EventsListProps> = ({ data }) => {
     return (
         <AUIThemedView style={eventListStyles.container}>
-            {data.map((item) => (
-                <AUIThemedView key={item.id} style={eventListStyles.item}>
-                    <Events title={item.title} image={item.image} />
+            {data?.map((item) => (
+                <AUIThemedView key={item._id} style={eventListStyles.item}>
+                    <Events title={item.eventName} image={item.eventImage} />
                 </AUIThemedView>
             ))}
         </AUIThemedView>

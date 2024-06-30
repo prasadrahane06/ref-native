@@ -1,4 +1,4 @@
-import { get } from "@/app/services/axiosClient";
+import useAxios from "@/app/services/axiosClient";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import CarouselSlide from "@/components/home/common/CarouselSlide";
 import CourseList from "@/components/home/common/CourseList";
@@ -31,6 +31,7 @@ export default function HomeScreen() {
     const width = Dimensions.get("window").width;
     const progress = useSharedValue<number>(0);
     const ref = useRef<ICarouselInstance>(null);
+    const { get } = useAxios();
 
     const [selectedLanguage, setSelectedLanguage] = useState(languagesData[0].code);
     const displayedCourses = coursesData.slice(0, 4);
@@ -39,10 +40,16 @@ export default function HomeScreen() {
     const courseResponse = useSelector((state: RootState) => state.api.course || {});
 
     useEffect(() => {
+        console.log("course ", courseResponse.docs);
+    }, [courseResponse]);
+    useEffect(() => {
+        requestFn(API_URL.course, "course", { limit: 4, similar: selectedLanguage ? selectedLanguage : "english" });
+    }, [selectedLanguage]);
+
+    useEffect(() => {
         dispatch(setLoader(true));
-        requestFn(get(API_URL.popularSchool, { limit: 4 }), "school");
+        requestFn(API_URL.popularSchool, "school");
         dispatch(setLoader(false));
-        // requestFn(get(API_URL.course, {limit : 4}) , "course")
     }, []);
 
     useEffect(() => {
@@ -99,7 +106,7 @@ export default function HomeScreen() {
                 >
                     {GLOBAL_TEXT.popular_schools}
                 </SectionTitle>
-                <SchoolList data={schoolsResponse.docs} dummyData={schoolsData} />
+                <SchoolList data={schoolsResponse.docs} />
             </AUIThemedView>
 
             <AUIThemedView>
@@ -115,7 +122,7 @@ export default function HomeScreen() {
                 <SectionTitle viewAll="(home)/course/AllCoursesScreen">
                     {GLOBAL_TEXT.popular_courses} (EN)
                 </SectionTitle>
-                <CourseList data={displayedCourses} />
+                <CourseList data={courseResponse?.docs} />
             </AUIThemedView>
 
             <AUIThemedView>

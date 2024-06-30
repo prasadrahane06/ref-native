@@ -53,13 +53,14 @@ const InitialLayout = () => {
         storeUserDeviceData();
 
         getUserData().then((data) => {
-            // console.log("user-data", data);
+            console.log("user-data", data);
             if (data && Object.keys(data).length > 0) {
                 if (data?.profile === "student") {
-                    router.replace("/(home)/(student)");
-
                     // saving token in redux
+                    console.log("saving token in layout", data?.data?.accessToken);
                     dispatch(setToken(data?.data?.accessToken));
+
+                    router.replace("/(home)/(student)");
                 }
                 if (data?.profile === "school") {
                     router.replace("/(home)/(school)");

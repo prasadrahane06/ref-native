@@ -22,13 +22,15 @@ import {
     View,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { post } from "./services/axiosClient";
+import useAxios from "./services/axiosClient";
 
 const SignupPage = () => {
     const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
     const router = useRouter();
     const dispatch = useDispatch();
     const profile = useSelector((state: RootState) => state.global.profile);
+
+    const { post } = useAxios();
 
     const [errors, setErrors] = useState({});
     const [signupValues, setSignupValues] = useState({

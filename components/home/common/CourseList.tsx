@@ -10,13 +10,14 @@ interface CourseListProps {
 const CourseList: React.FC<CourseListProps> = ({ data }) => {
     return (
         <AUIThemedView style={styles.courseContainer}>
-            {data.map((item) => (
-                <AUIThemedView key={item.id} style={styles.courseItem}>
+            {data?.map((item) => (
+                <AUIThemedView key={item._id} style={styles.courseItem}>
                     <Course
-                        title={item.name}
-                        image={item.image}
+                        title={item?.courseName}
+                        image={item?.image}
                         // @ts-ignore
-                        startingDate={item.startingDate}
+                        startingDate={item?.startingDate}
+                       courseId = {item._id}
                     />
                 </AUIThemedView>
             ))}
