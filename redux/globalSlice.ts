@@ -2,6 +2,15 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
 import { ThemeType } from "./../constants/Colors";
 
+export interface UserState {
+    userId: string;
+    userName: string;
+    userImage: string;
+    userEmail: string;
+    userPhone: string;
+    userType: string;
+}
+
 export interface GlobalState {
     profile: string;
     theme: ThemeType;
@@ -9,6 +18,7 @@ export interface GlobalState {
     signupDetails: any;
     loader: boolean;
     token: string;
+    user: UserState;
 }
 
 const initialState: GlobalState = {
@@ -18,6 +28,14 @@ const initialState: GlobalState = {
     signupDetails: null,
     loader: false,
     token: "",
+    user: {
+        userId: "",
+        userName: "",
+        userImage: "",
+        userEmail: "",
+        userPhone: "",
+        userType: "",
+    },
 };
 
 export const globalSlice = createSlice({
@@ -47,11 +65,31 @@ export const globalSlice = createSlice({
         setToken: (state, action: PayloadAction<string>) => {
             state.token = action.payload;
         },
+        setUser: (
+            state,
+            action: PayloadAction<{
+                userId: string;
+                userName: string;
+                userImage: string;
+                userEmail: string;
+                userPhone: string;
+                userType: string;
+            }>
+        ) => {
+            state.user = action.payload;
+        },
     },
 });
 
 // Action creators are generated for each case reducer function
-export const { setProfile, setTheme, setSignInType, setSignupDetails, setLoader, setToken } =
-    globalSlice.actions;
+export const {
+    setProfile,
+    setTheme,
+    setSignInType,
+    setSignupDetails,
+    setLoader,
+    setToken,
+    setUser,
+} = globalSlice.actions;
 
 export default globalSlice.reducer;

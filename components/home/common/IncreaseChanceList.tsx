@@ -1,20 +1,25 @@
-import LastChance from "@/components/LastChance";
+import IncreaseChance from "@/components/IncreaseChance";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import React from "react";
 import { FlatList, StyleSheet } from "react-native";
 
-interface LastChanceListProps {
+interface IncreaseChanceListProps {
     data: any[];
 }
 
-const LastChanceList: React.FC<LastChanceListProps> = ({ data }) => {
+const IncreaseChanceList: React.FC<IncreaseChanceListProps> = ({ data }) => {
     return (
         <AUIThemedView style={styles.container}>
             <FlatList
                 horizontal
                 data={data}
                 renderItem={({ item }) => (
-                    <LastChance title={item.title} subTitle={item.subTitle} />
+                    <IncreaseChance
+                        courseName={item.courseName}
+                        schoolName={item.schoolName}
+                        image={item.image}
+                        daysRemaining={item.daysRemaining}
+                    />
                 )}
                 keyExtractor={(item) => item.id}
             />
@@ -28,4 +33,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default LastChanceList;
+export default IncreaseChanceList;

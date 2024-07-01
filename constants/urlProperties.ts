@@ -10,4 +10,5 @@ export const API_URL = {
     schoolOverview: "schoolOverview",
     enquiry: "enquiry",
     favorite: "favorite",
+    user: "user",
 };

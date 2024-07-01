@@ -22,7 +22,12 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSelector } from "react-redux";
 
-function StudentDetailsTabs({ courseId }: { courseId: string }) {
+interface TabProps {
+    courseId: string;
+    clientId: string;
+}
+
+function StudentDetailsTabs({ courseId, clientId }: TabProps) {
     const schoolsResponse = useSelector((state: RootState) => state.api.individualSchool || {});
     const [selectedTab, setSelectedTab] = useState("overview");
 
@@ -74,7 +79,11 @@ function StudentDetailsTabs({ courseId }: { courseId: string }) {
 
             <AUIThemedView>
                 {selectedTab === "overview" && (
-                    <OverviewTab schoolOverView={schoolsResponse[0]} courseId={courseId} />
+                    <OverviewTab
+                        schoolOverView={schoolsResponse[0]}
+                        courseId={courseId}
+                        clientId={clientId}
+                    />
                 )}
                 {selectedTab === "courses" && <CoursesTab schoolCourses={schoolsResponse[0]} />}
             </AUIThemedView>
@@ -257,7 +266,7 @@ export default function SchoolDetails() {
                     </AUIThemedView>
 
                     <AUIThemedView>
-                        <StudentDetailsTabs courseId={id} />
+                        <StudentDetailsTabs courseId={id} clientId={schoolsResponse?._id} />
                     </AUIThemedView>
                 </AUIThemedView>
             </Animated.ScrollView>

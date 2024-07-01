@@ -51,12 +51,14 @@ interface EnquireNowModalProps {
     isVisible: boolean;
     onClose: () => void;
     courseId: string;
+    clientId: string;
     userId: string;
 }
 
 interface OverviewTabProps {
     schoolOverView: any;
     courseId: string;
+    clientId: string;
 }
 
 const schema = Yup.object().shape({
@@ -74,7 +76,7 @@ const schema = Yup.object().shape({
     comment: Yup.string().required("Comment is required"),
 });
 
-function EnquireNowModal({ isVisible, onClose, courseId, userId }: EnquireNowModalProps) {
+function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: EnquireNowModalProps) {
     const [showStartDatePicker, setShowStartDatePicker] = useState(false);
     const [showEndDatePicker, setShowEndDatePicker] = useState(false);
     const { post } = useAxios();
@@ -141,16 +143,16 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId }: EnquireNowMod
         const enquiry = {
             user: userId,
             course: courseId,
-            // remove this hard code ID after courses API are added
-            client: "5f4536e4221556307429d434",
+            client: clientId,
             nationality: data.nationality,
             phone: phone,
             email: data.email,
             languageToLearn: data.language,
             startDate: startDate,
             endDate: endDate,
-            accomodation: data.accommodation,
+            accommodation: data.accommodation,
             comment: data.comment,
+            type: "client",
         };
 
         console.log("enquiry-data", JSON.stringify(enquiry));
@@ -580,7 +582,7 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId }: EnquireNowMod
     );
 }
 
-export default function OverviewTab({ schoolOverView, courseId }: OverviewTabProps) {
+export default function OverviewTab({ schoolOverView, courseId, clientId }: OverviewTabProps) {
     const [isModalVisible, setIsModalVisible] = useState(false);
     let userId: string = "";
 
@@ -700,8 +702,9 @@ export default function OverviewTab({ schoolOverView, courseId }: OverviewTabPro
 
             <EnquireNowModal
                 isVisible={isModalVisible}
-                courseId={courseId}
                 userId={userId}
+                courseId={courseId}
+                clientId={clientId}
                 onClose={() => {
                     setIsModalVisible(false);
                 }}

@@ -25,7 +25,7 @@ const LanguageList: React.FC<LanguageListProps> = ({
                         <Flag
                             countryName={item.language.name}
                             countryCode={item.code}
-                            isSelected={item.code === selectedLanguage}
+                            isSelected={item.language.name === selectedLanguage}
                             onSelect={() => setSelectedLanguage(item.language.name)}
                         />
                     );

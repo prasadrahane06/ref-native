@@ -10,7 +10,7 @@ import { storeUserData } from "@/constants/RNAsyncStore";
 import { loginPageStyles, secondaryButtonStyle } from "@/constants/Styles";
 import { countriesData } from "@/constants/dummy data/countriesData";
 import { API_URL } from "@/constants/urlProperties";
-import { setLoader, setToken } from "@/redux/globalSlice";
+import { setLoader, setToken, setUser } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
 import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -212,6 +212,9 @@ const LoginPage = () => {
                     // saving token in redux
                     console.log("saving token in login", res?.data?.accessToken);
                     dispatch(setToken(res?.data?.accessToken));
+
+                    console.log("saving user data in login", res?.data?.user);
+                    dispatch(setUser(res?.data?.user));
 
                     router.push({
                         pathname: `(home)/(${profile})`,

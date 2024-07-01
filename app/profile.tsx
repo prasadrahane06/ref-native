@@ -1,6 +1,7 @@
 import AUIImage from "@/components/common/AUIImage";
 import { FontAwesome } from "@expo/vector-icons";
 import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
+import { Asset } from "expo-asset";
 import React, { useState } from "react";
 import {
     Platform,
@@ -35,16 +36,16 @@ const Profile: React.FC = () => {
             <View style={styles.container}>
                 <View style={styles.header}>
                     <Text style={styles.headerText}>My Profile</Text>
-                    <TouchableOpacity style={styles.editIcon}>
-                        <FontAwesome name="edit" size={20} color="#5BD894" />
-                    </TouchableOpacity>
                 </View>
 
                 <View style={styles.profileImageContainer}>
                     <AUIImage
                         icon
                         path={
-                            "https://linguest-assets-dev.s3.ap-south-1.amazonaws.com/1718884990288-6296.jpeg"
+                            Asset.fromModule(
+                                require("@/assets/images/user.png")
+                                // "https://linguest-assets-dev.s3.ap-south-1.amazonaws.com/1718884990288-6296.jpeg"
+                            ).uri
                         }
                         style={styles.profileImage}
                     />

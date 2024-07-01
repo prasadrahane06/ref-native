@@ -16,7 +16,7 @@ export const GLOBAL_TEXT = {
     popular_schools: "Popular Schools",
     popular_courses: "Popular Courses",
     choose_your_language: "Choose your language to learn",
-    last_chance_to_apply: "Last Chance to apply",
+    inrease_your_chance: "Increase your Chances",
     explore_more: "Explore More",
     latest_events: "Latest Events",
     facilities: "Facilities",

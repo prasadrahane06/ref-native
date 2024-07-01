@@ -1,10 +1,9 @@
-import useAxios from "@/app/services/axiosClient";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import CarouselSlide from "@/components/home/common/CarouselSlide";
 import CourseList from "@/components/home/common/CourseList";
 import DestinationList from "@/components/home/common/DestinationList";
+import IncreaseChanceList from "@/components/home/common/IncreaseChanceList";
 import LanguageList from "@/components/home/common/LanguageList";
-import LastChanceList from "@/components/home/common/LastChanceList";
 import SchoolList from "@/components/home/common/SchoolList";
 import SectionTitle from "@/components/home/common/SectionTitle";
 import { APP_THEME } from "@/constants/Colors";
@@ -12,9 +11,8 @@ import { GLOBAL_TEXT } from "@/constants/Properties";
 import { carouselData } from "@/constants/dummy data/carouselData";
 import { coursesData } from "@/constants/dummy data/coursesData";
 import { destinationData } from "@/constants/dummy data/destinationData";
+import { increaseChancesData } from "@/constants/dummy data/increaseChancesData";
 import { languagesData } from "@/constants/dummy data/languagesData";
-import { lastChanceData } from "@/constants/dummy data/lastChance";
-import { schoolsData } from "@/constants/dummy data/schoolsData";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import { setLoader } from "@/redux/globalSlice";
@@ -31,9 +29,8 @@ export default function HomeScreen() {
     const width = Dimensions.get("window").width;
     const progress = useSharedValue<number>(0);
     const ref = useRef<ICarouselInstance>(null);
-    const { get } = useAxios();
 
-    const [selectedLanguage, setSelectedLanguage] = useState(languagesData[0].code);
+    const [selectedLanguage, setSelectedLanguage] = useState(languagesData[0].language.name);
     const displayedCourses = coursesData.slice(0, 4);
 
     const schoolsResponse = useSelector((state: RootState) => state.api.school || {});
@@ -43,7 +40,7 @@ export default function HomeScreen() {
         console.log("course ", courseResponse.docs);
     }, [courseResponse]);
     useEffect(() => {
-        requestFn(API_URL.course, "course", { limit: 4, similar: selectedLanguage ? selectedLanguage : "english" });
+        requestFn(API_URL.course, "course", { limit: 4, similar: selectedLanguage });
     }, [selectedLanguage]);
 
     useEffect(() => {
@@ -126,8 +123,8 @@ export default function HomeScreen() {
             </AUIThemedView>
 
             <AUIThemedView>
-                <SectionTitle>{GLOBAL_TEXT.last_chance_to_apply}</SectionTitle>
-                <LastChanceList data={lastChanceData} />
+                <SectionTitle viewAll="#">{GLOBAL_TEXT.inrease_your_chance}</SectionTitle>
+                <IncreaseChanceList data={increaseChancesData} />
             </AUIThemedView>
         </ScrollView>
     );

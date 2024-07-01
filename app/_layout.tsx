@@ -2,7 +2,7 @@ import AUILoader from "@/components/common/AUILoader";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { APP_THEME, COLOR_THEME, TEXT_THEME } from "@/constants/Colors";
 import { getUserData, storeUserDeviceData } from "@/constants/RNAsyncStore";
-import { setToken } from "@/redux/globalSlice";
+import { setToken, setUser } from "@/redux/globalSlice";
 import { RootState, store } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -59,6 +59,10 @@ const InitialLayout = () => {
                     // saving token in redux
                     console.log("saving token in layout", data?.data?.accessToken);
                     dispatch(setToken(data?.data?.accessToken));
+
+                    // saving user in redux
+                    console.log("saving user data in layout", data?.data?.user);
+                    dispatch(setUser(data?.data?.user));
 
                     router.replace("/(home)/(student)");
                 }

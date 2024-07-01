@@ -1,50 +1,58 @@
 import { APP_THEME } from "@/constants/Colors";
 import {
-	AntDesign,
-	Feather,
-	FontAwesome,
-	FontAwesome6,
-	Fontisto,
-	Ionicons,
-	MaterialIcons,
+    AntDesign,
+    Feather,
+    FontAwesome,
+    FontAwesome6,
+    Fontisto,
+    Ionicons,
+    MaterialIcons,
 } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
-import { useNavigation } from "expo-router";
-import React from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { router, useNavigation } from "expo-router";
+import React, { useEffect } from "react";
+import { Pressable, StyleSheet, View, TouchableOpacity } from "react-native";
 import AUIImage from "../common/AUIImage";
 import { AUIThemedText } from "../common/AUIThemedText";
 import { AUIThemedView } from "../common/AUIThemedView";
+import useApiRequest from "@/customHooks/useApiRequest";
+import { API_URL } from "@/constants/urlProperties";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
+const array = [
+    {
+        id: 1,
+        icon: <FontAwesome6 name="user-circle" size={24} color={APP_THEME.primary.first} />,
+        label: "Profile Information",
+    },
+    {
+        id: 2,
+        icon: <Feather name="help-circle" size={24} color={APP_THEME.primary.first} />,
+        label: "Help",
+    },
+    {
+        id: 3,
+        icon: <Fontisto name="wallet" size={24} color={APP_THEME.primary.first} />,
+        label: "Transaction history",
+    },
+    {
+        id: 4,
+        icon: <Ionicons name="cart" size={24} color={APP_THEME.primary.first} />,
+        label: "My courses",
+    },
+    {
+        id: 5,
+        icon: <AntDesign name="poweroff" size={24} color={"red"} />,
+        label: "Delete Account",
+    },
+];
 function Profile() {
     const navigation = useNavigation();
-    const array = [
-        {
-            id: 1,
-            icon: <FontAwesome6 name="user-circle" size={24} color={APP_THEME.primary.first} />,
-            label: "Profile Information",
-        },
-        {
-            id: 2,
-            icon: <Feather name="help-circle" size={24} color={APP_THEME.primary.first} />,
-            label: "Help",
-        },
-        {
-            id: 3,
-            icon: <Fontisto name="wallet" size={24} color={APP_THEME.primary.first} />,
-            label: "Transaction history",
-        },
-        {
-            id: 4,
-            icon: <Ionicons name="cart" size={24} color={APP_THEME.primary.first} />,
-            label: "My courses",
-        },
-        {
-            id: 5,
-            icon: <AntDesign name="poweroff" size={24} color={"red"} />,
-            label: "Delete Account",
-        },
-    ];
+
+    const userData = useSelector((state: RootState) => state.api.user);
+    console.log("userData in profile", userData);
+
     return (
         <AUIThemedView style={styles.root}>
             <AUIThemedView style={styles.banner}>
@@ -60,7 +68,9 @@ function Profile() {
                             color={APP_THEME.ternary.first}
                         />
                     </Pressable>
-                    <FontAwesome name="edit" size={30} color={APP_THEME.ternary.first} />
+                    <TouchableOpacity onPress={() => router.push({ pathname: "/profile" })}>
+                        <FontAwesome name="edit" size={30} color={APP_THEME.ternary.first} />
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.avatarContainer}>
                     <AUIImage
@@ -106,7 +116,8 @@ const styles = StyleSheet.create({
     },
     banner: {
         height: 150,
-        backgroundColor: "rgba(91, 216, 148, 0.5)",
+        // backgroundColor: "rgba(91, 216, 148, 0.5)",
+        backgroundColor: APP_THEME.primary.first,
         elevation: 20,
         shadowColor: APP_THEME.ternary.first,
         shadowOffset: { width: -2, height: 4 },
