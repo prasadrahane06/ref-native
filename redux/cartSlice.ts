@@ -1,12 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface CartState {
-    items: Array<{
-        courseId: string;
-        title: string;
-        startingDate: string;
-        image: any;
-    }>;
+    items: any[];
 }
 
 const initialState: CartState = {
@@ -17,24 +12,16 @@ export const cartSlice = createSlice({
     name: "cart",
     initialState,
     reducers: {
-        addItemToCart: (
-            state,
-            action: PayloadAction<{
-                courseId: string;
-                title: string;
-                startingDate: string;
-                image: any;
-            }>
-        ) => {
-            state.items.push(action.payload);
+        addItemToCart: (state, action: PayloadAction<any>) => {
+            state.items = action.payload;
         },
 
-        removeCourseFromCart: (state, action: PayloadAction<string>) => {
-            state.items = state.items.filter((course) => course.courseId !== action.payload);
+        removeItemFromCart: (state, action: PayloadAction<string>) => {
+            state.items = state.items.filter((item) => item.course._id !== action.payload);
         },
     },
 });
 
-export const { addItemToCart, removeCourseFromCart } = cartSlice.actions;
+export const { addItemToCart, removeItemFromCart } = cartSlice.actions;
 
 export default cartSlice.reducer;

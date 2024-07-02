@@ -76,9 +76,9 @@ const useAxios = () => {
         }
     };
 
-    const del = async (url: string) => {
+    const del = async (url: string, payload?: any) => {
         try {
-            const response = await axiosClient.delete(url);
+            const response = await axiosClient.delete(url, { data: payload });
             return response.data;
         } catch (error) {
             throw error;

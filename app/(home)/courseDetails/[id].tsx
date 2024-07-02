@@ -235,19 +235,25 @@ export default function CourseDetails() {
     }, []);
 
     const handleAddToCart = () => {
-        // Replace with actual course details
         const courseDetails = {
-            courseId: Math.random().toString(36).substring(7),
-            title: "Exam preparation course",
-            startingDate: "20-06-2024",
-            image: Asset.fromModule(
-                require("@/assets/images/studentHomePage/popularSchools/school-1.png")
-            ).uri,
+            courseId: id,
+            title: course.courseName,
+            startingDate: course.startDate,
+            image: course.image,
         };
-        // @ts-ignore
-        dispatch(addItemToCart(courseDetails));
-        console.log("Item added to cart");
-        ApiSuccessToast("✅ Added to cart");
+
+        post(API_URL.cart, { course: id })
+            .then((res: any) => {
+                // ApiSuccessToast(res.message);
+                console.log("res from cart =>", res.data);
+
+                // dispatch(addItemToCart(courseDetails));
+                console.log("Item added to cart");
+            })
+            .catch((e: any) => {
+                ApiErrorToast(e.response?.data?.message);
+                console.log(e);
+            });
     };
 
     const startingDate: string = new Date(course.startDate).toLocaleDateString("en-GB", {

@@ -1,5 +1,4 @@
 import { APP_THEME } from "@/constants/Colors";
-import { removeCourseFromCart } from "@/redux/cartSlice";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -8,7 +7,12 @@ import { useDispatch } from "react-redux";
 import AUIImage from "./common/AUIImage";
 import { AUIThemedText } from "./common/AUIThemedText";
 import { AUIThemedView } from "./common/AUIThemedView";
-import { ApiSuccessToast } from "./common/AUIToast";
+import { ApiErrorToast, ApiSuccessToast } from "./common/AUIToast";
+import useAxios from "@/app/services/axiosClient";
+import { API_URL } from "@/constants/urlProperties";
+import { setResponse } from "@/redux/apiSlice";
+import { addItemToCart, removeItemFromCart } from "@/redux/cartSlice";
+import { setLoader } from "@/redux/globalSlice";
 
 interface CourseProps {
     title: string;
@@ -31,13 +35,29 @@ const Course: React.FC<CourseProps> = ({
 }) => {
     const router = useRouter();
     const dispatch = useDispatch();
+    const { del } = useAxios();
 
-    const handleRemoveFromCart = () => {
-        //@ts-ignore
-        dispatch(removeCourseFromCart(courseId));
-        console.log("Item removed from cart");
-        ApiSuccessToast("🗑️ Removed from cart");
+    console.log("courseId", courseId);
+
+    const handleRemoveFromCart = (id: string) => {
+        del(API_URL.cart, { course: id })
+            .then((res: any) => {
+                ApiSuccessToast(res.message);
+                dispatch(removeItemFromCart(id));
+                console.log("item removed from cart res =>", res.data);
+                dispatch(setLoader(false));
+            })
+            .catch((e: any) => {
+                ApiErrorToast(e.response?.data?.message);
+                console.log(e);
+            });
     };
+
+    const startDate: string = new Date(startingDate).toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "2-digit",
+    });
 
     return (
         <TouchableOpacity
@@ -54,7 +74,7 @@ const Course: React.FC<CourseProps> = ({
                     <Text style={styles.courseTitle}>{title}</Text>
                     <AUIThemedText style={{ fontSize: 12 }}>
                         <AUIThemedText style={styles.courseCaption}>Starting from: </AUIThemedText>
-                        20-04-2024
+                        {startDate}
                     </AUIThemedText>
                 </AUIThemedView>
                 {favorite && (
@@ -64,7 +84,7 @@ const Course: React.FC<CourseProps> = ({
                 )}
                 {cart && (
                     <TouchableOpacity
-                        onPress={handleRemoveFromCart}
+                        onPress={() => handleRemoveFromCart(courseId)}
                         style={styles.cartIconContainer}
                     >
                         <MaterialIcons

@@ -11,4 +11,5 @@ export const API_URL = {
     enquiry: "enquiry",
     favorite: "favorite",
     user: "user",
+    cart: "cart",
 };

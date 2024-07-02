@@ -16,7 +16,7 @@ const CourseList: React.FC<CourseListProps> = ({ data }) => {
                         title={item?.courseName}
                         image={item?.image}
                         // @ts-ignore
-                        startingDate={item?.startingDate}
+                        startingDate={item?.startDate}
                        courseId = {item._id}
                     />
                 </AUIThemedView>

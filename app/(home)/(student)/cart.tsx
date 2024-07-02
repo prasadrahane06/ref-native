@@ -2,13 +2,41 @@ import Course from "@/components/Course";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { GLOBAL_TEXT } from "@/constants/Properties";
+import { API_URL } from "@/constants/urlProperties";
+import useApiRequest from "@/customHooks/useApiRequest";
 import { RootState } from "@/redux/store";
+import React, { useCallback, useEffect, useState } from "react";
 import { FlatList, ScrollView, StyleSheet } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useFocusEffect } from "@react-navigation/native";
+import { setResponse } from "@/redux/apiSlice";
+import { addItemToCart } from "@/redux/cartSlice";
 
 export default function TabFourScreen() {
+    // const [cartItems, setCartItems] = useState<any>([]);
+    const { requestFn } = useApiRequest();
+    const dispatch = useDispatch();
+
+    useFocusEffect(
+        useCallback(() => {
+            requestFn(API_URL.cart, "cart");
+        }, [])
+    );
+
+    const cart = useSelector((state: RootState) => state.api.cart);
+
+    useEffect(() => {
+        if (cart && cart.docs && cart.docs.length > 0) {
+            const cartItems = cart.docs[0].items;
+            console.log("cartItems in cart =>", JSON.stringify(cartItems));
+
+            dispatch(addItemToCart(cartItems));
+            // setCartItems(cartItems);
+        }
+    }, [cart]);
+
     const cartItems = useSelector((state: RootState) => state.cart.items);
-    console.log("Cart Items", cartItems);
+    console.log("cartItems from selector =>", JSON.stringify(cartItems));
 
     if (cartItems.length === 0) {
         return (
@@ -31,10 +59,10 @@ export default function TabFourScreen() {
                         renderItem={({ item, index }) => (
                             <AUIThemedView style={styles.courseItem}>
                                 <Course
-                                    title={item.title}
-                                    image={item.image}
-                                    startingDate={item.startingDate}
-                                    courseId={item.courseId}
+                                    courseId={item?.course?._id}
+                                    title={item?.course?.courseName}
+                                    image={item?.course?.image}
+                                    startingDate={item?.course?.startDate}
                                     cart
                                 />
                             </AUIThemedView>
