@@ -10,15 +10,11 @@ import {
 } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
 import { router, useNavigation } from "expo-router";
-import React, { useEffect } from "react";
-import { Pressable, StyleSheet, View, TouchableOpacity } from "react-native";
+import React from "react";
+import { Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
 import AUIImage from "../common/AUIImage";
 import { AUIThemedText } from "../common/AUIThemedText";
 import { AUIThemedView } from "../common/AUIThemedView";
-import useApiRequest from "@/customHooks/useApiRequest";
-import { API_URL } from "@/constants/urlProperties";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
 
 const array = [
     {
@@ -49,9 +45,6 @@ const array = [
 ];
 function Profile() {
     const navigation = useNavigation();
-
-    const userData = useSelector((state: RootState) => state.api.user);
-    console.log("userData in profile", userData);
 
     return (
         <AUIThemedView style={styles.root}>

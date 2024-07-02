@@ -8,6 +8,7 @@ import SchoolList from "@/components/home/common/SchoolList";
 import SectionTitle from "@/components/home/common/SectionTitle";
 import { APP_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
+import { getUserData } from "@/constants/RNAsyncStore";
 import { carouselData } from "@/constants/dummy data/carouselData";
 import { coursesData } from "@/constants/dummy data/coursesData";
 import { destinationData } from "@/constants/dummy data/destinationData";
@@ -15,7 +16,6 @@ import { increaseChancesData } from "@/constants/dummy data/increaseChancesData"
 import { languagesData } from "@/constants/dummy data/languagesData";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
-import { setLoader } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
 import React, { useEffect, useRef, useState } from "react";
 import { Dimensions, ScrollView, StyleSheet } from "react-native";
@@ -44,9 +44,12 @@ export default function HomeScreen() {
     }, [selectedLanguage]);
 
     useEffect(() => {
-        dispatch(setLoader(true));
+        getUserData().then((data) => {
+            const id = data?.data?.user?._id;
+            requestFn(API_URL.user, "userProfileData", { id: id });
+        });
+
         requestFn(API_URL.popularSchool, "school");
-        dispatch(setLoader(false));
     }, []);
 
     useEffect(() => {

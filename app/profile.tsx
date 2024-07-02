@@ -1,4 +1,5 @@
 import AUIImage from "@/components/common/AUIImage";
+import { RootState } from "@/redux/store";
 import { FontAwesome } from "@expo/vector-icons";
 import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import { Asset } from "expo-asset";
@@ -12,20 +13,24 @@ import {
     TouchableOpacity,
     View,
 } from "react-native";
+import { useSelector } from "react-redux";
 
 const Profile: React.FC = () => {
+    const userProfileData = useSelector((state: RootState) => state.api.userProfileData);
+    console.log("userProfileData in profile", userProfileData);
+
     const [date, setDate] = useState<Date>(new Date());
     const [show, setShow] = useState<boolean>(false);
 
-    const [name, setName] = useState<string>("");
-    const [phoneNumber, setPhoneNumber] = useState<string>("");
-    const [mailID, setMailID] = useState<string>("");
+    const [name, setName] = useState<string>(userProfileData?.name);
+    const [phoneNumber, setPhoneNumber] = useState<string>(userProfileData?.phone);
+    const [mailID, setMailID] = useState<string>(userProfileData?.email);
     const [gender, setGender] = useState<string>("");
     const [qualification, setQualification] = useState<string>("");
     const [academicSession, setAcademicSession] = useState<string>("");
     const [selectedLanguage, setSelectedLanguage] = useState<string>("");
 
-    const onChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
+    const onDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
         const currentDate = selectedDate || date;
         setShow(Platform.OS === "ios");
         setDate(currentDate);
@@ -53,7 +58,7 @@ const Profile: React.FC = () => {
                 <Text style={styles.label}>Enter your name</Text>
                 <TextInput
                     style={styles.input}
-                    placeholder="Yazeed"
+                    placeholder="Enter Your Name"
                     value={name}
                     onChangeText={(text) => setName(text)}
                 />
@@ -61,7 +66,7 @@ const Profile: React.FC = () => {
                 <Text style={styles.label}>Phone Number</Text>
                 <TextInput
                     style={styles.input}
-                    placeholder="+44-395 335 2894"
+                    placeholder="Enter You Mobile Number"
                     value={phoneNumber}
                     onChangeText={(text) => setPhoneNumber(text)}
                 />
@@ -69,7 +74,7 @@ const Profile: React.FC = () => {
                 <Text style={styles.label}>Mail ID</Text>
                 <TextInput
                     style={styles.input}
-                    placeholder="yazeed652@gmail.com"
+                    placeholder="Enter Your Mail ID"
                     value={mailID}
                     onChangeText={(text) => setMailID(text)}
                 />
@@ -86,7 +91,7 @@ const Profile: React.FC = () => {
                         value={date}
                         mode="date"
                         display="default"
-                        onChange={onChange}
+                        onChange={onDateChange}
                     />
                 )}
 
