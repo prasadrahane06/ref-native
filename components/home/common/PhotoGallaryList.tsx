@@ -12,7 +12,7 @@ const PhotoGallaryList: React.FC<PhotoGallaryListProps> = ({ data }) => {
             <FlatList
                 horizontal
                 data={data}
-                renderItem={({ item }) => <PhotoGallary image={item.image} />}
+                renderItem={({ item }) => <PhotoGallary image={item} />}
                 keyExtractor={(item) => item.id}
             />
         </AUIThemedView>

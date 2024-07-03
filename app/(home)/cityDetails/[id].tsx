@@ -6,7 +6,7 @@ import { APP_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
 import { schoolsData } from "@/constants/dummy data/schoolsData";
 import { useLocalSearchParams } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 // import PhotoGallaryList from "@/components/home/common/PhotoGallaryList";
 // import { PhotoGallaryData } from "@/constants/dummy data/PhotoGallaryData";
@@ -17,32 +17,57 @@ import { RootState } from "@/redux/store";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
 import { useSelector } from "react-redux";
+import { API_URL } from "@/constants/urlProperties";
+import useApiRequest from "@/customHooks/useApiRequest";
 
 export default function CityDetails() {
     const { id } = useLocalSearchParams<{ id: string }>();
-    console.log(id);
-
-    const schoolsResponse = useSelector((state: RootState) => state.api.school || {});
+    console.log("country id =>", id);
 
     const [readMore, setReadMore] = useState(false);
-    const aboutText = `Craving an academic adventure? Immerse yourself in the vibrant landscapes of South Africa and master English through real-world experiences. South African universities, known for their academic excellence and diverse programs, offer a prestigious education alongside a unique cultural immersion. From the bustling streets of Johannesburg to the historic charm of Cape Town, explore breathtaking natural wonders, connect with a dynamic international student community, and unlock the secrets of English not just by reading, but by living it. This is your chance to boost your employability, delve into a rich history, and embrace the captivating culture of South Africa - all while mastering a language in demand worldwide.`;
+    const [country, setCountry] = useState<any>({});
+    const [photoGallary, setPhotoGallary] = useState<any>([]);
+    const [aboutText, setAboutText] = useState("");
+
+    const { requestFn } = useApiRequest();
+
+    const schoolsResponse = useSelector((state: RootState) => state.api.school || {});
+    const individualCountry = useSelector((state: RootState) => state.api.individualCountry || {});
+
+    console.log("individualCountry =>", JSON.stringify(individualCountry));
+
+    useEffect(() => {
+        requestFn(API_URL.country, "individualCountry", { _id: id });
+    }, []);
+
+    useEffect(() => {
+        if (individualCountry && individualCountry.docs && individualCountry.docs.length > 0) {
+            const country = individualCountry.docs[1];
+
+            setPhotoGallary(country.images);
+            setCountry(country);
+            setAboutText(country.about);
+            console.log("country data =>", country);
+        }
+    }, [individualCountry]);
+
     const wordsLimit = 50;
     const truncatedText = aboutText.split(" ").slice(0, wordsLimit).join(" ");
+
+    const population = country?.population;
+    const formattedPopulation =
+        population && population >= 1000000
+            ? (population / 1000000).toFixed(1) + "M"
+            : population && population > 0
+            ? population.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+            : null;
 
     return (
         <AUIThemedView>
             <ScrollView>
                 <AUIThemedView style={styles.container}>
                     <AUIThemedView>
-                        <AUIImage
-                            path={
-                                Asset.fromModule(
-                                    require("@/assets/images/studentHomePage/cityDetailsPage/Rectangle 13 (1).png")
-                                ).uri
-                            }
-                            style={styles.image}
-                            resizeMode="cover"
-                        />
+                        <AUIImage path={photoGallary[0]} style={styles.image} resizeMode="cover" />
                         <AUIThemedView style={styles.favIconContainer}>
                             <MaterialIcons
                                 name="favorite"
@@ -54,16 +79,13 @@ export default function CityDetails() {
                     </AUIThemedView>
 
                     <AUIThemedView style={styles.infoContainer}>
-                        <AUIThemedText style={styles.name}>Why study in South Africa</AUIThemedText>
+                        <AUIThemedText style={styles.name}>
+                            Why study in {country?.name}
+                        </AUIThemedText>
                         <AUIThemedView style={styles.headingContainer}>
                             <AUIThemedView style={styles.headingImageContainer}>
                                 <AUIImage
-                                    path={
-                                        // Asset.fromModule(
-                                        //   require("@/assets/images/studentHomePage/cityDetailsPage/fi_5111640.png")
-                                        // ).uri
-                                        "https://cdn.britannica.com/27/4227-050-00DBD10A/Flag-South-Africa.jpg"
-                                    }
+                                    path={country?.flag}
                                     style={styles.headingImage}
                                     resizeMode="cover"
                                 />
@@ -81,29 +103,21 @@ export default function CityDetails() {
                         <AUIThemedView style={styles.iconContainer}>
                             <View style={styles.iconWrapper}>
                                 <AUIImage
-                                    path={
-                                        Asset.fromModule(
-                                            require("@/assets/images/studentHomePage/cityDetailsPage/Rectangle 93.png")
-                                        ).uri
-                                    }
+                                    path={photoGallary[0]}
                                     style={styles.iconImage}
                                     resizeMode="cover"
                                 />
                                 <AUIThemedView style={styles.iconTextContainer}>
                                     <AUIThemedText style={styles.iconText}>Capital</AUIThemedText>
                                     <AUIThemedText style={styles.iconSubText}>
-                                        Cape Town
+                                        {country?.capital}
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </View>
 
                             <View style={styles.iconWrapper}>
                                 <AUIImage
-                                    path={
-                                        Asset.fromModule(
-                                            require("@/assets/images/studentHomePage/cityDetailsPage/Rectangle 96.png")
-                                        ).uri
-                                    }
+                                    path={photoGallary[0]}
                                     style={styles.iconImage}
                                     resizeMode="cover"
                                 />
@@ -111,23 +125,21 @@ export default function CityDetails() {
                                     <AUIThemedText style={styles.iconText}>
                                         Population
                                     </AUIThemedText>
-                                    <AUIThemedText style={styles.iconSubText}>68 Mn</AUIThemedText>
+                                    <AUIThemedText style={styles.iconSubText}>
+                                        {formattedPopulation}
+                                    </AUIThemedText>
                                 </AUIThemedView>
                             </View>
                             <View style={styles.iconWrapper}>
                                 <AUIImage
-                                    path={
-                                        Asset.fromModule(
-                                            require("@/assets/images/studentHomePage/cityDetailsPage/Rectangle 97.png")
-                                        ).uri
-                                    }
+                                    path={photoGallary[0]}
                                     style={styles.iconImage}
                                     resizeMode="cover"
                                 />
                                 <AUIThemedView style={styles.iconTextContainer}>
                                     <AUIThemedText style={styles.iconText}>Language</AUIThemedText>
                                     <AUIThemedText style={styles.iconSubText}>
-                                        English
+                                        {country?.language?.name}
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </View>
@@ -135,7 +147,7 @@ export default function CityDetails() {
 
                         <AUIThemedView style={styles.aboutContainer}>
                             <AUIThemedText style={styles.aboutTitle}>
-                                About South Africa
+                                About {country?.name}
                             </AUIThemedText>
                             <AUIThemedText style={styles.aboutDescription}>
                                 {readMore ? aboutText : `${truncatedText} `}
@@ -159,12 +171,12 @@ export default function CityDetails() {
                                 {GLOBAL_TEXT.photo_gallery}
                             </AUIThemedText>
                         </AUIThemedView>
-                        <PhotoGallaryList data={PhotoGallaryData} />
+                        <PhotoGallaryList data={photoGallary} />
                     </AUIThemedView>
 
                     <AUIThemedView style={styles.popularSchoolsContainer}>
                         <SectionTitle viewAll="#">{GLOBAL_TEXT.popular_schools}</SectionTitle>
-                        <SchoolList data={schoolsResponse.docs} dummyData={schoolsData} />
+                        <SchoolList data={schoolsResponse.docs} />
                     </AUIThemedView>
                 </AUIThemedView>
             </ScrollView>

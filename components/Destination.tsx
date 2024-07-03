@@ -6,12 +6,12 @@ import AUIBackgroundImage from "./common/AUIBackgroundImage";
 import { AUIThemedText } from "./common/AUIThemedText";
 import { AUIThemedView } from "./common/AUIThemedView";
 
-const Destination = ({ title, image, countryWidth, countryHeight, favorite }: any) => {
+const Destination = ({ title, image, countryWidth, countryHeight, favorite, id }: any) => {
     return (
         <TouchableOpacity
             onPress={() =>
                 router.push({
-                    pathname: `(home)/cityDetails/1`,
+                    pathname: `(home)/cityDetails/${id}`,
                 })
             }
         >

@@ -11,7 +11,6 @@ import { GLOBAL_TEXT } from "@/constants/Properties";
 import { getUserData } from "@/constants/RNAsyncStore";
 import { carouselData } from "@/constants/dummy data/carouselData";
 import { coursesData } from "@/constants/dummy data/coursesData";
-import { destinationData } from "@/constants/dummy data/destinationData";
 import { increaseChancesData } from "@/constants/dummy data/increaseChancesData";
 import { languagesData } from "@/constants/dummy data/languagesData";
 import { API_URL } from "@/constants/urlProperties";
@@ -31,25 +30,48 @@ export default function HomeScreen() {
     const ref = useRef<ICarouselInstance>(null);
 
     const [selectedLanguage, setSelectedLanguage] = useState(languagesData[0].language.name);
+    const [destinationData, setDestinationData] = useState([]);
+    console.log("destinationData", destinationData);
+
     const displayedCourses = coursesData.slice(0, 4);
 
     const schoolsResponse = useSelector((state: RootState) => state.api.school || {});
     const courseResponse = useSelector((state: RootState) => state.api.course || {});
 
+    const countryResponse = useSelector((state: RootState) => state.api.country || {});
+    console.log("countryResponse in index =>", JSON.stringify(countryResponse));
+
+    useEffect(() => {
+        if (countryResponse && countryResponse.docs && countryResponse.docs.length > 0) {
+            const country = countryResponse.docs;
+            const mappedData = country.map((item: any) => ({
+                id: item._id,
+                country: item.name,
+                image: item.images.length > 0 ? item.images[0] : null,
+                favorite: false,
+            }));
+
+            console.log("mappedData", mappedData);
+            setDestinationData(mappedData);
+        }
+    }, [countryResponse]);
+
     useEffect(() => {
         console.log("course ", courseResponse.docs);
     }, [courseResponse]);
+
     useEffect(() => {
         requestFn(API_URL.course, "course", { limit: 4, similar: selectedLanguage });
     }, [selectedLanguage]);
 
     useEffect(() => {
+        requestFn(API_URL.popularSchool, "school");
+        requestFn(API_URL.country, "country");
+
         getUserData().then((data) => {
             const id = data?.data?.user?._id;
             requestFn(API_URL.user, "userProfileData", { id: id });
         });
-
-        requestFn(API_URL.popularSchool, "school");
     }, []);
 
     useEffect(() => {

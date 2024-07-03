@@ -11,7 +11,9 @@ const DestinationList: React.FC<DestinationListProps> = ({ data }) => {
         <FlatList
             horizontal
             data={data}
-            renderItem={({ item }) => <Destination title={item.country} image={item.image} />}
+            renderItem={({ item }) => (
+                <Destination title={item.country} image={item.image} id={item.id} />
+            )}
             keyExtractor={(item) => item.id}
             contentContainerStyle={styles.container}
         />
