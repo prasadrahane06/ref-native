@@ -3,8 +3,9 @@ import AUIImage from "@/components/common/AUIImage";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { APP_THEME } from "@/constants/Colors";
-import { GLOBAL_TEXT } from "@/constants/Properties";
+import { GLOBAL_TEXT, GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { Asset } from "expo-asset";
+import { t } from "i18next";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 
@@ -41,7 +42,9 @@ export default function PurchaseScreen() {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <AUIThemedText style={styles.header}>{GLOBAL_TEXT.your_selected_plan}</AUIThemedText>
+            <AUIThemedText style={styles.header}>
+                {t(GLOBAL_TRANSLATION_LABEL.yourSelectedPlanIs)}
+            </AUIThemedText>
 
             <AUIThemedView style={styles.planContainer}>
                 <DropdownComponent
@@ -55,21 +58,27 @@ export default function PurchaseScreen() {
 
                 <AUIThemedView style={{ marginHorizontal: 15 }}>
                     <AUIThemedView style={styles.planDetails}>
-                        <AUIThemedText style={styles.planDetailText}>Duration</AUIThemedText>
+                        <AUIThemedText style={styles.planDetailText}>
+                            {t(GLOBAL_TRANSLATION_LABEL.duration)}
+                        </AUIThemedText>
                         <AUIThemedText style={styles.planDetailValue}>
                             {selectedPlan.duration}
                         </AUIThemedText>
                     </AUIThemedView>
 
                     <AUIThemedView style={styles.planDetails}>
-                        <AUIThemedText style={styles.planDetailText}>Fee</AUIThemedText>
+                        <AUIThemedText style={styles.planDetailText}>
+                            {t(GLOBAL_TRANSLATION_LABEL.fee)}
+                        </AUIThemedText>
                         <AUIThemedText style={styles.planDetailValue}>
                             {selectedPlan.fee}
                         </AUIThemedText>
                     </AUIThemedView>
 
                     <AUIThemedView style={styles.planDetails}>
-                        <AUIThemedText style={styles.planDetailText}>Taxes</AUIThemedText>
+                        <AUIThemedText style={styles.planDetailText}>
+                            {t(GLOBAL_TRANSLATION_LABEL.taxes)}
+                        </AUIThemedText>
                         <AUIThemedText style={styles.planDetailValue}>
                             {selectedPlan.taxes}
                         </AUIThemedText>
@@ -80,7 +89,9 @@ export default function PurchaseScreen() {
 
                 <AUIThemedView style={{ marginHorizontal: 15 }}>
                     <AUIThemedView style={styles.planDetails}>
-                        <AUIThemedText style={styles.totalText}>Total</AUIThemedText>
+                        <AUIThemedText style={styles.totalText}>
+                            {t(GLOBAL_TRANSLATION_LABEL.total)}
+                        </AUIThemedText>
                         <AUIThemedText style={styles.totalValue}>
                             {selectedPlan.total}
                         </AUIThemedText>
@@ -89,7 +100,7 @@ export default function PurchaseScreen() {
             </AUIThemedView>
 
             <AUIThemedText style={[styles.header, { marginTop: 20 }]}>
-                {GLOBAL_TEXT.select_payment_mode}
+                {t(GLOBAL_TRANSLATION_LABEL.selectPaymentMode)}
             </AUIThemedText>
 
             <AUIThemedView style={styles.paymentModes}>
@@ -105,7 +116,9 @@ export default function PurchaseScreen() {
                         style={{ width: 30, height: 30 }}
                     />
 
-                    <AUIThemedText style={styles.paymentModeText}>Hyper pay</AUIThemedText>
+                    <AUIThemedText style={styles.paymentModeText}>
+                        {t(GLOBAL_TRANSLATION_LABEL.hyperPay)}
+                    </AUIThemedText>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={[
@@ -119,7 +132,9 @@ export default function PurchaseScreen() {
                         style={{ width: 30, height: 30 }}
                     />
 
-                    <AUIThemedText style={styles.paymentModeText}>Card payment</AUIThemedText>
+                    <AUIThemedText style={styles.paymentModeText}>
+                        {t(GLOBAL_TRANSLATION_LABEL.cardPayment)}
+                    </AUIThemedText>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={[
@@ -132,13 +147,15 @@ export default function PurchaseScreen() {
                         path={Asset.fromModule(require("@/assets/icons/net-banking.png")).uri}
                         style={{ width: 30, height: 30 }}
                     />
-                    <AUIThemedText style={styles.paymentModeText}>Net Banking</AUIThemedText>
+                    <AUIThemedText style={styles.paymentModeText}>
+                        {t(GLOBAL_TRANSLATION_LABEL.netBanking)}
+                    </AUIThemedText>
                 </TouchableOpacity>
             </AUIThemedView>
 
             <TouchableOpacity style={styles.confirmButton}>
                 <AUIThemedText style={styles.confirmButtonText}>
-                    {GLOBAL_TEXT.confirm_your_payment}
+                    {t(GLOBAL_TRANSLATION_LABEL.confirmYourPayment)}
                 </AUIThemedText>
             </TouchableOpacity>
         </ScrollView>

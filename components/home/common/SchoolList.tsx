@@ -1,5 +1,6 @@
 import School from "@/components/School";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
+import { Asset } from "expo-asset";
 import React from "react";
 import { FlatList, StyleSheet } from "react-native";
 
@@ -17,8 +18,14 @@ const SchoolList: React.FC<SchoolListProps> = ({ data }) => {
                         <School
                             id={item._id}
                             title={item.name}
-                            image={item?.banner ? item?.banner : ""}
-                            caption={item?.email}
+                            image={
+                                item?.banner
+                                    ? item?.banner
+                                    : Asset.fromModule(
+                                          require("@/assets/images/schoolDetailsPage/school.png")
+                                      ).uri
+                            }
+                            caption={item?.description}
                             schoolWidth={270}
                             schoolHeight={160}
                         />

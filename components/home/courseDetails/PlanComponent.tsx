@@ -9,7 +9,7 @@ import CourseDetailsComponent from "@/components/home/courseDetails/CourseDetail
 import ScheduleAndLesson from "@/components/home/courseDetails/ScheduleAndLesson";
 import SimilarCoursesList from "@/components/home/courseDetails/SimilarCourses";
 import { APP_THEME } from "@/constants/Colors";
-import { ENQUIRY_FIELDS, GLOBAL_TEXT } from "@/constants/Properties";
+import { ENQUIRY_FIELDS, GLOBAL_TEXT, GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { getUserData } from "@/constants/RNAsyncStore";
 import { inputFieldStyle } from "@/constants/Styles";
 import { accommodationData } from "@/constants/dummy data/accommodationData";
@@ -39,6 +39,7 @@ import * as Yup from "yup";
 import { FacilitiesList } from "../schoolDetails/FacilitiesList";
 import useAxios from "@/app/services/axiosClient";
 import ContactNow from "../schoolDetails/ContactNow";
+import { useTranslation } from "react-i18next";
 
 interface PlanComponentProps {
     courseId: string;
@@ -581,7 +582,7 @@ export default function PlanComponent({
 }: PlanComponentProps) {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [userId, setUserId] = useState("");
-
+    const { t } = useTranslation();
     const [isSeatBooked, setIsSeatBooked] = useState(false);
 
     useEffect(() => {
@@ -614,17 +615,19 @@ export default function PlanComponent({
     return (
         <AUIThemedView>
             <AUIThemedView style={{ marginTop: 10 }}>
-                <AUIThemedText style={styles.boldText}>{GLOBAL_TEXT.course_details}</AUIThemedText>
+                <AUIThemedText style={styles.boldText}>
+                    {t(GLOBAL_TRANSLATION_LABEL.courseDetails)}
+                </AUIThemedText>
                 <CourseDetailsComponent plan={plan} />
             </AUIThemedView>
 
             <AUIThemedView style={styles.facilityContainer}>
-                <SectionTitle>{GLOBAL_TEXT.facilities}</SectionTitle>
+                <SectionTitle>{t(GLOBAL_TRANSLATION_LABEL.facilities)}</SectionTitle>
                 <FacilitiesList data={plan.facilities} />
             </AUIThemedView>
 
             <AUIThemedView style={styles.contactNowContainer}>
-                <SectionTitle>{GLOBAL_TEXT.contact_now}</SectionTitle>
+                <SectionTitle>{t(GLOBAL_TRANSLATION_LABEL.contactNow)}</SectionTitle>
                 <AUIThemedView style={styles.contactNowIconContainer}>
                     <ContactNow
                         name="phone"
@@ -644,7 +647,7 @@ export default function PlanComponent({
                 <AUIThemedView style={styles.bookContainer}>
                     <AntDesign name="calendar" size={24} color="black" />
                     <AUIThemedText style={styles.blackBoldText}>
-                        {GLOBAL_TEXT.book_your_seat}
+                        {t(GLOBAL_TRANSLATION_LABEL.bookYourSeat)}
                     </AUIThemedText>
                 </AUIThemedView>
 
@@ -667,7 +670,7 @@ export default function PlanComponent({
 
             <AUIThemedView>
                 <AUIButton
-                    title={GLOBAL_TEXT.enquire_now}
+                    title={t(GLOBAL_TRANSLATION_LABEL.enquireNow)}
                     style={styles.enquireButton}
                     borderColor="#5BD894"
                     onPress={() => setIsModalVisible(true)}
@@ -681,7 +684,7 @@ export default function PlanComponent({
             <AUIThemedView style={styles.similarCourseContainer}>
                 <AUIThemedView>
                     <AUIThemedText style={{ fontWeight: "bold" }}>
-                        {GLOBAL_TEXT.similar_courses}
+                        {t(GLOBAL_TRANSLATION_LABEL.similarCourses)}
                     </AUIThemedText>
                 </AUIThemedView>
                 <AUIThemedView>

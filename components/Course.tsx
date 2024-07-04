@@ -13,14 +13,16 @@ import { API_URL } from "@/constants/urlProperties";
 import { setResponse } from "@/redux/apiSlice";
 import { addItemToCart, removeItemFromCart } from "@/redux/cartSlice";
 import { setLoader } from "@/redux/globalSlice";
+import { useTranslation } from "react-i18next";
+import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 
 interface CourseProps {
     title: string;
     image: any;
     favorite?: boolean;
-    startingDate: string;
+    startingDate?: string;
     cart?: boolean;
-    courseId: string;
+    courseId: any;
     style?: object;
 }
 
@@ -36,7 +38,7 @@ const Course: React.FC<CourseProps> = ({
     const router = useRouter();
     const dispatch = useDispatch();
     const { del } = useAxios();
-
+    const { t } = useTranslation();
     console.log("courseId", courseId);
 
     const handleRemoveFromCart = (id: string) => {
@@ -52,7 +54,7 @@ const Course: React.FC<CourseProps> = ({
                 console.log(e);
             });
     };
-
+    // @ts-ignore
     const startDate: string = new Date(startingDate).toLocaleDateString("en-GB", {
         day: "2-digit",
         month: "2-digit",
@@ -68,12 +70,14 @@ const Course: React.FC<CourseProps> = ({
                 })
             }
         >
-            <AUIThemedView>
+            <AUIThemedView style={styles.layout}>
                 <AUIImage style={styles.courseImage} path={image} />
                 <AUIThemedView style={styles.courseItemContainer}>
                     <Text style={styles.courseTitle}>{title}</Text>
                     <AUIThemedText style={{ fontSize: 12 }}>
-                        <AUIThemedText style={styles.courseCaption}>Starting from: </AUIThemedText>
+                        <AUIThemedText style={styles.courseCaption}>
+                            {t(GLOBAL_TRANSLATION_LABEL.starting_from)}:{" "}
+                        </AUIThemedText>
                         {startDate}
                     </AUIThemedText>
                 </AUIThemedView>
@@ -102,6 +106,9 @@ const Course: React.FC<CourseProps> = ({
 
 const styles = StyleSheet.create({
     courseContainer: {},
+    layout: {
+        backgroundColor: "transparent",
+    },
     courseItemContainer: {
         paddingLeft: 10,
         width: "100%",
@@ -113,6 +120,10 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 8,
         borderBottomRightRadius: 8,
         borderColor: APP_THEME.primary.first,
+        shadowColor: APP_THEME.primary.first,
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
     },
     courseImage: {
         borderTopRightRadius: 8,

@@ -7,6 +7,9 @@ import { StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
 import AllSchoolsList from "../list/AllSchoolsList";
 import useAxios from "@/app/services/axiosClient";
+import { AUILinearGradient } from "@/components/common/AUILinearGradient";
+import { LinearGradient } from "expo-linear-gradient";
+import { APP_THEME } from "@/constants/Colors";
 
 interface SchoolListProps {
     data: any[];
@@ -21,19 +24,26 @@ const AllSchoolsScreen: React.FC<SchoolListProps> = ({ data }) => {
     }, []);
 
     return (
-        <AUIThemedView style={styles.container}>
-            <AllSchoolsList
-                data={schoolsResponse?.docs?.map((school: any) => ({
-                    id: school._id,
-                    name: school.name,
-                    image: school.banner,
-                    caption: school.description,
-                    favorite: false,
-                }))}
-                schoolWidth={165}
-                schoolHeight={150}
-            />
-        </AUIThemedView>
+        <AUILinearGradient
+            colors={[`${APP_THEME.primary.first}80`, "#ffffff"]}
+            start={{ x: 1, y: 0 }} // Gradient start point
+            end={{ x: 0, y: 1 }} // Gradient end point
+            style={styles.container}
+        >
+            <AUIThemedView style={styles.wrapper}>
+                <AllSchoolsList
+                    data={schoolsResponse?.docs?.map((school: any) => ({
+                        id: school._id,
+                        name: school.name,
+                        image: school.banner,
+                        caption: school.description,
+                        favorite: false,
+                    }))}
+                    schoolWidth={165}
+                    schoolHeight={160}
+                />
+            </AUIThemedView>
+        </AUILinearGradient>
     );
 };
 
@@ -45,6 +55,10 @@ const styles = StyleSheet.create({
         // justifyContent: "center",
         alignItems: "center",
         padding: 10,
+    },
+    wrapper: {
+        marginTop: 100,
+        backgroundColor: "transparent",
     },
     column: {
         justifyContent: "space-between",

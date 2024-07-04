@@ -5,6 +5,7 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 import AUIBackgroundImage from "./common/AUIBackgroundImage";
 import { AUIThemedText } from "./common/AUIThemedText";
 import { AUIThemedView } from "./common/AUIThemedView";
+import { APP_THEME } from "@/constants/Colors";
 
 const Destination = ({ title, image, countryWidth, countryHeight, favorite, id }: any) => {
     return (
@@ -59,6 +60,12 @@ const styles = StyleSheet.create({
     item: {
         margin: 10,
         alignItems: "center",
+        elevation: 20,
+        shadowColor: APP_THEME.ternary.first,
+        shadowOffset: { width: -1, height: 2 },
+        shadowOpacity: 0.5,
+        shadowRadius: 3,
+        borderRadius: 10,
     },
     imageContainer: {
         position: "relative",
@@ -70,7 +77,7 @@ const styles = StyleSheet.create({
     image: {
         width: "100%",
         height: "100%",
-        borderRadius: 7,
+        // borderRadius: 7,
     },
     gradient: {
         position: "absolute",
@@ -78,7 +85,7 @@ const styles = StyleSheet.create({
         right: 0,
         bottom: 0,
         height: "100%",
-        borderRadius: 7,
+        // borderRadius: 7,
     },
     destinationImageText: {
         position: "absolute",
@@ -95,7 +102,7 @@ const styles = StyleSheet.create({
         top: 10,
         right: 10,
         backgroundColor: "rgba(255, 0, 0, 0.2)",
-        borderRadius: 20,
+        // borderRadius: 20,
         padding: 5,
     },
     icon: {

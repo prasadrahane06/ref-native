@@ -7,7 +7,7 @@ import LanguageList from "@/components/home/common/LanguageList";
 import SchoolList from "@/components/home/common/SchoolList";
 import SectionTitle from "@/components/home/common/SectionTitle";
 import { APP_THEME } from "@/constants/Colors";
-import { GLOBAL_TEXT } from "@/constants/Properties";
+import { GLOBAL_TEXT, GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { getUserData } from "@/constants/RNAsyncStore";
 import { carouselData } from "@/constants/dummy data/carouselData";
 import { coursesData } from "@/constants/dummy data/coursesData";
@@ -17,11 +17,15 @@ import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import { RootState } from "@/redux/store";
 import React, { useEffect, useRef, useState } from "react";
-import { Dimensions, ScrollView, StyleSheet } from "react-native";
+import { useTranslation } from "react-i18next";
+import { Dimensions, I18nManager, Platform, ScrollView, StyleSheet } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 import Carousel, { ICarouselInstance, Pagination } from "react-native-reanimated-carousel";
 import { useDispatch, useSelector } from "react-redux";
-
+import RNRestart from "react-native-restart";
+import { useNavigation } from "expo-router";
+import { CommonActions } from "@react-navigation/native";
+import { setIsRTL } from "@/redux/globalSlice";
 export default function HomeScreen() {
     const dispatch = useDispatch();
     const { requestFn } = useApiRequest();
@@ -29,17 +33,19 @@ export default function HomeScreen() {
     const progress = useSharedValue<number>(0);
     const ref = useRef<ICarouselInstance>(null);
 
-    const [selectedLanguage, setSelectedLanguage] = useState(languagesData[0].language.name);
     const [destinationData, setDestinationData] = useState([]);
-    console.log("destinationData", destinationData);
 
+    const { t, i18n } = useTranslation();
+    const navigation = useNavigation();
+    const [selectedLanguage, setSelectedLanguage] = useState(languagesData[0].language);
     const displayedCourses = coursesData.slice(0, 4);
 
-    const schoolsResponse = useSelector((state: RootState) => state.api.school || {});
-    const courseResponse = useSelector((state: RootState) => state.api.course || {});
+    const response = useSelector((state: RootState) => state.api || {});
+    console.log("response in index =>", response);
+    let schoolsResponse = response?.school;
+    const courseResponse = response?.course;
 
-    const countryResponse = useSelector((state: RootState) => state.api.country || {});
-    console.log("countryResponse in index =>", JSON.stringify(countryResponse));
+    const countryResponse = response?.country;
 
     useEffect(() => {
         if (countryResponse && countryResponse.docs && countryResponse.docs.length > 0) {
@@ -57,10 +63,6 @@ export default function HomeScreen() {
     }, [countryResponse]);
 
     useEffect(() => {
-        console.log("course ", courseResponse.docs);
-    }, [courseResponse]);
-
-    useEffect(() => {
         requestFn(API_URL.course, "course", { limit: 4, similar: selectedLanguage });
     }, [selectedLanguage]);
 
@@ -68,21 +70,28 @@ export default function HomeScreen() {
         requestFn(API_URL.popularSchool, "school");
         requestFn(API_URL.country, "country");
 
+        requestFn(API_URL.course, "course", { limit: 4, similar: selectedLanguage.name });
+        console.log("slctdlng", selectedLanguage);
+        changeLanguage(selectedLanguage.code);
+    }, [selectedLanguage]);
+
+    useEffect(() => {
+        // i18n.changeLanguage("ar");
         getUserData().then((data) => {
             const id = data?.data?.user?._id;
             requestFn(API_URL.user, "userProfileData", { id: id });
         });
     }, []);
 
-    useEffect(() => {
-        console.log("schoolsResponse", schoolsResponse);
-    }, [schoolsResponse]);
-
     const onPressPagination = (index: number) => {
         ref.current?.scrollTo({
             count: index - progress.value,
             animated: true,
         });
+    };
+    const changeLanguage = (lng: string) => {
+        i18n.changeLanguage(lng === "ar" || lng === "en" ? lng : "en");
+        dispatch(setIsRTL(lng === "ar"));
     };
 
     return (
@@ -117,7 +126,7 @@ export default function HomeScreen() {
             </AUIThemedView>
 
             <AUIThemedView>
-                <SectionTitle>{GLOBAL_TEXT.find_your_destination}</SectionTitle>
+                <SectionTitle>{t(GLOBAL_TRANSLATION_LABEL.find_your_destination)}</SectionTitle>
                 <DestinationList data={destinationData} />
             </AUIThemedView>
 
@@ -126,13 +135,15 @@ export default function HomeScreen() {
                     viewAll="(home)/school/AllSchoolsScreen"
                     style={{ paddingBottom: 10 }}
                 >
-                    {GLOBAL_TEXT.popular_schools}
+                    {t(GLOBAL_TRANSLATION_LABEL.popular_school)}
                 </SectionTitle>
-                <SchoolList data={schoolsResponse.docs} />
+                <SchoolList data={schoolsResponse?.docs} />
             </AUIThemedView>
 
             <AUIThemedView>
-                <SectionTitle>{GLOBAL_TEXT.choose_your_language}</SectionTitle>
+                <SectionTitle>
+                    {t(GLOBAL_TRANSLATION_LABEL.choose_your_language_to_learn)}
+                </SectionTitle>
                 <LanguageList
                     data={languagesData}
                     selectedLanguage={selectedLanguage}
@@ -142,13 +153,13 @@ export default function HomeScreen() {
 
             <AUIThemedView>
                 <SectionTitle viewAll="(home)/course/AllCoursesScreen">
-                    {GLOBAL_TEXT.popular_courses} (EN)
+                    {t(GLOBAL_TRANSLATION_LABEL.popular_Courses)}
                 </SectionTitle>
                 <CourseList data={courseResponse?.docs} />
             </AUIThemedView>
 
             <AUIThemedView>
-                <SectionTitle viewAll="#">{GLOBAL_TEXT.inrease_your_chance}</SectionTitle>
+                <SectionTitle>{t(GLOBAL_TRANSLATION_LABEL.increase_your_chances)}</SectionTitle>
                 <IncreaseChanceList data={increaseChancesData} />
             </AUIThemedView>
         </ScrollView>

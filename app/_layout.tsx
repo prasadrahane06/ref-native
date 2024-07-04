@@ -15,7 +15,7 @@ import { TouchableOpacity } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
 import { Provider, useDispatch, useSelector } from "react-redux";
-
+import "@/components/i18n/i18n.config";
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 // @ts-ignore
@@ -31,7 +31,10 @@ XMLHttpRequest = _XHR;
 const InitialLayout = () => {
     const [loaded, error] = useFonts({
         SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
-        // Inter: require("../assets/fonts/Inter/static/Inter-Regular.ttf"),
+        Inter: require("../assets/fonts/Inter/static/Inter-Regular.ttf"),
+        Gilroy: require("../assets/fonts/gilroy/Gilroy-Black.ttf"),
+        GilroyMedium: require("../assets/fonts/gilroy/Gilroy-Medium.ttf"),
+        GilroyLight: require("../assets/fonts/gilroy/Gilroy-Light.ttf"),
         ...FontAwesome.font,
     });
     const router = useRouter();
@@ -51,26 +54,6 @@ const InitialLayout = () => {
 
     useEffect(() => {
         storeUserDeviceData();
-
-        getUserData().then((data) => {
-            console.log("user-data", data);
-            if (data && Object.keys(data).length > 0) {
-                if (data?.profile === "student") {
-                    // saving token in redux
-                    console.log("saving token in layout", data?.data?.accessToken);
-                    dispatch(setToken(data?.data?.accessToken));
-
-                    // saving user in redux
-                    console.log("saving user data in layout", data?.data?.user);
-                    dispatch(setUser(data?.data?.user));
-
-                    router.replace("/(home)/(student)");
-                }
-                if (data?.profile === "school") {
-                    router.replace("/(home)/(school)");
-                }
-            }
-        });
     }, []);
 
     if (!loaded) {
@@ -181,10 +164,11 @@ const InitialLayout = () => {
                     headerShown: true,
                     title: "Schools",
                     headerTitle: "Popular schools",
-                    headerTransparent: false,
+                    headerTitleStyle: { color: "#ffffff", fontFamily: "Gilroy" },
+                    headerTransparent: true,
                     headerLeft: () => (
                         <TouchableOpacity onPress={router.back}>
-                            <Ionicons name="arrow-back" size={34} color={"white"} />
+                            <Ionicons name="arrow-back" size={34} color={"#ffffff"} />
                         </TouchableOpacity>
                     ),
                 }}
@@ -196,7 +180,8 @@ const InitialLayout = () => {
                     headerShown: true,
                     title: "Courses",
                     headerTitle: "Popular Courses",
-                    headerTransparent: false,
+                    headerTitleStyle: { color: "#ffffff", fontFamily: "Gilroy" },
+                    headerTransparent: true,
                     headerLeft: () => (
                         <TouchableOpacity onPress={router.back}>
                             <Ionicons name="arrow-back" size={34} color={"white"} />

@@ -5,14 +5,16 @@ import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import CoursesTab from "@/components/home/schoolDetails/Courses";
 import OverviewTab from "@/components/home/schoolDetails/Overview";
 import { APP_THEME } from "@/constants/Colors";
-import { GLOBAL_TEXT } from "@/constants/Properties";
+import { GLOBAL_TEXT, GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
+import { setLoader } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
 import { FontAwesome, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useEffect, useLayoutEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Pressable, StyleSheet, TouchableOpacity, Linking } from "react-native";
 import Animated, {
     interpolate,
@@ -20,7 +22,7 @@ import Animated, {
     useAnimatedStyle,
     useScrollViewOffset,
 } from "react-native-reanimated";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 interface TabProps {
     courseId: string;
@@ -30,6 +32,7 @@ interface TabProps {
 function StudentDetailsTabs({ courseId, clientId }: TabProps) {
     const schoolsResponse = useSelector((state: RootState) => state.api.individualSchool || {});
     const [selectedTab, setSelectedTab] = useState("overview");
+    const { t, i18n } = useTranslation();
 
     const handleTabClick = (tabName: string) => {
         setSelectedTab(tabName);
@@ -53,7 +56,7 @@ function StudentDetailsTabs({ courseId, clientId }: TabProps) {
                                 : tabStyles.inactiveTabLabel,
                         ]}
                     >
-                        {GLOBAL_TEXT.overview}
+                        {t(GLOBAL_TRANSLATION_LABEL.overview)}
                     </AUIThemedText>
                 </Pressable>
 
@@ -72,7 +75,7 @@ function StudentDetailsTabs({ courseId, clientId }: TabProps) {
                                 : tabStyles.inactiveTabLabel,
                         ]}
                     >
-                        {GLOBAL_TEXT.courses}
+                        {t(GLOBAL_TRANSLATION_LABEL.courses)}
                     </AUIThemedText>
                 </Pressable>
             </AUIThemedView>
@@ -93,6 +96,8 @@ function StudentDetailsTabs({ courseId, clientId }: TabProps) {
 
 export default function SchoolDetails() {
     const { id } = useLocalSearchParams<{ id: string }>();
+    const isRTL = useSelector((state: RootState) => state.global.isRTL);
+
     console.log(id);
     if (!id) {
         return (
@@ -101,16 +106,14 @@ export default function SchoolDetails() {
             </AUIThemedView>
         );
     }
+    const { t, i18n } = useTranslation();
 
     const { post } = useAxios();
     const { requestFn } = useApiRequest();
-
+    const dispatch = useDispatch();
+    const [isFav, setIsFav] = useState(false);
     const school = useSelector((state: RootState) => state.api.individualSchool || {});
     const schoolsResponse = school[0];
-    useEffect(() => {
-        console.log("res of school ", schoolsResponse);
-        // console.log("res of school ", school);
-    }, [schoolsResponse]);
 
     useEffect(() => {
         requestFn(API_URL.schoolOverview, "individualSchool", { id: id ? id : {} });
@@ -152,6 +155,7 @@ export default function SchoolDetails() {
     const handleFavoriteClick = (id: string, type: string) => {
         post(API_URL.favorite, { id: id, type: type })
             .then((res: any) => {
+                setIsFav(true);
                 ApiSuccessToast(res.message);
                 console.log("response ", res.data);
             })
@@ -184,12 +188,6 @@ export default function SchoolDetails() {
                     name="arrow-back"
                     size={30}
                     color={"#fff"}
-                    style={{
-                        position: "absolute",
-                        left: -57,
-                        alignItems: "center",
-                        justifyContent: "center",
-                    }}
                     onPress={() => navigation.goBack()}
                 />
             ),
@@ -209,7 +207,11 @@ export default function SchoolDetails() {
                             alignItems: "center",
                         }}
                     >
-                        <Ionicons name="heart" size={24} color={APP_THEME.secondary.first} />
+                        <Ionicons
+                            name={isFav ? "heart" : "heart-outline"}
+                            size={24}
+                            color={APP_THEME.secondary.first}
+                        />
                     </AUIThemedView>
                 </TouchableOpacity>
             ),
@@ -241,14 +243,29 @@ export default function SchoolDetails() {
                     />
 
                     <AUIThemedView style={styles.infoContainer}>
-                        <AUIThemedView style={styles.headerContainer}>
+                        <AUIThemedView
+                            style={[
+                                styles.headerContainer,
+                                isRTL && {
+                                    flexDirection: "row-reverse",
+                                    justifyContent: "space-between",
+                                },
+                            ]}
+                        >
                             <AUIThemedText style={styles.name}>
                                 {schoolsResponse?.name || "The Manchester School"}
                             </AUIThemedText>
                             <AUIThemedText style={styles.viewsText}>150 Views</AUIThemedText>
                         </AUIThemedView>
 
-                        <AUIThemedView style={styles.ratingsContainer}>
+                        <AUIThemedView
+                            style={[
+                                styles.ratingsContainer,
+                                isRTL && {
+                                    flexDirection: "row-reverse",
+                                },
+                            ]}
+                        >
                             <Ionicons name="star" size={20} color={APP_THEME.primary.first} />
                             <AUIThemedText style={styles.ratingsText}>4.6</AUIThemedText>
                             <AUIThemedText style={styles.rankText}>QS Rank 276</AUIThemedText>
@@ -257,9 +274,7 @@ export default function SchoolDetails() {
                         <AUIThemedView style={styles.contactsContainer}>
                             <AUIThemedText>
                                 <AUIThemedText style={styles.description}>
-                                    The Manchester School, UK, is proud to offer dynamic selection
-                                    of language program design to ignite your fashion for
-                                    communication and open doors to new cultures.
+                                    {schoolsResponse?.description}
                                 </AUIThemedText>
                             </AUIThemedText>
                         </AUIThemedView>
@@ -334,7 +349,7 @@ const styles = StyleSheet.create({
     },
     infoContainer: {
         paddingVertical: 15,
-        paddingHorizontal: 20,
+        paddingHorizontal: 10,
     },
     headerContainer: {
         flexDirection: "row",
@@ -343,6 +358,7 @@ const styles = StyleSheet.create({
     name: {
         fontSize: 22,
         fontWeight: "bold",
+        width: "70%",
     },
     contactsContainer: {
         paddingTop: 15,

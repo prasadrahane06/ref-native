@@ -7,6 +7,7 @@ import "react-native-gesture-handler";
 import AUIBackgroundImage from "./common/AUIBackgroundImage";
 import { AUIThemedText } from "./common/AUIThemedText";
 import { AUIThemedView } from "./common/AUIThemedView";
+import { APP_THEME } from "@/constants/Colors";
 
 interface SchoolProps {
     id: string;
@@ -75,9 +76,13 @@ const School: React.FC<SchoolProps> = ({
 };
 
 const styles = StyleSheet.create({
-    schoolContainer: { marginRight: 10 },
+    schoolContainer: {
+        marginRight: 10,
+        borderRadius: 10,
+    },
     schoolItem: {
         borderRadius: 10,
+
         overflow: "hidden",
     },
     schoolTitle: {
@@ -86,13 +91,18 @@ const styles = StyleSheet.create({
         color: "white",
         fontSize: 14,
         fontWeight: "600",
+        letterSpacing: 1,
+        lineHeight: 15,
     },
     schoolCaption: {
         top: 95,
         textAlign: "center",
         color: "white",
-        fontSize: 13,
-        fontWeight: "400",
+        fontSize: 10,
+        lineHeight: 10,
+        opacity: 0.8,
+        fontFamily: "GilroyMedium",
+        paddingTop: 10,
     },
     image: {
         width: "100%",

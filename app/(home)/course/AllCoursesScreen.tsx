@@ -1,6 +1,8 @@
 import useAxios from "@/app/services/axiosClient";
 import Course from "@/components/Course";
+import { AUILinearGradient } from "@/components/common/AUILinearGradient";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
+import { APP_THEME } from "@/constants/Colors";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import { RootState } from "@/redux/store";
@@ -19,17 +21,29 @@ const AllCoursesScreen = () => {
     }, []);
 
     return (
-        <AUIThemedView style={styles.container}>
-            <FlatList
-                data={courseResponse.docs}
-                renderItem={({ item }) => (
-                    <Course title={item.courseName} image={item.image} style={styles.course} id={item._id} />
-                )}
-                keyExtractor={(item) => item._id}
-                numColumns={2}
-                columnWrapperStyle={styles.column}
-            />
-        </AUIThemedView>
+        <AUILinearGradient
+            colors={[`${APP_THEME.primary.first}80`, "#ffffff"]}
+            start={{ x: 1, y: 0 }} // Gradient start point
+            end={{ x: 0, y: 1 }} // Gradient end point
+            style={styles.container}
+        >
+            <AUIThemedView style={styles.wrapper}>
+                <FlatList
+                    data={courseResponse.docs}
+                    renderItem={({ item }) => (
+                        <Course
+                            title={item.courseName}
+                            image={item.image}
+                            style={styles.course}
+                            courseId={item._id}
+                        />
+                    )}
+                    keyExtractor={(item) => item._id}
+                    numColumns={2}
+                    columnWrapperStyle={styles.column}
+                />
+            </AUIThemedView>
+        </AUILinearGradient>
     );
 };
 
@@ -41,6 +55,10 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         padding: 10,
+    },
+    wrapper: {
+        marginTop: 100,
+        backgroundColor: "transparent",
     },
     column: {
         justifyContent: "space-between",

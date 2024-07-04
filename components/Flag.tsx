@@ -5,12 +5,7 @@ import { AUIThemedView } from "./common/AUIThemedView";
 
 const Flag = ({ countryName, countryCode, isSelected, onSelect }: any) => (
     <TouchableOpacity onPress={onSelect}>
-        <AUIThemedView
-            style={{
-                paddingVertical: 10,
-                marginRight: 10,
-            }}
-        >
+        <AUIThemedView style={styles.container}>
             <AUIThemedView style={[styles.flagImageContainer, isSelected && styles.selectedFlag]}>
                 <Image
                     source={{
@@ -25,18 +20,31 @@ const Flag = ({ countryName, countryCode, isSelected, onSelect }: any) => (
 );
 
 const styles = StyleSheet.create({
+    container: {
+        paddingVertical: 10,
+        marginRight: 10,
+    },
     flagImage: {
         width: 70,
         height: 70,
         borderRadius: 100,
     },
     flagNames: {
-        fontWeight: "600",
-        fontSize: 15,
+        fontSize: 13,
         textAlign: "center",
+        fontFamily: "GilroyMedium",
+        letterSpacing: 1,
+        opacity: 0.8,
     },
     flagImageContainer: {
         padding: 5,
+        elevation: 20,
+        shadowColor: APP_THEME.ternary.first,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+        borderRadius: 100,
+        marginHorizontal: 2,
     },
     selectedFlag: {
         borderWidth: 2,

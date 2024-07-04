@@ -1,18 +1,18 @@
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { APP_THEME } from "@/constants/Colors";
-import { GLOBAL_TEXT } from "@/constants/Properties";
+import { GLOBAL_TEXT, GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { removeUserData } from "@/constants/RNAsyncStore";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
-import {
-	DrawerContentScrollView,
-	DrawerItemList
-} from "@react-navigation/drawer";
+import { DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer";
 import { Asset } from "expo-asset";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, Switch, TouchableOpacity, View } from "react-native";
 import AUIImage from "./AUIImage";
 import { AUIThemedView } from "./AUIThemedView";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 //interface
 export interface DrawerItem {
@@ -32,21 +32,12 @@ export interface DrawerProps {
     school?: boolean;
 }
 
-// const AUIDrawerContent: React.FC<DrawerProps & DrawerContentComponentProps> = ({
-//   //   isLoggedIn,
-//   //   user,
-//   //   items,
-//   //   onLogout,
-//   //   navigation,
-//   //     school,
-//   ...props
-// }) => {
 const AUIDrawerContent = (props: any) => {
+    const { t, i18n } = useTranslation();
+    const isRTL = useSelector((state: RootState) => state.global.isRTL);
     const [isThemeEnabled, setIsEnabled] = useState(false);
-    const [isPositionEnabled, setIsPositionEnabled] = useState(false);
     const router = useRouter();
     const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
-    const togglePositionSwitch = () => setIsPositionEnabled((previousState) => !previousState);
     const onLogout = () => {
         removeUserData();
         router.push({ pathname: "/" });
@@ -61,10 +52,9 @@ const AUIDrawerContent = (props: any) => {
                 }}
             >
                 <AUIThemedView style={styles.header}>
-                    {/* <TouchableOpacity style={styles.closeButton}>
-            <Ionicons name="close" size={30} color="black" />
-          </TouchableOpacity> */}
-                    <View style={styles.avatarContainer}>
+                    <View
+                        style={[styles.avatarContainer, isRTL && { flexDirection: "row-reverse" }]}
+                    >
                         <AUIImage
                             path={
                                 Asset.fromModule(
@@ -76,8 +66,12 @@ const AUIDrawerContent = (props: any) => {
                             style={styles.avatar}
                         />
                         <View style={styles.nameContainer}>
-                            <AUIThemedText style={styles.name}>{"Hii, Yazeed"}</AUIThemedText>
-                            <AUIThemedText style={styles.welcome}>{"Welcome back"}</AUIThemedText>
+                            <AUIThemedText style={styles.name}>{`${t(
+                                GLOBAL_TRANSLATION_LABEL.hii
+                            )} Yazeed`}</AUIThemedText>
+                            <AUIThemedText style={styles.welcome}>
+                                {t(GLOBAL_TRANSLATION_LABEL.welcome_back)}
+                            </AUIThemedText>
                         </View>
                     </View>
                 </AUIThemedView>
@@ -93,7 +87,6 @@ const AUIDrawerContent = (props: any) => {
                     // backgroundColor: colors.cardbackground,
                 }}
             >
-                <AUIThemedText style={styles.preferences}>Preferences</AUIThemedText>
                 <AUIThemedView style={styles.switchTextContainer}>
                     <Switch
                         trackColor={{ false: "#767577", true: APP_THEME.primary.first }}
@@ -107,130 +100,24 @@ const AUIDrawerContent = (props: any) => {
                         style={{
                             fontSize: 15,
                             marginLeft: 5,
+                            fontFamily: "GilroyMedium",
                         }}
                     >
-                        Dark Mode
-                    </AUIThemedText>
-                </AUIThemedView>
-                <AUIThemedView style={styles.switchTextContainer}>
-                    <Switch
-                        trackColor={{ false: "#767577", true: APP_THEME.primary.first }}
-                        thumbColor={"#ffffff"}
-                        ios_backgroundColor={APP_THEME.ternary.first}
-                        onValueChange={togglePositionSwitch}
-                        value={isPositionEnabled}
-                        style={{ transform: [{ scaleX: 1.1 }, { scaleY: 1.1 }] }}
-                    />
-                    <AUIThemedText
-                        style={{
-                            fontSize: 15,
-                            marginLeft: 5,
-                        }}
-                    >
-                        {isPositionEnabled ? "Standard" : "RTL"}
+                        {t(GLOBAL_TRANSLATION_LABEL.darkMode)}
                     </AUIThemedText>
                 </AUIThemedView>
             </View>
             <View style={{ padding: 20, borderTopWidth: 1, borderTopColor: "#ccc" }}>
-                <TouchableOpacity onPress={() => {}} style={{ paddingVertical: 15 }}>
-                    <View style={{ flexDirection: "row", alignItems: "center" }}>
-                        <Ionicons name="share-social-outline" size={22} />
-                        <AUIThemedText
-                            style={{
-                                fontSize: 15,
-
-                                marginLeft: 5,
-                            }}
-                        >
-                            Tell a Friend
-                        </AUIThemedText>
-                    </View>
-                </TouchableOpacity>
                 <TouchableOpacity style={styles.logoutButton} onPress={onLogout}>
                     <FontAwesome name="sign-out" style={styles.logOutIcon} />
 
-                    <AUIThemedText style={styles.logoutText}>{GLOBAL_TEXT.logout}</AUIThemedText>
+                    <AUIThemedText style={styles.logoutText}>
+                        {t(GLOBAL_TRANSLATION_LABEL.logout)}
+                    </AUIThemedText>
                 </TouchableOpacity>
             </View>
         </AUIThemedView>
     );
-    //   return (
-    //     <AUIThemedView style={styles.drawerContent}>
-    //       <TouchableOpacity
-    //         style={styles.closeButton}
-    //         onPress={() => navigation.closeDrawer()}
-    //       >
-    //         <Ionicons name="close" size={30} color="black" />
-    //       </TouchableOpacity>
-    //       <AUIThemedView style={styles.menuItemMainContainer}>
-    //         <AUIThemedView style={styles.header}>
-    //           <Image source={{ uri: user.avatarUrl }} style={styles.avatar} />
-    //           <AUIThemedText style={styles.name}>{user.name}</AUIThemedText>
-    //           {school && (
-    //             <AUIThemedView>
-    //               <AUIThemedView style={styles.separator} />
-    //               <AUIThemedText style={styles.schoolName}>
-    //                 Gunnersbury House , 1 Chapel Hill, London, A11 B12
-    //               </AUIThemedText>
-    //             </AUIThemedView>
-    //           )}
-    //         </AUIThemedView>
-    //         <AUIThemedView style={styles.menuItemContainer}>
-    //           {items.map((item, index) => (
-    //             <React.Fragment key={index}>
-    //               {school && <AUIThemedView style={styles.separator} />}
-    //               <TouchableOpacity
-    //                 style={styles.menuItem}
-    //                 onPress={
-    //                   () => null
-    //                   // navigation.navigate(item.navigateTo)
-    //                 }
-    //               >
-    //                 <AUIImage
-    //                   path={item.iconPath}
-    //                   style={{ width: 26, height: 30 }}
-    //                 />
-
-    //                 <AUIThemedText style={styles.menuText}>
-    //                   {item.label}
-    //                 </AUIThemedText>
-    //               </TouchableOpacity>
-    //               <AUIThemedView style={styles.separator} />
-    //             </React.Fragment>
-    //           ))}
-    //         </AUIThemedView>
-    //       </AUIThemedView>
-    //       <AUIThemedView style={styles.buttonsMainContainer}>
-    //         {isLoggedIn ? (
-    //           <TouchableOpacity style={styles.logoutButton} onPress={onLogout}>
-    //             <FontAwesome name="sign-out" style={styles.logOutIcon} />
-    //             <AUIThemedText style={styles.logoutText}>
-    //               {GLOBAL_TEXT.logout}
-    //             </AUIThemedText>
-    //           </TouchableOpacity>
-    //         ) : (
-    //           <AUIThemedView style={styles.signUpLiginButtonContainer}>
-    //             <TouchableOpacity
-    //               style={styles.signUplogInButton}
-    //               onPress={() => {}}
-    //             >
-    //               <AUIThemedText style={styles.signUpText}>
-    //                 {GLOBAL_TEXT.singup}
-    //               </AUIThemedText>
-    //             </TouchableOpacity>
-    //             <TouchableOpacity
-    //               style={styles.signUplogInButton}
-    //               onPress={() => {}}
-    //             >
-    //               <AUIThemedText style={styles.signUpText}>
-    //                 {GLOBAL_TEXT.login}
-    //               </AUIThemedText>
-    //             </TouchableOpacity>
-    //           </AUIThemedView>
-    //         )}
-    //       </AUIThemedView>
-    //     </AUIThemedView>
-    //   );
 };
 
 const styles = StyleSheet.create({
@@ -258,7 +145,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "flex-start",
         gap: 20,
-        paddingLeft: 10,
+        paddingHorizontal: 10,
     },
     avatar: {
         width: 100,
@@ -359,7 +246,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         marginLeft: 7,
-        paddingVertical: 5,
+        paddingVertical: 10,
     },
     preferences: {
         fontSize: 16,

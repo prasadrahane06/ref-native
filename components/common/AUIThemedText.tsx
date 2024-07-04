@@ -27,6 +27,7 @@ export function AUIThemedText({
                 type === "defaultSemiBold" ? styles.defaultSemiBold : undefined,
                 type === "subtitle" ? styles.subtitle : undefined,
                 type === "link" ? styles.link : undefined,
+                { fontFamily: "Gilroy" },
                 style,
             ]}
             {...rest}

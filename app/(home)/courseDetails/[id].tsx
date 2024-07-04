@@ -39,8 +39,8 @@ function CoursePlanTabs({ courseId, clientId }: CoursePlanTabsProps) {
         if (individualCourse && individualCourse.docs && individualCourse.docs.length > 0) {
             const plans = individualCourse.docs[0].plan;
             setPlans(plans);
-            if (plans.length > 0) {
-                setSelectedPlan(plans[0].name);
+            if (plans?.length > 0) {
+                setSelectedPlan(plans[0]?.name);
             }
         }
     }, [individualCourse]);
@@ -133,9 +133,6 @@ export default function CourseDetails() {
             setClientId(clientId);
         }
     }, [individualCourse]);
-
-    console.log("res of course", JSON.stringify(course));
-    console.log("clientId", JSON.stringify(clientId));
 
     const scrollRef = useAnimatedRef<Animated.ScrollView>();
     const navigation = useNavigation();

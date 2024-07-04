@@ -18,6 +18,7 @@ export interface GlobalState {
     signupDetails: any;
     loader: boolean;
     token: string;
+    isRTL: boolean;
     user: UserState;
 }
 
@@ -28,6 +29,7 @@ const initialState: GlobalState = {
     signupDetails: null,
     loader: false,
     token: "",
+    isRTL: false,
     user: {
         userId: "",
         userName: "",
@@ -65,6 +67,9 @@ export const globalSlice = createSlice({
         setToken: (state, action: PayloadAction<string>) => {
             state.token = action.payload;
         },
+        setIsRTL: (state, action: PayloadAction<boolean>) => {
+            state.isRTL = action.payload;
+        },
         setUser: (
             state,
             action: PayloadAction<{
@@ -90,6 +95,7 @@ export const {
     setLoader,
     setToken,
     setUser,
+    setIsRTL,
 } = globalSlice.actions;
 
 export default globalSlice.reducer;

@@ -5,21 +5,25 @@ import { AUIThemedView } from "@/components/common/AUIThemedView";
 import PurchaseCoursesList from "@/components/home/courseDetails/PurchaseCourses";
 import Profile from "@/components/screenComponents/Profile";
 import { APP_THEME } from "@/constants/Colors";
+import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { purchaseCoursesData } from "@/constants/dummy data/similarCoursesData";
+import { RootState } from "@/redux/store";
 import {
-	AntDesign,
-	EvilIcons,
-	FontAwesome5,
-	FontAwesome6,
-	Ionicons,
-	MaterialIcons,
+    AntDesign,
+    EvilIcons,
+    FontAwesome5,
+    FontAwesome6,
+    Ionicons,
+    MaterialIcons,
 } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { Tabs } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Dimensions, Platform, TouchableOpacity, View } from "react-native";
 import "react-native-gesture-handler";
+import { useSelector } from "react-redux";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -63,24 +67,10 @@ const CoursesScreen = () => (
         />
     </Tab.Navigator>
 );
-const AccommodationScreen = () => (
-    <AUIThemedView>
-        <AUIThemedText>Accommodation Screen</AUIThemedText>
-    </AUIThemedView>
-);
-const ChangePasswordScreen = () => (
-    <AUIThemedView>
-        <AUIThemedText>Change Password Screen</AUIThemedText>
-    </AUIThemedView>
-);
+
 const TermsPolicyScreen = () => (
     <AUIThemedView>
         <AUIThemedText>Terms and Policy Screen</AUIThemedText>
-    </AUIThemedView>
-);
-const ShareAppScreen = () => (
-    <AUIThemedView>
-        <AUIThemedText>Share App Screen</AUIThemedText>
     </AUIThemedView>
 );
 
@@ -88,25 +78,35 @@ const Drawer = createDrawerNavigator();
 
 const MenuButton = ({ navigation }: any) => (
     <TouchableOpacity onPress={() => navigation.openDrawer()}>
-        <Ionicons name="menu" size={25} style={{ marginLeft: 15 }} />
+        <Ionicons
+            name="menu"
+            size={25}
+            style={{ marginLeft: 15 }}
+            color={APP_THEME.primary.first}
+        />
     </TouchableOpacity>
 );
 
 const HeaderIcons = () => (
     <View style={{ flexDirection: "row", marginRight: 15 }}>
         <TouchableOpacity onPress={() => alert("Search")}>
-            <Ionicons name="search" size={25} style={{ marginRight: 20 }} />
+            <Ionicons
+                name="search"
+                size={25}
+                style={{ marginRight: 20 }}
+                color={APP_THEME.primary.first}
+            />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => alert("Notifications")}>
-            <Ionicons name="notifications" size={25} />
+            <Ionicons name="notifications" size={25} color={APP_THEME.primary.first} />
         </TouchableOpacity>
     </View>
 );
 
-const screenOptions = (navigation: any) => ({
+const screenOptions = (navigation: any, isRTL: boolean) => ({
     headerBackground: () => (
         <AUILinearGradient
-            colors={["rgba(118, 250,178, 1)", "rgba(91, 216,148, 1)"]}
+            colors={["#ffffff", "#ffffff"]} //["rgba(118, 250,178, 1)", "rgba(91, 216,148, 1)"]}
             style={{ flex: 1 }}
         />
     ),
@@ -116,31 +116,29 @@ const screenOptions = (navigation: any) => ({
     drawerLabelStyle: { marginLeft: -20, fontSize: 15 },
     drawerActiveBackgroundColor: APP_THEME.primary.first,
     drawerActiveTintColor: "#ffffff",
+    drawerPosition: isRTL ? "right" : "left",
+    // drawerItemStyle: { flexDirection: "row-reverse" },
+
+    // drawerLabelStyle: { textAlign: "right" },
 });
 
 //creating Drawer
 export default function AUIDrawer() {
+    const { t, i18n } = useTranslation();
+    const isRTL = useSelector((state: RootState) => state.global.isRTL);
     return (
         <Drawer.Navigator
             initialRouteName="Home"
-            screenOptions={({ navigation }) => screenOptions(navigation)}
-            //   drawerContent={(props) => (
-            //     <AUIDrawerContent
-            //       {...props}
-            //       isLoggedIn={true}
-            //       user={user}
-            //       items={items}
-            //       onLogout={() => {
-            //         // Implement logout logic here
-            //       }}
-            //     />
-            //   )}
+            screenOptions={({ navigation }) => screenOptions(navigation, isRTL)}
             drawerContent={(props) => <AUIDrawerContent {...props} />}
         >
             <Drawer.Screen
                 name="Home"
                 component={TabLayout}
                 options={{
+                    title: t(GLOBAL_TRANSLATION_LABEL.home),
+
+                    // drawerItemStyle: { alignItems: "flex-end", flexDirection: "row-reverse" },
                     drawerIcon: ({ color }) => <AntDesign name="home" size={24} color={color} />,
                 }}
             />
@@ -149,6 +147,7 @@ export default function AUIDrawer() {
                 component={ProfileScreen}
                 options={{
                     headerShown: false,
+                    title: t(GLOBAL_TRANSLATION_LABEL.profile),
                     drawerIcon: ({ color }) => (
                         <FontAwesome6 name="user-circle" size={24} color={color} />
                     ),
@@ -158,12 +157,14 @@ export default function AUIDrawer() {
                 name="Courses"
                 component={CoursesScreen}
                 options={{
+                    title: t(GLOBAL_TRANSLATION_LABEL.courses),
+
                     drawerIcon: ({ color }) => (
                         <FontAwesome5 name="book-reader" size={24} color={color} />
                     ),
                 }}
             />
-            <Drawer.Screen
+            {/* <Drawer.Screen
                 name="Accommodation"
                 component={AccommodationScreen}
                 options={{
@@ -180,22 +181,15 @@ export default function AUIDrawer() {
                         <MaterialIcons name="password" size={24} color={color} />
                     ),
                 }}
-            />
+            /> */}
             <Drawer.Screen
                 name="TermsPolicy"
                 component={TermsPolicyScreen}
                 options={{
+                    title: t(GLOBAL_TRANSLATION_LABEL.termsPolicy),
+
                     drawerIcon: ({ color }) => (
                         <MaterialIcons name="policy" size={24} color={color} />
-                    ),
-                }}
-            />
-            <Drawer.Screen
-                name="ShareApp"
-                component={ShareAppScreen}
-                options={{
-                    drawerIcon: ({ color }) => (
-                        <EvilIcons name="share-google" size={28} color={color} />
                     ),
                 }}
             />
@@ -204,6 +198,8 @@ export default function AUIDrawer() {
 }
 
 export function TabLayout() {
+    const { t, i18n } = useTranslation();
+
     return (
         <Tabs
             screenOptions={{
@@ -220,7 +216,7 @@ export function TabLayout() {
             <Tabs.Screen
                 name="index"
                 options={{
-                    title: "Home",
+                    title: t(GLOBAL_TRANSLATION_LABEL.home),
                     tabBarInactiveTintColor: "#0A152F",
                     tabBarActiveTintColor: "white",
                     tabBarLabelStyle: { fontSize: 13 },
@@ -236,7 +232,8 @@ export function TabLayout() {
             <Tabs.Screen
                 name="favourite"
                 options={{
-                    title: "Favourite",
+                    headerShown: false,
+                    title: t(GLOBAL_TRANSLATION_LABEL.favourite),
                     tabBarInactiveTintColor: "#0A152F",
                     tabBarActiveTintColor: "white",
                     tabBarLabelStyle: { fontSize: 13 },
@@ -252,7 +249,7 @@ export function TabLayout() {
             <Tabs.Screen
                 name="compare"
                 options={{
-                    title: "Compare",
+                    title: t(GLOBAL_TRANSLATION_LABEL.compare),
                     tabBarInactiveTintColor: "#0A152F",
                     tabBarActiveTintColor: "white",
                     tabBarLabelStyle: { fontSize: 13 },
@@ -268,7 +265,7 @@ export function TabLayout() {
             <Tabs.Screen
                 name="cart"
                 options={{
-                    title: "Cart",
+                    title: t(GLOBAL_TRANSLATION_LABEL.cart),
                     tabBarInactiveTintColor: "#0A152F",
                     tabBarActiveTintColor: "white",
                     tabBarLabelStyle: { fontSize: 13 },

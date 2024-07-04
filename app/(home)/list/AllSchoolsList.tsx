@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         paddingHorizontal: 4,
         paddingBottom: 3,
+        backgroundColor: "transparent",
     },
     schoolItem: {
         width: "48%",

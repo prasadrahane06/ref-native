@@ -6,11 +6,13 @@ import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { APP_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
+import { getUserData } from "@/constants/RNAsyncStore";
 import { initialPageStyles } from "@/constants/Styles";
-import { setProfile, setSignInType } from "@/redux/globalSlice";
+import { setProfile, setSignInType, setToken, setUser } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
 import { Asset } from "expo-asset";
 import { useRouter } from "expo-router";
+import { useEffect } from "react";
 import { Platform, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -24,7 +26,25 @@ const InitialPage = () => {
         { label: "Light", value: "light" },
         { label: "Dark", value: "dark" },
     ];
+    useEffect(() => {
+        getUserData().then((data) => {
+            console.log("user-data", data);
+            if (data && Object.keys(data).length > 0) {
+                if (data?.profile === "student") {
+                    // saving token in redux
+                    dispatch(setToken(data?.data?.accessToken));
 
+                    // saving user in redux
+                    dispatch(setUser(data?.data?.user));
+
+                    router.replace("/(home)/(student)");
+                }
+                if (data?.profile === "school") {
+                    router.replace("/(home)/(school)");
+                }
+            }
+        });
+    }, []);
     const navigateToLogin = () => {
         dispatch(setSignInType("exist"));
         router.navigate("/login");

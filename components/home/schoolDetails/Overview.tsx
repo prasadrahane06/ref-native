@@ -10,7 +10,7 @@ import { EventsList } from "@/components/home/schoolDetails/EventsList";
 import { FacilitiesList } from "@/components/home/schoolDetails/FacilitiesList";
 import { ReviewList } from "@/components/home/schoolDetails/ReviewList";
 import { APP_THEME } from "@/constants/Colors";
-import { ENQUIRY_FIELDS, GLOBAL_TEXT } from "@/constants/Properties";
+import { ENQUIRY_FIELDS, GLOBAL_TEXT, GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { inputFieldStyle } from "@/constants/Styles";
 import { accommodationData } from "@/constants/dummy data/accommodationData";
 import { countriesData } from "@/constants/dummy data/countriesData";
@@ -46,6 +46,7 @@ import { getUserData } from "@/constants/RNAsyncStore";
 import { setLoader } from "@/redux/globalSlice";
 import ContactNow from "./ContactNow";
 import useAxios from "@/app/services/axiosClient";
+import { useTranslation } from "react-i18next";
 
 interface EnquireNowModalProps {
     isVisible: boolean;
@@ -584,6 +585,8 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
 
 export default function OverviewTab({ schoolOverView, courseId, clientId }: OverviewTabProps) {
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const { t, i18n } = useTranslation();
+
     let userId: string = "";
 
     getUserData().then((data) => {
@@ -657,20 +660,20 @@ export default function OverviewTab({ schoolOverView, courseId, clientId }: Over
 
             <AUIThemedView>
                 {schoolOverView?.events.length > 0 && (
-                    <SectionTitle>{GLOBAL_TEXT.latest_events}</SectionTitle>
+                    <SectionTitle>{t(GLOBAL_TRANSLATION_LABEL.latestEvents)}</SectionTitle>
                 )}
                 <EventsList data={schoolOverView?.events} />
             </AUIThemedView>
 
             <AUIThemedView>
                 {schoolOverView?.facilities.length > 0 && (
-                    <SectionTitle>{GLOBAL_TEXT.facilities}</SectionTitle>
+                    <SectionTitle>{t(GLOBAL_TRANSLATION_LABEL.facilities)}</SectionTitle>
                 )}
                 <FacilitiesList data={schoolOverView?.facilities} />
             </AUIThemedView>
 
             <AUIThemedView style={enquireNowStyles.contactNowContainer}>
-                <SectionTitle>{GLOBAL_TEXT.contact_now}</SectionTitle>
+                <SectionTitle>{t(GLOBAL_TRANSLATION_LABEL.contactNow)}</SectionTitle>
                 <AUIThemedView style={enquireNowStyles.contactNowIconContainer}>
                     <ContactNow
                         name="phone"
@@ -688,7 +691,7 @@ export default function OverviewTab({ schoolOverView, courseId, clientId }: Over
 
             <AUIThemedView>
                 <AUIButton
-                    title={GLOBAL_TEXT.enquire_now}
+                    title={t(GLOBAL_TRANSLATION_LABEL.enquireNow)}
                     style={{ paddingHorizontal: 15 }}
                     borderColor="#5BD894"
                     onPress={() => setIsModalVisible(true)}
@@ -696,7 +699,7 @@ export default function OverviewTab({ schoolOverView, courseId, clientId }: Over
             </AUIThemedView>
 
             <AUIThemedView>
-                <SectionTitle viewAll="#">{GLOBAL_TEXT.ratings_and_review}</SectionTitle>
+                <SectionTitle>{t(GLOBAL_TRANSLATION_LABEL.ratingsAndReview)}</SectionTitle>
                 <ReviewList data={reviewsData} />
             </AUIThemedView>
 
