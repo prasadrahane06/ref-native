@@ -47,20 +47,7 @@ export default function HomeScreen() {
 
     const countryResponse = response?.country;
 
-    useEffect(() => {
-        if (countryResponse && countryResponse.docs && countryResponse.docs.length > 0) {
-            const country = countryResponse.docs;
-            const mappedData = country.map((item: any) => ({
-                id: item._id,
-                country: item.name,
-                image: item.images.length > 0 ? item.images[0] : null,
-                favorite: false,
-            }));
 
-            console.log("mappedData", mappedData);
-            setDestinationData(mappedData);
-        }
-    }, [countryResponse]);
 
     useEffect(() => {
         requestFn(API_URL.course, "course", { limit: 4, similar: selectedLanguage });
@@ -126,8 +113,8 @@ export default function HomeScreen() {
             </AUIThemedView>
 
             <AUIThemedView>
-                <SectionTitle>{t(GLOBAL_TRANSLATION_LABEL.find_your_destination)}</SectionTitle>
-                <DestinationList data={destinationData} />
+                <SectionTitle>{GLOBAL_TEXT.find_your_destination}</SectionTitle>
+                <DestinationList data={countryResponse?.docs} />
             </AUIThemedView>
 
             <AUIThemedView>
@@ -145,7 +132,7 @@ export default function HomeScreen() {
                     {t(GLOBAL_TRANSLATION_LABEL.choose_your_language_to_learn)}
                 </SectionTitle>
                 <LanguageList
-                    data={languagesData}
+                    data={countryResponse?.docs}
                     selectedLanguage={selectedLanguage}
                     setSelectedLanguage={setSelectedLanguage}
                 />

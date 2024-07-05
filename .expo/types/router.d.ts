@@ -3,9 +3,9 @@ import type { ReactNode } from 'react';
 import type { TextProps, GestureResponderEvent } from 'react-native';
 
 export namespace ExpoRouter {
-  type StaticRoutes = `/` | `/(home)/` | `/(home)/(school)` | `/(home)/(student)` | `/(school)` | `/(student)` | `/_sitemap` | `/cart` | `/compare` | `/courses` | `/facilities` | `/favourite` | `/help` | `/login` | `/services/axiosClient` | `/services/data.json` | `/signup` | `/studentTab`;
-  type DynamicRoutes<T extends string> = never;
-  type DynamicRouteTemplate = never;
+  type StaticRoutes = `/` | `/(home)/` | `/(home)/(school)` | `/(home)/(student)` | `/(home)/compare/compareSchools` | `/(home)/compare/searchSchool` | `/(home)/course/AllCoursesScreen` | `/(home)/courseDetails/purchase` | `/(home)/list/AllSchoolsList` | `/(home)/school/AllSchoolsScreen` | `/(school)` | `/(student)` | `/_sitemap` | `/cart` | `/compare` | `/compare/compareSchools` | `/compare/searchSchool` | `/course/AllCoursesScreen` | `/courseDetails/purchase` | `/courses` | `/details` | `/facilities` | `/favourite` | `/help` | `/list/AllSchoolsList` | `/login` | `/profile` | `/school/AllSchoolsScreen` | `/services/axiosClient` | `/services/data.json` | `/signup` | `/studentTab`;
+  type DynamicRoutes<T extends string> = `/(home)/cityDetails/${SingleRoutePart<T>}` | `/(home)/courseDetails/${SingleRoutePart<T>}` | `/(home)/schoolDetails/${SingleRoutePart<T>}` | `/cityDetails/${SingleRoutePart<T>}` | `/courseDetails/${SingleRoutePart<T>}` | `/schoolDetails/${SingleRoutePart<T>}`;
+  type DynamicRouteTemplate = `/(home)/cityDetails/[id]` | `/(home)/courseDetails/[id]` | `/(home)/schoolDetails/[id]` | `/cityDetails/[id]` | `/courseDetails/[id]` | `/schoolDetails/[id]`;
 
   export type RelativePathString = `./${string}` | `../${string}` | '..';
   export type AbsoluteRoute = DynamicRouteTemplate | StaticRoutes;

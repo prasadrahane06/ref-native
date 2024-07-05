@@ -33,7 +33,7 @@ const LanguageList: React.FC<LanguageListProps> = ({
                         />
                     );
                 }}
-                keyExtractor={(item) => item.uniqueId.toString()}
+                keyExtractor={(item) => item._id}
             />
         </AUIThemedView>
     );

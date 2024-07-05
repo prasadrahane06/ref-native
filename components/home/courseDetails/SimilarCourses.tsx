@@ -1,8 +1,9 @@
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
 import React from "react";
-import { FlatList, ImageBackground, StyleSheet } from "react-native";
+import { FlatList, ImageBackground, StyleSheet, TouchableOpacity } from "react-native";
 
 interface SimilarCoursesProps {
     title: string;
@@ -41,19 +42,30 @@ function SimilarCourses({ title, subtitle, image }: SimilarCoursesProps) {
 }
 
 export default function SimilarCoursesList({ data }: SimilarCoursesListProps) {
+    const router = useRouter();
     return (
         <AUIThemedView style={similarCoursesStyle.container}>
             <FlatList
                 horizontal
                 data={data}
                 renderItem={({ item }) => (
-                    <SimilarCourses
-                        image={item.image}
-                        title={item.title}
-                        subtitle={item.subtitle}
-                    />
+                    <TouchableOpacity
+                    onPress={()=>{
+                        router.push({
+                            pathname: `(home)/courseDetails/${item._id}`,
+                        })
+                        
+                    }}
+                    
+                    >
+                        <SimilarCourses
+                            image={item.image}
+                            title={item.courseName}
+                            subtitle={item.description}
+                        />
+                    </TouchableOpacity>
                 )}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item) => item._id}
             />
         </AUIThemedView>
     );

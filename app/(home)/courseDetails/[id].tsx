@@ -34,6 +34,9 @@ function CoursePlanTabs({ courseId, clientId }: CoursePlanTabsProps) {
     const [selectedPlan, setSelectedPlan] = useState("");
 
     const individualCourse = useSelector((state: RootState) => state.api.individualCourse);
+    const similarCourse = useSelector((state: RootState) => state.api.similarCourse);
+
+    console.log("res of similarCourse", similarCourse?.docs);
 
     useEffect(() => {
         if (individualCourse && individualCourse.docs && individualCourse.docs.length > 0) {
@@ -90,7 +93,7 @@ function CoursePlanTabs({ courseId, clientId }: CoursePlanTabsProps) {
                                 plan={plan}
                                 scheduleDescription={plan.schedule}
                                 lessonDescription={plan.lessonsHour}
-                                similarCourses={similarCoursesData}
+                                similarCourses={similarCourse?.docs}
                             />
                         )
                 )}
@@ -120,9 +123,11 @@ export default function CourseDetails() {
 
     useEffect(() => {
         requestFn(API_URL.course, "individualCourse", { id: id });
+        
     }, []);
 
     const individualCourse = useSelector((state: RootState) => state.api.individualCourse);
+
 
     useEffect(() => {
         if (individualCourse && individualCourse.docs && individualCourse.docs.length > 0) {
@@ -130,6 +135,7 @@ export default function CourseDetails() {
             const clientId = course.client._id;
 
             setCourse(course);
+            requestFn(API_URL.course, "similarCourse" , {similar : course.language , limit : 4 })
             setClientId(clientId);
         }
     }, [individualCourse]);

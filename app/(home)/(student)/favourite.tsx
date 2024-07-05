@@ -58,10 +58,10 @@ const TabTwoScreen: React.FC = () => {
     };
 
     const getfavorite = useSelector((state: RootState) => state.api.favorite || {});
-    const fav = getfavorite?.docs?.[0] || { courses: [], clients: [] }; // Providing default values
+    const fav = getfavorite?.docs?.[0] || { courses: [], clients: [] , country : [] }; // Providing default values
 
     useEffect(() => {
-        console.log("getfavorite", fav);
+        console.log("getfavorite", JSON.stringify(fav));
     }, [getfavorite]);
 
     useEffect(() => {
@@ -102,8 +102,8 @@ const TabTwoScreen: React.FC = () => {
     const renderCountryItem: ListRenderItem<CountryData> = ({ item }: any) => (
         <AUIThemedView style={styles.destinationItem}>
             <Destination
-                title={item.country}
-                image={item.image}
+                title={item.name}
+                image={item.images[0]}
                 favorite={item.favorite}
                 countryWidth={160}
                 countryHeight={145}

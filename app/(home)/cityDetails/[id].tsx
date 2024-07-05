@@ -8,17 +8,18 @@ import { schoolsData } from "@/constants/dummy data/schoolsData";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
-// import PhotoGallaryList from "@/components/home/common/PhotoGallaryList";
-// import { PhotoGallaryData } from "@/constants/dummy data/PhotoGallaryData";
 import AUIImage from "@/components/common/AUIImage";
 import PhotoGallaryList from "@/components/home/common/PhotoGallaryList";
 import { PhotoGallaryData } from "@/constants/dummy data/PhotoGallaryData";
 import { RootState } from "@/redux/store";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Asset } from "expo-asset";
 import { useSelector } from "react-redux";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import useAxios from "@/app/services/axiosClient";
+import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
+
 
 export default function CityDetails() {
     const { id } = useLocalSearchParams<{ id: string }>();
@@ -30,30 +31,42 @@ export default function CityDetails() {
     const [aboutText, setAboutText] = useState("");
 
     const { requestFn } = useApiRequest();
+    
+    const { post } = useAxios();
 
     const schoolsResponse = useSelector((state: RootState) => state.api.school || {});
     const individualCountry = useSelector((state: RootState) => state.api.individualCountry || {});
 
-    console.log("individualCountry =>", JSON.stringify(individualCountry));
+    useEffect(() => {
+        requestFn(API_URL.country, "individualCountry", { id: id });
+    }, [id]);
 
     useEffect(() => {
-        requestFn(API_URL.country, "individualCountry", { _id: id });
-    }, []);
-
-    useEffect(() => {
-        if (individualCountry && individualCountry.docs && individualCountry.docs.length > 0) {
-            const country = individualCountry.docs[1];
-
-            setPhotoGallary(country.images);
-            setCountry(country);
-            setAboutText(country.about);
-            console.log("country data =>", country);
+        if (individualCountry?.docs && individualCountry.docs.length > 0) {
+            setAboutText(individualCountry.docs[0].about || "");
+            setCountry(individualCountry.docs[0]);
+            setPhotoGallary(individualCountry.docs[0].images || []);
         }
     }, [individualCountry]);
+
+    console.log("individualCountry =>", individualCountry?.docs?.[0]);
 
     const wordsLimit = 50;
     const truncatedText = aboutText.split(" ").slice(0, wordsLimit).join(" ");
 
+    const handleFavoriteClick = (id: string, type: string) => {
+        post(API_URL.favorite, { id: id, type: type })
+            .then((res: any) => {
+                ApiSuccessToast(res.message);
+                console.log("response ", res.data);
+            })
+            .catch((e: any) => {
+                ApiErrorToast(e.response?.data?.message);
+                console.log(e);
+            });
+
+        console.log(id, type);
+    };
     const population = country?.population;
     const formattedPopulation =
         population && population >= 1000000
@@ -67,14 +80,23 @@ export default function CityDetails() {
             <ScrollView>
                 <AUIThemedView style={styles.container}>
                     <AUIThemedView>
-                        <AUIImage path={photoGallary[0]} style={styles.image} resizeMode="cover" />
-                        <AUIThemedView style={styles.favIconContainer}>
-                            <MaterialIcons
+                        <AUIImage path={country?.images?.[0]} style={styles.image} resizeMode="cover" />
+                        <AUIThemedView style={styles.favIconContainer}
+                    
+                        >
+                        
+                        <TouchableOpacity
+                        onPress={()=>{
+                            handleFavoriteClick(country._id,"country")
+                        }}
+                        >
+                        <MaterialIcons
                                 name="favorite"
                                 size={18}
                                 color={APP_THEME.secondary.first}
                                 style={styles.icon}
                             />
+                        </TouchableOpacity>
                         </AUIThemedView>
                     </AUIThemedView>
 
@@ -150,17 +172,12 @@ export default function CityDetails() {
                                 About {country?.name}
                             </AUIThemedText>
                             <AUIThemedText style={styles.aboutDescription}>
-                                {readMore ? aboutText : `${truncatedText} `}
-                                {aboutText.split(" ").length > wordsLimit && (
-                                    <Pressable
-                                        onPress={() => setReadMore(!readMore)}
-                                        // style={{ paddingTop: 30 }}
-                                    >
-                                        <AUIThemedText style={styles.readMoreText}>
-                                            {readMore ? "read less" : "read more..."}
-                                        </AUIThemedText>
-                                    </Pressable>
-                                )}
+                               {readMore ?  truncatedText : aboutText}
+                               <AUIThemedText
+                                onPress={() => setReadMore(!readMore)}
+                               >
+                                   {readMore ? "Read Less" : "Read More"}
+                               </AUIThemedText>
                             </AUIThemedText>
                         </AUIThemedView>
                     </AUIThemedView>
@@ -171,7 +188,7 @@ export default function CityDetails() {
                                 {GLOBAL_TEXT.photo_gallery}
                             </AUIThemedText>
                         </AUIThemedView>
-                        <PhotoGallaryList data={photoGallary} />
+                        <PhotoGallaryList data={country?.images} />
                     </AUIThemedView>
 
                     <AUIThemedView style={styles.popularSchoolsContainer}>
