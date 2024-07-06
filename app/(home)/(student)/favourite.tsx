@@ -102,7 +102,7 @@ const TabTwoScreen: React.FC = () => {
     const renderCountryItem: ListRenderItem<CountryData> = ({ item }: any) => (
         <AUIThemedView style={styles.destinationItem}>
             <Destination
-                title={item.name}
+                title={item.name?.ar}
                 image={item.images[0]}
                 id={item._id}
                 favorite={item.favorite}

@@ -12,9 +12,9 @@ const DestinationList: React.FC<DestinationListProps> = ({ data }) => {
             horizontal
             data={data}
             renderItem={({ item }) => (
-                <Destination title={item.name} image={item.images[0]} id={item._id} />
+                <Destination title={item.name?.ar} image={item.images[0]} id={item._id} />
             )}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item._id}
             contentContainerStyle={styles.container}
         />
     );

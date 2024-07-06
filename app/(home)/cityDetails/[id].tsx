@@ -102,7 +102,7 @@ export default function CityDetails() {
 
                     <AUIThemedView style={styles.infoContainer}>
                         <AUIThemedText style={styles.name}>
-                            Why study in {country?.name}
+                            Why study in {country?.name?.ar}
                         </AUIThemedText>
                         <AUIThemedView style={styles.headingContainer}>
                             <AUIThemedView style={styles.headingImageContainer}>
@@ -169,7 +169,7 @@ export default function CityDetails() {
 
                         <AUIThemedView style={styles.aboutContainer}>
                             <AUIThemedText style={styles.aboutTitle}>
-                                About {country?.name}
+                                About {country?.name?.ar}
                             </AUIThemedText>
                             <AUIThemedText style={styles.aboutDescription}>
                                {readMore ?  truncatedText : aboutText}

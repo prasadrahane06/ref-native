@@ -11,7 +11,7 @@ export const en = {
     compare: "Compare",
     cart: "Cart",
     profile: "Profile",
-    courses: "Courses",
+    courses: "My Courses",
     welcome_back: "Welcome back",
     termsPolicy: "Terms Policy",
     darkMode: "Dark Mode",

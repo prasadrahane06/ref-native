@@ -614,7 +614,7 @@ export default function PlanComponent({
 
     return (
         <AUIThemedView>
-            <AUIThemedView style={{ marginTop: 10 }}>
+            <AUIThemedView>
                 <AUIThemedText style={styles.boldText}>
                     {t(GLOBAL_TRANSLATION_LABEL.courseDetails)}
                 </AUIThemedText>

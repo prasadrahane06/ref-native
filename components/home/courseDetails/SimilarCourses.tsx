@@ -72,7 +72,7 @@ export default function SimilarCoursesList({ data }: SimilarCoursesListProps) {
 }
 
 const similarCoursesStyle = StyleSheet.create({
-    container: { paddingVertical: 20 },
+    container: { marginTop: 5 },
     item: {
         width: 270,
         height: 120,

@@ -621,16 +621,16 @@ export default function OverviewTab({ schoolOverView, courseId, clientId }: Over
         },
     ];
 
-    const handlePhonePress = () => {
-        Linking.openURL("tel:+1234567890");
+    const handlePhonePress = (number : string) => {
+        Linking.openURL("tel:${number}");
     };
 
-    const handleEmailPress = () => {
-        Linking.openURL("mailto:example@example.com");
+    const handleEmailPress = (email : string) => {
+        Linking.openURL("mailto:${email}");
     };
 
-    const handleWebPress = () => {
-        Linking.openURL("https://example.com");
+    const handleWebPress = (website : string) => {
+        Linking.openURL("https://${website}");
     };
 
     return (
@@ -678,14 +678,20 @@ export default function OverviewTab({ schoolOverView, courseId, clientId }: Over
                     <ContactNow
                         name="phone"
                         IconComponent={FontAwesome}
-                        onPress={handlePhonePress}
+                        onPress={()=>{
+                            handlePhonePress(schoolOverView.phone)
+                        }}
                     />
                     <ContactNow
                         name="envelope"
                         IconComponent={FontAwesome}
-                        onPress={handleEmailPress}
+                        onPress={()=>{
+                            handleEmailPress(schoolOverView.email)
+                        }}
                     />
-                    <ContactNow name="globe" IconComponent={Feather} onPress={handleWebPress} />
+                    <ContactNow name="globe" IconComponent={Feather} onPress={()=>{
+                        handleWebPress(schoolOverView.website)
+                    }} />
                 </AUIThemedView>
             </AUIThemedView>
 

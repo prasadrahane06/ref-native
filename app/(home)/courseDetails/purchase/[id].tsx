@@ -95,7 +95,11 @@ export default function PurchaseScreen() {
 
                     <AUIThemedView style={styles.planDetails}>
                         <AUIThemedText style={styles.planDetailText}>
-                            {t(GLOBAL_TRANSLATION_LABEL.fee)}
+                            {
+                                newid.type === "buy"
+                                    ? t(GLOBAL_TRANSLATION_LABEL.fee)
+                                    : t(GLOBAL_TRANSLATION_LABEL.bookYourSeat)
+                            }
                         </AUIThemedText>
                         <AUIThemedText style={styles.planDetailValue}>
                             ${planValue.price}

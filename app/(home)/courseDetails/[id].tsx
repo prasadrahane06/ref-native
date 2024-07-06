@@ -55,7 +55,7 @@ function CoursePlanTabs({ courseId, clientId }: CoursePlanTabsProps) {
     };
 
     return (
-        <AUIThemedView style={{ marginBottom: 20 }}>
+        <AUIThemedView>
             <AUIThemedView style={planTabsStyles.tabsContainer}>
                 {plans.map((plan: any, index: number) => (
                     <Pressable

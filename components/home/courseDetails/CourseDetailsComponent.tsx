@@ -17,107 +17,44 @@ export default function CourseDetailsComponent({ plan }: any) {
     return (
         <AUIThemedView style={styles.container}>
             <AUIThemedView style={styles.accordionSection}>
-                <AUIAccordion title={`Introduction to ${individualCourse?.docs[0].language}`}>
-                    <AUIThemedView>
-                        <AUIThemedView style={styles.row}>
-                            <AUIThemedText style={styles.value}>Ownership</AUIThemedText>
-                            <AUIThemedView style={styles.rowContainer}>
-                                <AUIThemedText style={styles.label}>Private</AUIThemedText>
-                                <AUIThemedText style={styles.label2}>Private</AUIThemedText>
+                {plan.courseDetails.map((courseDetail: any) => (
+                    <AUIAccordion key={courseDetail._id} title={courseDetail.title}>
+                        <AUIThemedView>
+                            <AUIThemedView style={styles.row}>
+                                <AUIThemedView style={styles.rowContainer}>
+                                    <AUIThemedText style={styles.subtitle}>
+                                        {courseDetail.subtitle}
+                                    </AUIThemedText>
+                                </AUIThemedView>
                             </AUIThemedView>
                         </AUIThemedView>
-                    </AUIThemedView>
-                </AUIAccordion>
-
-                <AUIAccordion
-                    title={`Culture Introduction to - ${individualCourse?.docs[0].language}`}
-                >
-                    <AUIThemedView>
-                        <AUIThemedView style={styles.row}>
-                            <AUIThemedText style={styles.value}>Ownership</AUIThemedText>
-                            <AUIThemedView style={styles.rowContainer}>
-                                <AUIThemedText style={styles.label}>Private</AUIThemedText>
-                                <AUIThemedText style={styles.label2}>Private</AUIThemedText>
-                            </AUIThemedView>
-                        </AUIThemedView>
-                    </AUIThemedView>
-                </AUIAccordion>
-
-                <AUIAccordion title={`Intermediate ${individualCourse?.docs[0].language} 1`}>
-                    <AUIThemedView>
-                        <AUIThemedView style={styles.row}>
-                            <AUIThemedText style={styles.value}>Ownership</AUIThemedText>
-                            <AUIThemedView style={styles.rowContainer}>
-                                <AUIThemedText style={styles.label}>Private</AUIThemedText>
-                                <AUIThemedText style={styles.label2}>Private</AUIThemedText>
-                            </AUIThemedView>
-                        </AUIThemedView>
-                    </AUIThemedView>
-                </AUIAccordion>
-
-                <AUIAccordion title={`Intermediate ${individualCourse?.docs[0].language} 2`}>
-                    <AUIThemedView>
-                        <AUIThemedView style={styles.row}>
-                            <AUIThemedText style={styles.value}>Ownership</AUIThemedText>
-                            <AUIThemedView style={styles.rowContainer}>
-                                <AUIThemedText style={styles.label}>Private</AUIThemedText>
-                                <AUIThemedText style={styles.label2}>Private</AUIThemedText>
-                            </AUIThemedView>
-                        </AUIThemedView>
-                    </AUIThemedView>
-                </AUIAccordion>
-
-                <AUIAccordion title={`Medium ${individualCourse?.docs[0].language} 3`}>
-                    <AUIThemedView>
-                        <AUIThemedView style={styles.row}>
-                            <AUIThemedText style={styles.value}>Ownership</AUIThemedText>
-                            <AUIThemedView style={styles.rowContainer}>
-                                <AUIThemedText style={styles.label}>Private</AUIThemedText>
-                                <AUIThemedText style={styles.label2}>Private</AUIThemedText>
-                            </AUIThemedView>
-                        </AUIThemedView>
-                    </AUIThemedView>
-                </AUIAccordion>
-
-                <AUIAccordion title={`Advance ${individualCourse?.docs[0].language} 4`}>
-                    <AUIThemedView>
-                        <AUIThemedView style={styles.row}>
-                            <AUIThemedText style={styles.value}>Ownership</AUIThemedText>
-                            <AUIThemedView style={styles.rowContainer}>
-                                <AUIThemedText style={styles.label}>Private</AUIThemedText>
-                                <AUIThemedText style={styles.label2}>Private</AUIThemedText>
-                            </AUIThemedView>
-                        </AUIThemedView>
-                    </AUIThemedView>
-                </AUIAccordion>
+                    </AUIAccordion>
+                ))}
             </AUIThemedView>
 
             <AUIThemedView style={styles.detailsContainer2}>
                 <AUIThemedText style={styles.courseDetailsText}>Course Fees</AUIThemedText>
                 <AUIThemedView style={styles.detailsHeader}>
                     <AUIThemedText style={styles.courseLabel}>Total Fee</AUIThemedText>
-                    <AUIThemedText style={styles.primaryText}>{plan.price}</AUIThemedText>
+                    <AUIThemedText style={styles.primaryText}>${plan.price}</AUIThemedText>
                 </AUIThemedView>
 
                 <AUIThemedView style={styles.detailsHeader}>
-                    <AUIThemedText style={styles.courseLabel}>Book your seet</AUIThemedText>
-                    <AUIThemedText style={styles.primaryText}>{plan.bookYourSeat}</AUIThemedText>
+                    <AUIThemedText style={styles.courseLabel}>Book your seat</AUIThemedText>
+                    <AUIThemedText style={styles.primaryText}>${plan.bookYourSeat}</AUIThemedText>
                 </AUIThemedView>
-
-                {/* <AUIThemedView style={styles.detailsHeader}>
-                    <AUIThemedText style={styles.courseLabel}>Rating</AUIThemedText>
+                <AUIThemedView style={styles.detailsHeader}>
+                    <AUIThemedText style={styles.courseLabel}>Duration</AUIThemedText>
                     <AUIThemedText style={styles.primaryText}>{plan.duration}</AUIThemedText>
-                </AUIThemedView> */}
+                </AUIThemedView>
             </AUIThemedView>
-
-            {/* <AUIThemedView style={styles.borderBottom} /> */}
         </AUIThemedView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        marginVertical: 10,
+        // marginVertical: 10,
         marginHorizontal: 12,
         borderBottomWidth: 1,
         borderColor: "#9DA1AC",
@@ -164,15 +101,16 @@ const styles = StyleSheet.create({
     },
     accordionSection: {
         width: "100%",
-        marginVertical: 15,
+        marginVertical: 7,
         borderBottomWidth: 1,
         borderColor: "#9DA1AC",
     },
     row: {
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+    },
+    column: {
         flexDirection: "column",
-        justifyContent: "space-between",
-        borderBottomWidth: 2,
-        borderBottomColor: "#ddd",
     },
     value: {
         textAlign: "center",
@@ -183,21 +121,22 @@ const styles = StyleSheet.create({
     rowContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
+        alignItems: "center",
     },
     label: {
         flex: 1,
-        textAlign: "center",
+        textAlign: "left",
         fontWeight: "500",
         fontSize: 14,
-        marginRight: 50,
+        marginRight: 10,
         paddingVertical: 3,
     },
-    label2: {
+    subtitle: {
         flex: 1,
-        textAlign: "center",
-        fontWeight: "500",
+        textAlign: "justify",
+        fontWeight: "400",
         fontSize: 14,
-        marginLeft: 50,
+        marginLeft: 10,
         paddingVertical: 3,
     },
     courseFeesContainer: {

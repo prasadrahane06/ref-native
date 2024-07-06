@@ -8,7 +8,7 @@ interface FacilitiesListProps {
 }
 
 export const FacilitiesList: React.FC<FacilitiesListProps> = ({ data }) => {
-    console.log("facilitydata" , data)
+    console.log("facilitydata", data);
     return (
         <AUIThemedView style={facilitiesListStyles.container}>
             <FlatList
@@ -23,5 +23,5 @@ export const FacilitiesList: React.FC<FacilitiesListProps> = ({ data }) => {
 };
 
 const facilitiesListStyles = StyleSheet.create({
-    container: { paddingVertical: 10 },
+    container: {},
 });

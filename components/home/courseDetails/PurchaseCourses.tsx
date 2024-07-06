@@ -68,14 +68,14 @@ export default function PurchaseCoursesList({
                 data={data}
                 renderItem={({ item }) => (
                     <PurchaseCourses
-                        image={item.image}
-                        title={item.title}
-                        subtitle={item.subtitle}
-                        schoolName={item.schoolName}
+                        image={item.course.image}
+                        title={item.course.courseName}
+                        subtitle={item.course.description}
+                        schoolName={item.course.client.name}
                         type={type}
                     />
                 )}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item) => item._id}
             />
         </AUIThemedView>
     );
