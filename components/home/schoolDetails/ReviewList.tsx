@@ -5,13 +5,14 @@ import { Review } from "../../Review";
 
 interface ReviewProps {
     data: any[];
+    horizontal?: boolean;
 }
 
-export const ReviewList: React.FC<ReviewProps> = ({ data }) => {
+export const ReviewList: React.FC<ReviewProps> = ({ data, horizontal = false }) => {
     return (
         <AUIThemedView style={{ paddingLeft: 15 }}>
             <FlatList
-                horizontal
+                horizontal={horizontal}
                 data={data}
                 renderItem={({ item }) => (
                     <Review

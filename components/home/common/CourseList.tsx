@@ -18,6 +18,8 @@ const CourseList: React.FC<CourseListProps> = ({ data }) => {
                         // @ts-ignore
                         startingDate={item?.startDate}
                         courseId={item._id}
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
                     />
                 </AUIThemedView>
             ))}

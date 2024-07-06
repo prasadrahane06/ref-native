@@ -47,6 +47,7 @@ import { setLoader } from "@/redux/globalSlice";
 import ContactNow from "./ContactNow";
 import useAxios from "@/app/services/axiosClient";
 import { useTranslation } from "react-i18next";
+import AUIComingSoon from "@/components/common/AUIComingSoon";
 
 interface EnquireNowModalProps {
     isVisible: boolean;
@@ -659,17 +660,23 @@ export default function OverviewTab({ schoolOverView, courseId, clientId }: Over
             </AUIThemedView>
 
             <AUIThemedView>
-                {schoolOverView?.events.length > 0 && (
-                    <SectionTitle>{t(GLOBAL_TRANSLATION_LABEL.latestEvents)}</SectionTitle>
+                <SectionTitle>{t(GLOBAL_TRANSLATION_LABEL.latestEvents)}</SectionTitle>
+                {schoolOverView?.events.length > 0 ? (
+                    <>
+                        <EventsList data={schoolOverView?.events} />
+                    </>
+                ) : (
+                    <AUIComingSoon />
                 )}
-                <EventsList data={schoolOverView?.events} />
             </AUIThemedView>
 
             <AUIThemedView>
-                {schoolOverView?.facilities.length > 0 && (
-                    <SectionTitle>{t(GLOBAL_TRANSLATION_LABEL.facilities)}</SectionTitle>
+                <SectionTitle>{t(GLOBAL_TRANSLATION_LABEL.facilities)}</SectionTitle>
+                {schoolOverView?.facilities.length > 0 ? (
+                    <FacilitiesList data={schoolOverView?.facilities} />
+                ) : (
+                    <AUIComingSoon />
                 )}
-                <FacilitiesList data={schoolOverView?.facilities} />
             </AUIThemedView>
 
             <AUIThemedView style={enquireNowStyles.contactNowContainer}>
@@ -705,8 +712,10 @@ export default function OverviewTab({ schoolOverView, courseId, clientId }: Over
             </AUIThemedView>
 
             <AUIThemedView>
-                <SectionTitle>{t(GLOBAL_TRANSLATION_LABEL.ratingsAndReview)}</SectionTitle>
-                <ReviewList data={reviewsData} />
+                <SectionTitle viewAll="(home)/ratingsAndReview/AUIRatingsAndReview">
+                    {t(GLOBAL_TRANSLATION_LABEL.ratingsAndReview)}
+                </SectionTitle>
+                <ReviewList data={reviewsData} horizontal />
             </AUIThemedView>
 
             <EnquireNowModal

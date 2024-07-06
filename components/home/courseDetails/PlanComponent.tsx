@@ -40,6 +40,7 @@ import { FacilitiesList } from "../schoolDetails/FacilitiesList";
 import useAxios from "@/app/services/axiosClient";
 import ContactNow from "../schoolDetails/ContactNow";
 import { useTranslation } from "react-i18next";
+import AUIComingSoon from "@/components/common/AUIComingSoon";
 
 interface PlanComponentProps {
     courseId: string;
@@ -623,7 +624,11 @@ export default function PlanComponent({
 
             <AUIThemedView style={styles.facilityContainer}>
                 <SectionTitle>{t(GLOBAL_TRANSLATION_LABEL.facilities)}</SectionTitle>
-                <FacilitiesList data={plan.facilities} />
+                {plan.facilities && plan.facilities.length > 0 ? (
+                    <FacilitiesList data={plan.facilities} />
+                ) : (
+                    <AUIComingSoon />
+                )}
             </AUIThemedView>
 
             <AUIThemedView style={styles.contactNowContainer}>

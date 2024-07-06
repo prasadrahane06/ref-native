@@ -9,12 +9,20 @@ interface SimilarCoursesProps {
     title: string;
     subtitle: string;
     image: any;
+    numberOfLines?: number;
+    ellipsizeMode?: "head" | "middle" | "tail" | "clip";
 }
 interface SimilarCoursesListProps {
     data: any[];
 }
 
-function SimilarCourses({ title, subtitle, image }: SimilarCoursesProps) {
+function SimilarCourses({
+    title,
+    subtitle,
+    image,
+    numberOfLines,
+    ellipsizeMode,
+}: SimilarCoursesProps) {
     return (
         <AUIThemedView style={similarCoursesStyle.item}>
             <ImageBackground
@@ -35,7 +43,13 @@ function SimilarCourses({ title, subtitle, image }: SimilarCoursesProps) {
                     end={{ x: 0.5, y: 1 }}
                 />
                 <AUIThemedText style={similarCoursesStyle.title}>{title}</AUIThemedText>
-                <AUIThemedText style={similarCoursesStyle.subtitle}>{subtitle}</AUIThemedText>
+                <AUIThemedText
+                    style={similarCoursesStyle.subtitle}
+                    numberOfLines={numberOfLines}
+                    ellipsizeMode={ellipsizeMode}
+                >
+                    {subtitle}
+                </AUIThemedText>
             </ImageBackground>
         </AUIThemedView>
     );
@@ -62,6 +76,8 @@ export default function SimilarCoursesList({ data }: SimilarCoursesListProps) {
                             image={item.image}
                             title={item.courseName}
                             subtitle={item.description}
+                            numberOfLines={2}
+                            ellipsizeMode="tail"
                         />
                     </TouchableOpacity>
                 )}

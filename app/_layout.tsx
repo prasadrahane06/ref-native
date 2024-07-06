@@ -232,6 +232,21 @@ const InitialLayout = () => {
                     ),
                 }}
             />
+            <Stack.Screen
+                name="(home)/ratingsAndReview/AUIRatingsAndReview"
+                options={{
+                    headerShown: true,
+                    title: "",
+                    headerTitle: "Ratings and review",
+                    headerTitleStyle: { color: "black", fontFamily: "Gilroy" },
+                    headerTransparent: false,
+                    headerLeft: () => (
+                        <TouchableOpacity onPress={router.back}>
+                            <Ionicons name="arrow-back" size={34} color={"black"} />
+                        </TouchableOpacity>
+                    ),
+                }}
+            />
         </Stack>
     );
 };

@@ -24,6 +24,8 @@ interface CourseProps {
     cart?: boolean;
     courseId: any;
     style?: object;
+    numberOfLines?: number;
+    ellipsizeMode?: "head" | "middle" | "tail" | "clip";
 }
 
 const Course: React.FC<CourseProps> = ({
@@ -34,6 +36,8 @@ const Course: React.FC<CourseProps> = ({
     cart,
     courseId,
     style,
+    numberOfLines,
+    ellipsizeMode,
 }) => {
     const router = useRouter();
     const dispatch = useDispatch();
@@ -73,7 +77,13 @@ const Course: React.FC<CourseProps> = ({
             <AUIThemedView style={styles.layout}>
                 <AUIImage style={styles.courseImage} path={image} />
                 <AUIThemedView style={styles.courseItemContainer}>
-                    <Text style={styles.courseTitle}>{title}</Text>
+                    <Text
+                        style={styles.courseTitle}
+                        numberOfLines={numberOfLines}
+                        ellipsizeMode={ellipsizeMode}
+                    >
+                        {title}
+                    </Text>
                     <AUIThemedText style={{ fontSize: 12 }}>
                         <AUIThemedText style={styles.courseCaption}>
                             {t(GLOBAL_TRANSLATION_LABEL.starting_from)}:{" "}

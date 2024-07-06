@@ -15,4 +15,5 @@ export const API_URL = {
     cart: "cart",
     plan: "plan",
     purchaseCourse: "purchaseCourse",
+    schoolComparison : "schoolComparison"
 };

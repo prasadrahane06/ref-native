@@ -6,7 +6,7 @@ import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import { RootState } from "@/redux/store";
 import React, { useCallback, useEffect, useState } from "react";
-import { FlatList, ScrollView, StyleSheet } from "react-native";
+import { Dimensions, FlatList, ScrollView, StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { useFocusEffect } from "@react-navigation/native";
 import { setResponse } from "@/redux/apiSlice";
@@ -78,12 +78,13 @@ export default function TabFourScreen() {
     );
 }
 
+const { height: windowHeight } = Dimensions.get("window");
 const styles = StyleSheet.create({
     container: {
         padding: 20,
         flex: 1,
         backgroundColor: "#ffffff",
-        height: "100%",
+        height: windowHeight,
     },
     title: {
         fontSize: 20,

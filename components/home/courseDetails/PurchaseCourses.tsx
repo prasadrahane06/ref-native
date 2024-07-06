@@ -4,7 +4,7 @@ import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { Dimensions, FlatList, StyleSheet, View } from "react-native";
 
 interface PurchaseCoursesProps {
     title: string;
@@ -81,8 +81,9 @@ export default function PurchaseCoursesList({
     );
 }
 
+const { height: windowHeight } = Dimensions.get("window");
 const purchaseCoursesStyle = StyleSheet.create({
-    container: { padding: 20 },
+    container: { flex: 1, padding: 20, height: windowHeight },
     item: {
         // width: 270,
         // height: 120,
