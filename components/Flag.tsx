@@ -3,13 +3,13 @@ import { Image, StyleSheet, TouchableOpacity } from "react-native";
 import { AUIThemedText } from "./common/AUIThemedText";
 import { AUIThemedView } from "./common/AUIThemedView";
 
-const Flag = ({ countryName, countryCode, isSelected, onSelect }: any) => (
+const Flag = ({ countryName, countryCode, isSelected, onSelect  ,flag}: any) => (
     <TouchableOpacity onPress={onSelect}>
         <AUIThemedView style={styles.container}>
             <AUIThemedView style={[styles.flagImageContainer, isSelected && styles.selectedFlag]}>
                 <Image
                     source={{
-                        uri: `https://flagcdn.com/w320/${countryCode.toLowerCase()}.png`,
+                        uri: `${flag}`,
                     }}
                     style={[styles.flagImage]}
                 />
