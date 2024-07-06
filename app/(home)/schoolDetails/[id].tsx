@@ -1,4 +1,5 @@
 import useAxios from "@/app/services/axiosClient";
+import ChatBot from "@/components/chatbot/ChatBot";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
@@ -230,8 +231,41 @@ export default function SchoolDetails() {
         });
     }, [schoolsResponse, id]);
 
+    // chatbot
+    const [config, setConfig] = useState({});
+    const consumerId: string = "667276fdb4001407af7aa8a2";
+
+    // Bilal : 66683f4f7a4338e3c14339ab
+    // Agent : 667278245b62c3824a62e12f
+    const userId = "667278245b62c3824a62e12f";
+
+    // useEffect(() => {
+    //     get("https://example.com") // get bot configs
+    //         .then((res) => {
+    //             console.log(res);
+
+    //             // dummy configs
+    //             const botConfigs = {
+    //                 _id: "667276fdb4001407af7aa8a2",
+    //                 name: "School 1",
+    //                 owner: "School 1",
+    //                 config: {
+    //                     color: "green",
+    //                     language: "english",
+    //                 },
+    //             };
+
+    //             setConfig(botConfigs);
+    //         })
+    //         .catch((err) => {
+    //             console.log("Error in get /bot =>", err);
+    //         });
+    // }, []);
+
     return (
-        <AUIThemedView>
+        <AUIThemedView style={{ flex: 1 }}>
+            <ChatBot consumerId={consumerId} config={config} userId={userId} />
+
             <Animated.ScrollView ref={scrollRef} scrollEventThrottle={16}>
                 <AUIThemedView style={styles.container}>
                     <Animated.Image
