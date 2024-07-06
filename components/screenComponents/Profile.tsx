@@ -11,39 +11,36 @@ import {
 import { Asset } from "expo-asset";
 import { router, useNavigation } from "expo-router";
 import React from "react";
-import { Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Alert, Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
 import AUIImage from "../common/AUIImage";
 import { AUIThemedText } from "../common/AUIThemedText";
 import { AUIThemedView } from "../common/AUIThemedView";
+import { ApiSuccessToast } from "../common/AUIToast";
+import { RootState } from "@/redux/store";
+import { useSelector } from "react-redux";
 
 const array = [
     {
         id: 1,
         icon: <FontAwesome6 name="user-circle" size={24} color={APP_THEME.primary.first} />,
-        label: "Profile Information",
+        label: "Profile",
+        pathname: "/profile",
     },
     {
         id: 2,
         icon: <Feather name="help-circle" size={24} color={APP_THEME.primary.first} />,
         label: "Help",
+        pathname: "/help",
     },
     {
         id: 3,
         icon: <Fontisto name="wallet" size={24} color={APP_THEME.primary.first} />,
         label: "Transaction history",
-    },
-    {
-        id: 4,
-        icon: <Ionicons name="cart" size={24} color={APP_THEME.primary.first} />,
-        label: "My courses",
-    },
-    {
-        id: 5,
-        icon: <AntDesign name="poweroff" size={24} color={"red"} />,
-        label: "Delete Account",
+        pathname: "/transactions",
     },
 ];
 function Profile() {
+    const userProfileData = useSelector((state: RootState) => state.api.userProfileData);
     const navigation = useNavigation();
 
     return (
@@ -61,9 +58,6 @@ function Profile() {
                             color={APP_THEME.ternary.first}
                         />
                     </Pressable>
-                    <TouchableOpacity onPress={() => router.push({ pathname: "/profile" })}>
-                        <FontAwesome name="edit" size={30} color={APP_THEME.ternary.first} />
-                    </TouchableOpacity>
                 </View>
                 <View style={styles.avatarContainer}>
                     <AUIImage
@@ -75,21 +69,54 @@ function Profile() {
                         }
                         style={styles.avatar}
                     />
-                    <AUIThemedText style={styles.name}>Yazeed</AUIThemedText>
-                    <AUIThemedText style={styles.email}>yazeed@gmail.com</AUIThemedText>
+                    <AUIThemedText style={styles.name}>{userProfileData?.name}</AUIThemedText>
+                    <AUIThemedText style={styles.email}>{userProfileData?.email}</AUIThemedText>
                 </View>
             </AUIThemedView>
 
             <AUIThemedView style={styles.container}>
-                {array.map((item) => (
-                    <AUIThemedView style={styles.layout} key={item.id}>
+                {array.map((item: any) => (
+                    <TouchableOpacity
+                        style={styles.layout}
+                        key={item.id}
+                        onPress={() => router.push({ pathname: item.pathname })}
+                    >
                         <View style={styles.labelContainer}>
                             {item.icon}
                             <AUIThemedText>{item.label}</AUIThemedText>
                         </View>
                         <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
-                    </AUIThemedView>
+                    </TouchableOpacity>
                 ))}
+
+                {/* Delete Account */}
+                <TouchableOpacity
+                    style={styles.deleteLayout}
+                    onPress={() => {
+                        Alert.alert(
+                            "Delete Account",
+                            "Are you sure you want to delete your account? This action cannot be undone.",
+                            [
+                                { text: "Cancel" },
+                                {
+                                    text: "Confirm",
+                                    onPress: () => {
+                                        ApiSuccessToast("Account deleted successfully");
+                                        router.push({ pathname: "/login" });
+                                    },
+                                    style: "destructive",
+                                },
+                            ],
+                            { cancelable: false }
+                        );
+                    }}
+                >
+                    <View style={styles.deleteContainer}>
+                        <MaterialIcons name="delete" size={24} color="white" />
+                        <AUIThemedText style={{ color: "white" }}>Delete Account</AUIThemedText>
+                    </View>
+                    <MaterialIcons name="keyboard-arrow-right" size={24} color="white" />
+                </TouchableOpacity>
             </AUIThemedView>
         </AUIThemedView>
     );
@@ -127,9 +154,9 @@ const styles = StyleSheet.create({
     avatarContainer: {
         justifyContent: "center",
         alignItems: "center",
-        position: "absolute",
-        top: 100,
-        left: 130,
+        // position: "absolute",
+        // top: 100,
+        // left: 130,
     },
     name: {
         fontSize: 20,
@@ -140,10 +167,14 @@ const styles = StyleSheet.create({
         paddingTop: 5,
     },
     container: {
-        marginTop: 150,
+        marginTop: 130,
         padding: 10,
     },
     labelContainer: {
+        flexDirection: "row",
+        gap: 10,
+    },
+    deleteContainer: {
         flexDirection: "row",
         gap: 10,
     },
@@ -152,11 +183,17 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        elevation: 20,
-        shadowColor: APP_THEME.ternary.first,
-        shadowOffset: { width: -2, height: 4 },
-        shadowOpacity: 0.2,
-        shadowRadius: 3,
+        borderWidth: StyleSheet.hairlineWidth,
+        borderRadius: 10,
+        marginBottom: 10,
+    },
+    deleteLayout: {
+        padding: 20,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        backgroundColor: "#ff4a4a",
+        borderWidth: StyleSheet.hairlineWidth,
         borderRadius: 10,
         marginBottom: 10,
     },

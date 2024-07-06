@@ -190,12 +190,6 @@ const InitialLayout = () => {
                 }}
             />
             <Stack.Screen
-                name="(home)/courseDetails/[id]"
-                options={{
-                    headerTitle: "",
-                }}
-            />
-            <Stack.Screen
                 name="(home)/courseDetails/purchase/[id]"
                 options={{
                     headerTitle: "",
@@ -216,20 +210,19 @@ const InitialLayout = () => {
             <Stack.Screen
                 name="(home)/cityDetails/[id]"
                 options={{
-                    headerTransparent: true,
                     headerTitle: "",
-                    headerLeft: () => (
-                        <TouchableOpacity onPress={router.back}>
-                            <Ionicons name="arrow-back" size={34} color={"white"} />
-                        </TouchableOpacity>
-                    ),
-                    headerRight: () => (
-                        <TouchableOpacity onPress={router.back}>
-                            <AUIThemedView style={{ backgroundColor: "transparent" }}>
-                                <Ionicons name="notifications" size={24} color={"white"} />
-                            </AUIThemedView>
-                        </TouchableOpacity>
-                    ),
+                }}
+            />
+            <Stack.Screen
+                name="(home)/courseDetails/[id]"
+                options={{
+                    headerTitle: "",
+                }}
+            />
+            <Stack.Screen
+                name="profile"
+                options={{
+                    headerTitle: "My Profile",
                 }}
             />
             <Stack.Screen

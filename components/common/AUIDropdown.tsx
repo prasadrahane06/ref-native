@@ -1,7 +1,7 @@
 import { APP_THEME, TEXT_THEME, ThemeType } from "@/constants/Colors";
 import { RootState } from "@/redux/store";
 import React, { useState } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, TextStyle } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import { useSelector } from "react-redux";
 import AUIImage from "./AUIImage";
@@ -25,6 +25,8 @@ type Props = {
     listWithIcon?: boolean;
     iconField?: string;
     renderLeftIcon?: any;
+    labelStyles?: TextStyle
+    itemLabelStyle?: TextStyle
 };
 
 const DropdownComponent = ({
@@ -40,6 +42,8 @@ const DropdownComponent = ({
     position = "bottom",
     iconField = "iconUri",
     renderLeftIcon,
+    labelStyles,
+    itemLabelStyle
 }: Props) => {
     const [isFocus, setIsFocus] = useState(false);
     const theme = useSelector((state: RootState) => state.global.theme) as ThemeType;
@@ -53,7 +57,7 @@ const DropdownComponent = ({
                 <AUIThemedText
                     numberOfLines={1}
                     style={[
-                        styles.label,
+                        styles.label, labelStyles
                         // isFocus && { color: TEXT_THEME[theme].primary },
                     ]}
                 >
@@ -107,6 +111,7 @@ const DropdownComponent = ({
                             item={item}
                             labelField={labelField}
                             iconField={iconField}
+                            itemLabelStyle={itemLabelStyle}
                         />
                     ) : (
                         <RenderDefaultItem item={item} labelField={labelField} />
@@ -119,7 +124,7 @@ const DropdownComponent = ({
 
 export default DropdownComponent;
 
-const RenderItemWithIcon = ({ item, labelField, iconField }: any) => (
+const RenderItemWithIcon = ({ item, labelField, iconField, itemLabelStyle }: any) => (
     <AUIThemedView
         style={{
             flexDirection: "row",
@@ -139,7 +144,7 @@ const RenderItemWithIcon = ({ item, labelField, iconField }: any) => (
             }}
             path={item[iconField]}
         />
-        <AUIThemedText>{item[labelField]}</AUIThemedText>
+        <AUIThemedText style={[itemLabelStyle]}>{item[labelField]}</AUIThemedText>
     </AUIThemedView>
 );
 

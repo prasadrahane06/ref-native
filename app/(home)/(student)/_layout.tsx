@@ -21,75 +21,17 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { Tabs } from "expo-router";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Dimensions, Platform, TouchableOpacity, View } from "react-native";
+import { Dimensions, Linking, Platform, Text, TouchableOpacity, View } from "react-native";
 import "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 import useApiRequest from "@/customHooks/useApiRequest";
 import { API_URL } from "@/constants/urlProperties";
-
-const Tab = createMaterialTopTabNavigator();
+import MyCourses from "@/components/screenComponents/MyCourses";
+import TermsAndPolicy from "@/components/screenComponents/TermsAndPolicy";
 
 const ProfileScreen = () => <Profile />;
-const CoursesScreen = () => {
-    const { requestFn } = useApiRequest();
-    const MyCourse = useSelector((state: RootState) => state.api.myCourse || {});
-
-    console.log("myCourse", JSON.stringify(MyCourse));
-    const docs = MyCourse?.docs;
-    const bookMySeatData = docs ? docs.filter(item => item.type === 'bookYourSeat') : [];
-    const buyData = docs ? docs.filter(item => item.type === 'buy') : [];
-
-    useEffect(() => {
-        requestFn(API_URL.purchaseCourse, "myCourse");
-    }, []);
-
-    return (
-        <Tab.Navigator
-            screenOptions={{
-                tabBarActiveTintColor: APP_THEME.ternary.first,
-                tabBarScrollEnabled: true,
-                tabBarItemStyle: { width: Dimensions.get("window").width / 2.3 },
-                tabBarLabelStyle: {
-                    textAlign: "center",
-                    textTransform: "none",
-                    flexWrap: "nowrap",
-                    fontSize: 14,
-                    fontWeight: "bold",
-                },
-                tabBarIndicatorStyle: {
-                    backgroundColor: APP_THEME.primary.first,
-                    borderRadius: 5,
-                    height: 5,
-                },
-                tabBarStyle: {
-                    backgroundColor: "white",
-                    borderBottomWidth: 1,
-                    borderColor: APP_THEME.primary.first,
-                },
-            }}
-        >
-            <Tab.Screen
-                name="Purchase Courses"
-                component={() => <PurchaseCoursesList data={buyData} />}
-            />
-            <Tab.Screen
-                name="Seat Booking"
-                component={() => <PurchaseCoursesList data={bookMySeatData} seatBooking />}
-            />
-            <Tab.Screen
-                name="Completed Courses"
-                component={() => <PurchaseCoursesList data={[]} completedCourse />} 
-            />
-        </Tab.Navigator>
-    );
-};
-
-
-const TermsPolicyScreen = () => (
-    <AUIThemedView>
-        <AUIThemedText>Terms and Policy Screen</AUIThemedText>
-    </AUIThemedView>
-);
+const CoursesScreen = () => <MyCourses />;
+const TermsPolicyScreen = () => <TermsAndPolicy />;
 
 const Drawer = createDrawerNavigator();
 
@@ -164,7 +106,7 @@ export default function AUIDrawer() {
                 component={ProfileScreen}
                 options={{
                     headerShown: false,
-                    title: t(GLOBAL_TRANSLATION_LABEL.profile),
+                    title: t(GLOBAL_TRANSLATION_LABEL.account),
                     drawerIcon: ({ color }) => (
                         <FontAwesome6 name="user-circle" size={24} color={color} />
                     ),

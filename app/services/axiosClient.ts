@@ -3,7 +3,7 @@ import axios from "axios";
 import { RootState } from "@/redux/store";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 
-const baseURL = "https://beec-58-84-62-65.ngrok-free.app/dev/";
+const baseURL = "https://d93d-223-233-85-160.ngrok-free.app/dev/";
 
 const useAxios = () => {
     const token = useSelector((state: RootState) => state.global.token);
@@ -85,7 +85,16 @@ const useAxios = () => {
         }
     };
 
-    return { get, post, put, del };
+    const patch = async (url: string, payload: any) => {
+        try {
+            const response = await axiosClient.patch(url, payload);
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    return { get, post, put, del, patch };
 };
 
 export default useAxios;

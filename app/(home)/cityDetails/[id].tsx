@@ -1,29 +1,40 @@
+import useAxios from "@/app/services/axiosClient";
+import AUIImage from "@/components/common/AUIImage";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
+import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
+import PhotoGallaryList from "@/components/home/common/PhotoGallaryList";
 import SchoolList from "@/components/home/common/SchoolList";
 import SectionTitle from "@/components/home/common/SectionTitle";
 import { APP_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
-import { schoolsData } from "@/constants/dummy data/schoolsData";
-import { useLocalSearchParams } from "expo-router";
-import React, { useEffect, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, View } from "react-native";
-import AUIImage from "@/components/common/AUIImage";
-import PhotoGallaryList from "@/components/home/common/PhotoGallaryList";
-import { PhotoGallaryData } from "@/constants/dummy data/PhotoGallaryData";
-import { RootState } from "@/redux/store";
-import { MaterialIcons } from "@expo/vector-icons";
-import { useSelector } from "react-redux";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
+import { RootState } from "@/redux/store";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { useLocalSearchParams, useNavigation } from "expo-router";
+import { useEffect, useLayoutEffect, useState } from "react";
+import { StyleSheet, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import useAxios from "@/app/services/axiosClient";
-import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
-
+import Animated, {
+    interpolate,
+    useAnimatedRef,
+    useAnimatedStyle,
+    useScrollViewOffset,
+} from "react-native-reanimated";
+import { useSelector } from "react-redux";
 
 export default function CityDetails() {
     const { id } = useLocalSearchParams<{ id: string }>();
     console.log("country id =>", id);
+
+    if (!id) {
+        return (
+            <AUIThemedView style={{ justifyContent: "center", alignItems: "center" }}>
+                <AUIThemedText>City not found</AUIThemedText>
+            </AUIThemedView>
+        );
+    }
 
     const [readMore, setReadMore] = useState(false);
     const [country, setCountry] = useState<any>({});
@@ -31,11 +42,42 @@ export default function CityDetails() {
     const [aboutText, setAboutText] = useState("");
 
     const { requestFn } = useApiRequest();
-    
+
     const { post } = useAxios();
 
-    const schoolsResponse = useSelector((state: RootState) => state.api.school || {});
-    const individualCountry = useSelector((state: RootState) => state.api.individualCountry || {});
+    const schoolsResponse = useSelector((state: RootState) => state.api.school);
+    const individualCountry = useSelector((state: RootState) => state.api.individualCountry);
+
+    const scrollRef = useAnimatedRef<Animated.ScrollView>();
+    const navigation = useNavigation();
+    const scrollOffset = useScrollViewOffset(scrollRef);
+
+    const headerBackgroundAnimatedStyle = useAnimatedStyle(() => {
+        return {
+            opacity: interpolate(scrollOffset.value, [0, IMG_HEIGHT / 1.5], [0, 1]),
+        };
+    }, []);
+    const headerTitleAnimatedStyle = useAnimatedStyle(() => {
+        return {
+            opacity: interpolate(scrollOffset.value, [IMG_HEIGHT / 2, IMG_HEIGHT], [0, 1]),
+        };
+    }, []);
+    const imageAnimatedStyle = useAnimatedStyle(() => {
+        return {
+            transform: [
+                {
+                    translateY: interpolate(
+                        scrollOffset.value,
+                        [-IMG_HEIGHT, 0, IMG_HEIGHT, IMG_HEIGHT],
+                        [-IMG_HEIGHT / 2, 0, IMG_HEIGHT * 0.75]
+                    ),
+                },
+                {
+                    scale: interpolate(scrollOffset.value, [-IMG_HEIGHT, 0, IMG_HEIGHT], [2, 1, 1]),
+                },
+            ],
+        };
+    });
 
     useEffect(() => {
         requestFn(API_URL.country, "individualCountry", { id: id });
@@ -75,29 +117,68 @@ export default function CityDetails() {
             ? population.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
             : null;
 
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerTransparent: true,
+
+            headerBackground: () => (
+                <Animated.View style={[headerBackgroundAnimatedStyle, styles.screenHeader]} />
+            ),
+
+            headerLeft: () => (
+                <Ionicons
+                    name="arrow-back"
+                    size={30}
+                    color={"#fff"}
+                    style={{
+                        position: "absolute",
+                        left: -57,
+                        alignItems: "center",
+                        justifyContent: "center",
+                    }}
+                    onPress={() => navigation.goBack()}
+                />
+            ),
+            headerRight: () => (
+                <TouchableOpacity
+                    onPress={() => {
+                        handleFavoriteClick(country._id, "country");
+                    }}
+                >
+                    <AUIThemedView
+                        style={{
+                            backgroundColor: "rgba(91, 216, 148, 0.3)",
+                            borderRadius: 50,
+                            padding: 10,
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }}
+                    >
+                        <Ionicons name="heart" size={24} color={APP_THEME.secondary.first} />
+                    </AUIThemedView>
+                </TouchableOpacity>
+            ),
+
+            headerTitle: () => (
+                <Animated.Text style={[headerTitleAnimatedStyle, styles.screenTitle]}>
+                    {country?.name?.ar}
+                </Animated.Text>
+            ),
+        });
+    }, [id, country]);
+
     return (
         <AUIThemedView>
-            <ScrollView>
+            <Animated.ScrollView ref={scrollRef} scrollEventThrottle={16}>
                 <AUIThemedView style={styles.container}>
                     <AUIThemedView>
-                        <AUIImage path={country?.images?.[0]} style={styles.image} resizeMode="cover" />
-                        <AUIThemedView style={styles.favIconContainer}
-                    
-                        >
-                        
-                        <TouchableOpacity
-                        onPress={()=>{
-                            handleFavoriteClick(country._id,"country")
-                        }}
-                        >
-                        <MaterialIcons
-                                name="favorite"
-                                size={18}
-                                color={APP_THEME.secondary.first}
-                                style={styles.icon}
-                            />
-                        </TouchableOpacity>
-                        </AUIThemedView>
+                        <Animated.Image
+                            source={{
+                                uri: country?.images?.[0],
+                            }}
+                            style={[styles.image, imageAnimatedStyle]}
+                            resizeMode="cover"
+                        />
                     </AUIThemedView>
 
                     <AUIThemedView style={styles.infoContainer}>
@@ -172,12 +253,13 @@ export default function CityDetails() {
                                 About {country?.name?.ar}
                             </AUIThemedText>
                             <AUIThemedText style={styles.aboutDescription}>
-                               {readMore ?  truncatedText : aboutText}
-                               <AUIThemedText
-                                onPress={() => setReadMore(!readMore)}
-                               >
-                                   {readMore ? "Read Less" : "Read More"}
-                               </AUIThemedText>
+                                {readMore ? truncatedText : aboutText}
+                                <AUIThemedText
+                                    onPress={() => setReadMore(!readMore)}
+                                    style={styles.readMoreText}
+                                >
+                                    {readMore ? "Read Less" : "Read More"}
+                                </AUIThemedText>
                             </AUIThemedText>
                         </AUIThemedView>
                     </AUIThemedView>
@@ -196,15 +278,27 @@ export default function CityDetails() {
                         <SchoolList data={schoolsResponse.docs} />
                     </AUIThemedView>
                 </AUIThemedView>
-            </ScrollView>
+            </Animated.ScrollView>
         </AUIThemedView>
     );
 }
 
+const IMG_HEIGHT = 200;
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: APP_THEME.background },
+    screenHeader: {
+        backgroundColor: APP_THEME.primary.first,
+        height: 100,
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderColor: APP_THEME.gray,
+    },
+    screenTitle: {
+        fontSize: 18,
+        fontWeight: "bold",
+        color: "#fff",
+    },
     image: {
-        height: 200,
+        height: IMG_HEIGHT,
         width: "auto",
     },
     favIconContainer: {
@@ -299,7 +393,7 @@ const styles = StyleSheet.create({
         color: "green",
         fontSize: 14,
         textDecorationLine: "underline",
-        lineHeight: 7,
+        lineHeight: 20,
         paddingTop: 10,
     },
     photoGalleryContainer: {

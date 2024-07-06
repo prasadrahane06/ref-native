@@ -188,6 +188,12 @@ export default function SchoolDetails() {
                     name="arrow-back"
                     size={30}
                     color={"#fff"}
+                    style={{
+                        position: "absolute",
+                        left: -57,
+                        alignItems: "center",
+                        justifyContent: "center",
+                    }}
                     onPress={() => navigation.goBack()}
                 />
             ),
@@ -218,11 +224,11 @@ export default function SchoolDetails() {
 
             headerTitle: () => (
                 <Animated.Text style={[headerTitleAnimatedStyle, styles.screenTitle]}>
-                    {schoolsResponse?.name || "The Manchester School"}
+                    {schoolsResponse?.name}
                 </Animated.Text>
             ),
         });
-    }, []);
+    }, [schoolsResponse, id]);
 
     return (
         <AUIThemedView>
@@ -253,7 +259,7 @@ export default function SchoolDetails() {
                             ]}
                         >
                             <AUIThemedText style={styles.name}>
-                                {schoolsResponse?.name || "The Manchester School"}
+                                {schoolsResponse?.name}
                             </AUIThemedText>
                             <AUIThemedText style={styles.viewsText}>150 Views</AUIThemedText>
                         </AUIThemedView>

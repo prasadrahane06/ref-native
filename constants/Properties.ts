@@ -63,7 +63,7 @@ export const GLOBAL_TRANSLATION_LABEL = {
     favourite: "favourite",
     compare: "compare",
     cart: "cart",
-    profile: "profile",
+    account: "Account",
     courses: "courses",
     welcome_back: "welcome_back",
     termsPolicy: "termsPolicy",
