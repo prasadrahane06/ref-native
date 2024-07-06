@@ -644,19 +644,33 @@ export default function PlanComponent({
             </AUIThemedView>
 
             <AUIThemedView style={styles.btnContainer}>
-                <AUIThemedView style={styles.bookContainer}>
+                <Pressable style={styles.bookContainer}
+                      onPress={() =>
+                        router.push({
+                            pathname: `(home)/courseDetails/purchase/${JSON.stringify({
+                                type : "bookYourSeat",
+                                planId : planId,
+                                courseId : courseId
+                            })}`
+                        })
+                    }
+                >
                     <AntDesign name="calendar" size={24} color="black" />
                     <AUIThemedText style={styles.blackBoldText}>
                         {t(GLOBAL_TRANSLATION_LABEL.bookYourSeat)}
                     </AUIThemedText>
-                </AUIThemedView>
+                </Pressable>
 
                 {/* {isSeatBooked && ( */}
                 <Pressable
                     style={styles.buyContainer}
                     onPress={() =>
                         router.push({
-                            pathname: `(home)/courseDetails/purchase`,
+                            pathname: `(home)/courseDetails/purchase/${JSON.stringify({
+                                type : "buy",
+                                planId : planId,
+                                courseId : courseId
+                            })}`
                         })
                     }
                 >

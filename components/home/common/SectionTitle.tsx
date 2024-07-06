@@ -5,7 +5,7 @@ import { RootState } from "@/redux/store";
 import { Link } from "expo-router";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { I18nManager, StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
+import { I18nManager, StyleSheet, TextStyle, TouchableOpacity, ViewStyle } from "react-native";
 import { useSelector } from "react-redux";
 
 interface SectionTitleProps {
@@ -13,7 +13,7 @@ interface SectionTitleProps {
     viewAll?: string;
     onViewAllClick?: () => void | boolean;
     style?: ViewStyle;
-    titleStyle?: ViewStyle;
+    titleStyle?: TextStyle;
 }
 
 const SectionTitle: React.FC<SectionTitleProps> = ({

@@ -58,7 +58,7 @@ const TabTwoScreen: React.FC = () => {
     };
 
     const getfavorite = useSelector((state: RootState) => state.api.favorite || {});
-    const fav = getfavorite?.docs?.[0] || { courses: [], clients: [] , country : [] }; // Providing default values
+    const fav = getfavorite?.docs?.[0] || { courses: [], clients: [], country: [] }; // Providing default values
 
     useEffect(() => {
         console.log("getfavorite", JSON.stringify(fav));
@@ -104,6 +104,7 @@ const TabTwoScreen: React.FC = () => {
             <Destination
                 title={item.name}
                 image={item.images[0]}
+                id={item._id}
                 favorite={item.favorite}
                 countryWidth={160}
                 countryHeight={145}

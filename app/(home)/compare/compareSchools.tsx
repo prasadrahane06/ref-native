@@ -3,15 +3,35 @@ import AUIImage from "@/components/common/AUIImage";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { APP_THEME } from "@/constants/Colors";
+import { RootState } from "@/redux/store";
 import { FontAwesome, FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
 import { router } from "expo-router";
 import { useState } from "react";
-import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Platform, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { useSelector } from "react-redux";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const CompareSchools: React.FC = () => {
-    const [date, setDate] = useState<Date>(new Date());
-    const [show, setShow] = useState<boolean>(false);
+    const [date1, setDate1] = useState<Date>(new Date());
+    const [show1, setShow1] = useState<boolean>(false);
+    const [date2, setDate2] = useState<Date>(new Date());
+    const [show2, setShow2] = useState<boolean>(false);
+
+    const compareSchool1 = useSelector((state: RootState) => state.api.compareSchool1);
+    const compareSchool2 = useSelector((state: RootState) => state.api.compareSchool2);
+
+    const onChange1 = (event: any, selectedDate: Date | undefined) => {
+        const currentDate = selectedDate || date1;
+        setShow1(Platform.OS === "ios");
+        setDate1(currentDate);
+    };
+
+    const onChange2 = (event: any, selectedDate: Date | undefined) => {
+        const currentDate = selectedDate || date2;
+        setShow2(Platform.OS === "ios");
+        setDate2(currentDate);
+    };
 
     return (
         <ScrollView>
@@ -22,6 +42,7 @@ const CompareSchools: React.FC = () => {
                             <AUIImage
                                 style={styles.image}
                                 path={
+                                    compareSchool1?.banner ||
                                     Asset.fromModule(
                                         require("@/assets/images/compareScreen/compareSchoolsPage/Rectangle 155.png")
                                     ).uri
@@ -31,7 +52,7 @@ const CompareSchools: React.FC = () => {
                         </View>
                         <View style={styles.textContainer}>
                             <AUIThemedText style={styles.cardTitle}>
-                                The Manchester Schools
+                                {compareSchool1.name}
                             </AUIThemedText>
                             <AUIThemedText style={styles.cardSubtitle}>
                                 East, Academy The East, 60 Grey Mare Ln, ...
@@ -41,17 +62,43 @@ const CompareSchools: React.FC = () => {
               <Ionicons name="close" size={20} color="#5BD894" />
             </View> */}
                     </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.card}
-                        onPress={() =>
-                            router.push({
-                                pathname: `(home)/compare/searchSchool`,
-                            })
-                        }
-                    >
-                        <Ionicons name="add-circle-outline" size={50} color="#5BD894" />
-                        <AUIThemedText style={styles.cardText}>Add School</AUIThemedText>
-                    </TouchableOpacity>
+
+                    {compareSchool2 ? (
+                        <TouchableOpacity style={styles.customCard}>
+                            <View style={styles.imageContainer}>
+                                <AUIImage
+                                    style={styles.image}
+                                    path={
+                                        compareSchool2?.banner ||
+                                        Asset.fromModule(
+                                            require("@/assets/images/compareScreen/compareSchoolsPage/Rectangle 155.png")
+                                        ).uri
+                                    }
+                                    resizeMode="cover"
+                                />
+                            </View>
+                            <View style={styles.textContainer}>
+                                <AUIThemedText style={styles.cardTitle}>
+                                    {compareSchool2?.name}
+                                </AUIThemedText>
+                                <AUIThemedText style={styles.cardSubtitle}>
+                                    "Academy The East, behind the blue Care In, ..."
+                                </AUIThemedText>
+                            </View>
+                        </TouchableOpacity>
+                    ) : (
+                        <TouchableOpacity
+                            style={styles.card}
+                            onPress={() =>
+                                router.push({
+                                    pathname: `(home)/compare/searchSchool`,
+                                })
+                            }
+                        >
+                            <Ionicons name="add-circle-outline" size={50} color="#5BD894" />
+                            <AUIThemedText style={styles.cardText}>Add School</AUIThemedText>
+                        </TouchableOpacity>
+                    )}
                 </AUIThemedView>
 
                 <AUIThemedView style={styles.accordionSection}>
@@ -67,23 +114,33 @@ const CompareSchools: React.FC = () => {
                             <AUIThemedView style={styles.row}>
                                 <AUIThemedText style={styles.value}>Ownership</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
-                                    <AUIThemedText style={styles.label}>Private</AUIThemedText>
-                                    <AUIThemedText style={styles.label2}>Private</AUIThemedText>
+                                    <AUIThemedText style={styles.label}>
+                                        {compareSchool1?.ownership || "--"}
+                                    </AUIThemedText>
+                                    <AUIThemedText style={styles.label2}>
+                                        {compareSchool2?.ownership || "--"}
+                                    </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
                             <AUIThemedView style={styles.row}>
                                 <AUIThemedText style={styles.value}>School Time</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
-                                    <AUIThemedText style={styles.label}>Day School</AUIThemedText>
-                                    <AUIThemedText style={styles.label2}>Day School</AUIThemedText>
+                                    <AUIThemedText style={styles.label}>
+                                        {compareSchool1?.schoolTime || "--"}
+                                    </AUIThemedText>
+                                    <AUIThemedText style={styles.label2}>
+                                        {compareSchool2?.schoolTime || "--"}
+                                    </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
                             <AUIThemedView style={styles.row2}>
                                 <AUIThemedText style={styles.value}>Co-Ed status</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
-                                    <AUIThemedText style={styles.label}>Co-Education</AUIThemedText>
+                                    <AUIThemedText style={styles.label}>
+                                        {compareSchool1?.coEdStatus || "--"}
+                                    </AUIThemedText>
                                     <AUIThemedText style={styles.label2}>
-                                        Co-Education
+                                        {compareSchool2?.coEdStatus || "--"}
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
@@ -105,10 +162,10 @@ const CompareSchools: React.FC = () => {
                                 </AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
                                     <AUIThemedText style={styles.label}>
-                                        English, French
+                                        {compareSchool1?.language || "--"}
                                     </AUIThemedText>
                                     <AUIThemedText style={styles.label2}>
-                                        English, French and Dutch
+                                        {compareSchool2?.language || "--"}
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
@@ -120,9 +177,11 @@ const CompareSchools: React.FC = () => {
                                 </AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
                                     <AUIThemedText style={styles.label}>
-                                        April to march
+                                        {compareSchool1?.acadamicSession || "--"}
                                     </AUIThemedText>
-                                    <AUIThemedText style={styles.label2}>June to May</AUIThemedText>
+                                    <AUIThemedText style={styles.label2}>
+                                        {compareSchool1?.acadamicSession || "--"}
+                                    </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
                         </AUIThemedView>
@@ -168,13 +227,17 @@ const CompareSchools: React.FC = () => {
                                 </AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
                                     <AUIThemedView style={styles.feeLabelContainer}>
-                                        <AUIThemedText style={styles.label}>£ 500</AUIThemedText>
+                                        <AUIThemedText style={styles.label}>
+                                            {compareSchool1?.totalCostOfNewAdmission || "--"}
+                                        </AUIThemedText>
                                         <AUIThemedText style={styles.feeLabelLabelText}>
                                             Check Calculation
                                         </AUIThemedText>
                                     </AUIThemedView>
                                     <AUIThemedView style={styles.feeLabelContaine2}>
-                                        <AUIThemedText style={styles.label}>£ 700</AUIThemedText>
+                                        <AUIThemedText style={styles.label}>
+                                            {compareSchool2?.totalCostOfNewAdmission || "--"}
+                                        </AUIThemedText>
                                         <AUIThemedText style={styles.feeLabelLabelText2}>
                                             Check Calculation
                                         </AUIThemedText>
@@ -188,13 +251,17 @@ const CompareSchools: React.FC = () => {
                                 </AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
                                     <AUIThemedView style={styles.feeLabelContainer}>
-                                        <AUIThemedText style={styles.label}>£ 500</AUIThemedText>
+                                        <AUIThemedText style={styles.label}>
+                                            {compareSchool1?.totalMonthlyCost || "--"}
+                                        </AUIThemedText>
                                         <AUIThemedText style={styles.feeLabelLabelText}>
                                             Check Calculation
                                         </AUIThemedText>
                                     </AUIThemedView>
                                     <AUIThemedView style={styles.feeLabelContaine2}>
-                                        <AUIThemedText style={styles.label}>£ 700</AUIThemedText>
+                                        <AUIThemedText style={styles.label}>
+                                            {compareSchool2?.totalMonthlyCost || "--"}
+                                        </AUIThemedText>
                                         <AUIThemedText style={styles.feeLabelLabelText2}>
                                             Check Calculation
                                         </AUIThemedText>
@@ -216,32 +283,48 @@ const CompareSchools: React.FC = () => {
                             <AUIThemedView style={styles.row}>
                                 <AUIThemedText style={styles.value}>Campus type</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
-                                    <AUIThemedText style={styles.label}>Urban</AUIThemedText>
-                                    <AUIThemedText style={styles.label2}>Urban</AUIThemedText>
+                                    <AUIThemedText style={styles.label}>
+                                        {compareSchool1?.campusType || "--"}
+                                    </AUIThemedText>
+                                    <AUIThemedText style={styles.label2}>
+                                        {compareSchool1?.campusType || "--"}
+                                    </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
 
                             <AUIThemedView style={styles.row}>
                                 <AUIThemedText style={styles.value}>Total facilities</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
-                                    <AUIThemedText style={styles.label}>3</AUIThemedText>
-                                    <AUIThemedText style={styles.label2}>5</AUIThemedText>
+                                    <AUIThemedText style={styles.label}>
+                                        {compareSchool1?.totalFacilities || "--"}
+                                    </AUIThemedText>
+                                    <AUIThemedText style={styles.label2}>
+                                        {compareSchool1?.totalFacilities || "--"}
+                                    </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
 
                             <AUIThemedView style={styles.row}>
                                 <AUIThemedText style={styles.value}>Total Faculty</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
-                                    <AUIThemedText style={styles.label}>4</AUIThemedText>
-                                    <AUIThemedText style={styles.label2}>6</AUIThemedText>
+                                    <AUIThemedText style={styles.label}>
+                                        {compareSchool1?.totalFaculty || "--"}
+                                    </AUIThemedText>
+                                    <AUIThemedText style={styles.label2}>
+                                        {compareSchool1?.totalFaculty || "--"}
+                                    </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
 
                             <AUIThemedView style={styles.row}>
                                 <AUIThemedText style={styles.value}>Number of Seats</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
-                                    <AUIThemedText style={styles.label}>40</AUIThemedText>
-                                    <AUIThemedText style={styles.label2}>70</AUIThemedText>
+                                    <AUIThemedText style={styles.label}>
+                                        {compareSchool1?.numberOfSeats || "--"}
+                                    </AUIThemedText>
+                                    <AUIThemedText style={styles.label2}>
+                                        {compareSchool1?.numberOfSeats || "--"}
+                                    </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
 
@@ -250,8 +333,12 @@ const CompareSchools: React.FC = () => {
                                     Form availability
                                 </AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
-                                    <AUIThemedText style={styles.label}>Online</AUIThemedText>
-                                    <AUIThemedText style={styles.label2}>Online</AUIThemedText>
+                                    <AUIThemedText style={styles.label}>
+                                        {compareSchool1?.formAvailability || "--"}
+                                    </AUIThemedText>
+                                    <AUIThemedText style={styles.label2}>
+                                        {compareSchool1?.formAvailability || "--"}
+                                    </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
                         </AUIThemedView>
@@ -272,47 +359,75 @@ const CompareSchools: React.FC = () => {
                                 </AUIThemedText>
                                 <AUIThemedView style={styles.datePickerRowContainer}>
                                     <TouchableOpacity
-                                        onPress={() => setShow(true)}
+                                        onPress={() => setShow1(true)}
                                         style={styles.datePickerContainer}
                                     >
                                         <AUIThemedText style={styles.dateText}>
-                                            {date.toLocaleDateString()}
+                                            {date1.toLocaleDateString()}
                                         </AUIThemedText>
                                         <FontAwesome name="calendar" style={styles.calenderIcon} />
                                     </TouchableOpacity>
                                     <TouchableOpacity
-                                        onPress={() => setShow(true)}
+                                        onPress={() => setShow2(true)}
                                         style={styles.datePickerContainer}
                                     >
                                         <AUIThemedText style={styles.dateText}>
-                                            {date.toLocaleDateString()}
+                                            {date2.toLocaleDateString()}
                                         </AUIThemedText>
                                         <FontAwesome name="calendar" style={styles.calenderIcon} />
                                     </TouchableOpacity>
                                 </AUIThemedView>
+                                {show1 && (
+                                    <DateTimePicker
+                                        value={date1}
+                                        mode="date"
+                                        display="default"
+                                        onChange={onChange1}
+                                    />
+                                )}
+                                {show2 && (
+                                    <DateTimePicker
+                                        value={date2}
+                                        mode="date"
+                                        display="default"
+                                        onChange={onChange2}
+                                    />
+                                )}
                                 <AUIThemedText style={styles.label2}></AUIThemedText>
                             </AUIThemedView>
                             <AUIThemedView style={styles.row}>
                                 <AUIThemedText style={styles.value}>Age eligibility</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
-                                    <AUIThemedText style={styles.label}>12 to 40</AUIThemedText>
-                                    <AUIThemedText style={styles.label2}>12 to 40+</AUIThemedText>
+                                    <AUIThemedText style={styles.label}>
+                                        {compareSchool1?.ageEligibility || "--"}
+                                    </AUIThemedText>
+                                    <AUIThemedText style={styles.label2}>
+                                        {compareSchool1?.ageEligibility || "--"}
+                                    </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
 
                             <AUIThemedView style={styles.row}>
                                 <AUIThemedText style={styles.value}>Total Faculty</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
-                                    <AUIThemedText style={styles.label}>4</AUIThemedText>
-                                    <AUIThemedText style={styles.label2}>6</AUIThemedText>
+                                    <AUIThemedText style={styles.label}>
+                                        {compareSchool1?.totalFaculty || "--"}
+                                    </AUIThemedText>
+                                    <AUIThemedText style={styles.label2}>
+                                        {compareSchool1?.totalFaculty || "--"}
+                                    </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
 
                             <AUIThemedView style={styles.row2}>
                                 <AUIThemedText style={styles.value}>Number of seats</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
-                                    <AUIThemedText style={styles.label}>40</AUIThemedText>
-                                    <AUIThemedText style={styles.label2}>70</AUIThemedText>
+                                    <AUIThemedText style={styles.label}>
+                                        {compareSchool1?.numberOfSeats || "--"}
+                                    </AUIThemedText>
+                                    <AUIThemedText style={styles.label2}>
+                                        {compareSchool1?.numberOfSeats || "--"}
+                                    </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
                         </AUIThemedView>

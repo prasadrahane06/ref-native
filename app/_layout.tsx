@@ -196,7 +196,7 @@ const InitialLayout = () => {
                 }}
             />
             <Stack.Screen
-                name="(home)/courseDetails/purchase/index"
+                name="(home)/courseDetails/purchase/[id]"
                 options={{
                     headerTitle: "",
                     headerShown: true,

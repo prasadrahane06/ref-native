@@ -13,5 +13,6 @@ export const API_URL = {
     user: "user",
     country: "country",
     cart: "cart",
-    country : "country",
+    plan: "plan",
+    purchaseCourse: "purchaseCourse",
 };

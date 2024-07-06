@@ -2,17 +2,22 @@ import AUIAccordion from "@/components/common/AUIAccordion";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { APP_THEME } from "@/constants/Colors";
+import { RootState } from "@/redux/store";
 import { Asset } from "expo-asset";
 import React from "react";
 import { StyleSheet } from "react-native";
+import { useSelector } from "react-redux";
 
 export default function CourseDetailsComponent({ plan }: any) {
     console.log("plan", plan);
+    const individualCourse = useSelector((state: RootState) => state.api.individualCourse);
+
+    console.log("individualCourse =>", individualCourse?.docs);
 
     return (
         <AUIThemedView style={styles.container}>
             <AUIThemedView style={styles.accordionSection}>
-                <AUIAccordion title="Introduction to french">
+                <AUIAccordion title={`Introduction to ${individualCourse?.docs[0].language}`}>
                     <AUIThemedView>
                         <AUIThemedView style={styles.row}>
                             <AUIThemedText style={styles.value}>Ownership</AUIThemedText>
@@ -24,7 +29,9 @@ export default function CourseDetailsComponent({ plan }: any) {
                     </AUIThemedView>
                 </AUIAccordion>
 
-                <AUIAccordion title="Culture Introduction to - French">
+                <AUIAccordion
+                    title={`Culture Introduction to - ${individualCourse?.docs[0].language}`}
+                >
                     <AUIThemedView>
                         <AUIThemedView style={styles.row}>
                             <AUIThemedText style={styles.value}>Ownership</AUIThemedText>
@@ -36,7 +43,7 @@ export default function CourseDetailsComponent({ plan }: any) {
                     </AUIThemedView>
                 </AUIAccordion>
 
-                <AUIAccordion title="Intermediate French 1">
+                <AUIAccordion title={`Intermediate ${individualCourse?.docs[0].language} 1`}>
                     <AUIThemedView>
                         <AUIThemedView style={styles.row}>
                             <AUIThemedText style={styles.value}>Ownership</AUIThemedText>
@@ -48,7 +55,7 @@ export default function CourseDetailsComponent({ plan }: any) {
                     </AUIThemedView>
                 </AUIAccordion>
 
-                <AUIAccordion title="Intermediate French 2">
+                <AUIAccordion title={`Intermediate ${individualCourse?.docs[0].language} 2`}>
                     <AUIThemedView>
                         <AUIThemedView style={styles.row}>
                             <AUIThemedText style={styles.value}>Ownership</AUIThemedText>
@@ -60,7 +67,7 @@ export default function CourseDetailsComponent({ plan }: any) {
                     </AUIThemedView>
                 </AUIAccordion>
 
-                <AUIAccordion title="Medium French 3">
+                <AUIAccordion title={`Medium ${individualCourse?.docs[0].language} 3`}>
                     <AUIThemedView>
                         <AUIThemedView style={styles.row}>
                             <AUIThemedText style={styles.value}>Ownership</AUIThemedText>
@@ -72,7 +79,7 @@ export default function CourseDetailsComponent({ plan }: any) {
                     </AUIThemedView>
                 </AUIAccordion>
 
-                <AUIAccordion title="Advance French 4">
+                <AUIAccordion title={`Advance ${individualCourse?.docs[0].language} 4`}>
                     <AUIThemedView>
                         <AUIThemedView style={styles.row}>
                             <AUIThemedText style={styles.value}>Ownership</AUIThemedText>
@@ -89,18 +96,18 @@ export default function CourseDetailsComponent({ plan }: any) {
                 <AUIThemedText style={styles.courseDetailsText}>Course Fees</AUIThemedText>
                 <AUIThemedView style={styles.detailsHeader}>
                     <AUIThemedText style={styles.courseLabel}>Total Fee</AUIThemedText>
-                    <AUIThemedText style={styles.primaryText}>{plan.duration}</AUIThemedText>
+                    <AUIThemedText style={styles.primaryText}>{plan.price}</AUIThemedText>
                 </AUIThemedView>
 
                 <AUIThemedView style={styles.detailsHeader}>
                     <AUIThemedText style={styles.courseLabel}>Book your seet</AUIThemedText>
-                    <AUIThemedText style={styles.primaryText}>{plan.duration}</AUIThemedText>
+                    <AUIThemedText style={styles.primaryText}>{plan.bookYourSeat}</AUIThemedText>
                 </AUIThemedView>
 
-                <AUIThemedView style={styles.detailsHeader}>
+                {/* <AUIThemedView style={styles.detailsHeader}>
                     <AUIThemedText style={styles.courseLabel}>Rating</AUIThemedText>
                     <AUIThemedText style={styles.primaryText}>{plan.duration}</AUIThemedText>
-                </AUIThemedView>
+                </AUIThemedView> */}
             </AUIThemedView>
 
             {/* <AUIThemedView style={styles.borderBottom} /> */}

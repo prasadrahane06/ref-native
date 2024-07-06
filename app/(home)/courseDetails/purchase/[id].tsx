@@ -1,68 +1,95 @@
-import DropdownComponent from "@/components/common/AUIDropdown";
+import React, { useEffect, useState } from "react";
+import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import { useSelector } from "react-redux";
+import { useLocalSearchParams } from "expo-router";
+import { t } from "i18next";
+import { RouteProp, useRoute } from "@react-navigation/native";
+import { Asset } from "expo-asset";
+import { RootState } from "@/redux/store";
+import useApiRequest from "@/customHooks/useApiRequest";
+import { API_URL } from "@/constants/urlProperties";
+import { APP_THEME } from "@/constants/Colors";
+import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import AUIImage from "@/components/common/AUIImage";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { APP_THEME } from "@/constants/Colors";
-import { GLOBAL_TEXT, GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
-import { Asset } from "expo-asset";
-import { t } from "i18next";
-import React, { useState } from "react";
-import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import useAxios from "@/app/services/axiosClient";
+import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
+
+type RouteParams = {
+    courseDetailsPurchase: {
+        courseId: string;
+        planId: string;
+    };
+};
 
 export default function PurchaseScreen() {
-    const plans = [
-        {
-            label: "Plan 1",
-            value: "Plan 1",
-            duration: "5 Week",
-            fee: "£5 00",
-            taxes: "£ 5",
-            total: "£ 505",
-        },
-        {
-            label: "Plan 2",
-            value: "Plan 2",
-            duration: "10 Week",
-            fee: "£ 1000",
-            taxes: "£ 10",
-            total: "£ 1010",
-        },
-        {
-            label: "Plan 3",
-            value: "Plan 3",
-            duration: "15 Week",
-            fee: "£ 1500",
-            taxes: "£ 15",
-            total: "£ 1515",
-        },
-    ];
+    const { id } = useLocalSearchParams<{ id: any }>();
+    const { requestFn } = useApiRequest();
+    const {post} = useAxios();
 
-    const [selectedPlan, setSelectedPlan] = useState(plans[0]);
+    const newid = JSON.parse(id);
+
+    const individualPlan = useSelector((state: RootState) => state.api.individualPlan);
+
     const [paymentMode, setPaymentMode] = useState("");
+    const [planValue, setPlanValue] = useState({
+        planId: newid.planId,
+        price: newid.type === "buy" ? individualPlan?.price : individualPlan?.bookYourSeat,
+        paymentMode: paymentMode,
+        duration: individualPlan?.duration,
+        tax: 0,
+        total: 0,
+    });
+
+    useEffect(() => {
+        requestFn(API_URL.plan, "individualPlan", { id: newid.planId });
+    }, []);
+
+    useEffect(() => {
+        if (individualPlan) {
+            const price = newid.type === "buy" ? individualPlan.price : individualPlan.bookYourSeat;
+            const tax = price * 0.18;
+            const total = price + tax;
+
+            setPlanValue({
+                planId: newid.planId,
+                price: price,
+                paymentMode: paymentMode,
+                duration: individualPlan.duration,
+                tax: tax,
+                total: total,
+            });
+        }
+    }, [individualPlan, paymentMode]);
+
+    const handlePayment = () => {
+        post(API_URL.purchaseCourse, { course: newid.courseId, type: newid.type , plan : newid.planId })
+        .then((res: any) => {
+            ApiSuccessToast(res.message);
+            console.log("response ", res.data);
+        })
+        .catch((e: any) => {
+            ApiErrorToast(e.response?.data?.message);
+            console.log(e);
+        });
+
+    }
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <AUIThemedText style={styles.header}>
-                {t(GLOBAL_TRANSLATION_LABEL.yourSelectedPlanIs)}
+                {t(GLOBAL_TRANSLATION_LABEL.yourSelectedPlanIs)} {individualPlan?.name}
             </AUIThemedText>
 
             <AUIThemedView style={styles.planContainer}>
-                <DropdownComponent
-                    label=""
-                    list={plans}
-                    value={selectedPlan}
-                    setValue={setSelectedPlan}
-                    listWithIcon
-                    style={{ paddingVertical: 10 }}
-                />
-
                 <AUIThemedView style={{ marginHorizontal: 15 }}>
                     <AUIThemedView style={styles.planDetails}>
                         <AUIThemedText style={styles.planDetailText}>
                             {t(GLOBAL_TRANSLATION_LABEL.duration)}
                         </AUIThemedText>
                         <AUIThemedText style={styles.planDetailValue}>
-                            {selectedPlan.duration}
+                            {planValue.duration}
                         </AUIThemedText>
                     </AUIThemedView>
 
@@ -71,7 +98,7 @@ export default function PurchaseScreen() {
                             {t(GLOBAL_TRANSLATION_LABEL.fee)}
                         </AUIThemedText>
                         <AUIThemedText style={styles.planDetailValue}>
-                            {selectedPlan.fee}
+                            ${planValue.price}
                         </AUIThemedText>
                     </AUIThemedView>
 
@@ -80,7 +107,7 @@ export default function PurchaseScreen() {
                             {t(GLOBAL_TRANSLATION_LABEL.taxes)}
                         </AUIThemedText>
                         <AUIThemedText style={styles.planDetailValue}>
-                            {selectedPlan.taxes}
+                            ${planValue.tax.toFixed(2)}
                         </AUIThemedText>
                     </AUIThemedView>
                 </AUIThemedView>
@@ -93,7 +120,7 @@ export default function PurchaseScreen() {
                             {t(GLOBAL_TRANSLATION_LABEL.total)}
                         </AUIThemedText>
                         <AUIThemedText style={styles.totalValue}>
-                            {selectedPlan.total}
+                            ${planValue.total.toFixed(2)}
                         </AUIThemedText>
                     </AUIThemedView>
                 </AUIThemedView>
@@ -153,7 +180,9 @@ export default function PurchaseScreen() {
                 </TouchableOpacity>
             </AUIThemedView>
 
-            <TouchableOpacity style={styles.confirmButton}>
+            <TouchableOpacity style={styles.confirmButton}
+            onPress={() => handlePayment()}
+            >
                 <AUIThemedText style={styles.confirmButtonText}>
                     {t(GLOBAL_TRANSLATION_LABEL.confirmYourPayment)}
                 </AUIThemedText>
