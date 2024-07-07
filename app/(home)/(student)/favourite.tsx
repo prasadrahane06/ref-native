@@ -58,6 +58,8 @@ const TabTwoScreen: React.FC = () => {
     };
 
     const getfavorite = useSelector((state: RootState) => state.api.favorite || {});
+    const isRTL = useSelector((state: RootState) => state.global.isRTL || {});
+
     const fav = getfavorite?.docs?.[0] || { courses: [], clients: [], country: [] }; // Providing default values
 
     useEffect(() => {
@@ -102,7 +104,7 @@ const TabTwoScreen: React.FC = () => {
     const renderCountryItem: ListRenderItem<CountryData> = ({ item }: any) => (
         <AUIThemedView style={styles.destinationItem}>
             <Destination
-                title={item.name?.ar}
+                title={isRTL ? item.name?.ar : item.name?.en}
                 image={item.images[0]}
                 id={item._id}
                 favorite={item.favorite}

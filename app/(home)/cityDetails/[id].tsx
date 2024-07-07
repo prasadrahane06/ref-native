@@ -1,8 +1,6 @@
-import useAxios from "@/app/services/axiosClient";
 import AUIImage from "@/components/common/AUIImage";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import PhotoGallaryList from "@/components/home/common/PhotoGallaryList";
 import SchoolList from "@/components/home/common/SchoolList";
 import SectionTitle from "@/components/home/common/SectionTitle";
@@ -23,6 +21,8 @@ import Animated, {
     useScrollViewOffset,
 } from "react-native-reanimated";
 import { useSelector } from "react-redux";
+import useAxios from "@/app/services/axiosClient";
+import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 
 export default function CityDetails() {
     const { id } = useLocalSearchParams<{ id: string }>();
@@ -78,6 +78,8 @@ export default function CityDetails() {
             ],
         };
     });
+
+    const isRTL = useSelector((state: RootState) => state.global.isRTL || {});
 
     useEffect(() => {
         requestFn(API_URL.country, "individualCountry", { id: id });
@@ -162,7 +164,7 @@ export default function CityDetails() {
 
             headerTitle: () => (
                 <Animated.Text style={[headerTitleAnimatedStyle, styles.screenTitle]}>
-                    {country?.name?.en}
+                    {isRTL ? country?.name?.en : country?.name?.ar}
                 </Animated.Text>
             ),
         });
@@ -184,7 +186,7 @@ export default function CityDetails() {
 
                     <AUIThemedView style={styles.infoContainer}>
                         <AUIThemedText style={styles.name}>
-                            Why study in {country?.name?.ar}
+                            Why study in {isRTL ? country?.name?.en : country?.name?.ar}
                         </AUIThemedText>
                         <AUIThemedView style={styles.headingContainer}>
                             <AUIThemedView style={styles.headingImageContainer}>
@@ -251,7 +253,7 @@ export default function CityDetails() {
 
                         <AUIThemedView style={styles.aboutContainer}>
                             <AUIThemedText style={styles.aboutTitle}>
-                                About {country?.name?.ar}
+                                About {isRTL ? country?.name?.en : country?.name?.ar}
                             </AUIThemedText>
                             <AUIThemedText style={styles.aboutDescription}>
                                 {readMore ? truncatedText : aboutText}

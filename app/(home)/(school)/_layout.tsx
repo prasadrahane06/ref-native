@@ -6,7 +6,7 @@ import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { AUILinearGradient } from "@/components/common/AUILinearGradient";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { TouchableOpacity, View } from "react-native";
 import AUIDrawerContent from "@/components/common/AUIDrawerContent";
 import { Asset } from "expo-asset";
@@ -15,31 +15,7 @@ import { Asset } from "expo-asset";
 const Drawer = createDrawerNavigator();
 
 //dummy Screens
-const SchoolProfileScreen = () => (
-    <AUIThemedView>
-        <AUIThemedText>School Profile Screen</AUIThemedText>
-    </AUIThemedView>
-);
-const SchoolCoursesScreen = () => (
-    <AUIThemedView>
-        <AUIThemedText>School Courses Screen</AUIThemedText>
-    </AUIThemedView>
-);
-const FacilitiesScreen = () => (
-    <AUIThemedView>
-        <AUIThemedText>Facilities Screen</AUIThemedText>
-    </AUIThemedView>
-);
-const AdmissionScreen = () => (
-    <AUIThemedView>
-        <AUIThemedText>Admission Screen</AUIThemedText>
-    </AUIThemedView>
-);
-const ContactScreen = () => (
-    <AUIThemedView>
-        <AUIThemedText>Contact Screen</AUIThemedText>
-    </AUIThemedView>
-);
+
 const EventsScreen = () => (
     <AUIThemedView>
         <AUIThemedText>Events Screen</AUIThemedText>
@@ -92,11 +68,11 @@ export default function AUIDrawer() {
             )}
         >
             <Drawer.Screen name="Home" component={TabLayout} />
-            <Drawer.Screen name="SchoolProfile" component={SchoolProfileScreen} />
+            {/* <Drawer.Screen name="SchoolProfile" component={SchoolProfileScreen} />
             <Drawer.Screen name="SchoolCourses" component={SchoolCoursesScreen} />
             <Drawer.Screen name="Facilities" component={FacilitiesScreen} />
             <Drawer.Screen name="Admission" component={AdmissionScreen} />
-            <Drawer.Screen name="Contact" component={ContactScreen} />
+            <Drawer.Screen name="Contact" component={ContactScreen} /> */}
             <Drawer.Screen name="Events" component={EventsScreen} />
         </Drawer.Navigator>
     );
@@ -136,7 +112,11 @@ export function TabLayout() {
                     headerTitle: "",
 
                     tabBarIcon: ({ focused }) => (
-                        <Ionicons name={"person"} color={focused ? "white" : "#0A152F"} size={24} />
+                        <Ionicons
+                            name={focused ? "person" : "person-outline"}
+                            color={focused ? "white" : "#0A152F"}
+                            size={24}
+                        />
                     ),
                 }}
             />
@@ -145,10 +125,15 @@ export function TabLayout() {
                 options={{
                     title: "Courses",
                     tabBarIcon: ({ color, focused }) => (
-                        <TabBarIcon
-                            name={focused ? "home" : "home-outline"}
+                        <MaterialCommunityIcons
+                            name={focused ? "book-education" : "book-education-outline"}
+                            size={24}
                             color={focused ? "white" : "#0A152F"}
                         />
+                        // <TabBarIcon
+                        //     name={focused ? "home" : "home-outline"}
+                        //     color={focused ? "white" : "#0A152F"}
+                        // />
                     ),
                 }}
             />
@@ -188,10 +173,12 @@ const HeaderIcons = () => (
 const screenOptions = (navigation: any) => ({
     headerBackground: () => (
         <AUILinearGradient
-            colors={["rgba(118, 250,178, 1)", "rgba(91, 216,148, 1)"]}
+            colors={["#ffffff", "#ffffff"]} //["rgba(118, 250,178, 1)", "rgba(91, 216,148, 1)"]}
             style={{ flex: 1 }}
         />
     ),
+    headerTitle: "",
+
     headerLeft: () => <MenuButton navigation={navigation} />,
     headerRight: () => <HeaderIcons />,
 });

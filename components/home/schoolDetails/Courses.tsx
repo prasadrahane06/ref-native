@@ -9,7 +9,7 @@ export default function CoursesTab({ schoolCourses }: { schoolCourses: any }) {
     const [searchPhrase, setSearchPhrase] = useState("");
     const [clicked, setClicked] = useState(false);
 
-    const courses = schoolCourses.courses;
+    const courses = schoolCourses?.courses;
     console.log("schoolCourses", JSON.stringify(courses));
 
     return (
@@ -25,9 +25,11 @@ export default function CoursesTab({ schoolCourses }: { schoolCourses: any }) {
                 <AUIFilter />
             </AUIThemedView>
 
-            <AUIThemedView>
-                <AvailableCoursesList courses={courses} />
-            </AUIThemedView>
+            {courses && (
+                <AUIThemedView>
+                    <AvailableCoursesList courses={courses} />
+                </AUIThemedView>
+            )}
         </AUIThemedView>
     );
 }

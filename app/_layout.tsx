@@ -1,7 +1,7 @@
 import AUILoader from "@/components/common/AUILoader";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { APP_THEME, COLOR_THEME, TEXT_THEME } from "@/constants/Colors";
-import { getUserData, storeUserDeviceData } from "@/constants/RNAsyncStore";
+import { getUserData, removeUserData, storeUserDeviceData } from "@/constants/RNAsyncStore";
 import { setToken, setUser } from "@/redux/globalSlice";
 import { RootState, store } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";
@@ -54,6 +54,7 @@ const InitialLayout = () => {
 
     useEffect(() => {
         storeUserDeviceData();
+        getUserData().then((data) => console.log(data));
     }, []);
 
     if (!loaded) {

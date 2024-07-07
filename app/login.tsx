@@ -32,7 +32,7 @@ const schema = Yup.object().shape({
         is: "mobile",
         then: (schema) =>
             schema
-                .matches(/^[0-9]{10}$/, GLOBAL_TEXT.validate_mobile)
+                .matches(/^[0-9]{9}$/, GLOBAL_TEXT.validate_mobile)
                 .required(GLOBAL_TEXT.validate_mobile),
         otherwise: (schema) =>
             schema
@@ -46,10 +46,11 @@ const schema = Yup.object().shape({
 const LoginPage = () => {
     const router = useRouter();
     const dispatch = useDispatch();
-    const profile = useSelector((state: RootState) => state.global.profile);
-    const signInType = useSelector((state: RootState) => state.global.signInType);
-    // const [countryData, setCountryData] = useState(countriesData);
-    const signupDetails = useSelector((state: RootState) => state.global.signupDetails);
+    const globalState = useSelector((state: RootState) => state.global);
+    const profile = globalState.profile;
+    const signInType = globalState.signInType;
+    const signupDetails = globalState.signupDetails;
+    const schoolDetails = globalState.schoolDetails;
 
     const { post } = useAxios();
 
@@ -136,7 +137,7 @@ const LoginPage = () => {
 
     const handleSubmitEmailOtp = (newOtp: any) => {
         let payload = {
-            email: signupDetails?.email,
+            email: profile === "school" ? schoolDetails?.email : signupDetails?.email,
             otp: newOtp,
             verificationType: "register",
         };
@@ -157,6 +158,10 @@ const LoginPage = () => {
                     } else {
                         router.push({ pathname: "/schooldetails" });
                     }
+
+                    // router.push({
+                    //     pathname: profile === "school" ? `(home)/(${profile})` : "/details",
+                    // });
                 }
 
                 console.log("res", res);
@@ -167,7 +172,7 @@ const LoginPage = () => {
     };
     const handleSubmitPhoneOtp = (newOtp: any) => {
         let payload = {
-            phone: signupDetails?.phone,
+            phone: profile === "school" ? schoolDetails?.phone : signupDetails?.phone,
             otp: newOtp,
             verificationType: "register",
         };
@@ -188,6 +193,9 @@ const LoginPage = () => {
                     } else {
                         router.push({ pathname: "/schooldetails" });
                     }
+                    // router.push({
+                    //     pathname: profile === "school" ? `(home)/(${profile})` : "/details",
+                    // });
                 }
                 console.log("res", res);
             })
@@ -198,10 +206,16 @@ const LoginPage = () => {
     const handleSubmitLoginOtp = (newOtp: any) => {
         let code = phoneCode?.split("+")[1];
 
-        let payload = {
-            phone: `${code}${inputValue}`,
-            otp: newOtp,
-        };
+        let payload =
+            selectedButton === "mobile"
+                ? {
+                      phone: `${code}${inputValue}`,
+                      otp: newOtp,
+                  }
+                : {
+                      email: `${inputValue}`,
+                      otp: newOtp,
+                  };
         console.log(payload);
         dispatch(setLoader(true));
 
@@ -276,7 +290,9 @@ const LoginPage = () => {
                             onBackToInput={handleBackToInput}
                             onResendOtp={() => handleOnResendOtp(signupDetails?.email, "email")}
                             disabled={otpVerified.signUpEmail}
-                            inputValue={signupDetails?.email}
+                            inputValue={
+                                profile === "school" ? schoolDetails?.email : signupDetails?.email
+                            }
                         />
                         {otpVerified.signUpEmail && <OTPVerified label={"Email verified"} />}
 
@@ -290,7 +306,9 @@ const LoginPage = () => {
                             onBackToInput={handleBackToInput}
                             onResendOtp={() => handleOnResendOtp(signupDetails?.phone, "phone")}
                             disabled={otpVerified.signUpPhone}
-                            inputValue={signupDetails?.phone}
+                            inputValue={
+                                profile === "school" ? schoolDetails?.phone : signupDetails?.phone
+                            }
                         />
                         {otpVerified.signUpPhone && (
                             <OTPVerified label={"Mobile number verified"} />

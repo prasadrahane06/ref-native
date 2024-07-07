@@ -5,20 +5,28 @@ import ChartComponent from "@/components/home/common/LinearChart";
 import SectionTitle from "@/components/home/common/SectionTitle";
 import { APP_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
+import { getUserData } from "@/constants/RNAsyncStore";
 import { coursesData } from "@/constants/dummy data/coursesData";
-import React from "react";
+import { API_URL } from "@/constants/urlProperties";
+import useApiRequest from "@/customHooks/useApiRequest";
+import { RootState } from "@/redux/store";
+import React, { useEffect } from "react";
 import { FlatList, ScrollView, StyleSheet } from "react-native";
+import { useSelector } from "react-redux";
 
 export default function HomeScreen() {
+    const { requestFn } = useApiRequest();
+    const school = useSelector((state: RootState) => state.api.individualSchool || {});
+
     const courseInfoData = [
         {
             id: "1",
-            title: "3505+",
+            title: "2+",
             subtitle: "Total Numbers of student",
         },
         {
             id: "2",
-            title: "206+",
+            title: "4+",
             subtitle: "Total Number of Courses",
         },
         {
@@ -32,11 +40,24 @@ export default function HomeScreen() {
             subtitle: "Total Revenue of School",
         },
     ];
-
+    useEffect(() => {
+        getUserData().then((data) => {
+            const id = data?.data?.user?._id;
+            console.log("userId", id);
+            requestFn(API_URL.user, "userProfileData", { id: id });
+            requestFn(API_URL.schoolOverview, "individualSchool", {
+                id: "666e8905e16ce8a2691168f2",
+            });
+        });
+    }, []);
+    useEffect(() => {
+        console.log("school index", school);
+    }, [school]);
+    const userdetails = useSelector((state: RootState) => state.global.user);
     return (
         <ScrollView>
             <AUIThemedView style={styles.section}>
-                <SectionTitle>{GLOBAL_TEXT.welcome_to_my_school}</SectionTitle>
+                <SectionTitle>{`${GLOBAL_TEXT.welcome_to_my_school} school`}</SectionTitle>
                 <AUIThemedView style={{ alignItems: "center", marginTop: 15 }}>
                     <FlatList
                         scrollEnabled={false}
@@ -82,10 +103,10 @@ export default function HomeScreen() {
                 />
 
                 <AUIThemedView style={styles.section}>
-                    <SectionTitle viewAll="#" style={{ paddingBottom: 10 }}>
+                    <SectionTitle style={{ paddingBottom: 10 }}>
                         {GLOBAL_TEXT.ongoing_courses}
                     </SectionTitle>
-                    <CourseList data={coursesData} />
+                    <CourseList data={school[0]?.courses} />
                 </AUIThemedView>
             </AUIThemedView>
         </ScrollView>

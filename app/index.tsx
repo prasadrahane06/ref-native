@@ -51,7 +51,7 @@ const InitialPage = () => {
     };
     const navigateToSignup = () => {
         dispatch(setSignInType("new"));
-        router.navigate("/signup");
+        router.navigate(profile === "school" ? "/details" : "/signup");
     };
     return (
         <AUISafeAreaView

@@ -214,6 +214,7 @@ export const inputFieldStyle = StyleSheet.create({
         fontWeight: "semibold",
         letterSpacing: -0.32,
         color: APP_THEME.gray,
+        fontFamily: "Gilroy",
     },
     input: {
         height: 50,

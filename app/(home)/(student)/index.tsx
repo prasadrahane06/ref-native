@@ -77,8 +77,11 @@ export default function HomeScreen() {
         });
     };
     const changeLanguage = (lng: string) => {
-        i18n.changeLanguage(lng === "ar" || lng === "en" ? lng : "en");
-        dispatch(setIsRTL(lng === "ar"));
+        console.log("lng", lng);
+        let language = lng === "AR" ? "ar" : "en";
+        let RTL = language === "ar";
+        i18n.changeLanguage(language);
+        dispatch(setIsRTL(RTL));
     };
 
     return (
@@ -113,7 +116,7 @@ export default function HomeScreen() {
             </AUIThemedView>
 
             <AUIThemedView>
-                <SectionTitle>{GLOBAL_TEXT.find_your_destination}</SectionTitle>
+                <SectionTitle>{t(GLOBAL_TRANSLATION_LABEL.find_your_destination)}</SectionTitle>
                 <DestinationList data={countryResponse?.docs} />
             </AUIThemedView>
 

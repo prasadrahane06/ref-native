@@ -16,6 +16,7 @@ export interface GlobalState {
     theme: ThemeType;
     signInType: string;
     signupDetails: any;
+    schoolDetails: any;
     loader: boolean;
     token: string;
     isRTL: boolean;
@@ -27,6 +28,7 @@ const initialState: GlobalState = {
     theme: "light",
     signInType: "",
     signupDetails: null,
+    schoolDetails: null,
     loader: false,
     token: "",
     isRTL: false,
@@ -57,6 +59,9 @@ export const globalSlice = createSlice({
         },
         setSignupDetails: (state, action: PayloadAction<any>) => {
             state.signupDetails = action.payload;
+        },
+        setSchoolDetails: (state, action: PayloadAction<any>) => {
+            state.schoolDetails = action.payload;
         },
         setTheme: (state, action: PayloadAction<ThemeType>) => {
             state.theme = action.payload;
@@ -92,6 +97,7 @@ export const {
     setTheme,
     setSignInType,
     setSignupDetails,
+    setSchoolDetails,
     setLoader,
     setToken,
     setUser,
