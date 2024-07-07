@@ -37,7 +37,9 @@ function PurchaseCourses({ title, subtitle, image, schoolName, type }: PurchaseC
                 <AUIThemedText style={purchaseCoursesStyle.title}>{title}</AUIThemedText>
                 <AUIThemedText style={purchaseCoursesStyle.subtitle}>{subtitle}</AUIThemedText>
                 <View style={purchaseCoursesStyle.schoolStatus}>
-                    <AUIThemedText style={{ color: "#fff" }}>{schoolName}</AUIThemedText>
+                    <AUIThemedText style={{ color: "#fff", width: 150, fontSize: 20 }}>
+                        {schoolName}
+                    </AUIThemedText>
                     <AUIButton
                         title={
                             type === "BOOKED"
@@ -86,13 +88,13 @@ const purchaseCoursesStyle = StyleSheet.create({
     container: { flex: 1, padding: 20, height: windowHeight },
     item: {
         // width: 270,
-        // height: 120,
+
         borderRadius: 10,
         overflow: "hidden",
         // marginRight: 18,
 
         width: "100%", //388,
-        height: 163,
+        height: 200,
         marginBottom: 10,
         // marginHorizontal: 5,
     },
@@ -125,6 +127,6 @@ const purchaseCoursesStyle = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         paddingHorizontal: 10,
-        marginTop: 10,
+        marginVertical: 10,
     },
 });

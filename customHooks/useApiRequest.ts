@@ -9,14 +9,16 @@ const useApiRequest = () => {
     // dispatch(setLoader(true));
 
     const requestFn = (url: string, storeName: string, query?: {}) => {
+        dispatch(setLoader(true));
+
         get(url, query || {})
             .then((res) => {
-                // dispatch(setLoader(false));
+                dispatch(setLoader(false));
                 dispatch(setResponse({ storeName, data: res.data }));
                 console.log("response from API hook => ", res);
             })
             .catch((error: any) => {
-                // dispatch(setLoader(false));
+                dispatch(setLoader(false));
                 console.log("error from API hook => ", error);
             });
     };

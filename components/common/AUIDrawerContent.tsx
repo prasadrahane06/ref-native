@@ -34,7 +34,9 @@ export interface DrawerProps {
 
 const AUIDrawerContent = (props: any) => {
     const { t, i18n } = useTranslation();
-    const isRTL = useSelector((state: RootState) => state.global.isRTL);
+    const globalState = useSelector((state: RootState) => state.global);
+    const isRTL = globalState.isRTL;
+    const userdetails = globalState.user;
     const [isThemeEnabled, setIsEnabled] = useState(false);
     const router = useRouter();
     const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
@@ -68,7 +70,7 @@ const AUIDrawerContent = (props: any) => {
                         <View style={styles.nameContainer}>
                             <AUIThemedText style={styles.name}>{`${t(
                                 GLOBAL_TRANSLATION_LABEL.hii
-                            )} Yazeed`}</AUIThemedText>
+                            )} ${userdetails?.name}`}</AUIThemedText>
                             <AUIThemedText style={styles.welcome}>
                                 {t(GLOBAL_TRANSLATION_LABEL.welcome_back)}
                             </AUIThemedText>

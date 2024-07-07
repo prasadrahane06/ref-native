@@ -32,7 +32,7 @@ export const GLOBAL_TEXT = {
     book_your_seat: "Book your seat",
     buy_now: "Buy Now",
     similar_courses: "Similar Courses",
-    welcome_to_my_school: "Welcome to my school",
+    welcome_to_my_school: "Welcome to my",
     ongoing_courses: "Ongoing Courses",
     recent_courses: "Recently Added",
     upcoming_courses: "Upcoming Courses",
@@ -182,5 +182,47 @@ export const DETAILS_FIELDS = {
         label: "City",
         type: "DROPDOWN",
         placeholder: "Select city",
+    },
+};
+export const SCHOOL_DETAILS_FIELDS = {
+    name: {
+        label: "School Name",
+        type: "INPUT",
+        placeholder: "e.g The Manchester School",
+    },
+    email: {
+        label: "School Email",
+        type: "INPUT",
+        placeholder: "e.g manchester@edu.co",
+    },
+    phone: {
+        label: "School Email",
+        type: "CONTACT",
+        placeholder: "e.g manchester@edu.co",
+    },
+    description: {
+        label: "Add description",
+        type: "INPUT",
+        placeholder: "",
+    },
+    website: {
+        label: "Add URL",
+        type: "INPUT",
+        placeholder: "",
+    },
+    location: {
+        label: "Add Location",
+        type: "DROPDOWN",
+        placeholder: "Select location",
+    },
+    logo: {
+        label: "Add logo",
+        type: "IMAGE",
+        placeholder: "",
+    },
+    banner: {
+        label: "Add banner",
+        type: "IMAGE",
+        placeholder: "",
     },
 };

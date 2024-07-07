@@ -3,31 +3,35 @@ import CourseList from "@/components/home/common/CourseList";
 import SectionTitle from "@/components/home/common/SectionTitle";
 import { GLOBAL_TEXT } from "@/constants/Properties";
 import { coursesData } from "@/constants/dummy data/coursesData";
+import { RootState } from "@/redux/store";
 import { StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+import { useSelector } from "react-redux";
 
 export default function TabThreeScreen() {
+    const school = useSelector((state: RootState) => state.api.individualSchool || {});
+
     return (
         <AUIThemedView style={styles.root}>
             <ScrollView>
                 <AUIThemedView style={styles.section}>
-                    <SectionTitle viewAll="#" style={{ paddingBottom: 10 }}>
+                    <SectionTitle style={{ paddingBottom: 10 }}>
                         {GLOBAL_TEXT.recent_courses}
                     </SectionTitle>
-                    <CourseList data={coursesData} />
+                    <CourseList data={school[0]?.courses} />
                 </AUIThemedView>
-                <AUIThemedView style={styles.section}>
-                    <SectionTitle viewAll="#" style={{ paddingBottom: 10 }}>
+                {/* <AUIThemedView style={styles.section}>
+                    <SectionTitle style={{ paddingBottom: 10 }}>
                         {GLOBAL_TEXT.ongoing_courses}
                     </SectionTitle>
                     <CourseList data={coursesData} />
                 </AUIThemedView>
                 <AUIThemedView style={styles.section}>
-                    <SectionTitle viewAll="#" style={{ paddingBottom: 10 }}>
+                    <SectionTitle style={{ paddingBottom: 10 }}>
                         {GLOBAL_TEXT.upcoming_courses}
                     </SectionTitle>
                     <CourseList data={coursesData} />
-                </AUIThemedView>
+                </AUIThemedView> */}
             </ScrollView>
         </AUIThemedView>
     );

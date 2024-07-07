@@ -3,18 +3,14 @@ import axios from "axios";
 import { RootState } from "@/redux/store";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 
-<<<<<<< HEAD
 const baseURL = "https://zmgr2gg0-4000.inc1.devtunnels.ms/dev/";
-=======
-// const baseURL = "https://zmgr2gg0-4000.inc1.devtunnels.ms/dev/";
+
 // bot url
-const baseURL = "https://ef3e-223-233-85-160.ngrok-free.app";
->>>>>>> 43e74b1c64f6672fc503baf673d112f81905b698
+// const baseURL = "https://ef3e-223-233-85-160.ngrok-free.app";
 
 const useAxios = () => {
     const token = useSelector((state: RootState) => state.global.token);
-    console.log("token in client", token);
-
+    console.log("token", token);
     const axiosClient = axios.create({
         baseURL,
         headers: {

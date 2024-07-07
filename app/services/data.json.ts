@@ -105,4 +105,18 @@ export default {
             value: "hauts-de-france.",
         },
     ],
+    location: [
+        {
+            label: "India",
+            value: "IN",
+        },
+        {
+            label: "UK",
+            value: "UK",
+        },
+        {
+            label: "Arabic",
+            value: "AR",
+        },
+    ],
 };

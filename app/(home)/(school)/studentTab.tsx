@@ -1,10 +1,17 @@
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
+import { API_URL } from "@/constants/urlProperties";
+import useApiRequest from "@/customHooks/useApiRequest";
+import { RootState } from "@/redux/store";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
+import { useSelector } from "react-redux";
 
 export default function TabTwoScreen() {
-    const array = [
+    const { requestFn } = useApiRequest();
+    const studentList = useSelector((state: RootState) => state.api.studentList || {});
+    const [array, setArray] = useState([
         { studentId: "A1B2C", studentName: "Alice Johnson" },
         { studentId: "D3E4F", studentName: "Bob Smith" },
         { studentId: "G5H6I", studentName: "Charlie Davis" },
@@ -15,7 +22,25 @@ export default function TabTwoScreen() {
         { studentId: "V5W6X", studentName: "Hannah Lewis" },
         { studentId: "Y7Z8A", studentName: "Ian Walker" },
         { studentId: "B9C0D", studentName: "Jane Hall" },
-    ];
+    ]);
+    useEffect(() => {
+        requestFn("purchaseCourse", "studentList", {
+            course: "66866d8dd2fd125946796e9b",
+        });
+    }, []);
+    useEffect(() => {
+        console.log("student list", studentList);
+        let list = studentList?.docs;
+        let newList = list?.map((x: any) => {
+            let obj = {
+                studentId: x?.user?._id,
+                studentName: x?.user?.name,
+            };
+            return obj;
+        });
+        console.log("list", newList);
+        setArray(newList);
+    }, [studentList]);
 
     return (
         <AUIThemedView style={styles.root}>
