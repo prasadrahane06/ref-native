@@ -15,14 +15,7 @@ interface SchoolListProps {
     data: any[];
 }
 const AllSchoolsScreen: React.FC<SchoolListProps> = ({ data }) => {
-    const { get } = useAxios();
-    const { requestFn } = useApiRequest();
-    const schoolsResponse = useSelector((state: RootState) => state.api.moreSchool || {});
-
-    useEffect(() => {
-        requestFn(API_URL.popularSchool, "moreSchool", { limit: 6 });
-    }, []);
-
+    const schoolsResponse = useSelector((state: RootState) => state.api.school || {});
     return (
         <AUILinearGradient
             colors={[`${APP_THEME.primary.first}80`, "#ffffff"]}

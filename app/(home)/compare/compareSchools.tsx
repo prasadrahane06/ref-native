@@ -75,7 +75,7 @@ const CompareSchools: React.FC = () => {
                             <AUIImage
                                 style={styles.image}
                                 path={
-                                    compareSchool1?.banner ||
+                                    school1?.banner ||
                                     Asset.fromModule(
                                         require("@/assets/images/compareScreen/compareSchoolsPage/Rectangle 155.png")
                                     ).uri
@@ -85,7 +85,7 @@ const CompareSchools: React.FC = () => {
                         </View>
                         <View style={styles.textContainer}>
                             <AUIThemedText style={styles.cardTitle}>
-                                {compareSchool1.name}
+                                {school1?.name}
                             </AUIThemedText>
                             <AUIThemedText style={styles.cardSubtitle}>
                                 East, Academy The East, 60 Grey Mare Ln, ...
@@ -102,7 +102,7 @@ const CompareSchools: React.FC = () => {
                                 <AUIImage
                                     style={styles.image}
                                     path={
-                                        compareSchool2?.banner ||
+                                        school2?.banner ||
                                         Asset.fromModule(
                                             require("@/assets/images/compareScreen/compareSchoolsPage/Rectangle 155.png")
                                         ).uri
@@ -112,7 +112,7 @@ const CompareSchools: React.FC = () => {
                             </View>
                             <View style={styles.textContainer}>
                                 <AUIThemedText style={styles.cardTitle}>
-                                    {compareSchool2?.name}
+                                    {school2?.name}
                                 </AUIThemedText>
                                 <AUIThemedText style={styles.cardSubtitle}>
                                     "Academy The East, behind the blue Care In, ..."
@@ -222,8 +222,8 @@ const CompareSchools: React.FC = () => {
                         </AUIThemedView>
                     </AUIAccordion>
 
-                    {/* <AUIAccordion
-                        title="Distance"
+                    <AUIAccordion
+                        title="Location"
                         icon={
                             Asset.fromModule(
                                 require("@/assets/images/compareScreen/compareSchoolsPage/Layer 2.png")
@@ -232,20 +232,22 @@ const CompareSchools: React.FC = () => {
                     >
                         <AUIThemedView style={styles.academicsContainer}>
                             <AUIThemedText style={styles.descriptionText}>
-                                Please select your location to calculate the distance
+                                School Location
                             </AUIThemedText>
-                            <TouchableOpacity style={styles.locationButton}>
-                                <FontAwesome6
-                                    name="location-crosshairs"
-                                    size={30}
-                                    color="#5BD894"
-                                />
-                                <AUIThemedText style={styles.locationButtonText}>
-                                    Use my current location
-                                </AUIThemedText>
-                            </TouchableOpacity>
+                            <AUIThemedView style={styles.rowContainer}>
+                                    <AUIThemedView style={styles.feeLabelContainer}>
+                                        <AUIThemedText style={styles.label}>
+                                            {school1?.locationDetails?.name?.en || "--"}
+                                        </AUIThemedText>
+                                    </AUIThemedView>
+                                    <AUIThemedView style={styles.feeLabelContaine2}>
+                                        <AUIThemedText style={styles.label}>
+                                        {school2?.locationDetails?.name?.en || "--"}
+                                        </AUIThemedText>
+                                    </AUIThemedView>
+                                </AUIThemedView>
                         </AUIThemedView>
-                    </AUIAccordion> */}
+                    </AUIAccordion>
 
                     <AUIAccordion
                         title="Fee Structure"
@@ -277,7 +279,7 @@ const CompareSchools: React.FC = () => {
                                 <AUIThemedView style={styles.rowContainer}>
                                     <AUIThemedView style={styles.feeLabelContainer}>
                                         <AUIThemedText style={styles.label}>
-                                            {school1?.maxPrice || "--"}
+                                            {JSON.stringify(school1?.maxPrice) || "--"}
                                         </AUIThemedText>
                                     </AUIThemedView>
                                     <AUIThemedView style={styles.feeLabelContaine2}>

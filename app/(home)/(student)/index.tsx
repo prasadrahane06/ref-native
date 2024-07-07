@@ -42,11 +42,14 @@ export default function HomeScreen() {
     const response = useSelector((state: RootState) => state.api || {});
     console.log("response in index =>", response);
     let schoolsResponse = response?.school;
-    const courseResponse = response?.course;
+    const courseResponse = response?.selectedLanguagecourse;
     const countryResponse = response?.country;
 
+
+    console.log("courseResponse => selected", JSON.stringify(courseResponse));
+
     const fetchCourses = useCallback(() => {
-        requestFn(API_URL.course, "course", { limit: 4, similar: selectedLanguage.name });
+        requestFn(API_URL.course, "selectedLanguagecourse", { similar: selectedLanguage.name });
     }, [selectedLanguage]);
 
     useEffect(() => {
@@ -69,6 +72,7 @@ export default function HomeScreen() {
             requestFn(API_URL.user, "userProfileData", { id: id });
         });
     }, []);
+    
 
     const onPressPagination = (index: number) => {
         ref.current?.scrollTo({
@@ -127,7 +131,7 @@ export default function HomeScreen() {
                 >
                     {t(GLOBAL_TRANSLATION_LABEL.popular_school)}
                 </SectionTitle>
-                <SchoolList data={schoolsResponse?.docs} />
+                <SchoolList data={schoolsResponse?.docs.slice(0, 4)} />
             </AUIThemedView>
 
             <AUIThemedView>
@@ -145,7 +149,7 @@ export default function HomeScreen() {
                 <SectionTitle viewAll="(home)/course/AllCoursesScreen">
                     {t(GLOBAL_TRANSLATION_LABEL.popular_Courses)}
                 </SectionTitle>
-                <CourseList data={courseResponse?.docs} />
+                <CourseList data={courseResponse?.docs.slice(0, 4)} />
             </AUIThemedView>
 
             <AUIThemedView>

@@ -14,11 +14,11 @@ const AllCoursesScreen = () => {
     const { requestFn } = useApiRequest();
     const { get } = useAxios();
 
-    const courseResponse = useSelector((state: RootState) => state.api.popularCourse || {});
+    const courseResponse = useSelector((state: RootState) => state.api.selectedLanguagecourse || {});
 
-    useEffect(() => {
-        requestFn(API_URL.course, "popularCourse");
-    }, []);
+    // useEffect(() => {
+    //     requestFn(API_URL.course, "popularCourse");
+    // }, []);
 
     return (
         <AUILinearGradient

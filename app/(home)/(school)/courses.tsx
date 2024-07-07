@@ -9,7 +9,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 
 export default function TabThreeScreen() {
-    const school = useSelector((state: RootState) => state.api.individualSchool || {});
+    const school = useSelector((state: RootState) => state.api.MySchoolDetails || {});
 
     return (
         <AUIThemedView style={styles.root}>
