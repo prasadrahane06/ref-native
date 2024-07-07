@@ -1,50 +1,52 @@
-import { View, Text, StyleSheet, Image } from "react-native";
-import React, { useEffect } from "react";
+import { View, Text, StyleSheet, ScrollView, Platform, TextInput } from "react-native";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
+import { Controller, useForm } from "react-hook-form";
+import { useRouter } from "expo-router";
 import DATA from "@/app/services/data.json";
 import AUIButton from "@/components/common/AUIButton";
 import DropdownComponent from "@/components/common/AUIDropdown";
 import { AUISafeAreaView } from "@/components/common/AUISafeAreaView";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { DETAILS_FIELDS, GLOBAL_TEXT } from "@/constants/Properties";
 import { inputFieldStyle, signupPageStyles } from "@/constants/Styles";
-import { setSignupDetails } from "@/redux/globalSlice";
-import { RootState } from "@/redux/store";
-import { useRouter } from "expo-router";
-import { useState } from "react";
-import { Platform, ScrollView } from "react-native";
-import "react-native-gesture-handler";
-import { useDispatch, useSelector } from "react-redux";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as Yup from "yup";
-import { Controller, useForm } from "react-hook-form";
 import AUIInputField from "@/components/common/AUIInputField";
+import { RootState } from "@/redux/store";
 import useApiRequest from "@/customHooks/useApiRequest";
 import { API_URL } from "@/constants/urlProperties";
-import * as ImagePicker from "expo-image-picker";
-import ImageViewer from "@/components/ImageViewer";
-import { Asset } from "expo-asset";
+import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
+import useAxios from "./services/axiosClient";
+import { getUserData } from "@/constants/RNAsyncStore";
+import axios from "axios";
 
 const schema = Yup.object().shape({
     remark: Yup.string().required("Remark is required"),
     website: Yup.string().required("Website is required"),
     location: Yup.string().required("Location is required"),
-    logo: Yup.string().required("Logo is required"),
-    banner: Yup.string().required("Banner is required"),
+    // logo: Yup.string().required("Logo is required"),
+    // banner: Yup.string().required("Banner is required"),
     description: Yup.string().required("Description is required"),
 });
 
-export default function schooldetails() {
+export default function SchoolDetails() {
     const { requestFn } = useApiRequest();
 
     const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
     const router = useRouter();
     const profile = useSelector((state: RootState) => state.global.profile);
     const [locationData, setLocationData] = useState([]);
-    const [selectedLogo, setSelectedLogo] = useState("");
-    const [selectedBanner, setSelectedBanner] = useState("");
+    const { patch } = useAxios();
+    const [token , setToken] = useState<any>("")
 
-    console.log("location data => ", locationData);
+    useEffect(() => {
+        getUserData().then((data) => {
+            console.log("user-data", data);
+            setToken(data?.data?.accessToken)
+       
+        });
+    }, []);
 
     const { watch, reset, setValue, control, handleSubmit, formState } = useForm({
         resolver: yupResolver(schema),
@@ -53,8 +55,6 @@ export default function schooldetails() {
             remark: "",
             website: "",
             location: "",
-            logo: "",
-            banner: "",
             description: "",
         },
     });
@@ -64,8 +64,6 @@ export default function schooldetails() {
     useEffect(() => {
         requestFn(API_URL.country, "countryDataForSchool");
     }, []);
-
-    console.log("countryDataForSchool => ", JSON.stringify(countryDataForSchool));
 
     useEffect(() => {
         if (countryDataForSchool && countryDataForSchool.docs) {
@@ -78,29 +76,28 @@ export default function schooldetails() {
         }
     }, [countryDataForSchool]);
 
-    const pickImageAsync = async (value: any, imageType: any) => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            allowsEditing: true,
-            quality: 1,
-        });
-
-        if (!result.canceled) {
-            if (imageType === "logo") {
-                setSelectedLogo(result.assets[0].uri);
-                setValue(value, result.assets[0].uri);
-                console.log("image selected data =>", result);
-            } else {
-                setSelectedBanner(result.assets[0].uri);
-                setValue(value, result.assets[0].uri);
-                console.log("image selected data =>", result);
-            }
-        } else {
-            alert("You did not select any image.");
-        }
-    };
-
-    const onSave = (data: any) => {
+    const onSave = async (data: any) => {
         console.log("schooldetails form data", data);
+
+       try {
+        const response = await axios.patch("https://zmgr2gg0-4000.inc1.devtunnels.ms/dev/school", data , {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              
+            },})
+
+            console.log("schooldetails response", response.data);
+        ApiSuccessToast("School Details has been saved successfully");
+        router.push({
+            pathname: `(home)/(school)`,
+        });
+         
+        
+       } catch (error : any ) {
+        ApiErrorToast(error.response?.data?.message);
+        
+       }
     };
 
     return (
@@ -188,11 +185,8 @@ export default function schooldetails() {
                                         }}
                                     >
                                         <Text style={inputFieldStyle.label}>Location</Text>
-                                        {/* @ts-ignore */}
                                         <DropdownComponent
-                                            // @ts-ignore
                                             list={locationData}
-                                            // @ts-ignore
                                             value={value}
                                             setValue={({ _id }: { _id: string }) => onChange(_id)}
                                             labelField="location"
@@ -204,66 +198,6 @@ export default function schooldetails() {
                                     </AUIThemedView>
                                 )}
                             />
-
-                            <Controller
-                                name="logo"
-                                control={control}
-                                render={({ field: { onChange, value }, fieldState: { error } }) => (
-                                    <AUIThemedView>
-                                        <Text style={inputFieldStyle.label}>
-                                            Pick your school logo
-                                        </Text>
-                                        <AUIThemedView style={styles.imageContainer}>
-                                            <ImageViewer
-                                                selectedImage={selectedLogo}
-                                                placeholderImageSource={
-                                                    Asset.fromModule(
-                                                        require("@/assets/images/favicon.png")
-                                                    ).uri
-                                                }
-                                            />
-                                        </AUIThemedView>
-
-                                        <AUIThemedView>
-                                            <AUIButton
-                                                selected
-                                                title="Choose a photo"
-                                                onPress={() => pickImageAsync("logo", "logo")}
-                                            />
-                                            {/* <AUIButton title="Use this photo" /> */}
-                                        </AUIThemedView>
-                                    </AUIThemedView>
-                                )}
-                            />
-
-                            <Controller
-                                name="banner"
-                                control={control}
-                                render={({ field: { onChange, value }, fieldState: { error } }) => (
-                                    <AUIThemedView>
-                                        <Text style={inputFieldStyle.label}>School Banner</Text>
-                                        <AUIThemedView style={styles.imageContainer}>
-                                            <ImageViewer
-                                                selectedImage={selectedBanner}
-                                                placeholderImageSource={
-                                                    Asset.fromModule(
-                                                        require("@/assets/images/favicon.png")
-                                                    ).uri
-                                                }
-                                            />
-                                        </AUIThemedView>
-
-                                        <AUIThemedView>
-                                            <AUIButton
-                                                selected
-                                                title="Choose a photo"
-                                                onPress={() => pickImageAsync("banner", "banner")}
-                                            />
-                                            {/* <AUIButton title="Use this photo" /> */}
-                                        </AUIThemedView>
-                                    </AUIThemedView>
-                                )}
-                            />
                         </AUIThemedView>
 
                         <AUIThemedView
@@ -271,7 +205,6 @@ export default function schooldetails() {
                         >
                             <AUIButton
                                 title={"Submit"}
-                                disabled={!formState.isValid}
                                 selected
                                 style={{ width: "100%" }}
                                 onPress={handleSubmit(onSave)}

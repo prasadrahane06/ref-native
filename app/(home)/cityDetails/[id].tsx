@@ -45,7 +45,7 @@ export default function CityDetails() {
 
     const { post } = useAxios();
 
-    const schoolsResponse = useSelector((state: RootState) => state.api.school);
+    const schoolsResponse = useSelector((state: RootState) => state.api.countrySchool);
     const individualCountry = useSelector((state: RootState) => state.api.individualCountry);
 
     const scrollRef = useAnimatedRef<Animated.ScrollView>();
@@ -81,6 +81,7 @@ export default function CityDetails() {
 
     useEffect(() => {
         requestFn(API_URL.country, "individualCountry", { id: id });
+        requestFn(API_URL.popularSchool , "countrySchool" , { location: id })
     }, [id]);
 
     useEffect(() => {
@@ -161,7 +162,7 @@ export default function CityDetails() {
 
             headerTitle: () => (
                 <Animated.Text style={[headerTitleAnimatedStyle, styles.screenTitle]}>
-                    {country?.name?.ar}
+                    {country?.name?.en}
                 </Animated.Text>
             ),
         });
@@ -275,7 +276,7 @@ export default function CityDetails() {
 
                     <AUIThemedView style={styles.popularSchoolsContainer}>
                         <SectionTitle viewAll="#">{GLOBAL_TEXT.popular_schools}</SectionTitle>
-                        <SchoolList data={schoolsResponse.docs} />
+                        <SchoolList data={schoolsResponse?.docs} />
                     </AUIThemedView>
                 </AUIThemedView>
             </Animated.ScrollView>

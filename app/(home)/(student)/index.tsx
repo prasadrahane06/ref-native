@@ -16,7 +16,7 @@ import { languagesData } from "@/constants/dummy data/languagesData";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import { RootState } from "@/redux/store";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Dimensions, I18nManager, Platform, ScrollView, StyleSheet } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
@@ -34,7 +34,6 @@ export default function HomeScreen() {
     const ref = useRef<ICarouselInstance>(null);
 
     const [destinationData, setDestinationData] = useState([]);
-
     const { t, i18n } = useTranslation();
     const navigation = useNavigation();
     const [selectedLanguage, setSelectedLanguage] = useState(languagesData[0].language);
@@ -44,24 +43,25 @@ export default function HomeScreen() {
     console.log("response in index =>", response);
     let schoolsResponse = response?.school;
     const courseResponse = response?.course;
-
     const countryResponse = response?.country;
 
-
+    const fetchCourses = useCallback(() => {
+        requestFn(API_URL.course, "course", { limit: 4, similar: selectedLanguage.name });
+    }, [selectedLanguage]);
 
     useEffect(() => {
-        requestFn(API_URL.course, "course", { limit: 4, similar: selectedLanguage });
-    }, [selectedLanguage]);
+        fetchCourses();
+    }, [fetchCourses]);
 
     useEffect(() => {
         requestFn(API_URL.popularSchool, "school");
         requestFn(API_URL.country, "country");
 
-        requestFn(API_URL.course, "course", { limit: 4, similar: selectedLanguage.name });
-        console.log("slctdlng", selectedLanguage);
-        changeLanguage(selectedLanguage.code);
-    }, [selectedLanguage]);
-
+        getUserData().then((data) => {
+            const id = data?.data?.user?._id;
+            requestFn(API_URL.user, "userProfileData", { id: id });
+        });
+    }, []);
     useEffect(() => {
         // i18n.changeLanguage("ar");
         getUserData().then((data) => {
