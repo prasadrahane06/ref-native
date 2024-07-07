@@ -1,13 +1,19 @@
 import { APP_THEME } from "@/constants/Colors";
 import { useNavigation } from "expo-router";
 import React, { useLayoutEffect } from "react";
-import { Linking, Text, TouchableOpacity } from "react-native";
+import { Dimensions, Linking, Text, TouchableOpacity } from "react-native";
 import { AUIThemedView } from "../common/AUIThemedView";
 
+const { height: windowHeight } = Dimensions.get("window");
 export default function TermsAndPolicy() {
     return (
         <AUIThemedView
-            style={{ justifyContent: "center", alignContent: "center", paddingVertical: 20 }}
+            style={{
+                justifyContent: "flex-start",
+                alignContent: "center",
+                paddingVertical: 20,
+                height: windowHeight,
+            }}
         >
             <TouchableOpacity
                 style={{

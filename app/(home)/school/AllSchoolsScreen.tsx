@@ -39,8 +39,6 @@ const AllSchoolsScreen: React.FC<SchoolListProps> = ({ data }) => {
                         caption: school.description,
                         favorite: false,
                     }))}
-                    schoolWidth={165}
-                    schoolHeight={160}
                 />
             </AUIThemedView>
         </AUILinearGradient>
@@ -52,16 +50,14 @@ export default AllSchoolsScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // justifyContent: "center",
+        justifyContent: "flex-start",
         alignItems: "center",
-        padding: 10,
     },
     wrapper: {
-        marginTop: 100,
+        marginTop: 80,
         backgroundColor: "transparent",
     },
     column: {
         justifyContent: "space-between",
-        marginBottom: 10,
     },
 });

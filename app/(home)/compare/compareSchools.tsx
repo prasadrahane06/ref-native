@@ -8,7 +8,7 @@ import { FontAwesome, FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { Platform, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Dimensions, Platform, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import useAxios from "@/app/services/axiosClient";
@@ -151,18 +151,20 @@ const CompareSchools: React.FC = () => {
                                         {school1?.description || "--"}
                                     </AUIThemedText>
                                     <AUIThemedText style={styles.label2}>
-                                        {school2?.description|| "--"}
+                                        {school2?.description || "--"}
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
                             <AUIThemedView style={styles.row}>
-                                <AUIThemedText style={styles.value}>have Mail support </AUIThemedText>
+                                <AUIThemedText style={styles.value}>
+                                    have Mail support{" "}
+                                </AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
                                     <AUIThemedText style={styles.label}>
-                                    {school1?.mailSupport === true  ? "true" : "false" || "--"}
+                                        {school1?.mailSupport === true ? "true" : "false" || "--"}
                                     </AUIThemedText>
                                     <AUIThemedText style={styles.label2}>
-                                    {school2?.mailSupport  === true  ? "true" : "false" || "--"}
+                                        {school2?.mailSupport === true ? "true" : "false" || "--"}
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
@@ -170,10 +172,10 @@ const CompareSchools: React.FC = () => {
                                 <AUIThemedText style={styles.value}>callSupport</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
                                     <AUIThemedText style={styles.label}>
-                                    {school1?.callSupport === true  ? "true" : "false" || "--"}
+                                        {school1?.callSupport === true ? "true" : "false" || "--"}
                                     </AUIThemedText>
                                     <AUIThemedText style={styles.label2}>
-                                    {school2?.callSupport === true  ? "true" : "false" || "--"}
+                                        {school2?.callSupport === true ? "true" : "false" || "--"}
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
@@ -255,41 +257,33 @@ const CompareSchools: React.FC = () => {
                     >
                         <AUIThemedView>
                             <AUIThemedView style={styles.row}>
-                                <AUIThemedText style={styles.value}>
-                                    Minimum Fee
-                                </AUIThemedText>
+                                <AUIThemedText style={styles.value}>Minimum Fee</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
                                     <AUIThemedView style={styles.feeLabelContainer}>
                                         <AUIThemedText style={styles.label}>
                                             {school1?.minPrice || "--"}
                                         </AUIThemedText>
-                                      
                                     </AUIThemedView>
                                     <AUIThemedView style={styles.feeLabelContaine2}>
                                         <AUIThemedText style={styles.label}>
                                             {school2?.minPrice || "--"}
                                         </AUIThemedText>
-                                        
                                     </AUIThemedView>
                                 </AUIThemedView>
                             </AUIThemedView>
 
                             <AUIThemedView style={styles.feeRow2}>
-                                <AUIThemedText style={styles.value}>
-                                    Maximum Fee
-                                </AUIThemedText>
+                                <AUIThemedText style={styles.value}>Maximum Fee</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
                                     <AUIThemedView style={styles.feeLabelContainer}>
                                         <AUIThemedText style={styles.label}>
-                                        {school1?.maxPrice || "--"}
+                                            {school1?.maxPrice || "--"}
                                         </AUIThemedText>
-                                     
                                     </AUIThemedView>
                                     <AUIThemedView style={styles.feeLabelContaine2}>
                                         <AUIThemedText style={styles.label}>
-                                        {school2?.maxPrice || "--"}
+                                            {school2?.maxPrice || "--"}
                                         </AUIThemedText>
-                                      
                                     </AUIThemedView>
                                 </AUIThemedView>
                             </AUIThemedView>
@@ -345,10 +339,10 @@ const CompareSchools: React.FC = () => {
                                 <AUIThemedText style={styles.value}>Number of Seats</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
                                     <AUIThemedText style={styles.label}>
-                                    {school1?.totalNumberOfSeats || "--"}
+                                        {school1?.totalNumberOfSeats || "--"}
                                     </AUIThemedText>
                                     <AUIThemedText style={styles.label2}>
-                                    {school2?.totalNumberOfSeats || "--"}
+                                        {school2?.totalNumberOfSeats || "--"}
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
@@ -463,6 +457,7 @@ const CompareSchools: React.FC = () => {
     );
 };
 
+const { height: windowHeight } = Dimensions.get("window");
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -470,6 +465,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         padding: 15,
         backgroundColor: APP_THEME.background,
+        height: windowHeight,
     },
     cardContainer: {
         flexDirection: "row",

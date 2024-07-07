@@ -2,7 +2,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
 import "react-native-gesture-handler";
 import AUIBackgroundImage from "./common/AUIBackgroundImage";
 import { AUIThemedText } from "./common/AUIThemedText";
@@ -15,19 +15,10 @@ interface SchoolProps {
     image: any;
     caption?: string;
     favorite?: boolean;
-    schoolWidth: number;
-    schoolHeight: number;
+    style?: ViewStyle;
 }
 
-const School: React.FC<SchoolProps> = ({
-    id,
-    title,
-    image,
-    caption,
-    favorite,
-    schoolWidth,
-    schoolHeight,
-}) => {
+const School: React.FC<SchoolProps> = ({ id, title, image, caption, favorite, style }) => {
     const router = useRouter();
 
     return (
@@ -38,9 +29,7 @@ const School: React.FC<SchoolProps> = ({
                 })
             }
         >
-            <AUIThemedView
-                style={[styles.schoolContainer, { width: schoolWidth, height: schoolHeight }]}
-            >
+            <AUIThemedView style={[styles.schoolContainer, style]}>
                 <AUIThemedView style={styles.schoolItem}>
                     <AUIBackgroundImage style={[styles.image]} path={image}>
                         <LinearGradient
@@ -77,8 +66,8 @@ const School: React.FC<SchoolProps> = ({
 
 const styles = StyleSheet.create({
     schoolContainer: {
-        marginRight: 10,
         borderRadius: 10,
+        // marginHorizontal: 6,
     },
     schoolItem: {
         borderRadius: 10,
