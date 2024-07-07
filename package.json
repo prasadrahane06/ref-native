@@ -58,7 +58,8 @@
     "react-redux": "^9.1.2",
     "yup": "^1.4.0",
     "socket.io-client": "^4.7.5",
-    "expo-image-picker": "~15.0.7"
+    "expo-image-picker": "~15.0.7",
+    "@translate-tools/core": "^1.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -36,10 +36,11 @@ const AUIDrawerContent = (props: any) => {
     const { t, i18n } = useTranslation();
     const globalState = useSelector((state: RootState) => state.global);
     const isRTL = globalState.isRTL;
-    const userdetails = globalState.user;
     const [isThemeEnabled, setIsEnabled] = useState(false);
     const router = useRouter();
     const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+    const { name } = useSelector((state: RootState) => state.global.user);
+
     const onLogout = () => {
         removeUserData();
         router.push({ pathname: "/" });
@@ -70,7 +71,7 @@ const AUIDrawerContent = (props: any) => {
                         <View style={styles.nameContainer}>
                             <AUIThemedText style={styles.name}>{`${t(
                                 GLOBAL_TRANSLATION_LABEL.hii
-                            )} ${userdetails?.name}`}</AUIThemedText>
+                            )} ${name}`}</AUIThemedText>
                             <AUIThemedText style={styles.welcome}>
                                 {t(GLOBAL_TRANSLATION_LABEL.welcome_back)}
                             </AUIThemedText>
@@ -161,6 +162,8 @@ const styles = StyleSheet.create({
     name: {
         fontSize: 18,
         fontWeight: "bold",
+        textAlign: "center",
+        flexWrap: "wrap",
         color: APP_THEME.primary.first,
         // color: APP_THEME.ternary.first,
     },

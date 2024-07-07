@@ -151,17 +151,10 @@ const LoginPage = () => {
                 });
                 if (res?.data?.accessToken) {
                     storeUserData({ profile, ...res });
-                    // school
-                    // student
-                    if (profile === "student") {
-                        router.push({ pathname: "/details" });
-                    } else {
-                        router.push({ pathname: "/schooldetails" });
-                    }
 
-                    // router.push({
-                    //     pathname: profile === "school" ? `(home)/(${profile})` : "/details",
-                    // });
+                    router.push({
+                        pathname: profile === "school" ? `(home)/(${profile})` : "/details",
+                    });
                 }
 
                 console.log("res", res);
