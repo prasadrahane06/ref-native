@@ -3,7 +3,7 @@ import axios from "axios";
 import { RootState } from "@/redux/store";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 
-const baseURL = "https://r7n8bd67-4000.inc1.devtunnels.ms/dev/";
+const baseURL = "https://zmgr2gg0-4000.inc1.devtunnels.ms/dev/";
 
 const useAxios = () => {
     const token = useSelector((state: RootState) => state.global.token);

@@ -20,6 +20,7 @@ import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import useAxios from "./services/axiosClient";
 import { getUserData } from "@/constants/RNAsyncStore";
 import axios from "axios";
+import { setToken } from "@/redux/globalSlice";
 
 const schema = Yup.object().shape({
     remark: Yup.string().required("Remark is required"),
@@ -32,19 +33,19 @@ const schema = Yup.object().shape({
 
 export default function SchoolDetails() {
     const { requestFn } = useApiRequest();
+    const dispatch = useDispatch();
 
     const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
     const router = useRouter();
     const profile = useSelector((state: RootState) => state.global.profile);
     const [locationData, setLocationData] = useState([]);
     const { patch } = useAxios();
-    const [token , setToken] = useState<any>("")
+    const [token , settoken] = useState<any>("")
 
     useEffect(() => {
         getUserData().then((data) => {
             console.log("user-data", data);
-            setToken(data?.data?.accessToken)
-       
+            settoken(data?.data?.accessToken)
         });
     }, []);
 
