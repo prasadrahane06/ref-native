@@ -55,9 +55,9 @@ export default AllCoursesScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: "center",
+        justifyContent: "flex-start",
         alignItems: "center",
-        padding: 10,
+        padding: 5,
     },
     wrapper: {
         marginTop: 100,
