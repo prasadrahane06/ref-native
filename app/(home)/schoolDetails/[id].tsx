@@ -98,6 +98,8 @@ function StudentDetailsTabs({ courseId, clientId }: TabProps) {
 export default function SchoolDetails() {
     const { id } = useLocalSearchParams<{ id: string }>();
     const isRTL = useSelector((state: RootState) => state.global.isRTL);
+    const user = useSelector((state: RootState) => state.global.user);
+    console.log("USER:::::::::", user);
 
     console.log(id);
     if (!id) {
@@ -231,13 +233,14 @@ export default function SchoolDetails() {
         });
     }, [schoolsResponse, id]);
 
-    // chatbot
+    // chatbot code below
     const [config, setConfig] = useState({});
-    const consumerId: string = "667276fdb4001407af7aa8a2";
+    // const consumerId: string = "667276fdb4001407af7aa8a2";
+    const consumerId = id;
 
     // Bilal : 66683f4f7a4338e3c14339ab
     // Agent : 667278245b62c3824a62e12f
-    const userId = "667278245b62c3824a62e12f";
+    // const userId = "667278245b62c3824a62e12f";
 
     // useEffect(() => {
     //     get("https://example.com") // get bot configs
@@ -264,7 +267,7 @@ export default function SchoolDetails() {
 
     return (
         <AUIThemedView style={{ flex: 1 }}>
-            <ChatBot consumerId={consumerId} config={config} userId={userId} />
+            <ChatBot consumerId={consumerId} config={config} user={user} />
 
             <Animated.ScrollView ref={scrollRef} scrollEventThrottle={16}>
                 <AUIThemedView style={styles.container}>

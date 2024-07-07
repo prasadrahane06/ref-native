@@ -150,8 +150,11 @@ const LoginPage = () => {
                 });
                 if (res?.data?.accessToken) {
                     storeUserData({ profile, ...res });
-
-                    router.push({ pathname: "/details" });
+                    if (profile === "student") {
+                        router.push({ pathname: "/details" });
+                    } else {
+                        router.push({ pathname: "/schooldetails" });
+                    }
                 }
 
                 console.log("res", res);
