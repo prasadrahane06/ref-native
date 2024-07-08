@@ -14,6 +14,8 @@ interface AvailableCoursesProps {
     courseDesciption: string;
     image: string;
     startDate: string;
+    numberOfLines?: number;
+    ellipsizeMode?: "head" | "middle" | "tail" | "clip";
 }
 
 export const AvailableCourses: React.FC<AvailableCoursesProps> = ({
@@ -23,6 +25,8 @@ export const AvailableCourses: React.FC<AvailableCoursesProps> = ({
     courseDesciption,
     image,
     startDate,
+    numberOfLines,
+    ellipsizeMode,
 }) => {
     const isEven = index % 2 === 0;
 
@@ -31,7 +35,11 @@ export const AvailableCourses: React.FC<AvailableCoursesProps> = ({
             <AUIThemedView style={[styles.card, { flexDirection: isEven ? "row" : "row-reverse" }]}>
                 <AUIThemedView style={styles.textContainer}>
                     <AUIThemedText style={styles.title}>{courseName}</AUIThemedText>
-                    <AUIThemedText style={styles.description}>{courseDesciption}</AUIThemedText>
+                    <AUIThemedText style={styles.description}
+               numberOfLines={numberOfLines}
+               ellipsizeMode={ellipsizeMode}
+                    
+                    >{courseDesciption}</AUIThemedText>
                     <AUIThemedText
                         style={{
                             fontSize: 13,

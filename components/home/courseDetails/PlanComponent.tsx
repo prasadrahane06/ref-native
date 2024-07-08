@@ -41,6 +41,7 @@ import useAxios from "@/app/services/axiosClient";
 import ContactNow from "../schoolDetails/ContactNow";
 import { useTranslation } from "react-i18next";
 import AUIComingSoon from "@/components/common/AUIComingSoon";
+import useApiRequest from "@/customHooks/useApiRequest";
 
 interface PlanComponentProps {
     courseId: string;
@@ -597,6 +598,15 @@ export default function PlanComponent({
         });
     }, []);
 
+    const { requestFn } = useApiRequest();
+    const isPurchased = useSelector((state: RootState) => state.api.isPurchased );
+
+    console.log("isPurchased", isPurchased);
+
+    useEffect(() => {
+        requestFn(API_URL.purchaseCourse, "isPurchased", { user: true, course: courseId });
+    }, []);
+
     const handleBookSeat = () => {
         setIsSeatBooked(true);
     };
@@ -649,14 +659,31 @@ export default function PlanComponent({
             </AUIThemedView>
 
             <AUIThemedView style={styles.btnContainer}>
-                <Pressable style={styles.bookContainer}
-                      onPress={() =>
+                <Pressable
+                    style={[
+                        styles.bookContainer,
+                        {
+                            opacity:
+                                (isPurchased &&
+                                    isPurchased?.docs &&
+                                    isPurchased?.docs[0]?.type === "bookYourSeat") ||
+                                isPurchased?.docs[0]?.type === "buy"
+                                    ? 0.5
+                                    : 1,
+                        },
+                    ]}
+                    disabled={
+                        isPurchased &&
+                        (isPurchased?.docs[0]?.type === "bookYourSeat" ||
+                            isPurchased?.docs[0]?.type === "buy")
+                    }
+                    onPress={() =>
                         router.push({
                             pathname: `(home)/courseDetails/purchase/${JSON.stringify({
-                                type : "bookYourSeat",
-                                planId : planId,
-                                courseId : courseId
-                            })}`
+                                type: "bookYourSeat",
+                                planId: planId,
+                                courseId: courseId,
+                            })}`,
                         })
                     }
                 >
@@ -666,16 +693,28 @@ export default function PlanComponent({
                     </AUIThemedText>
                 </Pressable>
 
-                {/* {isSeatBooked && ( */}
                 <Pressable
-                    style={styles.buyContainer}
+                    style={[
+                        styles.buyContainer,
+                        {
+                            opacity:
+                                isPurchased &&
+                                isPurchased?.docs &&
+                                isPurchased?.docs[0]?.type === "buy"
+                                    ? 0.5
+                                    : 1,
+                        },
+                    ]}
+                    disabled={
+                        isPurchased && isPurchased?.docs && isPurchased?.docs[0]?.type === "buy"
+                    }
                     onPress={() =>
                         router.push({
                             pathname: `(home)/courseDetails/purchase/${JSON.stringify({
-                                type : "buy",
-                                planId : planId,
-                                courseId : courseId
-                            })}`
+                                type: "buy",
+                                planId: planId,
+                                courseId: courseId,
+                            })}`,
                         })
                     }
                 >

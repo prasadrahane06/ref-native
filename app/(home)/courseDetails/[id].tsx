@@ -249,6 +249,7 @@ export default function CourseDetails() {
                 console.log("res from cart =>", res.data);
 
                 // dispatch(addItemToCart(courseDetails));
+                ApiSuccessToast(res.message);
                 console.log("Item added to cart");
             })
             .catch((e: any) => {

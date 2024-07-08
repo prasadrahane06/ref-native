@@ -84,9 +84,7 @@ const CompareSchools: React.FC = () => {
                             />
                         </View>
                         <View style={styles.textContainer}>
-                            <AUIThemedText style={styles.cardTitle}>
-                                {school1?.name}
-                            </AUIThemedText>
+                            <AUIThemedText style={styles.cardTitle}>{school1?.name}</AUIThemedText>
                             <AUIThemedText style={styles.cardSubtitle}>
                                 East, Academy The East, 60 Grey Mare Ln, ...
                             </AUIThemedText>
@@ -230,23 +228,17 @@ const CompareSchools: React.FC = () => {
                             ).uri
                         }
                     >
-                        <AUIThemedView style={styles.academicsContainer}>
-                            <AUIThemedText style={styles.descriptionText}>
-                                School Location
-                            </AUIThemedText>
-                            <AUIThemedView style={styles.rowContainer}>
-                                    <AUIThemedView style={styles.feeLabelContainer}>
-                                        <AUIThemedText style={styles.label}>
-                                            {school1?.locationDetails?.name?.en || "--"}
-                                        </AUIThemedText>
-                                    </AUIThemedView>
-                                    <AUIThemedView style={styles.feeLabelContaine2}>
-                                        <AUIThemedText style={styles.label}>
-                                        {school2?.locationDetails?.name?.en || "--"}
-                                        </AUIThemedText>
-                                    </AUIThemedView>
+                        <AUIThemedView style={styles.row}>
+                                <AUIThemedText style={styles.value}>School Location</AUIThemedText>
+                                <AUIThemedView style={styles.rowContainer}>
+                                    <AUIThemedText style={styles.label}>
+                                        {school1?.locationDetails[0]?.name?.en || "--"}
+                                    </AUIThemedText>
+                                    <AUIThemedText style={styles.label2}>
+                                    {school2?.locationDetails[0]?.name?.en || "--"}
+                                    </AUIThemedText>
                                 </AUIThemedView>
-                        </AUIThemedView>
+                            </AUIThemedView>
                     </AUIAccordion>
 
                     <AUIAccordion
@@ -258,35 +250,27 @@ const CompareSchools: React.FC = () => {
                         }
                     >
                         <AUIThemedView>
-                            <AUIThemedView style={styles.row}>
+                        <AUIThemedView style={styles.row}>
                                 <AUIThemedText style={styles.value}>Minimum Fee</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
-                                    <AUIThemedView style={styles.feeLabelContainer}>
-                                        <AUIThemedText style={styles.label}>
-                                            {school1?.minPrice || "--"}
-                                        </AUIThemedText>
-                                    </AUIThemedView>
-                                    <AUIThemedView style={styles.feeLabelContaine2}>
-                                        <AUIThemedText style={styles.label}>
-                                            {school2?.minPrice || "--"}
-                                        </AUIThemedText>
-                                    </AUIThemedView>
+                                    <AUIThemedText style={styles.label}>
+                                         {school1?.minPrice || "--"}
+                                    </AUIThemedText>
+                                    <AUIThemedText style={styles.label2}>
+                                         {school2?.minPrice || "--"}
+                                    </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
 
-                            <AUIThemedView style={styles.feeRow2}>
+                            <AUIThemedView style={styles.row}>
                                 <AUIThemedText style={styles.value}>Maximum Fee</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
-                                    <AUIThemedView style={styles.feeLabelContainer}>
-                                        <AUIThemedText style={styles.label}>
-                                            {JSON.stringify(school1?.maxPrice) || "--"}
-                                        </AUIThemedText>
-                                    </AUIThemedView>
-                                    <AUIThemedView style={styles.feeLabelContaine2}>
-                                        <AUIThemedText style={styles.label}>
-                                            {school2?.maxPrice || "--"}
-                                        </AUIThemedText>
-                                    </AUIThemedView>
+                                    <AUIThemedText style={styles.label}>
+                                       {school1?.maxPrice || "--"}
+                                    </AUIThemedText>
+                                    <AUIThemedText style={styles.label2}>
+                                       {school2?.maxPrice || "--"}
+                                    </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
                         </AUIThemedView>
