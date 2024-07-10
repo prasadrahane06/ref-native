@@ -67,6 +67,7 @@ const CompareSchools: React.FC = () => {
     };
 
     return (
+        <AUIThemedView style={styles.outerContainer}>
         <ScrollView>
             <AUIThemedView style={styles.container}>
                 <AUIThemedView style={styles.cardContainer}>
@@ -189,7 +190,7 @@ const CompareSchools: React.FC = () => {
                         }
                     >
                         <AUIThemedView>
-                            <AUIThemedView style={styles.row}>
+                            <AUIThemedView style={styles.row2}>
                                 <AUIThemedText style={styles.value}>
                                     Language to learn
                                 </AUIThemedText>
@@ -228,7 +229,7 @@ const CompareSchools: React.FC = () => {
                             ).uri
                         }
                     >
-                        <AUIThemedView style={styles.row}>
+                        <AUIThemedView style={styles.row2}>
                                 <AUIThemedText style={styles.value}>School Location</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
                                     <AUIThemedText style={styles.label}>
@@ -262,7 +263,7 @@ const CompareSchools: React.FC = () => {
                                 </AUIThemedView>
                             </AUIThemedView>
 
-                            <AUIThemedView style={styles.row}>
+                            <AUIThemedView style={styles.row2}>
                                 <AUIThemedText style={styles.value}>Maximum Fee</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
                                     <AUIThemedText style={styles.label}>
@@ -440,10 +441,11 @@ const CompareSchools: React.FC = () => {
                 </AUIThemedView>
             </AUIThemedView>
         </ScrollView>
+        </AUIThemedView>
     );
 };
 
-const { height: windowHeight } = Dimensions.get("window");
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -451,8 +453,12 @@ const styles = StyleSheet.create({
         alignItems: "center",
         padding: 15,
         backgroundColor: APP_THEME.background,
-        height: windowHeight,
+        // height: windowHeight,
     },
+    outerContainer: {
+        flex: 1,
+        backgroundColor: APP_THEME.background,
+    },
     cardContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
