@@ -20,7 +20,6 @@ import AUIImage from "../common/AUIImage";
 import { Asset } from "expo-asset";
 import { get, post } from "@/app/services/botAxiosClient";
 import { GoogleTranslatorTokenFree } from "@translate-tools/core/translators/GoogleTranslator";
-// "@translate-tools/core": "^1.0.0",
 
 interface User {
     _id: string;
@@ -69,7 +68,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ consumerId, user, config }) => {
     const scrollViewRef = useRef<ScrollView>(null);
     const lastScrollOffset = useRef(0);
 
-    const { _id: userId, name: userName } = user;
+    const { _id: userId, name: userName, client } = user;
 
     console.log("userId :::::", userId, userName);
     // console.log("consumerId :::::", consumerId);
@@ -112,30 +111,25 @@ const ChatBot: React.FC<ChatBotProps> = ({ consumerId, user, config }) => {
                     console.log("Error in /room/join =>", err);
                 });
 
-            // return {
-            //     message: message.message,
-            //     user: message.user,
-            //     createdAt: new Date(message.createdAt).toLocaleTimeString([], {
-            //         hour: "numeric",
-            //         minute: "numeric",
-            //         hour12: true,
-            //     }),
-            // };
-
             socket.on("previousMessages", async () => {
                 const res = await get(`/chat?room=${roomId}`);
                 console.log("previousMessages from /chat =>", res);
                 const translatedMessages = await Promise.all(
-                    res.map(async (message: any) => ({
-                        message: await translator.translate(message.message, "ar", "en"),
-                        userId: message?.user?.user,
-                        username: message?.user?.name,
-                        createdAt: new Date(message.createdAt).toLocaleTimeString([], {
-                            hour: "numeric",
-                            minute: "numeric",
-                            hour12: true,
-                        }),
-                    }))
+                    res.map(async (message: any) => {
+                        const translatedMessage = await (client
+                            ? translator.translate(message.message, "ar", "en")
+                            : message.message);
+                        return {
+                            message: translatedMessage,
+                            userId: message?.user?.user,
+                            username: message?.user?.name,
+                            createdAt: new Date(message.createdAt).toLocaleTimeString([], {
+                                hour: "numeric",
+                                minute: "numeric",
+                                hour12: true,
+                            }),
+                        };
+                    })
                 );
 
                 setIncomingMessages((prevMesaages) => [...prevMesaages, ...translatedMessages]);
@@ -147,52 +141,31 @@ const ChatBot: React.FC<ChatBotProps> = ({ consumerId, user, config }) => {
         }
     }, [modalVisible]);
 
-    // useEffect(() => {
-    // 	socket.on('recieve_message', (data) => {
-    // 		if (data.username === '🤖 BOT') {
-    // 			console.log(data.message);
-    // 			return <IonToast message={data.message} duration={3000} position="top"></IonToast>;
-    // 		} else if (username === 'School') {
-    // 			translator.translate(data.message, 'ar', 'en').then((translatedMessage) => {
-    // 				setIncomingMessages((prevMesaages) => [
-    // 					...prevMesaages,
-    // 					{
-    // 						message: translatedMessage,
-    // 						username: data.username,
-    // 						time: data.time,
-    // 					},
-    // 				]);
-    // 			});
-    // 		} else {
-    // 			setIncomingMessages((prevMesaages) => [
-    // 				...prevMesaages,
-    // 				{
-    // 					message: data.message,
-    // 					username: data.username,
-    // 					time: data.time,
-    // 				},
-    // 			]);
-    // 		}
-    // 	});
-
     useEffect(() => {
         socket.on("message", (data) => {
             console.log(`res from message =>`, data);
 
-            translator.translate(data.message, "ar", "en").then((translatedMessage : any ) => {
-                // setIncomingMessages((prevMesaages) => [
-                //     ...prevMesaages,
-                //     {
-                //         message: translatedMessage,
-                //         username: data.username,
-                //         time: data.time,
-                //     },
-                // ]);
-
+            if (client) {
+                translator.translate(data.message, "ar", "en").then((translatedMessage: any) => {
+                    setIncomingMessages((prevMesaages) => [
+                        ...prevMesaages,
+                        {
+                            message: translatedMessage,
+                            userId: data?.user?.user,
+                            username: data?.user?.name,
+                            createdAt: new Date(data.createdAt).toLocaleTimeString([], {
+                                hour: "numeric",
+                                minute: "numeric",
+                                hour12: true,
+                            }),
+                        },
+                    ]);
+                });
+            } else {
                 setIncomingMessages((prevMesaages) => [
                     ...prevMesaages,
                     {
-                        message: translatedMessage,
+                        message: data.message,
                         userId: data?.user?.user,
                         username: data?.user?.name,
                         createdAt: new Date(data.createdAt).toLocaleTimeString([], {
@@ -202,21 +175,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ consumerId, user, config }) => {
                         }),
                     },
                 ]);
-            });
-
-            // setIncomingMessages((prevMesaages) => [
-            //     ...prevMesaages,
-            //     {
-            //         message: data.message,
-            //         userId: data?.user?.user,
-            //         username: data?.user?.name,
-            //         createdAt: new Date(data.createdAt).toLocaleTimeString([], {
-            //             hour: "numeric",
-            //             minute: "numeric",
-            //             hour12: true,
-            //         }),
-            //     },
-            // ]);
+            }
         });
 
         socket.on("joinMessage", (data) => {
@@ -278,6 +237,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ consumerId, user, config }) => {
 
     const closeChat = () => {
         setModalVisible(false);
+        setIncomingMessages([]);
     };
 
     return (
@@ -345,7 +305,9 @@ const ChatBot: React.FC<ChatBotProps> = ({ consumerId, user, config }) => {
                                         >
                                             <View style={chatStyles.userContainer}>
                                                 <Text style={chatStyles.userText}>
-                                                    {message.username}
+                                                    {message.userId === userId
+                                                        ? `${message.username} (You)`
+                                                        : message.username}
                                                 </Text>
                                             </View>
                                             <Text

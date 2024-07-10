@@ -2,17 +2,15 @@ import { StyleSheet, Image } from "react-native";
 import AUIImage from "./common/AUIImage";
 import { Asset } from "expo-asset";
 
-export default function ImageViewer({ placeholderImageSource, selectedImage }: any) {
+export default function ImageViewer({ placeholderImageSource, selectedImage, style }: any) {
     const imageSource = selectedImage ? { uri: selectedImage } : placeholderImageSource;
 
-    return <Image source={imageSource} style={styles.image} />;
+    return <Image source={imageSource} style={[styles.image, style]} />;
 }
 
 const styles = StyleSheet.create({
     image: {
-        width: 100,
-        height: 100,
-        objectFit: "contain",
-        borderRadius: 18,
+        objectFit: "fill",
+        borderRadius: 20,
     },
 });
