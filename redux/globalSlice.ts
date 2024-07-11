@@ -3,12 +3,22 @@ import { createSlice } from "@reduxjs/toolkit";
 import { ThemeType } from "./../constants/Colors";
 
 export interface UserState {
-    userId: string;
-    userName: string;
-    userImage: string;
-    userEmail: string;
-    userPhone: string;
-    userType: string;
+    _id: string;
+    academicSession: string;
+    city: string;
+    client: null;
+    country: string;
+    createdAt: string;
+    dob: string;
+    email: string;
+    language: string;
+    name: string;
+    phone: string;
+    qualification: string;
+    state: string;
+    status: number;
+    type: string;
+    updatedAt: string;
 }
 
 export interface GlobalState {
@@ -34,12 +44,22 @@ const initialState: GlobalState = {
     token: "",
     isRTL: false,
     user: {
-        userId: "",
-        userName: "",
-        userImage: "",
-        userEmail: "",
-        userPhone: "",
-        userType: "",
+        _id: "",
+        academicSession: "",
+        city: "",
+        client: null,
+        country: "",
+        createdAt: "",
+        dob: "",
+        email: "",
+        language: "",
+        name: "",
+        phone: "",
+        qualification: "",
+        state: "",
+        status: 0,
+        type: "",
+        updatedAt: "",
     },
 };
 
@@ -79,12 +99,22 @@ export const globalSlice = createSlice({
         setUser: (
             state,
             action: PayloadAction<{
-                userId: string;
-                userName: string;
-                userImage: string;
-                userEmail: string;
-                userPhone: string;
-                userType: string;
+                _id: "";
+                academicSession: "";
+                city: "";
+                client: null;
+                country: "";
+                createdAt: "";
+                dob: "";
+                email: "";
+                language: "";
+                name: "";
+                phone: "";
+                qualification: "";
+                state: "";
+                status: 0;
+                type: "";
+                updatedAt: "";
             }>
         ) => {
             state.user = action.payload;

@@ -67,6 +67,9 @@ export default function TabFourScreen() {
                                     title={item?.course?.courseName}
                                     image={item?.course?.image}
                                     startingDate={item?.course?.startDate}
+                                    ellipsizeMode="tail"
+                                    numberOfLines={1}
+
                                     cart
                                 />
                             </AUIThemedView>

@@ -34,6 +34,9 @@ export const AvailableCoursesList: React.FC<AvailableCoursesProps> = ({ courses 
                         courseDesciption={item.description}
                         image={item.image}
                         startDate={item.startDate}
+                        numberOfLines={3}
+                        ellipsizeMode={"tail"}
+                        
                     />
                 )}
                 keyExtractor={(item) => item.courseName}

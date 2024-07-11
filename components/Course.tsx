@@ -42,10 +42,11 @@ const Course: React.FC<CourseProps> = ({
 }) => {
     const router = useRouter();
     const dispatch = useDispatch();
-    const { del } = useAxios();
     const { t } = useTranslation();
     console.log("courseId", courseId);
     const theme = useSelector((state: RootState) => state.global.theme);
+
+    const { del } = useAxios();
 
     const handleRemoveFromCart = (id: string) => {
         del(API_URL.cart, { course: id })
@@ -66,6 +67,19 @@ const Course: React.FC<CourseProps> = ({
         month: "2-digit",
         year: "2-digit",
     });
+
+    const handleRemoveFav = (id: string, type: string) => {
+        del(API_URL.favorite, { id: id, type: type })
+            .then((res: any) => {
+                ApiSuccessToast(res.message);
+                console.log("item removed from favourite  res =>", res.data);
+                dispatch(setLoader(false));
+            })
+            .catch((e: any) => {
+                ApiErrorToast(e.response?.data?.message);
+                console.log(e);
+            });
+    };
 
     return (
         <TouchableOpacity
@@ -102,9 +116,12 @@ const Course: React.FC<CourseProps> = ({
                     </AUIThemedText>
                 </AUIThemedView>
                 {favorite && (
-                    <AUIThemedView style={styles.iconContainer}>
+                    <TouchableOpacity
+                        onPress={() => handleRemoveFav(courseId, "course")}
+                        style={styles.iconContainer}
+                    >
                         <MaterialIcons name="favorite" size={18} color="red" style={styles.icon} />
-                    </AUIThemedView>
+                    </TouchableOpacity>
                 )}
                 {cart && (
                     <TouchableOpacity

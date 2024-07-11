@@ -41,6 +41,7 @@ import useAxios from "@/app/services/axiosClient";
 import ContactNow from "../schoolDetails/ContactNow";
 import { useTranslation } from "react-i18next";
 import AUIComingSoon from "@/components/common/AUIComingSoon";
+import useApiRequest from "@/customHooks/useApiRequest";
 
 interface PlanComponentProps {
     courseId: string;
@@ -599,6 +600,15 @@ export default function PlanComponent({
         });
     }, []);
 
+    const { requestFn } = useApiRequest();
+    const isPurchased = useSelector((state: RootState) => state.api.isPurchased);
+
+    console.log("isPurchased", isPurchased);
+
+    useEffect(() => {
+        requestFn(API_URL.purchaseCourse, "isPurchased", { user: true, course: courseId });
+    }, []);
+
     const handleBookSeat = () => {
         setIsSeatBooked(true);
     };
@@ -657,8 +667,20 @@ export default function PlanComponent({
                         {
                             backgroundColor: BACKGOUND_THEME[theme].backgound,
                             borderColor: TEXT_THEME[theme].primary,
+                            opacity:
+                                (isPurchased &&
+                                    isPurchased?.docs &&
+                                    isPurchased?.docs[0]?.type === "bookYourSeat") ||
+                                isPurchased?.docs[0]?.type === "buy"
+                                    ? 0.5
+                                    : 1,
                         },
                     ]}
+                    disabled={
+                        isPurchased &&
+                        (isPurchased?.docs[0]?.type === "bookYourSeat" ||
+                            isPurchased?.docs[0]?.type === "buy")
+                    }
                     onPress={() =>
                         router.push({
                             pathname: `(home)/courseDetails/purchase/${JSON.stringify({
@@ -675,12 +697,23 @@ export default function PlanComponent({
                     </AUIThemedText>
                 </Pressable>
 
-                {/* {isSeatBooked && ( */}
                 <Pressable
                     style={[
                         styles.buyContainer,
-                        { backgroundColor: APP_THEME[theme].primary.first },
+                        {
+                            backgroundColor: APP_THEME[theme].primary.first,
+
+                            opacity:
+                                isPurchased &&
+                                isPurchased?.docs &&
+                                isPurchased?.docs[0]?.type === "buy"
+                                    ? 0.5
+                                    : 1,
+                        },
                     ]}
+                    disabled={
+                        isPurchased && isPurchased?.docs && isPurchased?.docs[0]?.type === "buy"
+                    }
                     onPress={() =>
                         router.push({
                             pathname: `(home)/courseDetails/purchase/${JSON.stringify({

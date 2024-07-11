@@ -9,13 +9,14 @@ import { destinationData } from "@/constants/dummy data/destinationData";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import { RootState } from "@/redux/store";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Dimensions, FlatList, ListRenderItem, ScrollView, StyleSheet } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Carousel, { ICarouselInstance, Pagination } from "react-native-reanimated-carousel";
 import { useSharedValue } from "react-native-reanimated";
 import { carouselData } from "@/constants/dummy data/carouselData";
 import CarouselSlide from "@/components/home/common/CarouselSlide";
+import { useFocusEffect } from "@react-navigation/native";
 
 interface CourseData {
     title: string;
@@ -56,6 +57,7 @@ const TabTwoScreen: React.FC = () => {
     const handleViewAllCountrySchoolsClick = () => {
         setShowAllCountries(true);
     };
+    const dispatch = useDispatch();
 
     const getfavorite = useSelector((state: RootState) => state.api.favorite || {});
     const isRTL = useSelector((state: RootState) => state.global.isRTL || {});
@@ -67,9 +69,11 @@ const TabTwoScreen: React.FC = () => {
         console.log("getfavorite", JSON.stringify(fav));
     }, [getfavorite]);
 
-    useEffect(() => {
-        requestFn(API_URL.favorite, "favorite", { user: true });
-    }, []);
+    useFocusEffect(
+        useCallback(() => {
+            requestFn(API_URL.favorite, "favorite", { user: true });
+        }, [])
+    );
     const onPressPagination = (index: number) => {
         ref.current?.scrollTo({
             count: index - progress.value,
@@ -84,8 +88,8 @@ const TabTwoScreen: React.FC = () => {
                 courseId={item?._id}
                 title={item?.courseName}
                 image={item?.image}
-                favorite={item?.favorite}
-                startingDate={item?.startingDate}
+                favorite={true}
+                startingDate={item?.startDate}
             />
         </AUIThemedView>
     );
@@ -99,9 +103,8 @@ const TabTwoScreen: React.FC = () => {
                 title={item?.name}
                 caption={item?.discription}
                 image={item?.banner}
-                favorite={item.favorite}
-                schoolWidth={160}
-                schoolHeight={145}
+                favorite={true}
+                style={{ width: 165, height: 160 }}
             />
         </AUIThemedView>
     );
@@ -109,10 +112,10 @@ const TabTwoScreen: React.FC = () => {
     const renderCountryItem: ListRenderItem<CountryData> = ({ item }: any) => (
         <AUIThemedView style={styles.destinationItem}>
             <Destination
-                title={isRTL ? item.name?.ar : item.name?.en}
+                title={isRTL ? item.name?.en : item.name?.ar}
                 image={item.images[0]}
                 id={item._id}
-                favorite={item.favorite}
+                favorite={true}
                 countryWidth={160}
                 countryHeight={145}
             />
@@ -238,7 +241,10 @@ const TabTwoScreen: React.FC = () => {
     );
 };
 
+const windowWidth = Dimensions.get('window').width;
 const styles = StyleSheet.create({
+
+
     container: {
         // paddingHorizontal: 12,
         // backgroundColor: APP_THEME.background,
@@ -248,7 +254,7 @@ const styles = StyleSheet.create({
         // borderBottomWidth: 1,
         borderColor: "#5BD894",
         paddingBottom: 10,
-        paddingLeft: 10,
+        paddingLeft:10,
 
         // backgroundColor: APP_THEME.background,
     },
@@ -285,15 +291,19 @@ const styles = StyleSheet.create({
         marginVertical: -6,
     },
     courseColumnWrapper: {
-        justifyContent: "space-between",
+        // justifyContent: "space-between",
         // backgroundColor: APP_THEME.background,
         marginTop: 10,
         marginBottom: -8,
+        justifyContent: windowWidth > 600 ? "center" : "space-between",
     },
     schoolColumnWrapper: {
-        justifyContent: "space-between",
+        // justifyContent: "space-between",
         // backgroundColor: APP_THEME.background,
+        marginHorizontal: 10,
         marginTop: 10,
+        // padding: 10,
+        justifyContent: windowWidth > 600 ? "center" : "space-between",
     },
     destinationColumnWrapper: {
         justifyContent: "space-between",

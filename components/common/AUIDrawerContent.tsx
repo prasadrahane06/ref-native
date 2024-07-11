@@ -37,11 +37,16 @@ const AUIDrawerContent = (props: any) => {
     const router = useRouter();
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
+
     const globalState = useSelector((state: RootState) => state.global);
     const theme = useSelector((state: RootState) => state.global.theme);
+    const isDarkMode = useSelector((state: RootState) => state.global.theme === "dark");
+    const { name } = useSelector((state: RootState) => state.global.user);
+
+    const [isThemeEnabled, setIsEnabled] = useState(false);
+
     const isRTL = globalState.isRTL;
     const userdetails = globalState.user;
-    const isDarkMode = useSelector((state: RootState) => state.global.theme === "dark");
 
     const toggleSwitch = async () => {
         const newDarkModeState = !isDarkMode;
@@ -82,9 +87,7 @@ const AUIDrawerContent = (props: any) => {
                         <View style={styles.nameContainer}>
                             <AUIThemedText
                                 style={[styles.name, { color: APP_THEME[theme].primary.first }]}
-                            >{`${t(GLOBAL_TRANSLATION_LABEL.hii)} ${
-                                userdetails?.userName
-                            }`}</AUIThemedText>
+                            >{`${t(GLOBAL_TRANSLATION_LABEL.hii)} ${name}`}</AUIThemedText>
                             <AUIThemedText
                                 style={[styles.welcome, { color: TEXT_THEME[theme].primary }]}
                             >
@@ -189,7 +192,8 @@ const styles = StyleSheet.create({
     name: {
         fontSize: 18,
         fontWeight: "bold",
-        // color: APP_THEME.primary.first,
+        textAlign: "center",
+        flexWrap: "wrap",
         // color: APP_THEME.ternary.first,
     },
     welcome: {

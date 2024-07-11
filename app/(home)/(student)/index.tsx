@@ -16,7 +16,7 @@ import { languagesData } from "@/constants/dummy data/languagesData";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import { RootState } from "@/redux/store";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Dimensions, I18nManager, Platform, ScrollView, StyleSheet } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
@@ -34,7 +34,6 @@ export default function HomeScreen() {
     const ref = useRef<ICarouselInstance>(null);
 
     const [destinationData, setDestinationData] = useState([]);
-
     const { t, i18n } = useTranslation();
     const navigation = useNavigation();
     const [selectedLanguage, setSelectedLanguage] = useState(languagesData[0].language);
@@ -44,23 +43,29 @@ export default function HomeScreen() {
     const theme = useSelector((state: RootState) => state.global.theme);
     console.log("response in index =>", response);
     let schoolsResponse = response?.school;
-    const courseResponse = response?.course;
-
+    const courseResponse = response?.selectedLanguagecourse;
     const countryResponse = response?.country;
 
-    useEffect(() => {
-        requestFn(API_URL.course, "course", { limit: 4, similar: selectedLanguage });
+
+    console.log("courseResponse => selected", JSON.stringify(courseResponse));
+
+    const fetchCourses = useCallback(() => {
+        requestFn(API_URL.course, "selectedLanguagecourse", { similar: selectedLanguage.name });
     }, [selectedLanguage]);
+
+    useEffect(() => {
+        fetchCourses();
+    }, [fetchCourses]);
 
     useEffect(() => {
         requestFn(API_URL.popularSchool, "school");
         requestFn(API_URL.country, "country");
 
-        requestFn(API_URL.course, "course", { limit: 4, similar: selectedLanguage.name });
-        console.log("slctdlng", selectedLanguage);
-        changeLanguage(selectedLanguage.code);
-    }, [selectedLanguage]);
-
+        getUserData().then((data) => {
+            const id = data?.data?.user?._id;
+            requestFn(API_URL.user, "userProfileData", { id: id });
+        });
+    }, []);
     useEffect(() => {
         // i18n.changeLanguage("ar");
         getUserData().then((data) => {
@@ -68,6 +73,7 @@ export default function HomeScreen() {
             requestFn(API_URL.user, "userProfileData", { id: id });
         });
     }, []);
+    
 
     const onPressPagination = (index: number) => {
         ref.current?.scrollTo({
@@ -126,7 +132,7 @@ export default function HomeScreen() {
                 >
                     {t(GLOBAL_TRANSLATION_LABEL.popular_school)}
                 </SectionTitle>
-                <SchoolList data={schoolsResponse?.docs} />
+                <SchoolList data={schoolsResponse?.docs.slice(0, 4)} />
             </AUIThemedView>
 
             <AUIThemedView>
@@ -144,7 +150,7 @@ export default function HomeScreen() {
                 <SectionTitle viewAll="(home)/course/AllCoursesScreen">
                     {t(GLOBAL_TRANSLATION_LABEL.popular_Courses)}
                 </SectionTitle>
-                <CourseList data={courseResponse?.docs} />
+                <CourseList data={courseResponse?.docs.slice(0, 4)} />
             </AUIThemedView>
 
             <AUIThemedView>

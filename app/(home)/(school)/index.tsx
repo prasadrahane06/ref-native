@@ -18,6 +18,7 @@ export default function HomeScreen() {
     const { requestFn } = useApiRequest();
     const school = useSelector((state: RootState) => state.api.individualSchool || {});
     const theme = useSelector((state: RootState) => state.global.theme);
+    const MySchoolDetails = useSelector((state: RootState) => state.api.MySchoolDetails || {});
 
     const courseInfoData = [
         {
@@ -41,28 +42,23 @@ export default function HomeScreen() {
             subtitle: "Total Revenue of School",
         },
     ];
-    useEffect(() => {
-        getUserData().then((data) => {
-            const id = data?.data?.user?._id;
-            console.log("userId", id);
-            requestFn(API_URL.user, "userProfileData", { id: id });
-            requestFn(API_URL.schoolOverview, "individualSchool", {
-                id: "666e8905e16ce8a2691168f2",
-            });
-        });
-    }, []);
-    useEffect(() => {
-        console.log("school index", school);
-    }, [school]);
-    const userdetails = useSelector((state: RootState) => state.global.user);
+
+  
+
+    useEffect(()=>{
+        requestFn(API_URL.schoolOverview , "MySchoolDetails" , {client : true })
+    },[])
+
+    console.log("MySchoolDetails" , JSON.stringify(MySchoolDetails))
+
     return (
         <ScrollView>
             <AUIThemedView style={styles.section}>
-                <SectionTitle>{`${GLOBAL_TEXT.welcome_to_my_school} school`}</SectionTitle>
+                <SectionTitle>{`${MySchoolDetails[0]?.name}`}</SectionTitle>
                 <AUIThemedView style={{ alignItems: "center", marginTop: 15 }}>
                     <FlatList
                         scrollEnabled={false}
-                        data={courseInfoData}
+                        data={MySchoolDetails[0]?.schoolInfo}
                         numColumns={2}
                         renderItem={({ item }) => (
                             <AUIInfoCard
@@ -107,7 +103,7 @@ export default function HomeScreen() {
                     <SectionTitle style={{ paddingBottom: 10 }}>
                         {GLOBAL_TEXT.ongoing_courses}
                     </SectionTitle>
-                    <CourseList data={school[0]?.courses} />
+                    <CourseList data={MySchoolDetails[0]?.courses?.slice(0,4)} />
                 </AUIThemedView>
             </AUIThemedView>
         </ScrollView>

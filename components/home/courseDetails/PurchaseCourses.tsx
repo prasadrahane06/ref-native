@@ -70,10 +70,10 @@ export default function PurchaseCoursesList({
                 data={data}
                 renderItem={({ item }) => (
                     <PurchaseCourses
-                        image={item.course.image}
-                        title={item.course.courseName}
-                        subtitle={item.course.description}
-                        schoolName={item.course.client.name}
+                        image={item?.course?.image}
+                        title={item?.course?.courseName}
+                        subtitle={item?.course?.description}
+                        schoolName={item?.course?.client?.name}
                         type={type}
                     />
                 )}

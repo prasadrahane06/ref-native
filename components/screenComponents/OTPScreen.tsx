@@ -55,26 +55,21 @@ const OTPScreen = ({
             <AUIThemedView style={styles.AUIOTPInput}>
                 <AUIOTPInput length={length} onChange={onChange} disabled={disabled} />
             </AUIThemedView>
-            <AUIThemedText style={styles.resendOtpText}>
-                {canResend ? (
-                    <TouchableOpacity onPress={handleResendOtp}>
-                        <AUIThemedText style={{ fontSize: 14, color: "gray" }}>
-                            Did't receive the OTP? {"  "}
-                            <AUIThemedText
-                                style={[
-                                    styles.resendLink,
-                                    { color: theme === "light" ? "#007aff" : "#66CCFF" },
-                                    disabled && { opacity: 0.5 },
-                                ]}
-                            >
-                                Resend OTP
-                            </AUIThemedText>
+
+            {canResend ? (
+                <TouchableOpacity onPress={handleResendOtp} style={styles.resendOtpText}>
+                    <AUIThemedText style={{ fontSize: 14, color: "gray" }}>
+                        Did't receive the OTP? {"  "}
+                        <AUIThemedText style={[styles.resendLink, disabled && { opacity: 0.5 }]}>
+                            Resend OTP
                         </AUIThemedText>
-                    </TouchableOpacity>
-                ) : (
-                    `Resend OTP in 00:${timer < 10 ? `0${timer}` : timer}`
-                )}
-            </AUIThemedText>
+                    </AUIThemedText>
+                </TouchableOpacity>
+            ) : (
+                <AUIThemedText style={styles.resendOtpText}>
+                    {`Resend OTP in 00:${timer < 10 ? `0${timer}` : timer}`}
+                </AUIThemedText>
+            )}
         </AUIThemedView>
     );
 };
