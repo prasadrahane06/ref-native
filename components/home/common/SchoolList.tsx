@@ -26,8 +26,11 @@ const SchoolList: React.FC<SchoolListProps> = ({ data }) => {
                                       ).uri
                             }
                             caption={item?.description}
-                            schoolWidth={270}
-                            schoolHeight={160}
+                            style={{
+                                width: 270,
+                                height: 160,
+                                marginHorizontal: 6,
+                            }}
                         />
                     </AUIThemedView>
                 )}
@@ -39,7 +42,7 @@ const SchoolList: React.FC<SchoolListProps> = ({ data }) => {
 
 const styles = StyleSheet.create({
     container: {
-        paddingLeft: 14,
+        paddingLeft: 10,
     },
 });
 

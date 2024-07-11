@@ -14,11 +14,11 @@ const AllCoursesScreen = () => {
     const { requestFn } = useApiRequest();
     const { get } = useAxios();
 
-    const courseResponse = useSelector((state: RootState) => state.api.popularCourse || {});
+    const courseResponse = useSelector((state: RootState) => state.api.selectedLanguagecourse || {});
 
-    useEffect(() => {
-        requestFn(API_URL.course, "popularCourse");
-    }, []);
+    // useEffect(() => {
+    //     requestFn(API_URL.course, "popularCourse");
+    // }, []);
 
     return (
         <AUILinearGradient
@@ -55,9 +55,9 @@ export default AllCoursesScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: "center",
+        justifyContent: "flex-start",
         alignItems: "center",
-        padding: 10,
+        padding: 5,
     },
     wrapper: {
         marginTop: 100,
