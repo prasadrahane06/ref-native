@@ -26,7 +26,7 @@ import { Controller, useForm } from "react-hook-form";
 import AUIInputField from "@/components/common/AUIInputField";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { countriesData } from "@/constants/dummy data/countriesData";
-import { APP_THEME } from "@/constants/Colors";
+import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import AUIButton from "@/components/common/AUIButton";
 import useAxios from "./services/axiosClient";
 import { API_URL } from "@/constants/urlProperties";
@@ -120,6 +120,7 @@ const schema = Yup.object().shape({
 
 const Profile: React.FC = () => {
     const userProfileData = useSelector((state: RootState) => state.api.userProfileData);
+    const theme = useSelector((state: RootState) => state.global.theme);
     console.log("userProfileData in profile", userProfileData);
 
     const [dateOfBirth, setDateOfBirth] = useState(userProfileData?.dob);
@@ -205,7 +206,7 @@ const Profile: React.FC = () => {
                     control={control}
                     render={({ field: { onChange, value }, fieldState: { error } }) => (
                         <AUIThemedView>
-                            <Text style={styles.label}>Name</Text>
+                            <AUIThemedText style={styles.label}>Name</AUIThemedText>
                             <AUIInputField
                                 value={value}
                                 onChangeText={onChange}
@@ -227,7 +228,7 @@ const Profile: React.FC = () => {
                     control={control}
                     render={({ field: { onChange, value }, fieldState: { error } }) => (
                         <AUIThemedView>
-                            <Text style={styles.label}>Mobile Number</Text>
+                            <AUIThemedText style={styles.label}>Mobile Number</AUIThemedText>
                             <AUIInputField
                                 value={value}
                                 onChangeText={onChange}
@@ -249,7 +250,7 @@ const Profile: React.FC = () => {
                     control={control}
                     render={({ field: { onChange, value }, fieldState: { error } }) => (
                         <AUIThemedView>
-                            <Text style={styles.label}>Email</Text>
+                            <AUIThemedText style={styles.label}>Email</AUIThemedText>
                             <AUIInputField
                                 value={value}
                                 onChangeText={onChange}
@@ -303,7 +304,7 @@ const Profile: React.FC = () => {
                                         style={{
                                             flex: 1,
                                             paddingVertical: 10,
-                                            color: "#000",
+                                            color: TEXT_THEME[theme].primary,
                                         }}
                                         value={formatDate(value)}
                                         editable={false}
@@ -330,13 +331,14 @@ const Profile: React.FC = () => {
                     control={control}
                     render={({ field: { onChange, value }, fieldState: { error } }) => (
                         <AUIThemedView>
+                            <AUIThemedText style={styles.label}>Select your gender</AUIThemedText>
                             <DropdownComponent
                                 //@ts-ignore
                                 list={genderData}
                                 value={value}
                                 setValue={({ gender }: { gender: string }) => onChange(gender)}
                                 labelField="gender"
-                                label="Select your gender"
+                                // label="Select your gender"
                                 labelStyles={{
                                     marginTop: 10,
                                     marginBottom: 5,
@@ -364,6 +366,7 @@ const Profile: React.FC = () => {
                     control={control}
                     render={({ field: { onChange, value }, fieldState: { error } }) => (
                         <AUIThemedView>
+                            <AUIThemedText style={styles.label}>My Qualification</AUIThemedText>
                             <DropdownComponent
                                 //@ts-ignore
                                 list={qualificationData}
@@ -371,7 +374,7 @@ const Profile: React.FC = () => {
                                 setValue={({ qualification }: { qualification: string }) =>
                                     onChange(qualification)
                                 }
-                                label="My Qualification"
+                                // label="My Qualification"
                                 labelField="qualification"
                                 labelStyles={{
                                     marginTop: 10,
@@ -400,6 +403,7 @@ const Profile: React.FC = () => {
                     control={control}
                     render={({ field: { onChange, value }, fieldState: { error } }) => (
                         <AUIThemedView>
+                            <AUIThemedText style={styles.label}>Academic Session</AUIThemedText>
                             <DropdownComponent
                                 //@ts-ignore
                                 list={academicSessionData}
@@ -407,7 +411,7 @@ const Profile: React.FC = () => {
                                 setValue={({ academicSession }: { academicSession: string }) =>
                                     onChange(academicSession)
                                 }
-                                label="Academic Session"
+                                // label="Academic Session"
                                 labelField="academicSession"
                                 labelStyles={{
                                     marginTop: 10,
@@ -436,7 +440,7 @@ const Profile: React.FC = () => {
                     control={control}
                     render={({ field: { onChange, value }, fieldState: { error } }) => (
                         <AUIThemedView>
-                            <Text style={styles.label}>My Language</Text>
+                            <AUIThemedText style={styles.label}>My Language</AUIThemedText>
                             {/* @ts-ignore */}
                             <DropdownComponent
                                 list={countriesData.map((country) => ({
@@ -461,7 +465,7 @@ const Profile: React.FC = () => {
                     control={control}
                     render={({ field: { onChange, value }, fieldState: { error } }) => (
                         <AUIThemedView>
-                            <Text style={styles.label}>My Country</Text>
+                            <AUIThemedText style={styles.label}>My Country</AUIThemedText>
                             {/* @ts-ignore */}
                             <DropdownComponent
                                 list={countriesData.map((country) => ({
@@ -486,7 +490,7 @@ const Profile: React.FC = () => {
                     control={control}
                     render={({ field: { onChange, value }, fieldState: { error } }) => (
                         <AUIThemedView>
-                            <Text style={styles.label}>My State</Text>
+                            <AUIThemedText style={styles.label}>My State</AUIThemedText>
                             <DropdownComponent
                                 // @ts-ignore
                                 list={stateData}
@@ -507,7 +511,7 @@ const Profile: React.FC = () => {
                     control={control}
                     render={({ field: { onChange, value }, fieldState: { error } }) => (
                         <AUIThemedView>
-                            <Text style={styles.label}>My City</Text>
+                            <AUIThemedText style={styles.label}>My City</AUIThemedText>
                             <DropdownComponent
                                 // @ts-ignore
                                 list={cityData}
@@ -561,7 +565,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: "#fff",
+        // backgroundColor: "#fff",
     },
     header: {
         flexDirection: "row",
@@ -591,7 +595,7 @@ const styles = StyleSheet.create({
         fontSize: 13,
         fontWeight: "bold",
         fontStyle: "normal",
-        color: "#333",
+        // color: "#333",
     },
     input: {
         borderWidth: 1,

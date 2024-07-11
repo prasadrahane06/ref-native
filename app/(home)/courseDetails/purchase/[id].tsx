@@ -8,7 +8,7 @@ import { Asset } from "expo-asset";
 import { RootState } from "@/redux/store";
 import useApiRequest from "@/customHooks/useApiRequest";
 import { API_URL } from "@/constants/urlProperties";
-import { APP_THEME } from "@/constants/Colors";
+import { APP_THEME, BACKGOUND_THEME } from "@/constants/Colors";
 import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import AUIImage from "@/components/common/AUIImage";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
@@ -81,7 +81,12 @@ export default function PurchaseScreen() {
     };
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView
+            contentContainerStyle={[
+                styles.container,
+                { backgroundColor: BACKGOUND_THEME[theme].backgound },
+            ]}
+        >
             <AUIThemedText style={styles.header}>
                 {t(GLOBAL_TRANSLATION_LABEL.yourSelectedPlanIs)} {individualPlan?.name}
             </AUIThemedText>
@@ -122,7 +127,6 @@ export default function PurchaseScreen() {
                     style={[
                         styles.separator,
                         {
-                            backgroundColor: APP_THEME[theme].primary.first,
                             borderColor: APP_THEME[theme].primary.first,
                         },
                     ]}
@@ -130,14 +134,10 @@ export default function PurchaseScreen() {
 
                 <AUIThemedView style={{ marginHorizontal: 15 }}>
                     <AUIThemedView style={styles.planDetails}>
-                        <AUIThemedText
-                            style={[styles.totalText, { color: APP_THEME[theme].primary.first }]}
-                        >
+                        <AUIThemedText style={styles.totalText}>
                             {t(GLOBAL_TRANSLATION_LABEL.total)}
                         </AUIThemedText>
-                        <AUIThemedText
-                            style={[styles.totalValue, { color: APP_THEME[theme].primary.first }]}
-                        >
+                        <AUIThemedText style={styles.totalValue}>
                             ${planValue.total.toFixed(2)}
                         </AUIThemedText>
                     </AUIThemedView>
@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
     container: {
         flexGrow: 1,
         padding: 20,
-        backgroundColor: "#fff",
+        // backgroundColor: "#fff",
     },
     header: {
         fontSize: 20,
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
     },
     confirmButtonText: {
-        color: "#fff",
+        // color: "#fff",
         textAlign: "center",
         fontSize: 18,
         fontWeight: "500",

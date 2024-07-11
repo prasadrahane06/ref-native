@@ -1,5 +1,5 @@
 import AUIImage from "@/components/common/AUIImage";
-import { APP_THEME } from "@/constants/Colors";
+import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { ReactNode, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
@@ -19,19 +19,12 @@ const AUIAccordion: React.FC<AccordionProps> = ({ title, children, icon }) => {
     const [expanded, setExpanded] = useState(false);
 
     return (
-        <AUIThemedView
-            style={[styles.accordionContainer, { backgroundColor: APP_THEME[theme].background }]}
-        >
+        <AUIThemedView style={styles.accordionContainer}>
             <TouchableOpacity
                 style={[styles.accordionHeader, expanded && styles.accordionHeaderExpanded]}
                 onPress={() => setExpanded(!expanded)}
             >
-                <AUIThemedView
-                    style={[
-                        styles.accordionTitle,
-                        { backgroundColor: APP_THEME[theme].background },
-                    ]}
-                >
+                <AUIThemedView style={styles.accordionTitle}>
                     <AUIImage style={styles.icon} path={icon} resizeMode="cover" />
                     <AUIThemedText style={styles.accordionTitleText}>{title}</AUIThemedText>
                 </AUIThemedView>
@@ -39,7 +32,7 @@ const AUIAccordion: React.FC<AccordionProps> = ({ title, children, icon }) => {
                 <Ionicons
                     name={expanded ? "chevron-up-outline" : "chevron-down-outline"}
                     size={24}
-                    color="#0A152F"
+                    color={TEXT_THEME[theme].primary}
                 />
             </TouchableOpacity>
             {expanded && <AUIThemedView style={styles.accordionContent}>{children}</AUIThemedView>}

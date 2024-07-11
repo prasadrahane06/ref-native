@@ -5,13 +5,17 @@ import { Linking, Text, TouchableOpacity } from "react-native";
 import { AUIThemedView } from "../common/AUIThemedView";
 import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
+import { AUIThemedText } from "../common/AUIThemedText";
 
 export default function TermsAndPolicy() {
     const theme = useSelector((state: RootState) => state.global.theme);
 
     return (
         <AUIThemedView
-            style={{ justifyContent: "center", alignContent: "center", paddingVertical: 20 }}
+            style={{
+                flex: 1,
+                alignContent: "center",
+            }}
         >
             <TouchableOpacity
                 style={{
@@ -30,7 +34,9 @@ export default function TermsAndPolicy() {
                     );
                 }}
             >
-                <Text style={{ color: "#fff", fontWeight: "bold" }}>Privacy Policy</Text>
+                <AUIThemedText style={{ color: "#fff", fontWeight: "bold" }}>
+                    Privacy Policy
+                </AUIThemedText>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -47,7 +53,7 @@ export default function TermsAndPolicy() {
                     Linking.openURL("https://linguistedu.com/assets/Terms.pdf");
                 }}
             >
-                <Text style={{ color: "#fff", fontWeight: "bold" }}>Terms</Text>
+                <AUIThemedText style={{ color: "#fff", fontWeight: "bold" }}>Terms</AUIThemedText>
             </TouchableOpacity>
         </AUIThemedView>
     );

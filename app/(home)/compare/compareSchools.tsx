@@ -2,13 +2,13 @@ import AUIAccordion from "@/components/common/AUIAccordion";
 import AUIImage from "@/components/common/AUIImage";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { APP_THEME } from "@/constants/Colors";
+import { APP_THEME, BACKGOUND_THEME } from "@/constants/Colors";
 import { RootState } from "@/redux/store";
 import { FontAwesome, FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { Platform, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Dimensions, Platform, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import useAxios from "@/app/services/axiosClient";
@@ -68,9 +68,9 @@ const CompareSchools: React.FC = () => {
     };
 
     return (
-        <ScrollView>
-            <AUIThemedView style={[styles.container, { backgroundColor: APP_THEME[theme].background }]}>
-                <AUIThemedView style={[styles.cardContainer, { backgroundColor: APP_THEME[theme].background }]}>
+        <ScrollView style={{ flex: 1, backgroundColor: BACKGOUND_THEME[theme].backgound }}>
+            <AUIThemedView style={styles.container}>
+                <AUIThemedView style={styles.cardContainer}>
                     <TouchableOpacity style={styles.customCard}>
                         <View style={styles.imageContainer}>
                             <AUIImage
@@ -152,18 +152,20 @@ const CompareSchools: React.FC = () => {
                                         {school1?.description || "--"}
                                     </AUIThemedText>
                                     <AUIThemedText style={styles.label2}>
-                                        {school2?.description|| "--"}
+                                        {school2?.description || "--"}
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
                             <AUIThemedView style={styles.row}>
-                                <AUIThemedText style={styles.value}>have Mail support </AUIThemedText>
+                                <AUIThemedText style={styles.value}>
+                                    have Mail support{" "}
+                                </AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
                                     <AUIThemedText style={styles.label}>
-                                    {school1?.mailSupport === true  ? "true" : "false" || "--"}
+                                        {school1?.mailSupport === true ? "true" : "false" || "--"}
                                     </AUIThemedText>
                                     <AUIThemedText style={styles.label2}>
-                                    {school2?.mailSupport  === true  ? "true" : "false" || "--"}
+                                        {school2?.mailSupport === true ? "true" : "false" || "--"}
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
@@ -171,10 +173,10 @@ const CompareSchools: React.FC = () => {
                                 <AUIThemedText style={styles.value}>callSupport</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
                                     <AUIThemedText style={styles.label}>
-                                    {school1?.callSupport === true  ? "true" : "false" || "--"}
+                                        {school1?.callSupport === true ? "true" : "false" || "--"}
                                     </AUIThemedText>
                                     <AUIThemedText style={styles.label2}>
-                                    {school2?.callSupport === true  ? "true" : "false" || "--"}
+                                        {school2?.callSupport === true ? "true" : "false" || "--"}
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
@@ -256,41 +258,33 @@ const CompareSchools: React.FC = () => {
                     >
                         <AUIThemedView>
                             <AUIThemedView style={styles.row}>
-                                <AUIThemedText style={styles.value}>
-                                    Minimum Fee
-                                </AUIThemedText>
+                                <AUIThemedText style={styles.value}>Minimum Fee</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
                                     <AUIThemedView style={styles.feeLabelContainer}>
                                         <AUIThemedText style={styles.label}>
                                             {school1?.minPrice || "--"}
                                         </AUIThemedText>
-                                      
                                     </AUIThemedView>
                                     <AUIThemedView style={styles.feeLabelContaine2}>
                                         <AUIThemedText style={styles.label}>
                                             {school2?.minPrice || "--"}
                                         </AUIThemedText>
-                                        
                                     </AUIThemedView>
                                 </AUIThemedView>
                             </AUIThemedView>
 
                             <AUIThemedView style={styles.feeRow2}>
-                                <AUIThemedText style={styles.value}>
-                                    Maximum Fee
-                                </AUIThemedText>
+                                <AUIThemedText style={styles.value}>Maximum Fee</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
                                     <AUIThemedView style={styles.feeLabelContainer}>
                                         <AUIThemedText style={styles.label}>
-                                        {school1?.maxPrice || "--"}
+                                            {school1?.maxPrice || "--"}
                                         </AUIThemedText>
-                                     
                                     </AUIThemedView>
                                     <AUIThemedView style={styles.feeLabelContaine2}>
                                         <AUIThemedText style={styles.label}>
-                                        {school2?.maxPrice || "--"}
+                                            {school2?.maxPrice || "--"}
                                         </AUIThemedText>
-                                      
                                     </AUIThemedView>
                                 </AUIThemedView>
                             </AUIThemedView>
@@ -346,10 +340,10 @@ const CompareSchools: React.FC = () => {
                                 <AUIThemedText style={styles.value}>Number of Seats</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
                                     <AUIThemedText style={styles.label}>
-                                    {school1?.totalNumberOfSeats || "--"}
+                                        {school1?.totalNumberOfSeats || "--"}
                                     </AUIThemedText>
                                     <AUIThemedText style={styles.label2}>
-                                    {school2?.totalNumberOfSeats || "--"}
+                                        {school2?.totalNumberOfSeats || "--"}
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
@@ -464,6 +458,7 @@ const CompareSchools: React.FC = () => {
     );
 };
 
+const height = Dimensions.get("screen").height;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -471,6 +466,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         padding: 15,
         // backgroundColor: APP_THEME.background,
+        // height: height,
     },
     cardContainer: {
         flexDirection: "row",
@@ -488,7 +484,7 @@ const styles = StyleSheet.create({
         borderColor: "#ddd",
         borderRadius: 15,
         overflow: "hidden",
-        backgroundColor: "#fff",
+        // backgroundColor: "#fff",
     },
     imageContainer: {
         width: "100%",
@@ -515,7 +511,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: "400",
         lineHeight: 15,
-        color: "#666",
+        // color: "#666",
         textAlign: "center",
     },
     customShape: {
@@ -524,7 +520,7 @@ const styles = StyleSheet.create({
         zIndex: 2,
         width: 30,
         height: 30,
-        backgroundColor: "#fff",
+        // backgroundColor: "#fff",
         borderWidth: 1,
         borderColor: "#5BD894",
         borderRadius: 15,
@@ -617,7 +613,7 @@ const styles = StyleSheet.create({
     },
     descriptionText: {
         fontSize: 14,
-        color: "#000",
+        // color: "#000",
         marginBottom: 20,
         textAlign: "center",
     },

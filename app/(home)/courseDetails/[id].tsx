@@ -389,7 +389,7 @@ const planTabsStyles = StyleSheet.create({
     inactiveTab: {
         paddingHorizontal: 10,
         paddingVertical: 8,
-        backgroundColor: "#fff",
+        // backgroundColor: "#fff",
         borderRadius: 7,
         borderWidth: 1,
         borderColor: "#5BD894",

@@ -192,8 +192,9 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        borderWidth: StyleSheet.hairlineWidth,
+        borderWidth: 2,
         borderRadius: 10,
+        borderColor: "#ccc",
         marginBottom: 10,
     },
     deleteLayout: {

@@ -1,5 +1,6 @@
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
+import { TEXT_THEME } from "@/constants/Colors";
 import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { RootState } from "@/redux/store";
 import { Link } from "expo-router";
@@ -25,18 +26,19 @@ const SectionTitle: React.FC<SectionTitleProps> = ({
 }) => {
     const { t, i18n } = useTranslation();
     const isRTL = useSelector((state: RootState) => state.global.isRTL);
+    const theme = useSelector((state: RootState) => state.global.theme);
 
     return (
         <AUIThemedView style={[styles.container, isRTL && { flexDirection: "row-reverse" }, style]}>
             <AUIThemedText style={[styles.title, titleStyle]}>{children}</AUIThemedText>
             {viewAll && (
-                <Link href={viewAll} style={styles.viewAll}>
+                <Link href={viewAll} style={[styles.viewAll, { color: TEXT_THEME[theme].primary }]}>
                     {t(GLOBAL_TRANSLATION_LABEL.view_all)}
                 </Link>
             )}
             {onViewAllClick && (
                 <TouchableOpacity onPress={onViewAllClick}>
-                    <AUIThemedText style={styles.viewAll}>
+                    <AUIThemedText style={[styles.viewAll, { color: TEXT_THEME[theme].primary }]}>
                         {t(GLOBAL_TRANSLATION_LABEL.view_all)}
                     </AUIThemedText>
                 </TouchableOpacity>

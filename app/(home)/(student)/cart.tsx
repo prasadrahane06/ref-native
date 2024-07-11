@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useFocusEffect } from "@react-navigation/native";
 import { setResponse } from "@/redux/apiSlice";
 import { addItemToCart } from "@/redux/cartSlice";
+import { BACKGOUND_THEME } from "@/constants/Colors";
 
 export default function TabFourScreen() {
     // const [cartItems, setCartItems] = useState<any>([]);
@@ -24,6 +25,7 @@ export default function TabFourScreen() {
     );
 
     const cart = useSelector((state: RootState) => state.api.cart);
+    const theme = useSelector((state: RootState) => state.global.theme);
 
     useEffect(() => {
         if (cart && cart.docs && cart.docs.length > 0) {
@@ -40,7 +42,9 @@ export default function TabFourScreen() {
 
     if (cartItems.length === 0) {
         return (
-            <AUIThemedView style={styles.container}>
+            <AUIThemedView
+                style={[styles.container, { backgroundColor: BACKGOUND_THEME[theme].backgound }]}
+            >
                 <AUIThemedText style={styles.title}>{GLOBAL_TEXT.your_cart_is_empty}</AUIThemedText>
             </AUIThemedView>
         );
@@ -83,7 +87,7 @@ const styles = StyleSheet.create({
     container: {
         padding: 20,
         flex: 1,
-        backgroundColor: "#ffffff",
+        // backgroundColor: "#ffffff",
         height: windowHeight,
     },
     title: {
@@ -94,7 +98,7 @@ const styles = StyleSheet.create({
 
     coursesContainer: {
         flex: 1,
-        backgroundColor: "#ffffff",
+        // backgroundColor: "#ffffff",
         paddingBottom: 10,
         height: "100%",
     },

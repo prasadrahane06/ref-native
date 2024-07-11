@@ -159,7 +159,9 @@ const InitialLayout = () => {
                 options={{
                     headerShown: true,
                     title: "search_school",
-                    headerTitle: "Add to compare (select school)",
+                    headerTitle: "Add to compare",
+                    headerTitleStyle: { color: TEXT_THEME[theme].primary },
+                    headerStyle: { backgroundColor: BACKGOUND_THEME[theme].backgound },
                 }}
             />
             <Stack.Screen
@@ -168,6 +170,8 @@ const InitialLayout = () => {
                     headerShown: true,
                     title: "compare school",
                     headerTitle: "Compare Schools",
+                    headerTitleStyle: { color: TEXT_THEME[theme].primary },
+                    headerStyle: { backgroundColor: BACKGOUND_THEME[theme].backgound },
                 }}
             />
             <Stack.Screen
@@ -176,11 +180,11 @@ const InitialLayout = () => {
                     headerShown: true,
                     title: "Schools",
                     headerTitle: "Popular schools",
-                    headerTitleStyle: { color: "#ffffff", fontFamily: "Gilroy" },
+                    headerTitleStyle: { color: "#fff", fontFamily: "Gilroy" },
                     headerTransparent: true,
                     headerLeft: () => (
                         <TouchableOpacity onPress={router.back}>
-                            <Ionicons name="arrow-back" size={34} color={"#ffffff"} />
+                            <Ionicons name="arrow-back" size={34} color={"#fff"} />
                         </TouchableOpacity>
                     ),
                 }}
@@ -204,13 +208,15 @@ const InitialLayout = () => {
             <Stack.Screen
                 name="(home)/courseDetails/purchase/[id]"
                 options={{
-                    headerTitle: "",
+                    headerTitle: "Purchase Course",
                     headerShown: true,
                     headerLeft: () => (
                         <TouchableOpacity onPress={router.back}>
                             <Ionicons name="arrow-back" size={34} color={"#000"} />
                         </TouchableOpacity>
                     ),
+                    headerTitleStyle: { color: TEXT_THEME[theme].primary },
+                    headerStyle: { backgroundColor: BACKGOUND_THEME[theme].backgound },
                 }}
             />
             <Stack.Screen
@@ -235,6 +241,8 @@ const InitialLayout = () => {
                 name="profile"
                 options={{
                     headerTitle: "My Profile",
+                    headerTitleStyle: { color: TEXT_THEME[theme].primary },
+                    headerStyle: { backgroundColor: BACKGOUND_THEME[theme].backgound },
                 }}
             />
             <Stack.Screen

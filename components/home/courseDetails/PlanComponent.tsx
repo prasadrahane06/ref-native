@@ -8,7 +8,7 @@ import SectionTitle from "@/components/home/common/SectionTitle";
 import CourseDetailsComponent from "@/components/home/courseDetails/CourseDetailsComponent";
 import ScheduleAndLesson from "@/components/home/courseDetails/ScheduleAndLesson";
 import SimilarCoursesList from "@/components/home/courseDetails/SimilarCourses";
-import { APP_THEME } from "@/constants/Colors";
+import { APP_THEME, BACKGOUND_THEME, TEXT_THEME } from "@/constants/Colors";
 import { ENQUIRY_FIELDS, GLOBAL_TEXT, GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { getUserData } from "@/constants/RNAsyncStore";
 import { inputFieldStyle } from "@/constants/Styles";
@@ -206,12 +206,12 @@ function EnquireNowModal({
                         {GLOBAL_TEXT.enquire_now}
                     </AUIThemedText>
                     <Pressable onPress={onClose} style={{ padding: 10 }}>
-                        <MaterialIcons name="close" color="#000" size={22} />
+                        <MaterialIcons name="close" color={TEXT_THEME[theme].primary} size={22} />
                     </Pressable>
                 </AUIThemedView>
 
                 <KeyboardAvoidingView
-                    style={{ flex: 1, backgroundColor: "#ffffff" }}
+                    style={{ flex: 1, backgroundColor: BACKGOUND_THEME[theme].backgound }}
                     behavior="padding"
                     keyboardVerticalOffset={keyboardVerticalOffset}
                 >
@@ -420,7 +420,7 @@ function EnquireNowModal({
                                                     style={{
                                                         flex: 1,
                                                         paddingVertical: 10,
-                                                        color: "#000",
+                                                        color: TEXT_THEME[theme].primary,
                                                     }}
                                                     value={formatDate(value)}
                                                     editable={false}
@@ -471,7 +471,7 @@ function EnquireNowModal({
                                                     style={{
                                                         flex: 1,
                                                         paddingVertical: 10,
-                                                        color: "#000",
+                                                        color: TEXT_THEME[theme].primary,
                                                     }}
                                                     value={formatDate(value)}
                                                     editable={false}
@@ -652,7 +652,13 @@ export default function PlanComponent({
 
             <AUIThemedView style={styles.btnContainer}>
                 <Pressable
-                    style={[styles.bookContainer, { backgroundColor: APP_THEME[theme].background }]}
+                    style={[
+                        styles.bookContainer,
+                        {
+                            backgroundColor: BACKGOUND_THEME[theme].backgound,
+                            borderColor: TEXT_THEME[theme].primary,
+                        },
+                    ]}
                     onPress={() =>
                         router.push({
                             pathname: `(home)/courseDetails/purchase/${JSON.stringify({
@@ -663,7 +669,7 @@ export default function PlanComponent({
                         })
                     }
                 >
-                    <AntDesign name="calendar" size={24} color="black" />
+                    <AntDesign name="calendar" size={24} color={TEXT_THEME[theme].primary} />
                     <AUIThemedText style={styles.blackBoldText}>
                         {t(GLOBAL_TRANSLATION_LABEL.bookYourSeat)}
                     </AUIThemedText>
@@ -768,7 +774,7 @@ const enquireNowStyles = StyleSheet.create({
     andoridModalContent: {
         height: "100%",
         width: "100%",
-        backgroundColor: "#fff",
+        // backgroundColor: "#fff",
         borderTopRightRadius: 20,
         borderTopLeftRadius: 20,
     },
@@ -777,12 +783,12 @@ const enquireNowStyles = StyleSheet.create({
         bottom: 0,
         height: "90%",
         width: "100%",
-        backgroundColor: "#fff",
+        // backgroundColor: "#fff",
         borderTopRightRadius: 20,
         borderTopLeftRadius: 20,
     },
     titleContainer: {
-        backgroundColor: "#fff",
+        // backgroundColor: "#fff",
         paddingHorizontal: 20,
         paddingVertical: 15,
         flexDirection: "row",
@@ -853,7 +859,7 @@ const styles = StyleSheet.create({
     },
     blackBoldText: {
         fontWeight: "bold",
-        color: "#000",
+        // color: "#000",
     },
     buyContainer: {
         flexDirection: "row",

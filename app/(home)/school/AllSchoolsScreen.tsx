@@ -9,7 +9,7 @@ import AllSchoolsList from "../list/AllSchoolsList";
 import useAxios from "@/app/services/axiosClient";
 import { AUILinearGradient } from "@/components/common/AUILinearGradient";
 import { LinearGradient } from "expo-linear-gradient";
-import { APP_THEME } from "@/constants/Colors";
+import { APP_THEME, BACKGOUND_THEME } from "@/constants/Colors";
 
 interface SchoolListProps {
     data: any[];
@@ -18,6 +18,7 @@ const AllSchoolsScreen: React.FC<SchoolListProps> = ({ data }) => {
     const { get } = useAxios();
     const { requestFn } = useApiRequest();
     const schoolsResponse = useSelector((state: RootState) => state.api.moreSchool || {});
+    const theme = useSelector((state: RootState) => state.global.theme);
 
     useEffect(() => {
         requestFn(API_URL.popularSchool, "moreSchool", { limit: 6 });
@@ -25,7 +26,7 @@ const AllSchoolsScreen: React.FC<SchoolListProps> = ({ data }) => {
 
     return (
         <AUILinearGradient
-            colors={[`${APP_THEME.light.primary.first}80`, "#ffffff"]}
+            colors={[`${APP_THEME[theme].primary.first}`, BACKGOUND_THEME[theme].backgound]}
             start={{ x: 1, y: 0 }} // Gradient start point
             end={{ x: 0, y: 1 }} // Gradient end point
             style={styles.container}
