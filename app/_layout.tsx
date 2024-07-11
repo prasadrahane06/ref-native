@@ -144,7 +144,7 @@ const InitialLayout = () => {
                     headerTitle: "",
                     headerLeft: () => (
                         <TouchableOpacity onPress={router.back}>
-                            <Ionicons name="arrow-back" size={34} color={APP_THEME.ternary.first} />
+                            <Ionicons name="arrow-back" size={34} color={APP_THEME.light.ternary.first} />
                         </TouchableOpacity>
                     ),
                     headerRight: () => (
@@ -153,7 +153,7 @@ const InitialLayout = () => {
                                 <Ionicons
                                     name="help-circle-outline"
                                     size={34}
-                                    color={APP_THEME.ternary.first}
+                                    color={APP_THEME.light.ternary.first}
                                 />
                             </TouchableOpacity>
                         </Link>

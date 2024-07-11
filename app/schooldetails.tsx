@@ -30,8 +30,8 @@ const schema = Yup.object().shape({
     remark: Yup.string().required("Remark is required"),
     website: Yup.string().required("Website is required"),
     location: Yup.string().required("Location is required"),
-    logo: Yup.string().required("Logo is required"),
-    banner: Yup.string().required("Banner is required"),
+    // logo: Yup.string().required("Logo is required"),
+    // banner: Yup.string().required("Banner is required"),
     description: Yup.string().required("Description is required"),
 });
 
@@ -63,8 +63,8 @@ export default function SchoolDetails() {
             website: "",
             location: "",
             description: "",
-            logo: "",
-            banner: "",
+            // logo: "",
+            // banner: "",
         },
     });
     console.log("form data", getValues());
@@ -87,28 +87,20 @@ export default function SchoolDetails() {
     }, [countryDataForSchool]);
 
     const onSave = async (data: any) => {
-        console.log("schooldetails form data", data);
+        // console.log("schooldetails form data", data);
 
-        try {
-            const response = await axios.patch(
-                "https://zmgr2gg0-4000.inc1.devtunnels.ms/dev/school",
-                data,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
-
-            console.log("schooldetails response", response.data);
-            ApiSuccessToast("School Details has been saved successfully");
-            router.push({
-                pathname: `(home)/(school)`,
+        patch(API_URL.popularSchool, data)
+            .then((response: any) => {
+                console.log("schooldetails response =>", response);
+                ApiSuccessToast("School Details has been saved successfully");
+                router.push({
+                    pathname: `(home)/(school)`,
+                });
+            })
+            .catch((error: any) => {
+                ApiErrorToast(error);
+                console.log("error in schooldetails onSave =>", error);
             });
-        } catch (error: any) {
-            ApiErrorToast(error.response?.data?.message);
-        }
     };
 
     const pickImageAsync = async (value: any, imageType: any) => {
@@ -232,7 +224,7 @@ export default function SchoolDetails() {
                                 )}
                             />
 
-                            <Controller
+                            {/* <Controller
                                 name="logo"
                                 control={control}
                                 render={({ field: { onChange, value }, fieldState: { error } }) => (
@@ -290,7 +282,7 @@ export default function SchoolDetails() {
                                         </AUIThemedView>
                                     </AUIThemedView>
                                 )}
-                            />
+                            /> */}
                         </AUIThemedView>
 
                         <AUIThemedView

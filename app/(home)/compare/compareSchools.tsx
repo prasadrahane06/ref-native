@@ -2,7 +2,7 @@ import AUIAccordion from "@/components/common/AUIAccordion";
 import AUIImage from "@/components/common/AUIImage";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { APP_THEME, BACKGOUND_THEME } from "@/constants/Colors";
+import { APP_THEME } from "@/constants/Colors";
 import { RootState } from "@/redux/store";
 import { FontAwesome, FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
@@ -13,7 +13,6 @@ import { useSelector } from "react-redux";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import useAxios from "@/app/services/axiosClient";
 import { API_URL } from "@/constants/urlProperties";
-
 const CompareSchools: React.FC = () => {
     const [date1, setDate1] = useState<Date>(new Date());
     const [show1, setShow1] = useState<boolean>(false);
@@ -21,15 +20,11 @@ const CompareSchools: React.FC = () => {
     const [show2, setShow2] = useState<boolean>(false);
     const compareSchool1 = useSelector((state: RootState) => state.api.compareSchool1);
     const compareSchool2 = useSelector((state: RootState) => state.api.compareSchool2);
-    const theme = useSelector((state: RootState) => state.global.theme);
     const [school1, setSchool1] = useState<any>();
     const [school2, setSchool2] = useState<any>();
-
     console.log("compareSchool1", JSON.stringify(school1));
     console.log("compareSchool2", JSON.stringify(school2));
-
     const { post } = useAxios();
-
     useEffect(() => {
         // Check if both compareSchool1 and compareSchool2 have IDs before making the API call
         if (compareSchool1 && compareSchool1.id && compareSchool2 && compareSchool2.id) {
@@ -54,19 +49,16 @@ const CompareSchools: React.FC = () => {
             // Handle case where one or both school IDs are missing
         }
     }, [compareSchool1, compareSchool2]); // useEffect will trigger whenever compareSchool1 or compareSchool2 changes
-
     const onChange1 = (event: any, selectedDate: Date | undefined) => {
         const currentDate = selectedDate || date1;
         setShow1(Platform.OS === "ios");
         setDate1(currentDate);
     };
-
     const onChange2 = (event: any, selectedDate: Date | undefined) => {
         const currentDate = selectedDate || date2;
         setShow2(Platform.OS === "ios");
         setDate2(currentDate);
     };
-
     return (
         <AUIThemedView style={styles.outerContainer}>
             <ScrollView>
@@ -97,7 +89,6 @@ const CompareSchools: React.FC = () => {
               <Ionicons name="close" size={20} color="#5BD894" />
             </View> */}
                         </TouchableOpacity>
-
                         {compareSchool2 ? (
                             <TouchableOpacity style={styles.customCard}>
                                 <View style={styles.imageContainer}>
@@ -135,7 +126,6 @@ const CompareSchools: React.FC = () => {
                             </TouchableOpacity>
                         )}
                     </AUIThemedView>
-
                     <AUIThemedView style={styles.accordionSection}>
                         <AUIAccordion
                             title="School Infomtion"
@@ -191,7 +181,6 @@ const CompareSchools: React.FC = () => {
                                 </AUIThemedView>
                             </AUIThemedView>
                         </AUIAccordion>
-
                         <AUIAccordion
                             title="Academics"
                             icon={
@@ -214,7 +203,6 @@ const CompareSchools: React.FC = () => {
                                         </AUIThemedText>
                                     </AUIThemedView>
                                 </AUIThemedView>
-
                                 {/* <AUIThemedView style={styles.row2}>
                                 <AUIThemedText style={styles.value}>
                                     {" "}
@@ -231,7 +219,6 @@ const CompareSchools: React.FC = () => {
                             </AUIThemedView> */}
                             </AUIThemedView>
                         </AUIAccordion>
-
                         <AUIAccordion
                             title="Location"
                             icon={
@@ -252,7 +239,6 @@ const CompareSchools: React.FC = () => {
                                 </AUIThemedView>
                             </AUIThemedView>
                         </AUIAccordion>
-
                         <AUIAccordion
                             title="Fee Structure"
                             icon={
@@ -287,7 +273,6 @@ const CompareSchools: React.FC = () => {
                                 </AUIThemedView>
                             </AUIThemedView>
                         </AUIAccordion>
-
                         <AUIAccordion
                             title="Campus and Facility"
                             icon={
@@ -308,7 +293,6 @@ const CompareSchools: React.FC = () => {
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView> */}
-
                                 <AUIThemedView style={styles.row}>
                                     <AUIThemedText style={styles.value}>
                                         Total facilities
@@ -322,7 +306,6 @@ const CompareSchools: React.FC = () => {
                                         </AUIThemedText>
                                     </AUIThemedView>
                                 </AUIThemedView>
-
                                 {/* <AUIThemedView style={styles.row}>
                                 <AUIThemedText style={styles.value}>Total Faculty</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
@@ -334,7 +317,6 @@ const CompareSchools: React.FC = () => {
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView> */}
-
                                 <AUIThemedView style={styles.row}>
                                     <AUIThemedText style={styles.value}>
                                         Number of Seats
@@ -348,7 +330,6 @@ const CompareSchools: React.FC = () => {
                                         </AUIThemedText>
                                     </AUIThemedView>
                                 </AUIThemedView>
-
                                 <AUIThemedView style={styles.row2}>
                                     <AUIThemedText style={styles.value}>
                                         Form availability
@@ -364,7 +345,6 @@ const CompareSchools: React.FC = () => {
                                 </AUIThemedView>
                             </AUIThemedView>
                         </AUIAccordion>
-
                         {/* <AUIAccordion
                         title="Admission Criteria and Eligibility"
                         icon={
@@ -427,7 +407,6 @@ const CompareSchools: React.FC = () => {
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
-
                             <AUIThemedView style={styles.row}>
                                 <AUIThemedText style={styles.value}>Total Faculty</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
@@ -439,7 +418,6 @@ const CompareSchools: React.FC = () => {
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
-
                             <AUIThemedView style={styles.row2}>
                                 <AUIThemedText style={styles.value}>Number of seats</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
@@ -460,7 +438,6 @@ const CompareSchools: React.FC = () => {
     );
 };
 
-const height = Dimensions.get("screen").height;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -468,12 +445,14 @@ const styles = StyleSheet.create({
         alignItems: "center",
         padding: 15,
         // backgroundColor: APP_THEME.background,
-        // height: height,
+        // height: windowHeight,
     },
+
     outerContainer: {
         flex: 1,
         // backgroundColor: APP_THEME.background,
     },
+
     cardContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
@@ -517,7 +496,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: "400",
         lineHeight: 15,
-        // color: "#666",
+        color: "#666",
         textAlign: "center",
     },
     customShape: {
@@ -689,5 +668,4 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
     },
 });
-
 export default CompareSchools;

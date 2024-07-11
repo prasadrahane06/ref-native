@@ -702,7 +702,6 @@ export default function PlanComponent({
                         styles.buyContainer,
                         {
                             backgroundColor: APP_THEME[theme].primary.first,
-
                             opacity:
                                 isPurchased &&
                                 isPurchased?.docs &&

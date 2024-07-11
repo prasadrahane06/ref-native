@@ -47,7 +47,6 @@ const Course: React.FC<CourseProps> = ({
     const theme = useSelector((state: RootState) => state.global.theme);
 
     const { del } = useAxios();
-
     const handleRemoveFromCart = (id: string) => {
         del(API_URL.cart, { course: id })
             .then((res: any) => {
