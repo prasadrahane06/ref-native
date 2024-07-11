@@ -656,8 +656,12 @@ const LoginPage = () => {
                     signUpEmail: res?.data?.emailVerified,
                 });
                 if (res?.data?.accessToken) {
-                    storeUserData({ profile, ...res });                    // school
-                    // student
+                    storeUserData({ profile, ...res });
+
+                    // saving token in redux
+                    console.log("saving token in handleSubmitEmailOtp", res?.data?.accessToken);
+                    dispatch(setToken(res?.data?.accessToken));
+
                     if (profile === "student") {
                         router.push({ pathname: "/details" });
                     } else {
@@ -686,6 +690,11 @@ const LoginPage = () => {
                 });
                 if (res?.data?.accessToken) {
                     storeUserData({ profile, ...res });
+
+                    // saving token in redux
+                    console.log("saving token in handleSubmitPhoneOtp", res?.data?.accessToken);
+                    dispatch(setToken(res?.data?.accessToken));
+
                     if (profile === "student") {
                         router.push({ pathname: "/details" });
                     } else {

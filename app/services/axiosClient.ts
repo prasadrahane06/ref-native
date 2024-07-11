@@ -7,26 +7,14 @@ const baseURL = "https://zmgr2gg0-4000.inc1.devtunnels.ms/dev/";
 
 const useAxios = () => {
     const token = useSelector((state: RootState) => state.global.token);
-    console.log("token", token);
+    console.log("token in axiosClient", token);
     const axiosClient = axios.create({
         baseURL,
         headers: {
             "Content-Type": "application/json",
+            "Authorization" : `Bearer ${token}`
         },
     });
-
-    // Request Interceptor
-    axiosClient.interceptors.request.use(
-        (config) => {
-            if (token) {
-                config.headers.Authorization = `Bearer ${token}`;
-            }
-            return config;
-        },
-        (error) => {
-            return Promise.reject(error);
-        }
-    );
 
     // Response Interceptor
     axiosClient.interceptors.response.use(
