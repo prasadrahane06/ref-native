@@ -4,16 +4,18 @@ import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import PurchaseCoursesList from "@/components/home/courseDetails/PurchaseCourses";
 import Profile from "@/components/screenComponents/Profile";
-import { APP_THEME } from "@/constants/Colors";
+import { APP_THEME, BACKGOUND_THEME, TEXT_THEME, ThemeType } from "@/constants/Colors";
 import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { purchaseCoursesData } from "@/constants/dummy data/similarCoursesData";
 import { RootState } from "@/redux/store";
 import {
     AntDesign,
     EvilIcons,
+    FontAwesome,
     FontAwesome5,
     FontAwesome6,
     Ionicons,
+    MaterialCommunityIcons,
     MaterialIcons,
 } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -41,7 +43,7 @@ const MenuButton = ({ navigation }: any) => (
             name="menu"
             size={25}
             style={{ marginLeft: 15 }}
-            color={APP_THEME.primary.first}
+            color={APP_THEME.light.primary.first}
         />
     </TouchableOpacity>
 );
@@ -53,27 +55,27 @@ const HeaderIcons = () => (
                 name="search"
                 size={25}
                 style={{ marginRight: 20 }}
-                color={APP_THEME.primary.first}
+                color={APP_THEME.light.primary.first}
             />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => alert("Notifications")}>
-            <Ionicons name="notifications" size={25} color={APP_THEME.primary.first} />
+            <Ionicons name="notifications" size={25} color={APP_THEME.light.primary.first} />
         </TouchableOpacity>
     </View>
 );
 
-const screenOptions = (navigation: any, isRTL: boolean) => ({
+const screenOptions = (navigation: any, isRTL: boolean, theme: ThemeType) => ({
     headerBackground: () => (
         <AUILinearGradient
-            colors={["#ffffff", "#ffffff"]} //["rgba(118, 250,178, 1)", "rgba(91, 216,148, 1)"]}
+            colors={[BACKGOUND_THEME[theme].backgound, BACKGOUND_THEME[theme].backgound]} //["rgba(118, 250,178, 1)", "rgba(91, 216,148, 1)"]}
             style={{ flex: 1 }}
         />
     ),
     headerLeft: () => <MenuButton navigation={navigation} />,
     headerRight: () => <HeaderIcons />,
     headerTitle: "",
-    drawerLabelStyle: { marginLeft: -20, fontSize: 15 },
-    drawerActiveBackgroundColor: APP_THEME.primary.first,
+    drawerLabelStyle: { marginLeft: -20, fontSize: 15, color: TEXT_THEME[theme].gray },
+    drawerActiveBackgroundColor: APP_THEME[theme].primary.first,
     drawerActiveTintColor: "#ffffff",
     drawerPosition: isRTL ? "right" : "left",
     // drawerItemStyle: { flexDirection: "row-reverse" },
@@ -85,10 +87,12 @@ const screenOptions = (navigation: any, isRTL: boolean) => ({
 export default function AUIDrawer() {
     const { t, i18n } = useTranslation();
     const isRTL = useSelector((state: RootState) => state.global.isRTL);
+    const theme = useSelector((state: RootState) => state.global.theme);
+
     return (
         <Drawer.Navigator
             initialRouteName="Home"
-            screenOptions={({ navigation }) => screenOptions(navigation, isRTL)}
+            screenOptions={({ navigation }) => screenOptions(navigation, isRTL, theme)}
             drawerContent={(props) => <AUIDrawerContent {...props} />}
         >
             <Drawer.Screen
@@ -98,7 +102,9 @@ export default function AUIDrawer() {
                     title: t(GLOBAL_TRANSLATION_LABEL.home),
 
                     // drawerItemStyle: { alignItems: "flex-end", flexDirection: "row-reverse" },
-                    drawerIcon: ({ color }) => <AntDesign name="home" size={24} color={color} />,
+                    drawerIcon: ({ color }) => (
+                        <FontAwesome name="home" size={24} color={TEXT_THEME[theme].gray} />
+                    ),
                 }}
             />
             <Drawer.Screen
@@ -108,7 +114,11 @@ export default function AUIDrawer() {
                     headerShown: false,
                     title: t(GLOBAL_TRANSLATION_LABEL.account),
                     drawerIcon: ({ color }) => (
-                        <FontAwesome6 name="user-circle" size={24} color={color} />
+                        <MaterialCommunityIcons
+                            name="account"
+                            size={24}
+                            color={TEXT_THEME[theme].gray}
+                        />
                     ),
                 }}
             />
@@ -119,7 +129,7 @@ export default function AUIDrawer() {
                     title: t(GLOBAL_TRANSLATION_LABEL.courses),
 
                     drawerIcon: ({ color }) => (
-                        <FontAwesome5 name="book-reader" size={24} color={color} />
+                        <FontAwesome5 name="book-reader" size={24} color={TEXT_THEME[theme].gray} />
                     ),
                 }}
             />
@@ -128,7 +138,7 @@ export default function AUIDrawer() {
                 component={AccommodationScreen}
                 options={{
                     drawerIcon: ({ color }) => (
-                        <FontAwesome6 name="house-chimney-window" size={20} color={color} />
+                        <FontAwesome6 name="house-chimney-window" size={20} color={TEXT_THEME[theme].gray} />
                     ),
                 }}
             />
@@ -137,7 +147,7 @@ export default function AUIDrawer() {
                 component={ChangePasswordScreen}
                 options={{
                     drawerIcon: ({ color }) => (
-                        <MaterialIcons name="password" size={24} color={color} />
+                        <MaterialIcons name="password" size={24} color={TEXT_THEME[theme].gray} />
                     ),
                 }}
             /> */}
@@ -148,7 +158,7 @@ export default function AUIDrawer() {
                     title: t(GLOBAL_TRANSLATION_LABEL.termsPolicy),
 
                     drawerIcon: ({ color }) => (
-                        <MaterialIcons name="policy" size={24} color={color} />
+                        <MaterialIcons name="policy" size={24} color={TEXT_THEME[theme].gray} />
                     ),
                 }}
             />

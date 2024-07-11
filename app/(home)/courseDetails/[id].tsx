@@ -126,6 +126,7 @@ export default function CourseDetails() {
     }, []);
 
     const individualCourse = useSelector((state: RootState) => state.api.individualCourse);
+    const theme = useSelector((state: RootState) => state.global.theme);
 
     useEffect(() => {
         if (individualCourse && individualCourse.docs && individualCourse.docs.length > 0) {
@@ -190,7 +191,18 @@ export default function CourseDetails() {
             headerTransparent: true,
 
             headerBackground: () => (
-                <Animated.View style={[headerBackgroundAnimatedStyle, styles.screenHeader]} />
+                <Animated.View
+                    style={[
+                        headerBackgroundAnimatedStyle,
+                        [
+                            styles.screenHeader,
+                            {
+                                backgroundColor: APP_THEME[theme].primary.first,
+                                borderColor: APP_THEME[theme].gray,
+                            },
+                        ],
+                    ]}
+                />
             ),
 
             headerLeft: () => (
@@ -222,7 +234,7 @@ export default function CourseDetails() {
                             alignItems: "center",
                         }}
                     >
-                        <Ionicons name="heart" size={24} color={APP_THEME.secondary.first} />
+                        <Ionicons name="heart" size={24} color={APP_THEME[theme].secondary.first} />
                     </AUIThemedView>
                 </TouchableOpacity>
             ),
@@ -275,8 +287,18 @@ export default function CourseDetails() {
                         resizeMode="cover"
                     />
 
-                    <AUIThemedView style={styles.infoContainer}>
-                        <AUIThemedView style={styles.headerContainer}>
+                    <AUIThemedView
+                        style={[
+                            styles.infoContainer,
+                            { backgroundColor: APP_THEME[theme].background },
+                        ]}
+                    >
+                        <AUIThemedView
+                            style={[
+                                styles.headerContainer,
+                                { backgroundColor: APP_THEME[theme].background },
+                            ]}
+                        >
                             <AUIThemedView style={styles.header}>
                                 <AUIImage
                                     path={
@@ -285,7 +307,9 @@ export default function CourseDetails() {
                                     icon
                                     style={{ width: 40 }}
                                 />
-                                <AUIThemedView style={styles.courseInfo}>
+                                <AUIThemedView
+                                    style={{ backgroundColor: APP_THEME[theme].background }}
+                                >
                                     <AUIThemedText style={styles.title}>
                                         {course.courseName}
                                     </AUIThemedText>
@@ -295,7 +319,12 @@ export default function CourseDetails() {
                                 </AUIThemedView>
                             </AUIThemedView>
                             <TouchableOpacity onPress={handleAddToCart}>
-                                <AUIThemedView style={styles.cartIconContainer}>
+                                <AUIThemedView
+                                    style={[
+                                        styles.cartIconContainer,
+                                        { backgroundColor: APP_THEME[theme].primary.first },
+                                    ]}
+                                >
                                     <AUIImage
                                         path={
                                             Asset.fromModule(require("@/assets/icons/cart.png")).uri
@@ -322,7 +351,12 @@ export default function CourseDetails() {
                             {course.description}
                         </AUIThemedText>
                     </AUIThemedView> */}
-                    <AUIThemedView style={styles.planContainer}>
+                    <AUIThemedView
+                        style={[
+                            styles.planContainer,
+                            { backgroundColor: APP_THEME[theme].background },
+                        ]}
+                    >
                         <AUIThemedText style={styles.planText}>
                             {GLOBAL_TEXT.select_your_plan}
                         </AUIThemedText>
@@ -365,10 +399,10 @@ const planTabsStyles = StyleSheet.create({
 const IMG_HEIGHT = 200;
 const styles = StyleSheet.create({
     screenHeader: {
-        backgroundColor: APP_THEME.primary.first,
+        // backgroundColor: APP_THEME.primary.first,
         height: 100,
         borderBottomWidth: StyleSheet.hairlineWidth,
-        borderColor: APP_THEME.gray,
+        // borderColor: APP_THEME.gray,
     },
     screenTitle: {
         fontSize: 18,
@@ -386,25 +420,22 @@ const styles = StyleSheet.create({
     infoContainer: {
         paddingVertical: 5,
         paddingHorizontal: 15,
-        backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.background,
     },
     headerContainer: {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
         paddingVertical: 10,
-        backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.background,
     },
     header: {
         flexDirection: "row",
         alignItems: "flex-start",
         gap: 10,
     },
-    courseInfo: {
-        backgroundColor: APP_THEME.background,
-    },
     cartIconContainer: {
-        backgroundColor: APP_THEME.primary.first,
+        // backgroundColor: APP_THEME.primary.first,
         borderRadius: 50,
         padding: 10,
     },
@@ -418,7 +449,7 @@ const styles = StyleSheet.create({
         color: "#6c757d",
     },
     planContainer: {
-        backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.background,
         paddingVertical: 10,
     },
     planText: {

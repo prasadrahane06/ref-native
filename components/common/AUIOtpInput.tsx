@@ -1,8 +1,11 @@
 import { APP_THEME } from "@/constants/Colors";
+import { RootState } from "@/redux/store";
 import React, { useRef, useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
+import { useSelector } from "react-redux";
 
 const AUIOTPInput = ({ length, onChange, disabled }: any) => {
+    const theme = useSelector((state: RootState) => state.global.theme);
     const [otp, setOtp] = useState(Array(length).fill(""));
     const inputs = useRef([]);
 
@@ -38,6 +41,10 @@ const AUIOTPInput = ({ length, onChange, disabled }: any) => {
                     ref={(ref) => (inputs.current[index] = ref)}
                     style={[
                         styles.input,
+                        {
+                            borderColor: APP_THEME[theme].primary.first,
+                            shadowColor: APP_THEME[theme].primary.first,
+                        },
                         disabled && {
                             borderColor: "gray",
                             shadowColor: "gray",
@@ -67,14 +74,14 @@ const styles = StyleSheet.create({
         width: 80,
         height: 50,
         borderWidth: 1,
-        borderColor: APP_THEME.primary.first, //"#7A827A",
+        // borderColor: APP_THEME.primary.first, //"#7A827A",
         textAlign: "center",
         fontSize: 18,
         backgroundColor: "#FFFFFF",
         borderRadius: 10,
         elevation: 5,
         // IOS
-        shadowColor: APP_THEME.primary.first,
+        // shadowColor: APP_THEME.primary.first,
         shadowOffset: { width: 0, height: 0.5 },
         shadowOpacity: 0.8,
         shadowRadius: 1,

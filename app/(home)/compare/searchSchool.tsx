@@ -44,6 +44,7 @@ const SearchSchool: React.FC = () => {
     const compareSchool1 = useSelector((state: RootState) => state.api.compareSchool1);
     const compareSchool2 = useSelector((state: RootState) => state.api.compareSchool2);
     const getfavorite = useSelector((state: RootState) => state.api.favorite || {});
+    const theme = useSelector((state: RootState) => state.global.theme);
     const fav = getfavorite?.docs?.[0] || { clients: [] };
 
     useEffect(() => {
@@ -83,13 +84,13 @@ const SearchSchool: React.FC = () => {
     );
 
     const renderItem = ({ item }: { item: School }) => (
-        <AUIThemedView style={styles.recentItem}>
+        <AUIThemedView style={[styles.recentItem, { backgroundColor: APP_THEME[theme].background }]}>
             <AUIImage
                 style={styles.schoolImage}
                 path={Asset.fromModule(require("@/assets/images/compareScreen/Group (1).png")).uri}
                 resizeMode="contain"
             />
-            <AUIThemedView style={styles.recentItemText}>
+            <AUIThemedView style={[styles.recentItemText, { backgroundColor: APP_THEME[theme].background }]}>
                 <AUIThemedText style={styles.recentItemName}>{item.name}</AUIThemedText>
                 <AUIThemedText style={styles.recentItemAddress}>{item.address}</AUIThemedText>
             </AUIThemedView>
@@ -124,7 +125,7 @@ const SearchSchool: React.FC = () => {
                     </AUIThemedView>
                 )}
 
-                <AUIThemedView style={styles.orContainer}>
+                <AUIThemedView style={[styles.orContainer, { backgroundColor: APP_THEME[theme].background }]}>
                     <AUIThemedView style={styles.line} />
                     <AUIThemedText style={styles.orText}>OR</AUIThemedText>
                     <AUIThemedView style={styles.line} />
@@ -233,7 +234,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         marginVertical: 16,
-        backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.background,
     },
     line: {
         flex: 1,
@@ -272,7 +273,7 @@ const styles = StyleSheet.create({
         // alignItems: "center",
         marginVertical: 8,
         marginTop: 15,
-        backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.background,
     },
     schoolImage: {
         width: 25,
@@ -281,7 +282,7 @@ const styles = StyleSheet.create({
     },
     recentItemText: {
         marginLeft: 8,
-        backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.background,
     },
     recentItemName: {
         fontSize: 16,

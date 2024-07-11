@@ -9,7 +9,7 @@ export const GLOBAL_TEXT = {
     enter_email_id: "Enter your email",
     validate_mobile: "Please provide valid mobile number",
     validate_email: "Please provide valid email",
-    enter_pin: "Enter Your OTP",
+    enter_otp: "Enter Your OTP",
     continue_n_verify: "Continue & verify",
     additional_details: "Additional Details",
     find_your_destination: "Find your destination",

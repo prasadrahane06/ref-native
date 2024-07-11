@@ -45,7 +45,7 @@ export const initialPageStyles = StyleSheet.create({
         fontSize: 18,
         fontWeight: "700",
         // fontFamily: font,
-        color: APP_THEME.gray,
+        // color: APP_THEME.light.gray,
         lineHeight: 21,
         left: "50%",
         position: "absolute",
@@ -55,7 +55,7 @@ export const initialPageStyles = StyleSheet.create({
         fontSize: 18,
         fontWeight: "700",
         // fontFamily: font,
-        color: APP_THEME.gray,
+        // color: APP_THEME.light.gray,
         lineHeight: 21,
         width: "100%",
         textAlign: "center",
@@ -91,7 +91,7 @@ export const initialPageStyles = StyleSheet.create({
         marginHorizontal: "auto",
         borderRadius: 50,
         paddingBottom: 25,
-        backgroundColor: APP_THEME.primary.first, //"#9DD393",
+        backgroundColor: APP_THEME.light.primary.first, //"#9DD393",
     },
 });
 
@@ -100,26 +100,23 @@ export const loginPageStyles = StyleSheet.create({
         flex: 1,
         paddingHorizontal: 20,
         paddingTop: 10,
-        backgroundColor: "#ffffff",
     },
     heading: {
         fontSize: 25,
         // marginTop: 40,
         paddingTop: 10,
         fontWeight: "bold",
-        color: APP_THEME.gray,
     },
     mobileEmailButtonContainer: {
         flexDirection: "row",
         gap: 5,
         marginTop: 20,
-        backgroundColor: "#ffffff",
+        // backgroundColor: "#ffffff",
     },
     sendOtpContainer: {
         marginTop: 20,
         flexDirection: "column",
-        backgroundColor: "#ffffff",
-
+        // backgroundColor: "#ffffff",
         gap: 20,
     },
     otpViewContainer: {
@@ -127,7 +124,7 @@ export const loginPageStyles = StyleSheet.create({
         flexDirection: "column",
         alignItems: "flex-start",
         // gap: 30,
-        backgroundColor: "#ffffff",
+        // backgroundColor: "#ffffff",
     },
 });
 
@@ -152,14 +149,12 @@ export const buttonStyle = StyleSheet.create({
         paddingHorizontal: 10,
     },
     buttonText: {
-        color: "#fff",
         fontSize: 16,
         fontWeight: "bold",
         textAlign: "center",
         justifyContent: "center",
     },
     regularText: {
-        color: "#fff",
         fontSize: 12,
         fontWeight: "500",
         textAlign: "left",
@@ -206,14 +201,14 @@ export const secondaryButtonStyle = StyleSheet.create({
 export const inputFieldStyle = StyleSheet.create({
     container: {
         // marginVertical: 10,
-        backgroundColor: "#ffffff",
+        // backgroundColor: "#ffffff",
     },
     label: {
         marginBottom: 5,
         fontSize: 16,
         fontWeight: "semibold",
         letterSpacing: -0.32,
-        color: APP_THEME.gray,
+        // color: APP_THEME.light.gray,
         fontFamily: "Gilroy",
     },
     input: {
@@ -242,7 +237,7 @@ export const signupPageStyles = StyleSheet.create({
         // marginTop: 40,
         paddingTop: 20,
         fontWeight: "bold",
-        color: APP_THEME.gray,
+        color: APP_THEME.light.gray,
     },
     formLayout: {
         gap: 10,

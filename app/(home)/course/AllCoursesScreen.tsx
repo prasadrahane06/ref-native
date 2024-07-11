@@ -15,6 +15,7 @@ const AllCoursesScreen = () => {
     const { get } = useAxios();
 
     const courseResponse = useSelector((state: RootState) => state.api.popularCourse || {});
+    const theme = useSelector((state: RootState) => state.global.theme);
 
     useEffect(() => {
         requestFn(API_URL.course, "popularCourse");
@@ -22,7 +23,7 @@ const AllCoursesScreen = () => {
 
     return (
         <AUILinearGradient
-            colors={[`${APP_THEME.primary.first}80`, "#ffffff"]}
+            colors={[`${APP_THEME[theme].primary.first}80`, "#ffffff"]}
             start={{ x: 1, y: 0 }} // Gradient start point
             end={{ x: 0, y: 1 }} // Gradient end point
             style={styles.container}

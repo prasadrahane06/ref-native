@@ -13,6 +13,7 @@ const Tab = createMaterialTopTabNavigator();
 export default function MyCourses() {
     const { requestFn } = useApiRequest();
     const MyCourse = useSelector((state: RootState) => state.api.myCourse || {});
+    const theme = useSelector((state: RootState) => state.global.theme);
 
     console.log("myCourse", JSON.stringify(MyCourse));
     const docs = MyCourse?.docs;
@@ -26,7 +27,7 @@ export default function MyCourses() {
     return (
         <Tab.Navigator
             screenOptions={{
-                tabBarActiveTintColor: APP_THEME.ternary.first,
+                tabBarActiveTintColor: APP_THEME[theme].ternary.first,
                 tabBarScrollEnabled: true,
                 tabBarItemStyle: { width: Dimensions.get("window").width / 2.3 },
                 tabBarLabelStyle: {
@@ -37,14 +38,14 @@ export default function MyCourses() {
                     fontWeight: "bold",
                 },
                 tabBarIndicatorStyle: {
-                    backgroundColor: APP_THEME.primary.first,
+                    backgroundColor: APP_THEME[theme].primary.first,
                     borderRadius: 5,
                     height: 5,
                 },
                 tabBarStyle: {
                     backgroundColor: "white",
                     borderBottomWidth: 1,
-                    borderColor: APP_THEME.primary.first,
+                    borderColor: APP_THEME[theme].primary.first,
                 },
             }}
         >

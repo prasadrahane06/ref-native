@@ -1,7 +1,9 @@
 import { APP_THEME } from "@/constants/Colors";
+import { RootState } from "@/redux/store";
 import React from "react";
 import { Dimensions, StyleSheet, Text, View } from "react-native";
 import { LineChart } from "react-native-chart-kit";
+import { useSelector } from "react-redux";
 
 interface ChartComponentProps {
     title: string;
@@ -22,10 +24,12 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     yAxisSuffix,
     yAxisInterval,
 }) => {
+    const theme = useSelector((state: RootState) => state.global.theme);
+
     const chartConfig = {
-        backgroundGradientFrom: APP_THEME.background,
+        backgroundGradientFrom: APP_THEME[theme].background,
         backgroundGradientFromOpacity: 0.2,
-        backgroundGradientTo: APP_THEME.background,
+        backgroundGradientTo: APP_THEME[theme].background,
         backgroundGradientToOpacity: 0.4,
         color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
         strokeWidth: 4,
@@ -35,9 +39,11 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     };
 
     return (
-        <View style={styles.mainContainer}>
-            <View style={styles.container}>
-                <Text style={styles.title}>{title}</Text>
+        <View style={[styles.mainContainer, { backgroundColor: APP_THEME[theme].background }]}>
+            <View style={[styles.container, { backgroundColor: APP_THEME[theme].background }]}>
+                <Text style={[styles.title, { color: APP_THEME[theme].ternary.first }]}>
+                    {title}
+                </Text>
                 <View style={styles.legendContainer}>
                     <View style={styles.legendItem}>
                         <View
@@ -46,7 +52,11 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
                                 { backgroundColor: "rgba(144, 238, 144, 1)" }, // Faint green
                             ]}
                         />
-                        <Text style={styles.legendText}>Pending Payments</Text>
+                        <Text
+                            style={[styles.legendText, { color: APP_THEME[theme].ternary.first }]}
+                        >
+                            Pending Payments
+                        </Text>
                     </View>
                     <View style={styles.legendItem}>
                         <View
@@ -55,7 +65,11 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
                                 { backgroundColor: "rgba(0, 100, 0, 1)" }, // Dark green
                             ]}
                         />
-                        <Text style={styles.legendText}>Done Payments</Text>
+                        <Text
+                            style={[styles.legendText, { color: APP_THEME[theme].ternary.first }]}
+                        >
+                            Done Payments
+                        </Text>
                     </View>
                 </View>
                 <LineChart
@@ -94,20 +108,20 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         padding: 16,
-        backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.background,
     },
     container: {
         justifyContent: "center",
         alignItems: "flex-start",
         padding: 16,
-        backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.background,
         borderRadius: 0,
     },
     title: {
         fontSize: 20,
         fontWeight: "bold",
         marginBottom: 16,
-        color: APP_THEME.ternary.first,
+        // color: APP_THEME.ternary.first,
     },
     chart: {
         marginVertical: 8,
@@ -130,7 +144,7 @@ const styles = StyleSheet.create({
     },
     legendText: {
         fontSize: 14,
-        color: APP_THEME.ternary.first,
+        // color: APcP_THEME.ternary.first,
     },
 });
 

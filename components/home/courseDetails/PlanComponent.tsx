@@ -98,6 +98,7 @@ function EnquireNowModal({
 
     const dispatch = useDispatch();
     const enquiryData = useSelector((state: RootState) => state.enquiryForm);
+    const theme = useSelector((state: RootState) => state.global.theme);
     console.log("enquiryData", JSON.stringify(enquiryData));
 
     const { watch, reset, setValue, control, handleSubmit, formState } = useForm({
@@ -428,7 +429,7 @@ function EnquireNowModal({
                                                 <Ionicons
                                                     name="calendar-clear"
                                                     size={20}
-                                                    color={APP_THEME.primary.first}
+                                                    color={APP_THEME[theme].primary.first}
                                                 />
                                             </Pressable>
                                             {error && (
@@ -479,7 +480,7 @@ function EnquireNowModal({
                                                 <Ionicons
                                                     name="calendar-clear"
                                                     size={20}
-                                                    color={APP_THEME.primary.first}
+                                                    color={APP_THEME[theme].primary.first}
                                                 />
                                             </Pressable>
                                             {error && (
@@ -581,6 +582,7 @@ export default function PlanComponent({
     lessonDescription,
     similarCourses,
 }: PlanComponentProps) {
+    const theme = useSelector((state: RootState) => state.global.theme);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [userId, setUserId] = useState("");
     const { t } = useTranslation();
@@ -649,14 +651,15 @@ export default function PlanComponent({
             </AUIThemedView>
 
             <AUIThemedView style={styles.btnContainer}>
-                <Pressable style={styles.bookContainer}
-                      onPress={() =>
+                <Pressable
+                    style={[styles.bookContainer, { backgroundColor: APP_THEME[theme].background }]}
+                    onPress={() =>
                         router.push({
                             pathname: `(home)/courseDetails/purchase/${JSON.stringify({
-                                type : "bookYourSeat",
-                                planId : planId,
-                                courseId : courseId
-                            })}`
+                                type: "bookYourSeat",
+                                planId: planId,
+                                courseId: courseId,
+                            })}`,
                         })
                     }
                 >
@@ -668,14 +671,17 @@ export default function PlanComponent({
 
                 {/* {isSeatBooked && ( */}
                 <Pressable
-                    style={styles.buyContainer}
+                    style={[
+                        styles.buyContainer,
+                        { backgroundColor: APP_THEME[theme].primary.first },
+                    ]}
                     onPress={() =>
                         router.push({
                             pathname: `(home)/courseDetails/purchase/${JSON.stringify({
-                                type : "buy",
-                                planId : planId,
-                                courseId : courseId
-                            })}`
+                                type: "buy",
+                                planId: planId,
+                                courseId: courseId,
+                            })}`,
                         })
                     }
                 >
@@ -697,7 +703,9 @@ export default function PlanComponent({
             </AUIThemedView>
 
             <AUIThemedView style={{ marginTop: 25 }}>
-                <AUIThemedView style={styles.borderBottom} />
+                <AUIThemedView
+                    style={[styles.borderBottom, { borderColor: APP_THEME[theme].primary.first }]}
+                />
             </AUIThemedView>
 
             <AUIThemedView style={styles.similarCourseContainer}>
@@ -810,7 +818,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         bottom: 0,
         borderWidth: StyleSheet.hairlineWidth,
-        borderColor: APP_THEME.primary.first,
+        // borderColor: APP_THEME.primary.first,
     },
     facilityContainer: {
         borderBottomWidth: 1,
@@ -841,7 +849,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         padding: 10,
         width: "50%",
-        backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.background,
     },
     blackBoldText: {
         fontWeight: "bold",
@@ -855,7 +863,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         padding: 10,
         width: "50%",
-        backgroundColor: APP_THEME.primary.first,
+        // backgroundColor: APP_THEME.primary.first,
     },
     whiteBoldText: {
         fontWeight: "bold",

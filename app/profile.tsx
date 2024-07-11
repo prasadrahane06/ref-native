@@ -312,7 +312,7 @@ const Profile: React.FC = () => {
                                     <Ionicons
                                         name="calendar-clear"
                                         size={20}
-                                        color={APP_THEME.primary.first}
+                                        color={APP_THEME.light.primary.first}
                                     />
                                 </Pressable>
                                 {error && (

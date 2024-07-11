@@ -21,6 +21,7 @@ const CompareSchools: React.FC = () => {
     const [show2, setShow2] = useState<boolean>(false);
     const compareSchool1 = useSelector((state: RootState) => state.api.compareSchool1);
     const compareSchool2 = useSelector((state: RootState) => state.api.compareSchool2);
+    const theme = useSelector((state: RootState) => state.global.theme);
     const [school1, setSchool1] = useState<any>();
     const [school2, setSchool2] = useState<any>();
 
@@ -68,8 +69,8 @@ const CompareSchools: React.FC = () => {
 
     return (
         <ScrollView>
-            <AUIThemedView style={styles.container}>
-                <AUIThemedView style={styles.cardContainer}>
+            <AUIThemedView style={[styles.container, { backgroundColor: APP_THEME[theme].background }]}>
+                <AUIThemedView style={[styles.cardContainer, { backgroundColor: APP_THEME[theme].background }]}>
                     <TouchableOpacity style={styles.customCard}>
                         <View style={styles.imageContainer}>
                             <AUIImage
@@ -469,14 +470,14 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start",
         alignItems: "center",
         padding: 15,
-        backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.background,
     },
     cardContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
         width: "100%",
         marginBottom: 20,
-        backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.background,
     },
     customCard: {
         width: "48%",

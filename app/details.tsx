@@ -244,56 +244,60 @@ const ContactNumberField = ({
     handleDropdownChange,
     placeholder,
     onBlur,
-}: any) => (
-    <AUIThemedView style={{ backgroundColor: "#ffffff" }}>
-        <AUIThemedText
-            style={{
-                marginBottom: 5,
-                fontSize: 16,
-                fontWeight: "semibold",
-                letterSpacing: -0.32,
-                color: APP_THEME.gray,
-            }}
-        >
-            {label}
-        </AUIThemedText>
-        <AUIThemedView
-            style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                gap: 10,
-            }}
-        >
-            <DropdownComponent
-                style={{ flex: 1 }}
-                // @ts-ignore
-                list={countriesData}
-                // @ts-ignore
-                value={dropdownValue}
-                setValue={handleDropdownChange}
-                labelField="dialling_code"
-                valueField="dialling_code"
-                listWithIcon
-                renderLeftIcon
-            />
-            <AUIInputField
-                style={{ flex: 2 }}
-                // @ts-ignore
-                placeholder={placeholder}
-                value={value}
-                onChangeText={handleOnChange}
-                keyboardType="numeric"
-                onBlur={onBlur}
-            />
-        </AUIThemedView>
-        {error && (
+}: any) => {
+    const theme = useSelector((state: RootState) => state.global.theme);
+
+    return (
+        <AUIThemedView style={{ backgroundColor: "#ffffff" }}>
             <AUIThemedText
-                style={{ position: "absolute", color: "red", fontSize: 14, marginTop: 78 }}
+                style={{
+                    marginBottom: 5,
+                    fontSize: 16,
+                    fontWeight: "semibold",
+                    letterSpacing: -0.32,
+                    color: APP_THEME[theme].gray,
+                }}
             >
-                {error}
+                {label}
             </AUIThemedText>
-        )}
-    </AUIThemedView>
-);
+            <AUIThemedView
+                style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: 10,
+                }}
+            >
+                <DropdownComponent
+                    style={{ flex: 1 }}
+                    // @ts-ignore
+                    list={countriesData}
+                    // @ts-ignore
+                    value={dropdownValue}
+                    setValue={handleDropdownChange}
+                    labelField="dialling_code"
+                    valueField="dialling_code"
+                    listWithIcon
+                    renderLeftIcon
+                />
+                <AUIInputField
+                    style={{ flex: 2 }}
+                    // @ts-ignore
+                    placeholder={placeholder}
+                    value={value}
+                    onChangeText={handleOnChange}
+                    keyboardType="numeric"
+                    onBlur={onBlur}
+                />
+            </AUIThemedView>
+            {error && (
+                <AUIThemedText
+                    style={{ position: "absolute", color: "red", fontSize: 14, marginTop: 78 }}
+                >
+                    {error}
+                </AUIThemedText>
+            )}
+        </AUIThemedView>
+    );
+};
 export default DetailsPage;

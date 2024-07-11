@@ -1,4 +1,4 @@
-import { APP_THEME, TEXT_THEME, ThemeType } from "@/constants/Colors";
+import { APP_THEME, BACKGOUND_THEME, TEXT_THEME, ThemeType } from "@/constants/Colors";
 import { RootState } from "@/redux/store";
 import React, { useState } from "react";
 import { StyleSheet, TextStyle } from "react-native";
@@ -25,8 +25,8 @@ type Props = {
     listWithIcon?: boolean;
     iconField?: string;
     renderLeftIcon?: any;
-    labelStyles?: TextStyle
-    itemLabelStyle?: TextStyle
+    labelStyles?: TextStyle;
+    itemLabelStyle?: TextStyle;
 };
 
 const DropdownComponent = ({
@@ -43,21 +43,20 @@ const DropdownComponent = ({
     iconField = "iconUri",
     renderLeftIcon,
     labelStyles,
-    itemLabelStyle
+    itemLabelStyle,
 }: Props) => {
     const [isFocus, setIsFocus] = useState(false);
     const theme = useSelector((state: RootState) => state.global.theme) as ThemeType;
     // @ts-ignore
 
     return (
-        <AUIThemedView
-            style={[{ backgroundColor: "#ffffff" }, style]} //COLOR_THEME[theme].backgound
-        >
+        <AUIThemedView style={style}>
             {label && (
                 <AUIThemedText
                     numberOfLines={1}
                     style={[
-                        styles.label, labelStyles
+                        styles.label,
+                        labelStyles,
                         // isFocus && { color: TEXT_THEME[theme].primary },
                     ]}
                 >
@@ -65,10 +64,17 @@ const DropdownComponent = ({
                 </AUIThemedText>
             )}
             <Dropdown
-                style={[styles.dropdown, isFocus && { borderColor: TEXT_THEME[theme].primary }]}
+                style={[
+                    styles.dropdown,
+                    { backgroundColor: BACKGOUND_THEME[theme].backgound },
+                    isFocus && { borderColor: TEXT_THEME[theme].primary },
+                ]}
                 placeholderStyle={styles.placeholderStyle}
-                selectedTextStyle={styles.selectedTextStyle}
-                inputSearchStyle={styles.inputSearchStyle}
+                selectedTextStyle={[styles.selectedTextStyle, { color: TEXT_THEME[theme].primary }]}
+                inputSearchStyle={[
+                    styles.inputSearchStyle,
+                    { backgroundColor: BACKGOUND_THEME[theme].backgound },
+                ]}
                 // itemTextStyle={{ borderWidth: 1, width: "100%" }}
                 iconStyle={styles.iconStyle}
                 data={list}
@@ -112,11 +118,13 @@ const DropdownComponent = ({
                             labelField={labelField}
                             iconField={iconField}
                             itemLabelStyle={itemLabelStyle}
+                            theme={theme}
                         />
                     ) : (
                         <RenderDefaultItem item={item} labelField={labelField} />
                     )
                 }
+                containerStyle={{ backgroundColor: BACKGOUND_THEME[theme].backgound }}
             />
         </AUIThemedView>
     );
@@ -124,14 +132,29 @@ const DropdownComponent = ({
 
 export default DropdownComponent;
 
-const RenderItemWithIcon = ({ item, labelField, iconField, itemLabelStyle }: any) => (
+interface RenderItemWithIconProps {
+    item: any;
+    labelField: any;
+    iconField: any;
+    itemLabelStyle: any;
+    theme: ThemeType;
+}
+
+const RenderItemWithIcon = ({
+    item,
+    labelField,
+    iconField,
+    itemLabelStyle,
+    theme,
+}: RenderItemWithIconProps) => (
     <AUIThemedView
         style={{
             flexDirection: "row",
             alignItems: "center",
             gap: 3,
-            marginVertical: 5,
-            backgroundColor: "#ffffff",
+            // marginVertical: 5,
+            paddingVertical: 5,
+            backgroundColor: BACKGOUND_THEME[theme].backgound,
         }}
     >
         <AUIImage
@@ -144,7 +167,9 @@ const RenderItemWithIcon = ({ item, labelField, iconField, itemLabelStyle }: any
             }}
             path={item[iconField]}
         />
-        <AUIThemedText style={[itemLabelStyle]}>{item[labelField]}</AUIThemedText>
+        <AUIThemedText style={[itemLabelStyle, { color: TEXT_THEME[theme].secondary }]}>
+            {item[labelField]}
+        </AUIThemedText>
     </AUIThemedView>
 );
 
@@ -152,10 +177,9 @@ const RenderDefaultItem = ({ item, labelField }: any) => item[labelField];
 const styles = StyleSheet.create({
     dropdown: {
         height: 50,
-
         borderColor: "#ccc",
         borderWidth: 1,
-        borderRadius: 5,
+        borderRadius: 4,
         paddingHorizontal: 5,
     },
 
@@ -167,7 +191,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "500",
         letterSpacing: -0.32,
-        color: APP_THEME.gray,
     },
     placeholderStyle: {
         fontSize: 16,

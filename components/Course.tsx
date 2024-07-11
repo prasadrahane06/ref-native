@@ -1,9 +1,9 @@
-import { APP_THEME } from "@/constants/Colors";
+import { APP_THEME, TEXT_THEME, ThemeType } from "@/constants/Colors";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AUIImage from "./common/AUIImage";
 import { AUIThemedText } from "./common/AUIThemedText";
 import { AUIThemedView } from "./common/AUIThemedView";
@@ -15,6 +15,7 @@ import { addItemToCart, removeItemFromCart } from "@/redux/cartSlice";
 import { setLoader } from "@/redux/globalSlice";
 import { useTranslation } from "react-i18next";
 import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
+import { RootState } from "@/redux/store";
 
 interface CourseProps {
     title: string;
@@ -44,6 +45,7 @@ const Course: React.FC<CourseProps> = ({
     const { del } = useAxios();
     const { t } = useTranslation();
     console.log("courseId", courseId);
+    const theme = useSelector((state: RootState) => state.global.theme);
 
     const handleRemoveFromCart = (id: string) => {
         del(API_URL.cart, { course: id })
@@ -76,9 +78,17 @@ const Course: React.FC<CourseProps> = ({
         >
             <AUIThemedView style={styles.layout}>
                 <AUIImage style={styles.courseImage} path={image} />
-                <AUIThemedView style={styles.courseItemContainer}>
+                <AUIThemedView
+                    style={[
+                        styles.courseItemContainer,
+                        {
+                            borderColor: APP_THEME[theme].primary.first,
+                            shadowColor: APP_THEME[theme].primary.first,
+                        },
+                    ]}
+                >
                     <Text
-                        style={styles.courseTitle}
+                        style={[styles.courseTitle, { color: TEXT_THEME[theme].primary }]}
                         numberOfLines={numberOfLines}
                         ellipsizeMode={ellipsizeMode}
                     >
@@ -99,7 +109,10 @@ const Course: React.FC<CourseProps> = ({
                 {cart && (
                     <TouchableOpacity
                         onPress={() => handleRemoveFromCart(courseId)}
-                        style={styles.cartIconContainer}
+                        style={[
+                            styles.cartIconContainer,
+                            { backgroundColor: APP_THEME[theme].primary.first },
+                        ]}
                     >
                         <MaterialIcons
                             name="shopping-cart"
@@ -129,8 +142,8 @@ const styles = StyleSheet.create({
         borderRightWidth: 1,
         borderBottomLeftRadius: 8,
         borderBottomRightRadius: 8,
-        borderColor: APP_THEME.primary.first,
-        shadowColor: APP_THEME.primary.first,
+        // borderColor: APP_THEME[theme].primary,
+        // shadowColor: APP_THEME[theme].primary,
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.8,
         shadowRadius: 2,
@@ -161,7 +174,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         top: 10,
         right: 10,
-        backgroundColor: APP_THEME.primary.first,
+        // backgroundColor: APP_THEME.primary.first,
         borderRadius: 20,
         padding: 5,
     },

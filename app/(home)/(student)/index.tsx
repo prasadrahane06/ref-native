@@ -41,6 +41,7 @@ export default function HomeScreen() {
     const displayedCourses = coursesData.slice(0, 4);
 
     const response = useSelector((state: RootState) => state.api || {});
+    const theme = useSelector((state: RootState) => state.global.theme);
     console.log("response in index =>", response);
     let schoolsResponse = response?.school;
     const courseResponse = response?.course;
@@ -108,7 +109,7 @@ export default function HomeScreen() {
                     data={carouselData}
                     containerStyle={styles.dotsContainer}
                     dotStyle={styles.dot}
-                    activeDotStyle={styles.activeDot}
+                    activeDotStyle={{ backgroundColor: APP_THEME[theme].primary.first }}
                     onPress={onPressPagination}
                 />
             </AUIThemedView>
@@ -161,5 +162,4 @@ const styles = StyleSheet.create({
         gap: 10,
     },
     dot: { backgroundColor: "#fff", borderRadius: 100, width: 20, height: 3 },
-    activeDot: { backgroundColor: APP_THEME.primary.first },
 });

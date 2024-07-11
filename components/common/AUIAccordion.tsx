@@ -5,6 +5,8 @@ import { ReactNode, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { AUIThemedText } from "./AUIThemedText";
 import { AUIThemedView } from "./AUIThemedView";
+import { RootState } from "@/redux/store";
+import { useSelector } from "react-redux";
 
 interface AccordionProps {
     title: string;
@@ -13,15 +15,23 @@ interface AccordionProps {
 }
 
 const AUIAccordion: React.FC<AccordionProps> = ({ title, children, icon }) => {
+    const theme = useSelector((state: RootState) => state.global.theme);
     const [expanded, setExpanded] = useState(false);
 
     return (
-        <AUIThemedView style={styles.accordionContainer}>
+        <AUIThemedView
+            style={[styles.accordionContainer, { backgroundColor: APP_THEME[theme].background }]}
+        >
             <TouchableOpacity
                 style={[styles.accordionHeader, expanded && styles.accordionHeaderExpanded]}
                 onPress={() => setExpanded(!expanded)}
             >
-                <AUIThemedView style={styles.accordionTitle}>
+                <AUIThemedView
+                    style={[
+                        styles.accordionTitle,
+                        { backgroundColor: APP_THEME[theme].background },
+                    ]}
+                >
                     <AUIImage style={styles.icon} path={icon} resizeMode="cover" />
                     <AUIThemedText style={styles.accordionTitleText}>{title}</AUIThemedText>
                 </AUIThemedView>
@@ -44,7 +54,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginBottom: 12,
         overflow: "hidden",
-        backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.background,
     },
     accordionHeader: {
         flexDirection: "row",
@@ -59,7 +69,7 @@ const styles = StyleSheet.create({
     accordionTitle: {
         flexDirection: "row",
         alignItems: "center",
-        backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.background,
     },
     accordionTitleText: {
         marginLeft: 10,

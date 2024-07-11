@@ -22,6 +22,7 @@ export interface ButtonTheme {
     secondary: ButtonVariant;
     success: ButtonVariant;
     danger: ButtonVariant;
+    disabled: ButtonVariant;
 }
 export interface TextTheme {
     light: {
@@ -30,6 +31,7 @@ export interface TextTheme {
         danger: string;
         warning: string;
         info: string;
+        gray: string;
     };
     dark: {
         primary: string;
@@ -37,6 +39,7 @@ export interface TextTheme {
         danger: string;
         warning: string;
         info: string;
+        gray: string;
     };
 }
 export interface ColorThemes {
@@ -54,65 +57,116 @@ export interface TabColors {
 }
 export type ThemeType = "light" | "dark";
 
-const APP_THEME: AppTheme = {
-    background: "#ffffff",
-    gray: "#595959",
-    lightGray: "",
-    primary: {
-        first: "#5BD894", //"#93D1BF",
-        second: "#A5D7B9",
-        third: "#95CF9C",
+const APP_THEME: { [key in ThemeType]: AppTheme } = {
+    light: {
+        background: "#fff",
+        gray: "#595959",
+        lightGray: "",
+        primary: {
+            first: "#5BD894", //"#93D1BF",
+            second: "#A5D7B9",
+            third: "#95CF9C",
+        },
+        secondary: {
+            first: "#76FAB2", //"#9CD292",
+            second: "#B1D788",
+            third: "#CAE18E",
+        },
+        ternary: {
+            first: "#192119",
+            second: "#484D48",
+            third: "#7A827A",
+        },
     },
-    secondary: {
-        first: "#76FAB2", //"#9CD292",
-        second: "#B1D788",
-        third: "#CAE18E",
-    },
-    ternary: {
-        first: "#192119",
-        second: "#484D48",
-        third: "#7A827A",
+    dark: {
+        background: "#000",
+        gray: "#fff",
+        lightGray: "",
+        primary: {
+            first: "#5BD894", //"#93D1BF",
+            second: "#A5D7B9",
+            third: "#95CF9C",
+        },
+        secondary: {
+            first: "#76FAB2", //"#9CD292",
+            second: "#B1D788",
+            third: "#CAE18E",
+        },
+        ternary: {
+            first: "#192119",
+            second: "#484D48",
+            third: "#7A827A",
+        },
     },
 };
-
-const COLOR_THEME: ColorThemes = {
+const BACKGOUND_THEME: ColorThemes = {
     light: { backgound: "#fff" },
-    dark: { backgound: "#343a40" },
+    dark: { backgound: "#000" },
 };
 
 const TEXT_THEME: TextTheme = {
     light: {
-        primary: "#343a40",
-        secondary: "#6c757d",
+        primary: "#000",
+        secondary: "#ccc",
         danger: "#dc3545",
         warning: "#ffc107",
         info: "#17a2b8",
+        gray: "#000",
     },
     dark: {
-        primary: "#ffffff",
-        secondary: "#6c757d",
+        primary: "#fff",
+        secondary: "#ccc",
         danger: "#dc3545",
         warning: "#ffc107",
         info: "#17a2b8",
+        gray: "#fff",
     },
 };
 
-const BUTTON_THEME: ButtonTheme = {
-    primary: {
-        background: "#3498db",
-        color: "#ffffff",
+const BUTTON_THEME: { [key in ThemeType]: ButtonTheme } = {
+    light: {
+        primary: {
+            background: "#3498db",
+            color: "#fff",
+        },
+        secondary: {
+            background: "#2ecc71",
+            color: "#fff",
+        },
+        success: {
+            background: "#28a745",
+            color: "#fff",
+        },
+        danger: {
+            background: "#dc3545",
+            color: "#fff",
+        },
+        disabled: {
+            background: "#dcdcdd",
+            color: "#fff",
+        },
     },
-    secondary: {
-        background: "#2ecc71",
-        color: "#ffffff",
-    },
-    success: {
-        background: "#28a745",
-        color: "#ffffff",
-    },
-    danger: {
-        background: "#dc3545",
-        color: "#ffffff",
+    dark: {
+        primary: {
+            background: "#3498db",
+            color: "#fff",
+        },
+        secondary: {
+            background: "#2ecc71",
+            color: "#fff",
+        },
+        success: {
+            background: "#28a745",
+            color: "#fff",
+        },
+        danger: {
+            background: "#dc3545",
+            color: "#fff",
+        },
+        disabled: {
+            background: "#777777",
+            color: "#fff",
+        },
     },
 };
 
@@ -122,10 +176,15 @@ const STUDENT_GRADIENT: StudentGradient = {
     ternary: "rgba(91, 216, 148, 0.8)",
 };
 
-const TAB_COLORS: TabColors = {
-    active: "#ffffff",
-    inactive: "#265451",
+const TAB_COLORS: { [key in ThemeType]: TabColors } = {
+    light: {
+        active: "#fff",
+        inactive: "#265451",
+    },
+    dark: {
+        active: "#000",
+        inactive: "#fff",
+    },
 };
 
-export { APP_THEME, BUTTON_THEME, COLOR_THEME, STUDENT_GRADIENT, TAB_COLORS, TEXT_THEME };
-
+export { APP_THEME, BUTTON_THEME, BACKGOUND_THEME, STUDENT_GRADIENT, TAB_COLORS, TEXT_THEME };

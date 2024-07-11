@@ -1,7 +1,7 @@
 import { AUIThemedText } from "@/components/common/AUIThemedText";
-import { APP_THEME } from "@/constants/Colors";
+import { APP_THEME, BACKGOUND_THEME, TEXT_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT, GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
-import { removeUserData } from "@/constants/RNAsyncStore";
+import { removeUserData, storeUserData } from "@/constants/RNAsyncStore";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer";
 import { Asset } from "expo-asset";
@@ -11,8 +11,9 @@ import { StyleSheet, Switch, TouchableOpacity, View } from "react-native";
 import AUIImage from "./AUIImage";
 import { AUIThemedView } from "./AUIThemedView";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { setTheme } from "@/redux/globalSlice";
 
 //interface
 export interface DrawerItem {
@@ -33,13 +34,24 @@ export interface DrawerProps {
 }
 
 const AUIDrawerContent = (props: any) => {
+    const router = useRouter();
+    const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
     const globalState = useSelector((state: RootState) => state.global);
+    const theme = useSelector((state: RootState) => state.global.theme);
     const isRTL = globalState.isRTL;
     const userdetails = globalState.user;
-    const [isThemeEnabled, setIsEnabled] = useState(false);
-    const router = useRouter();
-    const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+    const isDarkMode = useSelector((state: RootState) => state.global.theme === "dark");
+
+    const toggleSwitch = async () => {
+        const newDarkModeState = !isDarkMode;
+        const newTheme = newDarkModeState ? "dark" : "light";
+        dispatch(setTheme(newTheme));
+        console.log("isDarkMode", newDarkModeState);
+
+        await storeUserData({ darkMode: newDarkModeState });
+    };
+
     const onLogout = () => {
         removeUserData();
         router.push({ pathname: "/" });
@@ -68,17 +80,27 @@ const AUIDrawerContent = (props: any) => {
                             style={styles.avatar}
                         />
                         <View style={styles.nameContainer}>
-                            <AUIThemedText style={styles.name}>{`${t(
-                                GLOBAL_TRANSLATION_LABEL.hii
-                            )} ${userdetails?.name}`}</AUIThemedText>
-                            <AUIThemedText style={styles.welcome}>
+                            <AUIThemedText
+                                style={[styles.name, { color: APP_THEME[theme].primary.first }]}
+                            >{`${t(GLOBAL_TRANSLATION_LABEL.hii)} ${
+                                userdetails?.userName
+                            }`}</AUIThemedText>
+                            <AUIThemedText
+                                style={[styles.welcome, { color: TEXT_THEME[theme].primary }]}
+                            >
                                 {t(GLOBAL_TRANSLATION_LABEL.welcome_back)}
                             </AUIThemedText>
                         </View>
                     </View>
                 </AUIThemedView>
                 {/* </AUIBackgroundImage> */}
-                <View style={{ flex: 1, backgroundColor: "#fff", paddingTop: 10 }}>
+                <View
+                    style={{
+                        flex: 1,
+                        backgroundColor: BACKGOUND_THEME[theme].backgound,
+                        paddingTop: 10,
+                    }}
+                >
                     <DrawerItemList {...props} />
                 </View>
             </DrawerContentScrollView>
@@ -91,11 +113,11 @@ const AUIDrawerContent = (props: any) => {
             >
                 <AUIThemedView style={styles.switchTextContainer}>
                     <Switch
-                        trackColor={{ false: "#767577", true: APP_THEME.primary.first }}
-                        thumbColor={"#ffffff"}
-                        ios_backgroundColor={APP_THEME.ternary.first}
+                        trackColor={{ false: "#767577", true: APP_THEME.light.primary.first }}
+                        thumbColor={isDarkMode ? "#f4f3f4" : "#f4f3f4"}
+                        ios_backgroundColor={APP_THEME.light.ternary.first}
                         onValueChange={toggleSwitch}
-                        value={isThemeEnabled}
+                        value={isDarkMode}
                         style={{ transform: [{ scaleX: 1.1 }, { scaleY: 1.1 }] }}
                     />
                     <AUIThemedText
@@ -110,7 +132,13 @@ const AUIDrawerContent = (props: any) => {
                 </AUIThemedView>
             </View>
             <View style={{ padding: 20, borderTopWidth: 1, borderTopColor: "#ccc" }}>
-                <TouchableOpacity style={styles.logoutButton} onPress={onLogout}>
+                <TouchableOpacity
+                    style={[
+                        styles.logoutButton,
+                        { backgroundColor: APP_THEME[theme].primary.first },
+                    ]}
+                    onPress={onLogout}
+                >
                     <FontAwesome name="sign-out" style={styles.logOutIcon} />
 
                     <AUIThemedText style={styles.logoutText}>
@@ -161,12 +189,12 @@ const styles = StyleSheet.create({
     name: {
         fontSize: 18,
         fontWeight: "bold",
-        color: APP_THEME.primary.first,
+        // color: APP_THEME.primary.first,
         // color: APP_THEME.ternary.first,
     },
     welcome: {
         fontSize: 15,
-        color: APP_THEME.gray,
+        // color: APP_THEME.gray,
     },
     menuItemContainer: {
         marginTop: 20,
@@ -185,11 +213,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         paddingLeft: 15,
     },
-    separator: {
-        height: 1,
-        backgroundColor: APP_THEME.primary.first,
-        marginHorizontal: 20,
-    },
     buttonsMainContainer: {
         position: "absolute",
         bottom: 50,
@@ -202,7 +225,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         paddingVertical: 15,
         paddingHorizontal: 20,
-        backgroundColor: APP_THEME.primary.first,
+        // backgroundColor: APP_THEME.primary.first,
         // marginHorizontal: 20,
         borderRadius: 15,
     },
@@ -249,13 +272,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginLeft: 7,
         paddingVertical: 10,
-    },
-    preferences: {
-        fontSize: 16,
-        color: APP_THEME.gray,
-        paddingTop: 10,
-        fontWeight: "500",
-        paddingLeft: 12,
     },
     switchText: {
         fontSize: 17,

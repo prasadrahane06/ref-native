@@ -25,7 +25,7 @@ const AllSchoolsScreen: React.FC<SchoolListProps> = ({ data }) => {
 
     return (
         <AUILinearGradient
-            colors={[`${APP_THEME.primary.first}80`, "#ffffff"]}
+            colors={[`${APP_THEME.light.primary.first}80`, "#ffffff"]}
             start={{ x: 1, y: 0 }} // Gradient start point
             end={{ x: 0, y: 1 }} // Gradient end point
             style={styles.container}

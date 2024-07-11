@@ -26,11 +26,12 @@ type RouteParams = {
 export default function PurchaseScreen() {
     const { id } = useLocalSearchParams<{ id: any }>();
     const { requestFn } = useApiRequest();
-    const {post} = useAxios();
+    const { post } = useAxios();
 
     const newid = JSON.parse(id);
 
     const individualPlan = useSelector((state: RootState) => state.api.individualPlan);
+    const theme = useSelector((state: RootState) => state.global.theme);
 
     const [paymentMode, setPaymentMode] = useState("");
     const [planValue, setPlanValue] = useState({
@@ -64,17 +65,20 @@ export default function PurchaseScreen() {
     }, [individualPlan, paymentMode]);
 
     const handlePayment = () => {
-        post(API_URL.purchaseCourse, { course: newid.courseId, type: newid.type , plan : newid.planId })
-        .then((res: any) => {
-            ApiSuccessToast(res.message);
-            console.log("response ", res.data);
+        post(API_URL.purchaseCourse, {
+            course: newid.courseId,
+            type: newid.type,
+            plan: newid.planId,
         })
-        .catch((e: any) => {
-            ApiErrorToast(e.response?.data?.message);
-            console.log(e);
-        });
-
-    }
+            .then((res: any) => {
+                ApiSuccessToast(res.message);
+                console.log("response ", res.data);
+            })
+            .catch((e: any) => {
+                ApiErrorToast(e.response?.data?.message);
+                console.log(e);
+            });
+    };
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -95,11 +99,9 @@ export default function PurchaseScreen() {
 
                     <AUIThemedView style={styles.planDetails}>
                         <AUIThemedText style={styles.planDetailText}>
-                            {
-                                newid.type === "buy"
-                                    ? t(GLOBAL_TRANSLATION_LABEL.fee)
-                                    : t(GLOBAL_TRANSLATION_LABEL.bookYourSeat)
-                            }
+                            {newid.type === "buy"
+                                ? t(GLOBAL_TRANSLATION_LABEL.fee)
+                                : t(GLOBAL_TRANSLATION_LABEL.bookYourSeat)}
                         </AUIThemedText>
                         <AUIThemedText style={styles.planDetailValue}>
                             ${planValue.price}
@@ -116,14 +118,26 @@ export default function PurchaseScreen() {
                     </AUIThemedView>
                 </AUIThemedView>
 
-                <AUIThemedView style={styles.separator} />
+                <AUIThemedView
+                    style={[
+                        styles.separator,
+                        {
+                            backgroundColor: APP_THEME[theme].primary.first,
+                            borderColor: APP_THEME[theme].primary.first,
+                        },
+                    ]}
+                />
 
                 <AUIThemedView style={{ marginHorizontal: 15 }}>
                     <AUIThemedView style={styles.planDetails}>
-                        <AUIThemedText style={styles.totalText}>
+                        <AUIThemedText
+                            style={[styles.totalText, { color: APP_THEME[theme].primary.first }]}
+                        >
                             {t(GLOBAL_TRANSLATION_LABEL.total)}
                         </AUIThemedText>
-                        <AUIThemedText style={styles.totalValue}>
+                        <AUIThemedText
+                            style={[styles.totalValue, { color: APP_THEME[theme].primary.first }]}
+                        >
                             ${planValue.total.toFixed(2)}
                         </AUIThemedText>
                     </AUIThemedView>
@@ -138,7 +152,12 @@ export default function PurchaseScreen() {
                 <TouchableOpacity
                     style={[
                         styles.paymentModeButton,
-                        paymentMode === "Razor pay" && styles.selectedButton,
+                        paymentMode === "Razor pay" && [
+                            styles.selectedButton,
+                            {
+                                borderColor: APP_THEME[theme].primary.first,
+                            },
+                        ],
                     ]}
                     onPress={() => setPaymentMode("Razor pay")}
                 >
@@ -154,7 +173,12 @@ export default function PurchaseScreen() {
                 <TouchableOpacity
                     style={[
                         styles.paymentModeButton,
-                        paymentMode === "Card payment" && styles.selectedButton,
+                        paymentMode === "Card payment" && [
+                            styles.selectedButton,
+                            {
+                                borderColor: APP_THEME[theme].primary.first,
+                            },
+                        ],
                     ]}
                     onPress={() => setPaymentMode("Card payment")}
                 >
@@ -170,7 +194,12 @@ export default function PurchaseScreen() {
                 <TouchableOpacity
                     style={[
                         styles.paymentModeButton,
-                        paymentMode === "Net Banking" && styles.selectedButton,
+                        paymentMode === "Net Banking" && [
+                            styles.selectedButton,
+                            {
+                                borderColor: APP_THEME[theme].primary.first,
+                            },
+                        ],
                     ]}
                     onPress={() => setPaymentMode("Net Banking")}
                 >
@@ -184,8 +213,9 @@ export default function PurchaseScreen() {
                 </TouchableOpacity>
             </AUIThemedView>
 
-            <TouchableOpacity style={styles.confirmButton}
-            onPress={() => handlePayment()}
+            <TouchableOpacity
+                style={[styles.confirmButton, { backgroundColor: APP_THEME[theme].primary.first }]}
+                onPress={() => handlePayment()}
             >
                 <AUIThemedText style={styles.confirmButtonText}>
                     {t(GLOBAL_TRANSLATION_LABEL.confirmYourPayment)}
@@ -223,12 +253,12 @@ const styles = StyleSheet.create({
     totalText: {
         fontSize: 18,
         fontWeight: "bold",
-        color: APP_THEME.primary.first,
+        // color: APP_THEME.primary.first,
     },
     totalValue: {
         fontSize: 18,
         fontWeight: "bold",
-        color: APP_THEME.primary.first,
+        // color: APP_THEME.primary.first,
     },
     paymentModes: {
         marginVertical: 15,
@@ -244,13 +274,13 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     selectedButton: {
-        borderColor: APP_THEME.primary.first,
+        // borderColor: APP_THEME.primary.first,
         borderWidth: 1,
         borderRadius: 10,
     },
     confirmButton: {
         position: "absolute",
-        backgroundColor: APP_THEME.primary.first,
+        // backgroundColor: APP_THEME.primary.first,
         padding: 15,
         borderRadius: 10,
         bottom: "10%",
@@ -265,10 +295,10 @@ const styles = StyleSheet.create({
     },
     separator: {
         marginTop: 10,
-        backgroundColor: APP_THEME.primary.first,
+        // backgroundColor: APP_THEME.primary.first,
         alignItems: "center",
         justifyContent: "center",
         borderTopWidth: 1,
-        borderColor: APP_THEME.primary.first,
+        // borderColor: APP_THEME.primary.first,
     },
 });
