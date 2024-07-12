@@ -715,11 +715,23 @@ const LoginPage = () => {
     };
     const handleSubmitLoginOtp = (newOtp: any) => {
         let code = phoneCode?.split("+")[1];
-        let payload = {
-            phone: `${code}${inputValue}`,
-            otp: newOtp,
-        };
-        console.log(payload);
+        let payload = {};
+        console.log("selectedButton", selectedButton);
+
+        if (selectedButton === "mobile") {
+            payload = {
+                phone: `${code}${inputValue}`,
+                otp: newOtp,
+            };
+        }
+        if (selectedButton === "email") {
+            payload = {
+                email: `${inputValue}`,
+                otp: newOtp,
+            };
+        }
+
+        console.log("payload from handleSubmitLoginOtp=>", payload);
         dispatch(setLoader(true));
         post(API_URL.verifyOTP, payload)
             .then((res) => {
