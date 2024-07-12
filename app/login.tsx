@@ -716,7 +716,6 @@ const LoginPage = () => {
     const handleSubmitLoginOtp = (newOtp: any) => {
         let code = phoneCode?.split("+")[1];
         let payload = {};
-        console.log("selectedButton", selectedButton);
 
         if (selectedButton === "mobile") {
             payload = {
@@ -731,7 +730,6 @@ const LoginPage = () => {
             };
         }
 
-        console.log("payload from handleSubmitLoginOtp=>", payload);
         dispatch(setLoader(true));
         post(API_URL.verifyOTP, payload)
             .then((res) => {
