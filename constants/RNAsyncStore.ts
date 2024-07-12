@@ -3,10 +3,13 @@ import * as Device from "expo-device";
 
 export const storeUserData = async (value: object) => {
     try {
-        const jsonValue = JSON.stringify(value);
+        const existingData = await getUserData();
+        const updatedData = { ...existingData, ...value };
+
+        const jsonValue = JSON.stringify(updatedData);
         await AsyncStorage.setItem("@user-data", jsonValue);
     } catch (e) {
-        // saving error
+        console.log("Error in storeUserData:", e);
     }
 };
 
@@ -24,30 +27,32 @@ export const storeUserDeviceData = async (value: object = {}) => {
 
         await AsyncStorage.setItem("@user-device-data", JSON.stringify(jsonValue));
     } catch (e) {
-        // saving error
+        console.log("Error in storeUserDeviceData:", e);
     }
 };
+
 export const getUserData = async () => {
     try {
         const jsonValue = await AsyncStorage.getItem("@user-data");
         return jsonValue != null ? JSON.parse(jsonValue) : null;
     } catch (e) {
-        // error reading value
+        console.log("Error in getUserData:", e);
     }
 };
+
 export const getUserDeviceData = async () => {
     try {
         const jsonValue = await AsyncStorage.getItem("@user-device-data");
         return jsonValue != null ? JSON.parse(jsonValue) : null;
     } catch (e) {
-        // error reading value
+        console.log("Error in getUserDeviceData:", e);
     }
 };
+
 export const removeUserData = async () => {
     try {
-        const jsonValue = await AsyncStorage.removeItem("@user-data");
-        return jsonValue != null ? JSON.parse(jsonValue) : null;
+        await AsyncStorage.removeItem("@user-data");
     } catch (e) {
-        // error reading value
+        console.log("Error in removeUserData:", e);
     }
 };

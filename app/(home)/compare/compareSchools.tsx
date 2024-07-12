@@ -13,7 +13,6 @@ import { useSelector } from "react-redux";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import useAxios from "@/app/services/axiosClient";
 import { API_URL } from "@/constants/urlProperties";
-
 const CompareSchools: React.FC = () => {
     const [date1, setDate1] = useState<Date>(new Date());
     const [show1, setShow1] = useState<boolean>(false);
@@ -23,12 +22,9 @@ const CompareSchools: React.FC = () => {
     const compareSchool2 = useSelector((state: RootState) => state.api.compareSchool2);
     const [school1, setSchool1] = useState<any>();
     const [school2, setSchool2] = useState<any>();
-
     console.log("compareSchool1", JSON.stringify(school1));
     console.log("compareSchool2", JSON.stringify(school2));
-
     const { post } = useAxios();
-
     useEffect(() => {
         // Check if both compareSchool1 and compareSchool2 have IDs before making the API call
         if (compareSchool1 && compareSchool1.id && compareSchool2 && compareSchool2.id) {
@@ -53,55 +49,27 @@ const CompareSchools: React.FC = () => {
             // Handle case where one or both school IDs are missing
         }
     }, [compareSchool1, compareSchool2]); // useEffect will trigger whenever compareSchool1 or compareSchool2 changes
-
     const onChange1 = (event: any, selectedDate: Date | undefined) => {
         const currentDate = selectedDate || date1;
         setShow1(Platform.OS === "ios");
         setDate1(currentDate);
     };
-
     const onChange2 = (event: any, selectedDate: Date | undefined) => {
         const currentDate = selectedDate || date2;
         setShow2(Platform.OS === "ios");
         setDate2(currentDate);
     };
-
     return (
         <AUIThemedView style={styles.outerContainer}>
-        <ScrollView>
-            <AUIThemedView style={styles.container}>
-                <AUIThemedView style={styles.cardContainer}>
-                    <TouchableOpacity style={styles.customCard}>
-                        <View style={styles.imageContainer}>
-                            <AUIImage
-                                style={styles.image}
-                                path={
-                                    school1?.banner ||
-                                    Asset.fromModule(
-                                        require("@/assets/images/compareScreen/compareSchoolsPage/Rectangle 155.png")
-                                    ).uri
-                                }
-                                resizeMode="cover"
-                            />
-                        </View>
-                        <View style={styles.textContainer}>
-                            <AUIThemedText style={styles.cardTitle}>{school1?.name}</AUIThemedText>
-                            <AUIThemedText style={styles.cardSubtitle}>
-                                East, Academy The East, 60 Grey Mare Ln, ...
-                            </AUIThemedText>
-                        </View>
-                        {/* <View style={styles.customShape}>
-              <Ionicons name="close" size={20} color="#5BD894" />
-            </View> */}
-                    </TouchableOpacity>
-
-                    {compareSchool2 ? (
+            <ScrollView>
+                <AUIThemedView style={styles.container}>
+                    <AUIThemedView style={styles.cardContainer}>
                         <TouchableOpacity style={styles.customCard}>
                             <View style={styles.imageContainer}>
                                 <AUIImage
                                     style={styles.image}
                                     path={
-                                        school2?.banner ||
+                                        school1?.banner ||
                                         Asset.fromModule(
                                             require("@/assets/images/compareScreen/compareSchoolsPage/Rectangle 155.png")
                                         ).uri
@@ -111,100 +79,125 @@ const CompareSchools: React.FC = () => {
                             </View>
                             <View style={styles.textContainer}>
                                 <AUIThemedText style={styles.cardTitle}>
-                                    {school2?.name}
-                                </AUIThemedText>
-                                <AUIThemedText style={styles.cardSubtitle}>
-                                    "Academy The East, behind the blue Care In, ..."
+                                    {school1?.name}
                                 </AUIThemedText>
                             </View>
+                            {/* <View style={styles.customShape}>
+              <Ionicons name="close" size={20} color="#5BD894" />
+            </View> */}
                         </TouchableOpacity>
-                    ) : (
-                        <TouchableOpacity
-                            style={styles.card}
-                            onPress={() =>
-                                router.push({
-                                    pathname: `(home)/compare/searchSchool`,
-                                })
+                        {compareSchool2 ? (
+                            <TouchableOpacity style={styles.customCard}>
+                                <View style={styles.imageContainer}>
+                                    <AUIImage
+                                        style={styles.image}
+                                        path={
+                                            school2?.banner ||
+                                            Asset.fromModule(
+                                                require("@/assets/images/compareScreen/compareSchoolsPage/Rectangle 155.png")
+                                            ).uri
+                                        }
+                                        resizeMode="cover"
+                                    />
+                                </View>
+                                <View style={styles.textContainer}>
+                                    <AUIThemedText style={styles.cardTitle}>
+                                        {school2?.name}
+                                    </AUIThemedText>
+                                </View>
+                            </TouchableOpacity>
+                        ) : (
+                            <TouchableOpacity
+                                style={styles.card}
+                                onPress={() =>
+                                    router.push({
+                                        pathname: "(home)/compare/searchSchool",
+                                    })
+                                }
+                            >
+                                <Ionicons name="add-circle-outline" size={50} color="#5BD894" />
+                                <AUIThemedText style={styles.cardText}>Add School</AUIThemedText>
+                            </TouchableOpacity>
+                        )}
+                    </AUIThemedView>
+                    <AUIThemedView style={styles.accordionSection}>
+                        <AUIAccordion
+                            title="School Infomtion"
+                            icon={
+                                Asset.fromModule(
+                                    require("@/assets/images/compareScreen/compareSchoolsPage/Group 36763.png")
+                                ).uri
                             }
                         >
-                            <Ionicons name="add-circle-outline" size={50} color="#5BD894" />
-                            <AUIThemedText style={styles.cardText}>Add School</AUIThemedText>
-                        </TouchableOpacity>
-                    )}
-                </AUIThemedView>
-
-                <AUIThemedView style={styles.accordionSection}>
-                    <AUIAccordion
-                        title="School Infomtion"
-                        icon={
-                            Asset.fromModule(
-                                require("@/assets/images/compareScreen/compareSchoolsPage/Group 36763.png")
-                            ).uri
-                        }
-                    >
-                        <AUIThemedView>
-                            <AUIThemedView style={styles.row}>
-                                <AUIThemedText style={styles.value}>information</AUIThemedText>
-                                <AUIThemedView style={styles.rowContainer}>
-                                    <AUIThemedText style={styles.label}>
-                                        {school1?.description || "--"}
+                            <AUIThemedView>
+                                <AUIThemedView style={styles.row}>
+                                    <AUIThemedText style={styles.value}>information</AUIThemedText>
+                                    <AUIThemedView style={styles.rowContainer}>
+                                        <AUIThemedText style={styles.label}>
+                                            {school1?.description || "--"}
+                                        </AUIThemedText>
+                                        <AUIThemedText style={styles.label2}>
+                                            {school2?.description || "--"}
+                                        </AUIThemedText>
+                                    </AUIThemedView>
+                                </AUIThemedView>
+                                <AUIThemedView style={styles.row}>
+                                    <AUIThemedText style={styles.value}>
+                                        have Mail support{" "}
                                     </AUIThemedText>
-                                    <AUIThemedText style={styles.label2}>
-                                        {school2?.description || "--"}
-                                    </AUIThemedText>
+                                    <AUIThemedView style={styles.rowContainer}>
+                                        <AUIThemedText style={styles.label}>
+                                            {school1?.mailSupport === true
+                                                ? "true"
+                                                : "false" || "--"}
+                                        </AUIThemedText>
+                                        <AUIThemedText style={styles.label2}>
+                                            {school2?.mailSupport === true
+                                                ? "true"
+                                                : "false" || "--"}
+                                        </AUIThemedText>
+                                    </AUIThemedView>
+                                </AUIThemedView>
+                                <AUIThemedView style={styles.row2}>
+                                    <AUIThemedText style={styles.value}>callSupport</AUIThemedText>
+                                    <AUIThemedView style={styles.rowContainer}>
+                                        <AUIThemedText style={styles.label}>
+                                            {school1?.callSupport === true
+                                                ? "true"
+                                                : "false" || "--"}
+                                        </AUIThemedText>
+                                        <AUIThemedText style={styles.label2}>
+                                            {school2?.callSupport === true
+                                                ? "true"
+                                                : "false" || "--"}
+                                        </AUIThemedText>
+                                    </AUIThemedView>
                                 </AUIThemedView>
                             </AUIThemedView>
-                            <AUIThemedView style={styles.row}>
-                                <AUIThemedText style={styles.value}>
-                                    have Mail support{" "}
-                                </AUIThemedText>
-                                <AUIThemedView style={styles.rowContainer}>
-                                    <AUIThemedText style={styles.label}>
-                                        {school1?.mailSupport === true ? "true" : "false" || "--"}
+                        </AUIAccordion>
+                        <AUIAccordion
+                            title="Academics"
+                            icon={
+                                Asset.fromModule(
+                                    require("@/assets/images/compareScreen/compareSchoolsPage/Group (2).png")
+                                ).uri
+                            }
+                        >
+                            <AUIThemedView>
+                                <AUIThemedView style={styles.row2}>
+                                    <AUIThemedText style={styles.value}>
+                                        Language to learn
                                     </AUIThemedText>
-                                    <AUIThemedText style={styles.label2}>
-                                        {school2?.mailSupport === true ? "true" : "false" || "--"}
-                                    </AUIThemedText>
+                                    <AUIThemedView style={styles.rowContainer}>
+                                        <AUIThemedText style={styles.label}>
+                                            {school1?.languages?.join(", ") || "--"}
+                                        </AUIThemedText>
+                                        <AUIThemedText style={styles.label2}>
+                                            {school2?.languages?.join(", ") || "--"}
+                                        </AUIThemedText>
+                                    </AUIThemedView>
                                 </AUIThemedView>
-                            </AUIThemedView>
-                            <AUIThemedView style={styles.row2}>
-                                <AUIThemedText style={styles.value}>callSupport</AUIThemedText>
-                                <AUIThemedView style={styles.rowContainer}>
-                                    <AUIThemedText style={styles.label}>
-                                        {school1?.callSupport === true ? "true" : "false" || "--"}
-                                    </AUIThemedText>
-                                    <AUIThemedText style={styles.label2}>
-                                        {school2?.callSupport === true ? "true" : "false" || "--"}
-                                    </AUIThemedText>
-                                </AUIThemedView>
-                            </AUIThemedView>
-                        </AUIThemedView>
-                    </AUIAccordion>
-
-                    <AUIAccordion
-                        title="Academics"
-                        icon={
-                            Asset.fromModule(
-                                require("@/assets/images/compareScreen/compareSchoolsPage/Group (2).png")
-                            ).uri
-                        }
-                    >
-                        <AUIThemedView>
-                            <AUIThemedView style={styles.row2}>
-                                <AUIThemedText style={styles.value}>
-                                    Language to learn
-                                </AUIThemedText>
-                                <AUIThemedView style={styles.rowContainer}>
-                                    <AUIThemedText style={styles.label}>
-                                        {school1?.languages?.join(", ") || "--"}
-                                    </AUIThemedText>
-                                    <AUIThemedText style={styles.label2}>
-                                        {school2?.languages?.join(", ") || "--"}
-                                    </AUIThemedText>
-                                </AUIThemedView>
-                            </AUIThemedView>
-
-                            {/* <AUIThemedView style={styles.row2}>
+                                {/* <AUIThemedView style={styles.row2}>
                                 <AUIThemedText style={styles.value}>
                                     {" "}
                                     Acadamic Session
@@ -218,75 +211,72 @@ const CompareSchools: React.FC = () => {
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView> */}
-                        </AUIThemedView>
-                    </AUIAccordion>
-
-                    <AUIAccordion
-                        title="Location"
-                        icon={
-                            Asset.fromModule(
-                                require("@/assets/images/compareScreen/compareSchoolsPage/Layer 2.png")
-                            ).uri
-                        }
-                    >
-                        <AUIThemedView style={styles.row2}>
+                            </AUIThemedView>
+                        </AUIAccordion>
+                        <AUIAccordion
+                            title="Location"
+                            icon={
+                                Asset.fromModule(
+                                    require("@/assets/images/compareScreen/compareSchoolsPage/Layer 2.png")
+                                ).uri
+                            }
+                        >
+                            <AUIThemedView style={styles.row2}>
                                 <AUIThemedText style={styles.value}>School Location</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
                                     <AUIThemedText style={styles.label}>
                                         {school1?.locationDetails[0]?.name?.en || "--"}
                                     </AUIThemedText>
                                     <AUIThemedText style={styles.label2}>
-                                    {school2?.locationDetails[0]?.name?.en || "--"}
+                                        {school2?.locationDetails[0]?.name?.en || "--"}
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
-                    </AUIAccordion>
+                        </AUIAccordion>
+                        <AUIAccordion
+                            title="Fee Structure"
+                            icon={
+                                Asset.fromModule(
+                                    require("@/assets/images/compareScreen/compareSchoolsPage/fi_6926264.png")
+                                ).uri
+                            }
+                        >
+                            <AUIThemedView>
+                                <AUIThemedView style={styles.row}>
+                                    <AUIThemedText style={styles.value}>Minimum Fee</AUIThemedText>
+                                    <AUIThemedView style={styles.rowContainer}>
+                                        <AUIThemedText style={styles.label}>
+                                            {school1?.minPrice || "--"}
+                                        </AUIThemedText>
+                                        <AUIThemedText style={styles.label2}>
+                                            {school2?.minPrice || "--"}
+                                        </AUIThemedText>
+                                    </AUIThemedView>
+                                </AUIThemedView>
 
-                    <AUIAccordion
-                        title="Fee Structure"
-                        icon={
-                            Asset.fromModule(
-                                require("@/assets/images/compareScreen/compareSchoolsPage/fi_6926264.png")
-                            ).uri
-                        }
-                    >
-                        <AUIThemedView>
-                        <AUIThemedView style={styles.row}>
-                                <AUIThemedText style={styles.value}>Minimum Fee</AUIThemedText>
-                                <AUIThemedView style={styles.rowContainer}>
-                                    <AUIThemedText style={styles.label}>
-                                         {school1?.minPrice || "--"}
-                                    </AUIThemedText>
-                                    <AUIThemedText style={styles.label2}>
-                                         {school2?.minPrice || "--"}
-                                    </AUIThemedText>
+                                <AUIThemedView style={styles.row2}>
+                                    <AUIThemedText style={styles.value}>Maximum Fee</AUIThemedText>
+                                    <AUIThemedView style={styles.rowContainer}>
+                                        <AUIThemedText style={styles.label}>
+                                            {school1?.maxPrice || "--"}
+                                        </AUIThemedText>
+                                        <AUIThemedText style={styles.label2}>
+                                            {school2?.maxPrice || "--"}
+                                        </AUIThemedText>
+                                    </AUIThemedView>
                                 </AUIThemedView>
                             </AUIThemedView>
-
-                            <AUIThemedView style={styles.row2}>
-                                <AUIThemedText style={styles.value}>Maximum Fee</AUIThemedText>
-                                <AUIThemedView style={styles.rowContainer}>
-                                    <AUIThemedText style={styles.label}>
-                                       {school1?.maxPrice || "--"}
-                                    </AUIThemedText>
-                                    <AUIThemedText style={styles.label2}>
-                                       {school2?.maxPrice || "--"}
-                                    </AUIThemedText>
-                                </AUIThemedView>
-                            </AUIThemedView>
-                        </AUIThemedView>
-                    </AUIAccordion>
-
-                    <AUIAccordion
-                        title="Campus and Facility"
-                        icon={
-                            Asset.fromModule(
-                                require("@/assets/images/compareScreen/compareSchoolsPage/fi_8716577.png")
-                            ).uri
-                        }
-                    >
-                        <AUIThemedView>
-                            {/* <AUIThemedView style={styles.row}>
+                        </AUIAccordion>
+                        <AUIAccordion
+                            title="Campus and Facility"
+                            icon={
+                                Asset.fromModule(
+                                    require("@/assets/images/compareScreen/compareSchoolsPage/fi_8716577.png")
+                                ).uri
+                            }
+                        >
+                            <AUIThemedView>
+                                {/* <AUIThemedView style={styles.row}>
                                 <AUIThemedText style={styles.value}>Campus type</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
                                     <AUIThemedText style={styles.label}>
@@ -297,20 +287,20 @@ const CompareSchools: React.FC = () => {
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView> */}
-
-                            <AUIThemedView style={styles.row}>
-                                <AUIThemedText style={styles.value}>Total facilities</AUIThemedText>
-                                <AUIThemedView style={styles.rowContainer}>
-                                    <AUIThemedText style={styles.label}>
-                                        {school1?.facilitiesDetails.length || "--"}
+                                <AUIThemedView style={styles.row}>
+                                    <AUIThemedText style={styles.value}>
+                                        Total facilities
                                     </AUIThemedText>
-                                    <AUIThemedText style={styles.label2}>
-                                        {school2?.facilitiesDetails.length || "--"}
-                                    </AUIThemedText>
+                                    <AUIThemedView style={styles.rowContainer}>
+                                        <AUIThemedText style={styles.label}>
+                                            {school1?.facilitiesDetails.length || "--"}
+                                        </AUIThemedText>
+                                        <AUIThemedText style={styles.label2}>
+                                            {school2?.facilitiesDetails.length || "--"}
+                                        </AUIThemedText>
+                                    </AUIThemedView>
                                 </AUIThemedView>
-                            </AUIThemedView>
-
-                            {/* <AUIThemedView style={styles.row}>
+                                {/* <AUIThemedView style={styles.row}>
                                 <AUIThemedText style={styles.value}>Total Faculty</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
                                     <AUIThemedText style={styles.label}>
@@ -321,36 +311,35 @@ const CompareSchools: React.FC = () => {
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView> */}
-
-                            <AUIThemedView style={styles.row}>
-                                <AUIThemedText style={styles.value}>Number of Seats</AUIThemedText>
-                                <AUIThemedView style={styles.rowContainer}>
-                                    <AUIThemedText style={styles.label}>
-                                        {school1?.totalNumberOfSeats || "--"}
+                                <AUIThemedView style={styles.row}>
+                                    <AUIThemedText style={styles.value}>
+                                        Number of Seats
                                     </AUIThemedText>
-                                    <AUIThemedText style={styles.label2}>
-                                        {school2?.totalNumberOfSeats || "--"}
+                                    <AUIThemedView style={styles.rowContainer}>
+                                        <AUIThemedText style={styles.label}>
+                                            {school1?.totalNumberOfSeats || "--"}
+                                        </AUIThemedText>
+                                        <AUIThemedText style={styles.label2}>
+                                            {school2?.totalNumberOfSeats || "--"}
+                                        </AUIThemedText>
+                                    </AUIThemedView>
+                                </AUIThemedView>
+                                <AUIThemedView style={styles.row2}>
+                                    <AUIThemedText style={styles.value}>
+                                        Form availability
                                     </AUIThemedText>
+                                    <AUIThemedView style={styles.rowContainer}>
+                                        <AUIThemedText style={styles.label}>
+                                            {compareSchool1?.formAvailability || "80"}
+                                        </AUIThemedText>
+                                        <AUIThemedText style={styles.label2}>
+                                            {compareSchool1?.formAvailability || "90"}
+                                        </AUIThemedText>
+                                    </AUIThemedView>
                                 </AUIThemedView>
                             </AUIThemedView>
-
-                            <AUIThemedView style={styles.row2}>
-                                <AUIThemedText style={styles.value}>
-                                    Form availability
-                                </AUIThemedText>
-                                <AUIThemedView style={styles.rowContainer}>
-                                    <AUIThemedText style={styles.label}>
-                                        {compareSchool1?.formAvailability || "80"}
-                                    </AUIThemedText>
-                                    <AUIThemedText style={styles.label2}>
-                                        {compareSchool1?.formAvailability || "90"}
-                                    </AUIThemedText>
-                                </AUIThemedView>
-                            </AUIThemedView>
-                        </AUIThemedView>
-                    </AUIAccordion>
-
-                    {/* <AUIAccordion
+                        </AUIAccordion>
+                        {/* <AUIAccordion
                         title="Admission Criteria and Eligibility"
                         icon={
                             Asset.fromModule(
@@ -412,7 +401,6 @@ const CompareSchools: React.FC = () => {
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
-
                             <AUIThemedView style={styles.row}>
                                 <AUIThemedText style={styles.value}>Total Faculty</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
@@ -424,7 +412,6 @@ const CompareSchools: React.FC = () => {
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
-
                             <AUIThemedView style={styles.row2}>
                                 <AUIThemedText style={styles.value}>Number of seats</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
@@ -438,13 +425,12 @@ const CompareSchools: React.FC = () => {
                             </AUIThemedView>
                         </AUIThemedView>
                     </AUIAccordion> */}
+                    </AUIThemedView>
                 </AUIThemedView>
-            </AUIThemedView>
-        </ScrollView>
+            </ScrollView>
         </AUIThemedView>
     );
 };
-
 
 const styles = StyleSheet.create({
     container: {
@@ -452,19 +438,21 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start",
         alignItems: "center",
         padding: 15,
-        backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.background,
         // height: windowHeight,
     },
+
     outerContainer: {
         flex: 1,
-        backgroundColor: APP_THEME.background,
-    },
+        // backgroundColor: APP_THEME.background,
+    },
+
     cardContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
         width: "100%",
         marginBottom: 20,
-        backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.background,
     },
     customCard: {
         width: "48%",
@@ -475,7 +463,7 @@ const styles = StyleSheet.create({
         borderColor: "#ddd",
         borderRadius: 15,
         overflow: "hidden",
-        backgroundColor: "#fff",
+        // backgroundColor: "#fff",
     },
     imageContainer: {
         width: "100%",
@@ -511,7 +499,7 @@ const styles = StyleSheet.create({
         zIndex: 2,
         width: 30,
         height: 30,
-        backgroundColor: "#fff",
+        // backgroundColor: "#fff",
         borderWidth: 1,
         borderColor: "#5BD894",
         borderRadius: 15,
@@ -604,7 +592,7 @@ const styles = StyleSheet.create({
     },
     descriptionText: {
         fontSize: 14,
-        color: "#000",
+        // color: "#000",
         marginBottom: 20,
         textAlign: "center",
     },
@@ -674,5 +662,4 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
     },
 });
-
 export default CompareSchools;

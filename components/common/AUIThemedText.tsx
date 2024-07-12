@@ -4,18 +4,10 @@ import { StyleSheet, Text, type TextProps } from "react-native";
 import { useSelector } from "react-redux";
 
 export type ThemedTextProps = TextProps & {
-    lightColor?: string;
-    darkColor?: string;
     type?: "default" | "title" | "defaultSemiBold" | "subtitle" | "link";
 };
 
-export function AUIThemedText({
-    style,
-    lightColor,
-    darkColor,
-    type = "default",
-    ...rest
-}: ThemedTextProps) {
+export function AUIThemedText({ style, type = "default", ...rest }: ThemedTextProps) {
     const theme = useSelector((state: RootState) => state.global.theme) as ThemeType;
 
     return (

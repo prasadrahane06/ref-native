@@ -301,9 +301,12 @@
 import DATA from "@/app/services/data.json";
 import AUIButton from "@/components/common/AUIButton";
 import DropdownComponent from "@/components/common/AUIDropdown";
+import AUIInputField from "@/components/common/AUIInputField";
 import { AUISafeAreaView } from "@/components/common/AUISafeAreaView";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
+import { APP_THEME } from "@/constants/Colors";
+import { countriesData } from "@/constants/dummy data/countriesData";
 import { DETAILS_FIELDS, GLOBAL_TEXT } from "@/constants/Properties";
 import { signupPageStyles } from "@/constants/Styles";
 import { setSignupDetails } from "@/redux/globalSlice";
@@ -394,6 +397,72 @@ const DetailsPage = () => {
                 </AUIThemedView>
             </ScrollView>
         </AUISafeAreaView>
+    );
+};
+const ContactNumberField = ({
+    label,
+    value,
+    handleOnChange,
+    error,
+    dropdownValue,
+    handleDropdownChange,
+    placeholder,
+    onBlur,
+}: any) => {
+    const theme = useSelector((state: RootState) => state.global.theme);
+
+    return (
+        <AUIThemedView style={{ backgroundColor: "#ffffff" }}>
+            <AUIThemedText
+                style={{
+                    marginBottom: 5,
+                    fontSize: 16,
+                    fontWeight: "semibold",
+                    letterSpacing: -0.32,
+                    color: APP_THEME[theme].gray,
+                }}
+            >
+                {label}
+            </AUIThemedText>
+            <AUIThemedView
+                style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: 10,
+                }}
+            >
+                {/* @ts-ignore */}
+                <DropdownComponent
+                    style={{ flex: 1 }}
+                    // @ts-ignore
+                    list={countriesData}
+                    // @ts-ignore
+                    value={dropdownValue}
+                    setValue={handleDropdownChange}
+                    labelField="dialling_code"
+                    valueField="dialling_code"
+                    listWithIcon
+                    renderLeftIcon
+                />
+                <AUIInputField
+                    style={{ flex: 2 }}
+                    // @ts-ignore
+                    placeholder={placeholder}
+                    value={value}
+                    onChangeText={handleOnChange}
+                    keyboardType="numeric"
+                    onBlur={onBlur}
+                />
+            </AUIThemedView>
+            {error && (
+                <AUIThemedText
+                    style={{ position: "absolute", color: "red", fontSize: 14, marginTop: 78 }}
+                >
+                    {error}
+                </AUIThemedText>
+            )}
+        </AUIThemedView>
     );
 };
 

@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 export default function CourseDetailsComponent({ plan }: any) {
     console.log("plan", plan);
     const individualCourse = useSelector((state: RootState) => state.api.individualCourse);
-
+    const theme = useSelector((state: RootState) => state.global.theme);
     console.log("individualCourse =>", individualCourse?.docs);
 
     return (
@@ -36,16 +36,28 @@ export default function CourseDetailsComponent({ plan }: any) {
                 <AUIThemedText style={styles.courseDetailsText}>Course Fees</AUIThemedText>
                 <AUIThemedView style={styles.detailsHeader}>
                     <AUIThemedText style={styles.courseLabel}>Total Fee</AUIThemedText>
-                    <AUIThemedText style={styles.primaryText}>${plan.price}</AUIThemedText>
+                    <AUIThemedText
+                        style={[styles.primaryText, { color: APP_THEME[theme].primary.first }]}
+                    >
+                        ${plan.price}
+                    </AUIThemedText>
                 </AUIThemedView>
 
                 <AUIThemedView style={styles.detailsHeader}>
                     <AUIThemedText style={styles.courseLabel}>Book your seat</AUIThemedText>
-                    <AUIThemedText style={styles.primaryText}>${plan.bookYourSeat}</AUIThemedText>
+                    <AUIThemedText
+                        style={[styles.primaryText, { color: APP_THEME[theme].primary.first }]}
+                    >
+                        ${plan.bookYourSeat}
+                    </AUIThemedText>
                 </AUIThemedView>
                 <AUIThemedView style={styles.detailsHeader}>
                     <AUIThemedText style={styles.courseLabel}>Duration</AUIThemedText>
-                    <AUIThemedText style={styles.primaryText}>{plan.duration}</AUIThemedText>
+                    <AUIThemedText
+                        style={[styles.primaryText, { color: APP_THEME[theme].primary.first }]}
+                    >
+                        {plan.duration}
+                    </AUIThemedText>
                 </AUIThemedView>
             </AUIThemedView>
         </AUIThemedView>
@@ -86,18 +98,11 @@ const styles = StyleSheet.create({
         marginVertical: 4,
     },
     primaryText: {
-        color: APP_THEME.primary.first,
+        // color: APP_THEME.primary.first,
         fontWeight: "600",
     },
     marginBottom15: {
         marginBottom: 15,
-    },
-    borderBottom: {
-        width: "100%",
-        position: "absolute",
-        bottom: 0,
-        borderWidth: StyleSheet.hairlineWidth,
-        borderColor: APP_THEME.primary.first,
     },
     accordionSection: {
         width: "100%",
@@ -153,8 +158,5 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         marginBottom: 5,
-    },
-    feeValue: {
-        color: APP_THEME.primary.first,
     },
 });

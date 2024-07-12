@@ -61,6 +61,7 @@ const TabTwoScreen: React.FC = () => {
 
     const getfavorite = useSelector((state: RootState) => state.api.favorite || {});
     const isRTL = useSelector((state: RootState) => state.global.isRTL || {});
+    const theme = useSelector((state: RootState) => state.global.theme);
 
     const fav = getfavorite?.docs?.[0] || { courses: [], clients: [], country: [] }; // Providing default values
 
@@ -80,7 +81,9 @@ const TabTwoScreen: React.FC = () => {
         });
     };
     const renderCourseItem: ListRenderItem<CourseData> = ({ item }: any) => (
-        <AUIThemedView style={styles.courseItem}>
+        <AUIThemedView
+            style={[styles.courseItem, { backgroundColor: APP_THEME[theme].background }]}
+        >
             <Course
                 courseId={item?._id}
                 title={item?.courseName}
@@ -92,7 +95,9 @@ const TabTwoScreen: React.FC = () => {
     );
 
     const renderSchoolItem: ListRenderItem<SchoolData> = ({ item }: any) => (
-        <AUIThemedView style={styles.schoolItem}>
+        <AUIThemedView
+            style={[styles.schoolItem, { backgroundColor: APP_THEME[theme].background }]}
+        >
             <School
                 id={item?._id}
                 title={item?.name}
@@ -118,7 +123,7 @@ const TabTwoScreen: React.FC = () => {
     );
 
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView style={[styles.container, { backgroundColor: APP_THEME[theme].background }]}>
             <AUIThemedView>
                 <Carousel
                     ref={ref}
@@ -143,13 +148,18 @@ const TabTwoScreen: React.FC = () => {
                     data={carouselData}
                     containerStyle={styles.dotsContainer}
                     dotStyle={styles.dot}
-                    activeDotStyle={styles.activeDot}
+                    activeDotStyle={{ backgroundColor: APP_THEME[theme].primary.first }}
                     onPress={onPressPagination}
                 />
             </AUIThemedView>
             <AUIThemedView>
                 {fav?.courses && fav?.courses.length > 0 && (
-                    <AUIThemedView style={styles.coursesContainer}>
+                    <AUIThemedView
+                        style={[
+                            styles.coursesContainer,
+                            { backgroundColor: APP_THEME[theme].background },
+                        ]}
+                    >
                         <SectionTitle
                             // @ts-ignore
                             onViewAllClick={
@@ -165,14 +175,22 @@ const TabTwoScreen: React.FC = () => {
                             renderItem={renderCourseItem}
                             keyExtractor={(item, index) => index.toString()}
                             numColumns={2}
-                            columnWrapperStyle={styles.courseColumnWrapper}
+                            columnWrapperStyle={[
+                                styles.courseColumnWrapper,
+                                { backgroundColor: APP_THEME[theme].background },
+                            ]}
                             scrollEnabled={false}
                         />
                     </AUIThemedView>
                 )}
 
                 {fav?.clients && fav?.clients.length > 0 && (
-                    <AUIThemedView style={styles.schoolContainer}>
+                    <AUIThemedView
+                        style={[
+                            styles.schoolContainer,
+                            { backgroundColor: APP_THEME[theme].background },
+                        ]}
+                    >
                         <SectionTitle
                             // @ts-ignore
                             onViewAllClick={
@@ -188,7 +206,10 @@ const TabTwoScreen: React.FC = () => {
                             renderItem={renderSchoolItem}
                             keyExtractor={(item: any) => item._id}
                             numColumns={2}
-                            columnWrapperStyle={styles.schoolColumnWrapper}
+                            columnWrapperStyle={[
+                                styles.schoolColumnWrapper,
+                                { backgroundColor: APP_THEME[theme].background },
+                            ]}
                             scrollEnabled={false}
                         />
                     </AUIThemedView>
@@ -226,7 +247,7 @@ const styles = StyleSheet.create({
 
     container: {
         // paddingHorizontal: 12,
-        backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.background,
         flex: 1,
     },
     coursesContainer: {
@@ -235,14 +256,14 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
         paddingLeft:10,
 
-        backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.background,
     },
     schoolContainer: {
         // borderBottomWidth: 1,
         borderColor: "#5BD894",
         paddingBottom: 3,
         paddingLeft: 10,
-        backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.background,
     },
     title: {
         letterSpacing: 0,
@@ -255,14 +276,14 @@ const styles = StyleSheet.create({
     courseItem: {
         width: "48%",
         marginBottom: 10,
-        backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.background,
     },
     schoolItem: {
         width: "48%",
         marginBottom: 10,
         marginTop: -10,
-        // paddingHorizontal: 1,
-        backgroundColor: APP_THEME.background,
+        paddingHorizontal: 1,
+        // backgroundColor: APP_THEME.background,
     },
     destinationItem: {
         width: "48%",
@@ -271,13 +292,14 @@ const styles = StyleSheet.create({
     },
     courseColumnWrapper: {
         // justifyContent: "space-between",
-        backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.background,
         marginTop: 10,
         marginBottom: -8,
         justifyContent: windowWidth > 600 ? "center" : "space-between",
     },
     schoolColumnWrapper: {
-        backgroundColor: APP_THEME.background,
+        // justifyContent: "space-between",
+        // backgroundColor: APP_THEME.background,
         marginHorizontal: 10,
         marginTop: 10,
         // padding: 10,
@@ -292,7 +314,6 @@ const styles = StyleSheet.create({
         gap: 10,
     },
     dot: { backgroundColor: "#fff", borderRadius: 100, width: 20, height: 3 },
-    activeDot: { backgroundColor: APP_THEME.primary.first },
 });
 
 export default TabTwoScreen;

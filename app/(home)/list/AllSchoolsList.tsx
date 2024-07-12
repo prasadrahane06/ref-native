@@ -20,11 +20,11 @@ const AllSchoolsList: React.FC<SchoolListProps> = ({ data, style }) => {
     const renderItem: ListRenderItem<SchoolData> = ({ item }) => (
         <View style={styles.schoolItem}>
             <School
-                id={item.id}
-                title={item.name}
-                caption={item.caption}
-                image={item.image}
-                favorite={item.favorite}
+                id={item?.id}
+                title={item?.name}
+                caption={item?.caption}
+                image={item?.image}
+                favorite={item?.favorite}
                 style={{ width: 165, height: 160 }}
             />
         </View>
@@ -35,10 +35,10 @@ const AllSchoolsList: React.FC<SchoolListProps> = ({ data, style }) => {
             <FlatList
                 data={data}
                 renderItem={renderItem}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item) => item?.id}
                 numColumns={2}
                 columnWrapperStyle={styles.schoolContainer}
-                scrollEnabled={false}
+                scrollEnabled={true}
             />
         </AUIThemedView>
     );

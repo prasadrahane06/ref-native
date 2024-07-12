@@ -5,7 +5,7 @@ import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import CoursesTab from "@/components/home/schoolDetails/Courses";
 import OverviewTab from "@/components/home/schoolDetails/Overview";
-import { APP_THEME } from "@/constants/Colors";
+import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT, GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
@@ -32,6 +32,7 @@ interface TabProps {
 
 function StudentDetailsTabs({ courseId, clientId }: TabProps) {
     const schoolsResponse = useSelector((state: RootState) => state.api.individualSchool || {});
+    const theme = useSelector((state: RootState) => state.global.theme);
     const [selectedTab, setSelectedTab] = useState("overview");
     const { t, i18n } = useTranslation();
 
@@ -41,20 +42,30 @@ function StudentDetailsTabs({ courseId, clientId }: TabProps) {
 
     return (
         <AUIThemedView style={{ marginBottom: 20 }}>
-            <AUIThemedView style={tabStyles.tabsContainer}>
+            <AUIThemedView
+                style={[
+                    tabStyles.tabsContainer,
+                    { borderBottomColor: APP_THEME[theme].primary.first },
+                ]}
+            >
                 <Pressable
                     onPress={() => handleTabClick("overview")}
                     style={[
                         tabStyles.tab,
-                        selectedTab === "overview" ? tabStyles.activeTab : tabStyles.inactiveTab,
+                        selectedTab === "overview"
+                            ? [
+                                  tabStyles.activeTab,
+                                  { borderBottomColor: APP_THEME[theme].primary.first },
+                              ]
+                            : tabStyles.inactiveTab,
                     ]}
                 >
                     <AUIThemedText
                         style={[
                             tabStyles.tabLabel,
                             selectedTab === "overview"
-                                ? tabStyles.activeTabLabel
-                                : tabStyles.inactiveTabLabel,
+                                ? { color: TEXT_THEME[theme].primary }
+                                : { color: TEXT_THEME[theme].secondary },
                         ]}
                     >
                         {t(GLOBAL_TRANSLATION_LABEL.overview)}
@@ -65,15 +76,20 @@ function StudentDetailsTabs({ courseId, clientId }: TabProps) {
                     onPress={() => handleTabClick("courses")}
                     style={[
                         tabStyles.tab,
-                        selectedTab === "courses" ? tabStyles.activeTab : tabStyles.inactiveTab,
+                        selectedTab === "courses"
+                            ? [
+                                  tabStyles.activeTab,
+                                  { borderBottomColor: APP_THEME[theme].primary.first },
+                              ]
+                            : tabStyles.inactiveTab,
                     ]}
                 >
                     <AUIThemedText
                         style={[
                             tabStyles.tabLabel,
                             selectedTab === "courses"
-                                ? tabStyles.activeTabLabel
-                                : tabStyles.inactiveTabLabel,
+                                ? { color: TEXT_THEME[theme].primary }
+                                : { color: TEXT_THEME[theme].secondary },
                         ]}
                     >
                         {t(GLOBAL_TRANSLATION_LABEL.courses)}
@@ -116,6 +132,7 @@ export default function SchoolDetails() {
     const dispatch = useDispatch();
     const [isFav, setIsFav] = useState(false);
     const school = useSelector((state: RootState) => state.api.individualSchool || {});
+    const theme = useSelector((state: RootState) => state.global.theme);
     const schoolsResponse = school[0];
 
     useEffect(() => {
@@ -183,7 +200,18 @@ export default function SchoolDetails() {
             headerTransparent: true,
 
             headerBackground: () => (
-                <Animated.View style={[headerBackgroundAnimatedStyle, styles.screenHeader]} />
+                <Animated.View
+                    style={[
+                        headerBackgroundAnimatedStyle,
+                        [
+                            styles.screenHeader,
+                            {
+                                backgroundColor: APP_THEME[theme].primary.first,
+                                borderColor: APP_THEME[theme].gray,
+                            },
+                        ],
+                    ]}
+                />
             ),
 
             headerLeft: () => (
@@ -219,7 +247,7 @@ export default function SchoolDetails() {
                         <Ionicons
                             name={isFav ? "heart" : "heart-outline"}
                             size={24}
-                            color={APP_THEME.secondary.first}
+                            color={APP_THEME.light.secondary.first}
                         />
                     </AUIThemedView>
                 </TouchableOpacity>
@@ -309,7 +337,7 @@ export default function SchoolDetails() {
                                 },
                             ]}
                         >
-                            <Ionicons name="star" size={20} color={APP_THEME.primary.first} />
+                            <Ionicons name="star" size={20} color={APP_THEME.light.primary.first} />
                             <AUIThemedText style={styles.ratingsText}>4.6</AUIThemedText>
                             <AUIThemedText style={styles.rankText}>QS Rank 276</AUIThemedText>
                         </AUIThemedView>
@@ -337,7 +365,7 @@ const tabStyles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        borderBottomColor: APP_THEME.primary.first,
+        // borderBottomColor: APP_THEME.primary.first,
         borderBottomWidth: 1,
     },
     tab: {
@@ -348,36 +376,30 @@ const tabStyles = StyleSheet.create({
     },
     activeTab: {
         borderTopLeftRadius: 7,
-        borderBottomWidth: 2,
-        borderBottomColor: APP_THEME.primary.first,
-        backgroundColor: "#D3FFE7",
+        borderBottomWidth: 5,
+        // borderBottomColor: APP_THEME.primary.first,
+        // backgroundColor: "#D3FFE7",
     },
     inactiveTab: {
         borderTopRightRadius: 7,
         borderBottomWidth: 0,
         borderBottomColor: "#000",
-        backgroundColor: "#fff",
+        // backgroundColor: "#fff",
     },
     tabLabel: {
         fontSize: 17,
         fontWeight: "500",
         paddingHorizontal: 25,
     },
-    activeTabLabel: {
-        color: "#000",
-    },
-    inactiveTabLabel: {
-        color: "#ccc",
-    },
 });
 
 const IMG_HEIGHT = 250;
 const styles = StyleSheet.create({
     screenHeader: {
-        backgroundColor: APP_THEME.primary.first,
+        // backgroundColor: APP_THEME.primary.first,
         height: 100,
         borderBottomWidth: StyleSheet.hairlineWidth,
-        borderColor: APP_THEME.gray,
+        // borderColor: APP_THEME.gray,
     },
     screenTitle: {
         fontSize: 18,

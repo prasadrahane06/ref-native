@@ -1,10 +1,12 @@
 import AUIImage from "@/components/common/AUIImage";
-import { APP_THEME } from "@/constants/Colors";
+import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { ReactNode, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { AUIThemedText } from "./AUIThemedText";
 import { AUIThemedView } from "./AUIThemedView";
+import { RootState } from "@/redux/store";
+import { useSelector } from "react-redux";
 
 interface AccordionProps {
     title: string;
@@ -13,6 +15,7 @@ interface AccordionProps {
 }
 
 const AUIAccordion: React.FC<AccordionProps> = ({ title, children, icon }) => {
+    const theme = useSelector((state: RootState) => state.global.theme);
     const [expanded, setExpanded] = useState(false);
 
     return (
@@ -29,7 +32,7 @@ const AUIAccordion: React.FC<AccordionProps> = ({ title, children, icon }) => {
                 <Ionicons
                     name={expanded ? "chevron-up-outline" : "chevron-down-outline"}
                     size={24}
-                    color="#0A152F"
+                    color={TEXT_THEME[theme].primary}
                 />
             </TouchableOpacity>
             {expanded && <AUIThemedView style={styles.accordionContent}>{children}</AUIThemedView>}
@@ -44,7 +47,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginBottom: 12,
         overflow: "hidden",
-        backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.background,
     },
     accordionHeader: {
         flexDirection: "row",
@@ -59,7 +62,7 @@ const styles = StyleSheet.create({
     accordionTitle: {
         flexDirection: "row",
         alignItems: "center",
-        backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.background,
     },
     accordionTitleText: {
         marginLeft: 10,

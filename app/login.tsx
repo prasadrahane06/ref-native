@@ -523,7 +523,7 @@ import AUIInputField from "@/components/common/AUIInputField";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import OTPScreen from "@/components/screenComponents/OTPScreen";
-import { APP_THEME } from "@/constants/Colors";
+import { APP_THEME, BACKGOUND_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT, SIGNUP_FIELDS } from "@/constants/Properties";
 import { storeUserData } from "@/constants/RNAsyncStore";
 import { loginPageStyles, secondaryButtonStyle } from "@/constants/Styles";
@@ -564,10 +564,16 @@ const schema = Yup.object().shape({
 const LoginPage = () => {
     const router = useRouter();
     const dispatch = useDispatch();
-    const profile = useSelector((state: RootState) => state.global.profile);
-    const signInType = useSelector((state: RootState) => state.global.signInType);
+
+    const globalState = useSelector((state: RootState) => state.global);
+    const theme = useSelector((state: RootState) => state.global.theme);
+    const profile = globalState.profile;
+    const signInType = globalState.signInType;
+    const signupDetails = globalState.signupDetails;
+    const schoolDetails = globalState.schoolDetails;
+
     // const [countryData, setCountryData] = useState(countriesData);
-    const signupDetails = useSelector((state: RootState) => state.global.signupDetails);
+
     const { post } = useAxios();
     const [otpSent, setOtpSent] = useState<boolean>(false);
     const [otp, setOtp] = useState({
@@ -765,10 +771,10 @@ const LoginPage = () => {
         return (
             <AUIThemedView style={loginPageStyles.container}>
                 <AUIThemedText style={loginPageStyles.heading}>
-                    {GLOBAL_TEXT.enter_pin}
+                    {GLOBAL_TEXT.enter_otp}
                 </AUIThemedText>
                 <KeyboardAvoidingView
-                    style={{ flex: 1, backgroundColor: "#ffffff" }}
+                    style={{ flex: 1, backgroundColor: BACKGOUND_THEME[theme].backgound }}
                     behavior="padding"
                     keyboardVerticalOffset={keyboardVerticalOffset}
                 >
@@ -811,10 +817,10 @@ const LoginPage = () => {
         <TouchableWithoutFeedback onPress={dismissKeyboard}>
             <AUIThemedView style={loginPageStyles.container}>
                 <AUIThemedText style={loginPageStyles.heading}>
-                    {otpSent ? GLOBAL_TEXT.enter_pin : GLOBAL_TEXT.login_to_continue}
+                    {otpSent ? GLOBAL_TEXT.enter_otp : GLOBAL_TEXT.login_to_continue}
                 </AUIThemedText>
                 <KeyboardAvoidingView
-                    style={{ flex: 1, backgroundColor: "#ffffff" }}
+                    style={{ flex: 1, backgroundColor: BACKGOUND_THEME[theme].backgound }}
                     behavior="padding"
                     keyboardVerticalOffset={keyboardVerticalOffset}
                 >
@@ -849,6 +855,7 @@ const LoginPage = () => {
                                     selected={selectedButton === "email"}
                                 />
                             </AUIThemedView>
+
                             <AUIThemedView style={loginPageStyles.sendOtpContainer}>
                                 {selectedButton === "mobile" ? (
                                     <ContactNumberField control={control} trigger={trigger} />
@@ -862,7 +869,7 @@ const LoginPage = () => {
                                         selected
                                         icon={"arrowright"}
                                         style={{ width: "50%" }}
-                                        background={APP_THEME.primary.first}
+                                        background={APP_THEME[theme].primary.first}
                                         onPress={handleSendOtp}
                                     />
                                 </View>
@@ -890,88 +897,97 @@ const LoginPage = () => {
     );
 };
 const OTPVerified = ({ label }: any) => (
-    <AUIThemedView style={{ flexDirection: "row", gap: 10, backgroundColor: "#ffffff" }}>
+    <AUIThemedView style={{ flexDirection: "row", gap: 10 }}>
         <AUIThemedText style={{ fontSize: 14, fontWeight: "bold" }}>{label}</AUIThemedText>
         <MaterialIcons name="verified-user" size={24} color="green" />
     </AUIThemedView>
 );
-const ContactNumberField = ({ label, control }: any) => (
-    <AUIThemedView style={{ backgroundColor: "#ffffff" }}>
-        {label && (
-            <AUIThemedText
+const ContactNumberField = ({ label, control }: any) => {
+    const theme = useSelector((state: RootState) => state.global.theme);
+
+    return (
+        <AUIThemedView style={{ backgroundColor: "#ffffff" }}>
+            {label && (
+                <AUIThemedText
+                    style={{
+                        marginBottom: 5,
+                        fontSize: 16,
+                        fontWeight: "semibold",
+                        letterSpacing: -0.32,
+                        color: APP_THEME[theme].gray,
+                    }}
+                >
+                    {label}
+                </AUIThemedText>
+            )}
+            <AUIThemedView
                 style={{
-                    marginBottom: 5,
-                    fontSize: 16,
-                    fontWeight: "semibold",
-                    letterSpacing: -0.32,
-                    color: APP_THEME.gray,
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: 10,
                 }}
             >
-                {label}
-            </AUIThemedText>
-        )}
-        <AUIThemedView
-            style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                gap: 10,
-            }}
-        >
-            <Controller
-                name="phoneCode"
-                control={control}
-                render={({ field: { onChange, value } }) => {
-                    return (
-                        <DropdownComponent
-                            style={{ flex: 0.8 }}
-                            // @ts-ignore
-                            list={countriesData}
-                            // @ts-ignore
-                            value={value}
-                            setValue={({ dialling_code }: { dialling_code: string }) =>
-                                onChange(dialling_code)
-                            }
-                            labelField="dialling_code"
-                            valueField="dialling_code"
-                            listWithIcon
-                            renderLeftIcon
-                        />
-                    );
-                }}
-            />
+                <Controller
+                    name="phoneCode"
+                    control={control}
+                    render={({ field: { onChange, value } }) => {
+                        return (
+                            <DropdownComponent
+                                style={{ flex: 0.8 }}
+                                // @ts-ignore
+                                list={countriesData}
+                                // @ts-ignore
+                                value={value}
+                                setValue={({ dialling_code }: { dialling_code: string }) =>
+                                    onChange(dialling_code)
+                                }
+                                labelField="dialling_code"
+                                valueField="dialling_code"
+                                listWithIcon
+                                renderLeftIcon
+                            />
+                        );
+                    }}
+                />
+                <Controller
+                    name="input"
+                    control={control}
+                    render={({ field: { onChange, value }, fieldState: { error } }) => {
+                        return (
+                            <AUIInputField
+                                style={{ flex: 2 }}
+                                value={value}
+                                onChangeText={onChange}
+                                placeholder={SIGNUP_FIELDS.phone.placeholder}
+                                keyboardType="numeric"
+                                autoFocus={true}
+                            />
+                        );
+                    }}
+                />
+            </AUIThemedView>
             <Controller
                 name="input"
                 control={control}
-                render={({ field: { onChange, value }, fieldState: { error } }) => {
+                render={({ fieldState: { error } }) => {
                     return (
-                        <AUIInputField
-                            style={{ flex: 2 }}
-                            value={value}
-                            onChangeText={onChange}
-                            placeholder={SIGNUP_FIELDS.phone.placeholder}
-                            keyboardType="numeric"
-                            autoFocus={true}
-                        />
+                        <AUIThemedText
+                            style={{
+                                position: "absolute",
+                                color: "red",
+                                fontSize: 14,
+                                marginTop: 52,
+                            }}
+                        >
+                            {error?.message || ""}
+                        </AUIThemedText>
                     );
                 }}
             />
         </AUIThemedView>
-        <Controller
-            name="input"
-            control={control}
-            render={({ fieldState: { error } }) => {
-                return (
-                    <AUIThemedText
-                        style={{ position: "absolute", color: "red", fontSize: 14, marginTop: 52 }}
-                    >
-                        {error?.message || ""}
-                    </AUIThemedText>
-                );
-            }}
-        />
-    </AUIThemedView>
-);
+    );
+};
 const InputField = ({ control }: any) => (
     <Controller
         name="input"

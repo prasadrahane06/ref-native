@@ -1,11 +1,13 @@
 import AUIImage from "@/components/common/AUIImage";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { APP_THEME } from "@/constants/Colors";
+import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
+import { RootState } from "@/redux/store";
 import { AntDesign } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { StyleSheet, TouchableOpacity } from "react-native";
+import { useSelector } from "react-redux";
 
 interface AvailableCoursesProps {
     index: number;
@@ -29,10 +31,20 @@ export const AvailableCourses: React.FC<AvailableCoursesProps> = ({
     ellipsizeMode,
 }) => {
     const isEven = index % 2 === 0;
+    const theme = useSelector((state: RootState) => state.global.theme);
 
     return (
         <AUIThemedView style={styles.container} key={_id}>
-            <AUIThemedView style={[styles.card, { flexDirection: isEven ? "row" : "row-reverse" }]}>
+            <AUIThemedView
+                style={[
+                    styles.card,
+                    {
+                        borderColor: APP_THEME[theme].primary.first,
+                        backgroundColor: APP_THEME[theme].background,
+                    },
+                    { flexDirection: isEven ? "row" : "row-reverse" },
+                ]}
+            >
                 <AUIThemedView style={styles.textContainer}>
                     <AUIThemedText style={styles.title}>{courseName}</AUIThemedText>
                     <AUIThemedText style={styles.description}
@@ -44,11 +56,11 @@ export const AvailableCourses: React.FC<AvailableCoursesProps> = ({
                         style={{
                             fontSize: 13,
                             marginBottom: 10,
-                            color: APP_THEME.gray,
+                            color: APP_THEME[theme].gray,
                         }}
                     >
                         Starting from:{" "}
-                        <AUIThemedText style={styles.date}>
+                        <AUIThemedText style={[styles.date, { color: TEXT_THEME[theme].primary }]}>
                             {new Date(startDate).toLocaleDateString("en-US", {
                                 day: "2-digit",
                                 month: "2-digit",
@@ -64,10 +76,12 @@ export const AvailableCourses: React.FC<AvailableCoursesProps> = ({
                             })
                         }
                     >
-                        <AUIThemedText style={styles.buttonText}>
+                        <AUIThemedText
+                            style={[styles.buttonText, { color: APP_THEME[theme].primary.first }]}
+                        >
                             {GLOBAL_TEXT.explore_more}
                         </AUIThemedText>
-                        <AntDesign name="arrowright" size={20} color="black" />
+                        <AntDesign name="arrowright" size={20} color={TEXT_THEME[theme].primary} />
                     </TouchableOpacity>
                 </AUIThemedView>
                 <AUIImage path={image} style={styles.image} />
@@ -87,8 +101,8 @@ const styles = StyleSheet.create({
     card: {
         borderWidth: 1,
         borderRadius: 10,
-        borderColor: APP_THEME.primary.first,
-        backgroundColor: APP_THEME.background,
+        // borderColor: APP_THEME.primary.first,
+        // backgroundColor: APP_THEME.background,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 5 },
         shadowOpacity: 0.1,
@@ -113,7 +127,7 @@ const styles = StyleSheet.create({
         lineHeight: 15,
     },
     date: {
-        color: "#000",
+        // color: "#000",
         fontWeight: "bold",
         fontSize: 12,
     },
@@ -124,7 +138,7 @@ const styles = StyleSheet.create({
         gap: 5,
     },
     buttonText: {
-        color: APP_THEME.primary.first,
+        // color: APP_THEME.primary.first,
         fontSize: 14,
     },
     image: {

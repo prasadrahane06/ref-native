@@ -6,8 +6,12 @@ import AUIBackgroundImage from "./common/AUIBackgroundImage";
 import { AUIThemedText } from "./common/AUIThemedText";
 import { AUIThemedView } from "./common/AUIThemedView";
 import { APP_THEME } from "@/constants/Colors";
+import { RootState } from "@/redux/store";
+import { useSelector } from "react-redux";
 
 const Destination = ({ title, image, countryWidth, countryHeight, favorite, id }: any) => {
+    const theme = useSelector((state: RootState) => state.global.theme);
+
     return (
         <TouchableOpacity
             onPress={() =>
@@ -16,7 +20,9 @@ const Destination = ({ title, image, countryWidth, countryHeight, favorite, id }
                 })
             }
         >
-            <AUIThemedView style={styles.item}>
+            <AUIThemedView
+                style={[styles.item, { backgroundColor: APP_THEME[theme].ternary.first }]}
+            >
                 <AUIThemedView
                     style={[
                         styles.imageContainer,
@@ -61,7 +67,7 @@ const styles = StyleSheet.create({
         margin: 10,
         alignItems: "center",
         elevation: 20,
-        shadowColor: APP_THEME.ternary.first,
+        // shadowColor: APP_THEME.ternary.first,
         shadowOffset: { width: -1, height: 2 },
         shadowOpacity: 0.5,
         shadowRadius: 3,

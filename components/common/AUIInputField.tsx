@@ -1,6 +1,10 @@
+import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { inputFieldStyle } from "@/constants/Styles";
+import { RootState } from "@/redux/store";
 import React from "react";
 import { Text, TextInput, TextInputProps, View } from "react-native";
+import { useSelector } from "react-redux";
+import { AUIThemedText } from "./AUIThemedText";
 
 /**
  * AUIInputField is a custom component of input field.
@@ -32,18 +36,27 @@ const AUIInputField: React.FC<CustomInputProps> = ({
     keyboardType,
     ...props
 }) => {
+    const theme = useSelector((state: RootState) => state.global.theme);
+
     return (
         <View style={[inputFieldStyle.container, style]}>
-            {label && <Text style={inputFieldStyle.label}>{label}</Text>}
+            {label && (
+                <AUIThemedText
+                    style={[inputFieldStyle.label, { color: TEXT_THEME[theme].primary }]}
+                >
+                    {label}
+                </AUIThemedText>
+            )}
             <TextInput
                 style={[
                     inputFieldStyle.input,
                     // @ts-ignore
                     error && { borderWidth: 1, borderColor: "red" },
                     inputStyle,
+                    { color: TEXT_THEME[theme].primary },
                 ]}
                 placeholder={placeholder}
-                placeholderTextColor={"gray"}
+                placeholderTextColor={APP_THEME[theme].gray}
                 value={value}
                 onChangeText={onChangeText}
                 autoFocus={autoFocus}

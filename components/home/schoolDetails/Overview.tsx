@@ -9,7 +9,7 @@ import SectionTitle from "@/components/home/common/SectionTitle";
 import { EventsList } from "@/components/home/schoolDetails/EventsList";
 import { FacilitiesList } from "@/components/home/schoolDetails/FacilitiesList";
 import { ReviewList } from "@/components/home/schoolDetails/ReviewList";
-import { APP_THEME } from "@/constants/Colors";
+import { APP_THEME, BACKGOUND_THEME, BUTTON_THEME, TEXT_THEME } from "@/constants/Colors";
 import { ENQUIRY_FIELDS, GLOBAL_TEXT, GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { inputFieldStyle } from "@/constants/Styles";
 import { accommodationData } from "@/constants/dummy data/accommodationData";
@@ -48,6 +48,7 @@ import ContactNow from "./ContactNow";
 import useAxios from "@/app/services/axiosClient";
 import { useTranslation } from "react-i18next";
 import AUIComingSoon from "@/components/common/AUIComingSoon";
+import { AUILinearGradient } from "@/components/common/AUILinearGradient";
 
 interface EnquireNowModalProps {
     isVisible: boolean;
@@ -92,6 +93,7 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
 
     const dispatch = useDispatch();
     const enquiryData = useSelector((state: RootState) => state.enquiryForm);
+    const theme = useSelector((state: RootState) => state.global.theme);
     console.log("enquiryData", JSON.stringify(enquiryData));
 
     const { watch, reset, setValue, control, handleSubmit, formState, trigger } = useForm({
@@ -199,17 +201,26 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
                             : enquireNowStyles.andoridModalContent
                     }
                 >
-                    <AUIThemedView style={enquireNowStyles.titleContainer}>
+                    <AUIThemedView
+                        style={[
+                            enquireNowStyles.titleContainer,
+                            { backgroundColor: BACKGOUND_THEME[theme].backgound },
+                        ]}
+                    >
                         <AUIThemedText style={enquireNowStyles.title}>
                             {GLOBAL_TEXT.enquire_now}
                         </AUIThemedText>
                         <Pressable onPress={onClose} style={{ padding: 10 }}>
-                            <MaterialIcons name="close" color="#000" size={22} />
+                            <MaterialIcons
+                                name="close"
+                                color={TEXT_THEME[theme].primary}
+                                size={22}
+                            />
                         </Pressable>
                     </AUIThemedView>
 
                     <KeyboardAvoidingView
-                        style={{ flex: 1, backgroundColor: "#ffffff" }}
+                        style={{ flex: 1, backgroundColor: BACKGOUND_THEME[theme].backgound }}
                         behavior="padding"
                         keyboardVerticalOffset={keyboardVerticalOffset}
                     >
@@ -422,7 +433,7 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
                                                         style={{
                                                             flex: 1,
                                                             paddingVertical: 10,
-                                                            color: "#000",
+                                                            color: TEXT_THEME[theme].primary,
                                                         }}
                                                         value={formatDate(value)}
                                                         editable={false}
@@ -431,7 +442,7 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
                                                     <Ionicons
                                                         name="calendar-clear"
                                                         size={20}
-                                                        color={APP_THEME.primary.first}
+                                                        color={APP_THEME[theme].primary.first}
                                                     />
                                                 </Pressable>
                                                 {error && (
@@ -475,7 +486,7 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
                                                         style={{
                                                             flex: 1,
                                                             paddingVertical: 10,
-                                                            color: "#000",
+                                                            color: TEXT_THEME[theme].primary,
                                                         }}
                                                         value={formatDate(value)}
                                                         editable={false}
@@ -484,7 +495,7 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
                                                     <Ionicons
                                                         name="calendar-clear"
                                                         size={20}
-                                                        color={APP_THEME.primary.first}
+                                                        color={APP_THEME[theme].primary.first}
                                                     />
                                                 </Pressable>
                                                 {error && (
@@ -585,6 +596,7 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
 }
 
 export default function OverviewTab({ schoolOverView, courseId, clientId }: OverviewTabProps) {
+    const theme = useSelector((state: RootState) => state.global.theme);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const { t, i18n } = useTranslation();
 
@@ -622,15 +634,15 @@ export default function OverviewTab({ schoolOverView, courseId, clientId }: Over
         },
     ];
 
-    const handlePhonePress = (number : string) => {
+    const handlePhonePress = (number: string) => {
         Linking.openURL("tel:${number}");
     };
 
-    const handleEmailPress = (email : string) => {
+    const handleEmailPress = (email: string) => {
         Linking.openURL("mailto:${email}");
     };
 
-    const handleWebPress = (website : string) => {
+    const handleWebPress = (website: string) => {
         Linking.openURL("https://${website}");
     };
 
@@ -646,7 +658,7 @@ export default function OverviewTab({ schoolOverView, courseId, clientId }: Over
                             titleStyle={{ fontSize: 21 }}
                             subtitleStyle={{
                                 fontSize: 14,
-                                color: APP_THEME.gray,
+                                color: APP_THEME.light.gray,
                             }}
                             title={item.title}
                             subtitle={item.subtitle}
@@ -685,30 +697,37 @@ export default function OverviewTab({ schoolOverView, courseId, clientId }: Over
                     <ContactNow
                         name="phone"
                         IconComponent={FontAwesome}
-                        onPress={()=>{
-                            handlePhonePress(schoolOverView.phone)
+                        onPress={() => {
+                            handlePhonePress(schoolOverView.phone);
                         }}
                     />
                     <ContactNow
                         name="envelope"
                         IconComponent={FontAwesome}
-                        onPress={()=>{
-                            handleEmailPress(schoolOverView.email)
+                        onPress={() => {
+                            handleEmailPress(schoolOverView.email);
                         }}
                     />
-                    <ContactNow name="globe" IconComponent={Feather} onPress={()=>{
-                        handleWebPress(schoolOverView.website)
-                    }} />
+                    <ContactNow
+                        name="globe"
+                        IconComponent={Feather}
+                        onPress={() => {
+                            handleWebPress(schoolOverView.website);
+                        }}
+                    />
                 </AUIThemedView>
             </AUIThemedView>
 
             <AUIThemedView>
-                <AUIButton
-                    title={t(GLOBAL_TRANSLATION_LABEL.enquireNow)}
-                    style={{ paddingHorizontal: 15 }}
-                    borderColor="#5BD894"
-                    onPress={() => setIsModalVisible(true)}
-                />
+                <Pressable style={buttonStyle.container} onPress={() => setIsModalVisible(true)}>
+                    <AUIThemedView style={[buttonStyle.buttonInner]}>
+                        <AUIThemedText
+                            style={[buttonStyle.buttonText, { color: TEXT_THEME[theme].primary }]}
+                        >
+                            {t(GLOBAL_TRANSLATION_LABEL.enquireNow)}
+                        </AUIThemedText>
+                    </AUIThemedView>
+                </Pressable>
             </AUIThemedView>
 
             <AUIThemedView>
@@ -730,6 +749,39 @@ export default function OverviewTab({ schoolOverView, courseId, clientId }: Over
         </AUIThemedView>
     );
 }
+
+const buttonStyle = StyleSheet.create({
+    container: {
+        marginVertical: 20,
+        paddingHorizontal: 15,
+        backgroundColor: "transparent",
+        borderColor: APP_THEME.light.primary.first,
+    },
+    button: {
+        borderRadius: 5,
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "row",
+    },
+    buttonInner: {
+        flex: 1,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 10,
+        borderRadius: 5,
+        height: 40,
+        paddingHorizontal: 10,
+        borderWidth: 1,
+        borderColor: APP_THEME.light.primary.first,
+    },
+    buttonText: {
+        fontSize: 16,
+        fontWeight: "bold",
+        textAlign: "center",
+        justifyContent: "center",
+    },
+});
 
 const enquiryFormStyles = StyleSheet.create({
     container: {
@@ -766,7 +818,7 @@ const enquireNowStyles = StyleSheet.create({
     andoridModalContent: {
         height: "100%",
         width: "100%",
-        backgroundColor: "#fff",
+        // backgroundColor: "#fff",
         borderTopRightRadius: 20,
         borderTopLeftRadius: 20,
     },
@@ -775,12 +827,12 @@ const enquireNowStyles = StyleSheet.create({
         bottom: 0,
         height: "90%",
         width: "100%",
-        backgroundColor: "#fff",
+        // backgroundColor: "#fff",
         borderTopRightRadius: 20,
         borderTopLeftRadius: 20,
     },
     titleContainer: {
-        backgroundColor: "#fff",
+        // backgroundColor: "#fff",
         paddingHorizontal: 20,
         paddingVertical: 15,
         flexDirection: "row",

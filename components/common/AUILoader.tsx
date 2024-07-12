@@ -11,7 +11,11 @@ export default function AUILoader() {
 
     return (
         <AUIThemedView style={[loaderStyles.container, loader && { display: "flex" }]}>
-            <ActivityIndicator size="large" color={APP_THEME.primary.first} shouldRasterizeIOS />
+            <ActivityIndicator
+                size="large"
+                color={APP_THEME.light.primary.first}
+                shouldRasterizeIOS
+            />
         </AUIThemedView>
     );
 }

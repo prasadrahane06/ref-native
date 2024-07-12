@@ -47,6 +47,7 @@ export default function CityDetails() {
 
     const schoolsResponse = useSelector((state: RootState) => state.api.countrySchool);
     const individualCountry = useSelector((state: RootState) => state.api.individualCountry);
+    const theme = useSelector((state: RootState) => state.global.theme);
 
     const scrollRef = useAnimatedRef<Animated.ScrollView>();
     const navigation = useNavigation();
@@ -125,7 +126,16 @@ export default function CityDetails() {
             headerTransparent: true,
 
             headerBackground: () => (
-                <Animated.View style={[headerBackgroundAnimatedStyle, styles.screenHeader]} />
+                <Animated.View
+                    style={[
+                        headerBackgroundAnimatedStyle,
+                        styles.screenHeader,
+                        {
+                            backgroundColor: APP_THEME[theme].primary.first,
+                            borderColor: APP_THEME[theme].gray,
+                        },
+                    ]}
+                />
             ),
 
             headerLeft: () => (
@@ -157,7 +167,7 @@ export default function CityDetails() {
                             alignItems: "center",
                         }}
                     >
-                        <Ionicons name="heart" size={24} color={APP_THEME.secondary.first} />
+                        <Ionicons name="heart" size={24} color={APP_THEME[theme].secondary.first} />
                     </AUIThemedView>
                 </TouchableOpacity>
             ),
@@ -173,7 +183,9 @@ export default function CityDetails() {
     return (
         <AUIThemedView>
             <Animated.ScrollView ref={scrollRef} scrollEventThrottle={16}>
-                <AUIThemedView style={styles.container}>
+                <AUIThemedView
+                    style={[styles.container, { backgroundColor: APP_THEME[theme].background }]}
+                >
                     <AUIThemedView>
                         <Animated.Image
                             source={{
@@ -184,19 +196,34 @@ export default function CityDetails() {
                         />
                     </AUIThemedView>
 
-                    <AUIThemedView style={styles.infoContainer}>
+                    <AUIThemedView
+                        style={[
+                            styles.infoContainer,
+                            { backgroundColor: APP_THEME[theme].background },
+                        ]}
+                    >
                         <AUIThemedText style={styles.name}>
                             Why study in {isRTL ? country?.name?.en : country?.name?.ar}
                         </AUIThemedText>
-                        <AUIThemedView style={styles.headingContainer}>
-                            <AUIThemedView style={styles.headingImageContainer}>
+                        <AUIThemedView
+                            style={[
+                                styles.headingContainer,
+                                { backgroundColor: APP_THEME[theme].background },
+                            ]}
+                        >
+                            <AUIThemedView style={{ backgroundColor: APP_THEME[theme].background }}>
                                 <AUIImage
                                     path={country?.flag}
                                     style={styles.headingImage}
                                     resizeMode="cover"
                                 />
                             </AUIThemedView>
-                            <AUIThemedView style={styles.nestedContainer}>
+                            <AUIThemedView
+                                style={[
+                                    styles.nestedContainer,
+                                    { backgroundColor: APP_THEME[theme].background },
+                                ]}
+                            >
                                 <AUIThemedText style={styles.headingName}>
                                     200+ Universities
                                 </AUIThemedText>
@@ -206,7 +233,12 @@ export default function CityDetails() {
                             </AUIThemedView>
                         </AUIThemedView>
 
-                        <AUIThemedView style={styles.iconContainer}>
+                        <AUIThemedView
+                            style={[
+                                styles.iconContainer,
+                                { backgroundColor: APP_THEME[theme].background },
+                            ]}
+                        >
                             <View style={styles.iconWrapper}>
                                 <AUIImage
                                     path={photoGallary[0]}
@@ -251,7 +283,12 @@ export default function CityDetails() {
                             </View>
                         </AUIThemedView>
 
-                        <AUIThemedView style={styles.aboutContainer}>
+                        <AUIThemedView
+                            style={[
+                                styles.aboutContainer,
+                                { backgroundColor: APP_THEME[theme].background },
+                            ]}
+                        >
                             <AUIThemedText style={styles.aboutTitle}>
                                 About {isRTL ? country?.name?.en : country?.name?.ar}
                             </AUIThemedText>
@@ -267,8 +304,13 @@ export default function CityDetails() {
                         </AUIThemedView>
                     </AUIThemedView>
 
-                    <AUIThemedView style={styles.photoGalleryContainer}>
-                        <AUIThemedView style={styles.photoGalleryheader}>
+                    <AUIThemedView style={{ backgroundColor: APP_THEME[theme].background }}>
+                        <AUIThemedView
+                            style={[
+                                styles.photoGalleryheader,
+                                { backgroundColor: APP_THEME[theme].background },
+                            ]}
+                        >
                             <AUIThemedText style={styles.photoGalleryText}>
                                 {GLOBAL_TEXT.photo_gallery}
                             </AUIThemedText>
@@ -276,7 +318,12 @@ export default function CityDetails() {
                         <PhotoGallaryList data={country?.images} />
                     </AUIThemedView>
 
-                    <AUIThemedView style={styles.popularSchoolsContainer}>
+                    <AUIThemedView
+                        style={[
+                            styles.popularSchoolsContainer,
+                            { backgroundColor: APP_THEME[theme].background },
+                        ]}
+                    >
                         <SectionTitle viewAll="#">{GLOBAL_TEXT.popular_schools}</SectionTitle>
                         <SchoolList data={schoolsResponse?.docs} />
                     </AUIThemedView>
@@ -288,12 +335,12 @@ export default function CityDetails() {
 
 const IMG_HEIGHT = 200;
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: APP_THEME.background },
+    container: { flex: 1 },
     screenHeader: {
-        backgroundColor: APP_THEME.primary.first,
+        // backgroundColor: APP_THEME.primary.first,
         height: 100,
         borderBottomWidth: StyleSheet.hairlineWidth,
-        borderColor: APP_THEME.gray,
+        // borderColor: APP_THEME.gray,
     },
     screenTitle: {
         fontSize: 18,
@@ -318,7 +365,7 @@ const styles = StyleSheet.create({
     infoContainer: {
         paddingVertical: 10,
         paddingHorizontal: 15,
-        backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.background,
     },
     name: {
         fontSize: 17,
@@ -328,10 +375,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "row",
         marginVertical: 10,
-        backgroundColor: APP_THEME.background,
-    },
-    headingImageContainer: {
-        backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.background,
     },
     headingImage: {
         height: 55,
@@ -344,13 +388,13 @@ const styles = StyleSheet.create({
     nestedContainer: {
         marginVertical: 5,
         marginLeft: 15,
-        backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.background,
     },
     iconContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
         marginTop: 20,
-        backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.background,
     },
     iconWrapper: {
         alignItems: "center",
@@ -373,15 +417,17 @@ const styles = StyleSheet.create({
         marginTop: 5,
         textAlign: "center",
         fontSize: 12,
+        color: "#000",
     },
     iconSubText: {
         textAlign: "center",
         fontSize: 16,
         fontWeight: "bold",
+        color: "#000",
     },
     aboutContainer: {
         marginTop: 15,
-        backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.background,
     },
     aboutTitle: {
         fontSize: 18,
@@ -399,12 +445,9 @@ const styles = StyleSheet.create({
         lineHeight: 20,
         paddingTop: 10,
     },
-    photoGalleryContainer: {
-        backgroundColor: APP_THEME.background,
-    },
     photoGalleryheader: {
         marginBottom: 10,
-        backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.background,
     },
     photoGalleryText: {
         paddingLeft: 14,
@@ -413,7 +456,7 @@ const styles = StyleSheet.create({
         paddingVertical: 5,
     },
     popularSchoolsContainer: {
-        backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.background,
         marginBottom: 15,
     },
 });

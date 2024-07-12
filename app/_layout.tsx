@@ -1,6 +1,6 @@
 import AUILoader from "@/components/common/AUILoader";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { APP_THEME, COLOR_THEME, TEXT_THEME } from "@/constants/Colors";
+import { APP_THEME, BACKGOUND_THEME, TEXT_THEME } from "@/constants/Colors";
 import { getUserData, removeUserData, storeUserDeviceData } from "@/constants/RNAsyncStore";
 import { setToken, setUser } from "@/redux/globalSlice";
 import { RootState, store } from "@/redux/store";
@@ -78,7 +78,7 @@ const InitialLayout = () => {
                         </TouchableOpacity>
                     ),
                     headerStyle: {
-                        backgroundColor: COLOR_THEME[theme].backgound,
+                        backgroundColor: BACKGOUND_THEME[theme].backgound,
                     },
                 }}
             />
@@ -88,7 +88,11 @@ const InitialLayout = () => {
                     headerTitle: "",
                     headerLeft: () => (
                         <TouchableOpacity onPress={router.back}>
-                            <Ionicons name="arrow-back" size={34} color={APP_THEME.ternary.first} />
+                            <Ionicons
+                                name="arrow-back"
+                                size={34}
+                                color={theme === "light" ? "#000" : "#fff"}
+                            />
                         </TouchableOpacity>
                     ),
                     headerRight: () => (
@@ -97,11 +101,14 @@ const InitialLayout = () => {
                                 <Ionicons
                                     name="help-circle-outline"
                                     size={34}
-                                    color={APP_THEME.ternary.first}
+                                    color={theme === "light" ? "#000" : "#fff"}
                                 />
                             </TouchableOpacity>
                         </Link>
                     ),
+                    headerStyle: {
+                        backgroundColor: BACKGOUND_THEME[theme].backgound,
+                    },
                 }}
             />
             <Stack.Screen
@@ -110,7 +117,11 @@ const InitialLayout = () => {
                     headerTitle: "",
                     headerLeft: () => (
                         <TouchableOpacity onPress={router.back}>
-                            <Ionicons name="arrow-back" size={34} color={APP_THEME.ternary.first} />
+                            <Ionicons
+                                name="arrow-back"
+                                size={34}
+                                color={APP_THEME.light.ternary.first}
+                            />
                         </TouchableOpacity>
                     ),
                     headerRight: () => (
@@ -119,7 +130,7 @@ const InitialLayout = () => {
                                 <Ionicons
                                     name="help-circle-outline"
                                     size={34}
-                                    color={APP_THEME.ternary.first}
+                                    color={APP_THEME.light.ternary.first}
                                 />
                             </TouchableOpacity>
                         </Link>
@@ -133,7 +144,7 @@ const InitialLayout = () => {
                     headerTitle: "",
                     headerLeft: () => (
                         <TouchableOpacity onPress={router.back}>
-                            <Ionicons name="arrow-back" size={34} color={APP_THEME.ternary.first} />
+                            <Ionicons name="arrow-back" size={34} color={APP_THEME.light.ternary.first} />
                         </TouchableOpacity>
                     ),
                     headerRight: () => (
@@ -142,7 +153,7 @@ const InitialLayout = () => {
                                 <Ionicons
                                     name="help-circle-outline"
                                     size={34}
-                                    color={APP_THEME.ternary.first}
+                                    color={APP_THEME.light.ternary.first}
                                 />
                             </TouchableOpacity>
                         </Link>
@@ -172,7 +183,9 @@ const InitialLayout = () => {
                 options={{
                     headerShown: true,
                     title: "search_school",
-                    headerTitle: "Add to compare (select school)",
+                    headerTitle: "Add to compare",
+                    headerTitleStyle: { color: TEXT_THEME[theme].primary },
+                    headerStyle: { backgroundColor: BACKGOUND_THEME[theme].backgound },
                 }}
             />
             <Stack.Screen
@@ -181,6 +194,8 @@ const InitialLayout = () => {
                     headerShown: true,
                     title: "compare school",
                     headerTitle: "Compare Schools",
+                    headerTitleStyle: { color: TEXT_THEME[theme].primary },
+                    headerStyle: { backgroundColor: BACKGOUND_THEME[theme].backgound },
                 }}
             />
             <Stack.Screen
@@ -189,11 +204,11 @@ const InitialLayout = () => {
                     headerShown: true,
                     title: "Schools",
                     headerTitle: "Popular schools",
-                    headerTitleStyle: { color: "#ffffff", fontFamily: "Gilroy" },
+                    headerTitleStyle: { color: "#fff", fontFamily: "Gilroy" },
                     headerTransparent: true,
                     headerLeft: () => (
                         <TouchableOpacity onPress={router.back}>
-                            <Ionicons name="arrow-back" size={34} color={"#ffffff"} />
+                            <Ionicons name="arrow-back" size={34} color={"#fff"} />
                         </TouchableOpacity>
                     ),
                 }}
@@ -217,13 +232,15 @@ const InitialLayout = () => {
             <Stack.Screen
                 name="(home)/courseDetails/purchase/[id]"
                 options={{
-                    headerTitle: "",
+                    headerTitle: "Purchase Course",
                     headerShown: true,
                     headerLeft: () => (
                         <TouchableOpacity onPress={router.back}>
                             <Ionicons name="arrow-back" size={34} color={"#000"} />
                         </TouchableOpacity>
                     ),
+                    headerTitleStyle: { color: TEXT_THEME[theme].primary },
+                    headerStyle: { backgroundColor: BACKGOUND_THEME[theme].backgound },
                 }}
             />
             <Stack.Screen
@@ -248,6 +265,8 @@ const InitialLayout = () => {
                 name="profile"
                 options={{
                     headerTitle: "My Profile",
+                    headerTitleStyle: { color: TEXT_THEME[theme].primary },
+                    headerStyle: { backgroundColor: BACKGOUND_THEME[theme].backgound },
                 }}
             />
             <Stack.Screen

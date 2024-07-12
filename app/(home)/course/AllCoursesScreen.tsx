@@ -2,7 +2,7 @@ import useAxios from "@/app/services/axiosClient";
 import Course from "@/components/Course";
 import { AUILinearGradient } from "@/components/common/AUILinearGradient";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { APP_THEME } from "@/constants/Colors";
+import { APP_THEME, BACKGOUND_THEME } from "@/constants/Colors";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import { RootState } from "@/redux/store";
@@ -11,10 +11,10 @@ import { FlatList, StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
 
 const AllCoursesScreen = () => {
-    const { requestFn } = useApiRequest();
-    const { get } = useAxios();
-
-    const courseResponse = useSelector((state: RootState) => state.api.selectedLanguagecourse || {});
+    const theme = useSelector((state: RootState) => state.global.theme);
+    const courseResponse = useSelector(
+        (state: RootState) => state.api.selectedLanguagecourse || {}
+    );
 
     // useEffect(() => {
     //     requestFn(API_URL.course, "popularCourse");
@@ -22,7 +22,7 @@ const AllCoursesScreen = () => {
 
     return (
         <AUILinearGradient
-            colors={[`${APP_THEME.primary.first}80`, "#ffffff"]}
+            colors={[`${APP_THEME[theme].primary.first}`, BACKGOUND_THEME[theme].backgound]}
             start={{ x: 1, y: 0 }} // Gradient start point
             end={{ x: 0, y: 1 }} // Gradient end point
             style={styles.container}

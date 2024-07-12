@@ -361,7 +361,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ consumerId, user, config }) => {
                                         <Ionicons
                                             name="send"
                                             size={24}
-                                            color={APP_THEME.primary.first}
+                                            color={APP_THEME.light.primary.first}
                                         />
                                     </TouchableOpacity>
                                 </View>
@@ -405,7 +405,7 @@ const chatStyles = StyleSheet.create({
         right: "5%",
     },
     scrollButton: {
-        backgroundColor: APP_THEME.primary.first,
+        backgroundColor: APP_THEME.light.primary.first,
         borderRadius: 25,
         width: 40,
         height: 40,
@@ -466,7 +466,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         height: height / 8,
-        backgroundColor: APP_THEME.primary.first,
+        backgroundColor: APP_THEME.light.primary.first,
         borderBottomRightRadius: 15,
         borderBottomLeftRadius: 15,
     },
@@ -484,7 +484,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
     floatingButton: {
-        backgroundColor: APP_THEME.primary.first,
+        backgroundColor: APP_THEME.light.primary.first,
         width: 60,
         height: 60,
         borderRadius: 30,
@@ -519,7 +519,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: APP_THEME.primary.first,
+        backgroundColor: APP_THEME.light.primary.first,
         gap: 10,
     },
     splashText: {

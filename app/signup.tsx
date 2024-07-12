@@ -320,7 +320,6 @@ import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast, FormValidateToast } from "@/components/common/AUIToast";
 import { APP_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT, SIGNUP_FIELDS } from "@/constants/Properties";
-import { signupPageStyles } from "@/constants/Styles";
 import { countriesData } from "@/constants/dummy data/countriesData";
 import { API_URL } from "@/constants/urlProperties";
 import { setLoader, setSignInType, setSignupDetails } from "@/redux/globalSlice";
@@ -331,6 +330,7 @@ import {
     Keyboard,
     KeyboardAvoidingView,
     Platform,
+    StyleSheet,
     TouchableWithoutFeedback,
     View,
 } from "react-native";
@@ -551,56 +551,108 @@ const ContactNumberField = ({
     handleDropdownChange,
     placeholder,
     onBlur,
-}: any) => (
-    <AUIThemedView style={{ backgroundColor: "#ffffff" }}>
-        <AUIThemedText
-            style={{
-                marginBottom: 5,
-                fontSize: 16,
-                fontWeight: "semibold",
-                letterSpacing: -0.32,
-                color: APP_THEME.gray,
-            }}
-        >
-            {label}
-        </AUIThemedText>
-        <AUIThemedView
-            style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                gap: 10,
-            }}
-        >
-            <DropdownComponent
-                style={{ flex: 1 }}
-                // @ts-ignore
-                list={countriesData}
-                // @ts-ignore
-                value={dropdownValue}
-                setValue={handleDropdownChange}
-                labelField="dialling_code"
-                valueField="dialling_code"
-                listWithIcon
-                renderLeftIcon
-            />
-            <AUIInputField
-                style={{ flex: 2 }}
-                // @ts-ignore
-                placeholder={placeholder}
-                value={value}
-                onChangeText={handleOnChange}
-                keyboardType="numeric"
-                onBlur={onBlur}
-            />
-        </AUIThemedView>
-        {error && (
+}: any) => {
+    const theme = useSelector((state: RootState) => state.global.theme);
+
+    return (
+        <AUIThemedView>
             <AUIThemedText
-                style={{ position: "absolute", color: "red", fontSize: 14, marginTop: 78 }}
+                style={{
+                    marginBottom: 5,
+                    fontSize: 16,
+                    fontWeight: "semibold",
+                    letterSpacing: -0.32,
+                }}
             >
-                {error}
+                {label}
             </AUIThemedText>
-        )}
-    </AUIThemedView>
-);
+            <AUIThemedView
+                style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: 10,
+                }}
+            >
+                <DropdownComponent
+                    style={{ flex: 1 }}
+                    // @ts-ignore
+                    list={countriesData}
+                    // @ts-ignore
+                    value={dropdownValue}
+                    setValue={handleDropdownChange}
+                    labelField="dialling_code"
+                    valueField="dialling_code"
+                    listWithIcon
+                    renderLeftIcon
+                />
+                <AUIInputField
+                    style={{ flex: 2 }}
+                    // @ts-ignore
+                    placeholder={placeholder}
+                    value={value}
+                    onChangeText={handleOnChange}
+                    keyboardType="numeric"
+                    onBlur={onBlur}
+                />
+            </AUIThemedView>
+            {error && (
+                <AUIThemedText
+                    style={{ position: "absolute", color: "red", fontSize: 14, marginTop: 78 }}
+                >
+                    {error}
+                </AUIThemedText>
+            )}
+        </AUIThemedView>
+    );
+};
+
+const signupPageStyles = StyleSheet.create({
+    container: {
+        flex: 1,
+        paddingHorizontal: 20,
+        position: "relative",
+        // backgroundColor: "#ffffff",
+    },
+    heading: {
+        fontSize: 30,
+        // marginTop: 40,
+        paddingTop: 20,
+        fontWeight: "bold",
+        // color: APP_THEME.light.gray,
+    },
+    formLayout: {
+        gap: 10,
+        marginTop: 20,
+        flex: 1,
+        // backgroundColor: "#ffffff",
+
+        // justifyContent: "space-between",
+    },
+    fieldContainer: {
+        gap: 15,
+        // backgroundColor: "#ffffff",
+    },
+    buttonContainer: {
+        width: "100%",
+        marginTop: 20,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        gap: 5,
+    },
+    section: {
+        marginTop: 30,
+    },
+    signInLink: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 10,
+        // backgroundColor: "#ffffff",
+    },
+    link: {
+        color: "blue",
+        textDecorationLine: "underline",
+    },
+});
+
 export default SignupPage;

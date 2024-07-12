@@ -4,6 +4,8 @@ import React from "react";
 import { Keyboard, StyleSheet, TextInput } from "react-native";
 import { AUIThemedText } from "./AUIThemedText";
 import { AUIThemedView } from "./AUIThemedView";
+import { RootState } from "@/redux/store";
+import { useSelector } from "react-redux";
 
 interface SearchBarProps {
     clicked: boolean;
@@ -13,8 +15,10 @@ interface SearchBarProps {
 }
 
 const AUISearchBar = ({ clicked, searchPhrase, setSearchPhrase, setClicked }: SearchBarProps) => {
+    const theme = useSelector((state: RootState) => state.global.theme);
+
     return (
-        <AUIThemedView style={styles.container}>
+        <AUIThemedView style={[styles.container, { borderColor: APP_THEME[theme].primary.first }]}>
             <AUIThemedView
                 style={clicked ? styles.searchBar__clicked : styles.searchBar__unclicked}
             >
@@ -28,7 +32,9 @@ const AUISearchBar = ({ clicked, searchPhrase, setSearchPhrase, setClicked }: Se
                     }}
                 />
                 {/* search Icon */}
-                {!clicked && <Feather name="search" size={25} color={APP_THEME.primary.first} />}
+                {!clicked && (
+                    <Feather name="search" size={25} color={APP_THEME[theme].primary.first} />
+                )}
 
                 {/* cross Icon, depending on whether the search bar is clicked or not */}
                 {clicked && (
@@ -80,7 +86,7 @@ const styles = StyleSheet.create({
         width: "85%",
         borderWidth: 1,
         borderRadius: 100,
-        borderColor: APP_THEME.primary.first,
+        // borderColor: APP_THEME.primary.first,
         paddingLeft: 10,
     },
     searchBar__unclicked: {

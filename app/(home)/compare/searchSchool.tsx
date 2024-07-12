@@ -2,7 +2,7 @@ import AUIImage from "@/components/common/AUIImage";
 import AUIInputField from "@/components/common/AUIInputField";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { APP_THEME } from "@/constants/Colors";
+import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { setResponse, setSelectedSchool2 } from "@/redux/apiSlice";
 import { RootState } from "@/redux/store";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
@@ -44,6 +44,7 @@ const SearchSchool: React.FC = () => {
     const compareSchool1 = useSelector((state: RootState) => state.api.compareSchool1);
     const compareSchool2 = useSelector((state: RootState) => state.api.compareSchool2);
     const getfavorite = useSelector((state: RootState) => state.api.favorite || {});
+    const theme = useSelector((state: RootState) => state.global.theme);
     const fav = getfavorite?.docs?.[0] || { clients: [] };
 
     useEffect(() => {
@@ -83,13 +84,17 @@ const SearchSchool: React.FC = () => {
     );
 
     const renderItem = ({ item }: { item: School }) => (
-        <AUIThemedView style={styles.recentItem}>
+        <AUIThemedView
+            style={[styles.recentItem, { backgroundColor: APP_THEME[theme].background }]}
+        >
             <AUIImage
                 style={styles.schoolImage}
                 path={Asset.fromModule(require("@/assets/images/compareScreen/Group (1).png")).uri}
                 resizeMode="contain"
             />
-            <AUIThemedView style={styles.recentItemText}>
+            <AUIThemedView
+                style={[styles.recentItemText, { backgroundColor: APP_THEME[theme].background }]}
+            >
                 <AUIThemedText style={styles.recentItemName}>{item.name}</AUIThemedText>
                 <AUIThemedText style={styles.recentItemAddress}>{item.address}</AUIThemedText>
             </AUIThemedView>
@@ -124,7 +129,9 @@ const SearchSchool: React.FC = () => {
                     </AUIThemedView>
                 )}
 
-                <AUIThemedView style={styles.orContainer}>
+                <AUIThemedView
+                    style={[styles.orContainer, { backgroundColor: APP_THEME[theme].background }]}
+                >
                     <AUIThemedView style={styles.line} />
                     <AUIThemedText style={styles.orText}>OR</AUIThemedText>
                     <AUIThemedView style={styles.line} />
@@ -140,7 +147,11 @@ const SearchSchool: React.FC = () => {
                     <AUIThemedText style={styles.favoriteText}>
                         Choose from your favorite...
                     </AUIThemedText>
-                    <Ionicons name="chevron-down-outline" size={24} color="#0A152F" />
+                    <Ionicons
+                        name="chevron-down-outline"
+                        size={24}
+                        color={TEXT_THEME[theme].primary}
+                    />
                 </TouchableOpacity>
 
                 {favoriteDropdownVisible && (
@@ -174,7 +185,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
-        backgroundColor: "#ffffff",
+        // backgroundColor: "#ffffff",
     },
     searchschoolText: {
         fontWeight: "500",
@@ -187,7 +198,7 @@ const styles = StyleSheet.create({
         borderColor: "#9DA1AC",
         borderRadius: 8,
         paddingHorizontal: 8,
-        backgroundColor: "#F5F5F5",
+        // backgroundColor: "#F5F5F5",
     },
     searchIcon: {
         // marginRight: 8,
@@ -198,10 +209,10 @@ const styles = StyleSheet.create({
     inputField: {
         height: 40,
         borderWidth: 0,
-        backgroundColor: "#F5F5F5",
+        // backgroundColor: "#F5F5F5",
     },
     dropdown: {
-        backgroundColor: "#fff",
+        // backgroundColor: "#fff",
         borderWidth: 1,
         borderColor: "#ccc",
         borderRadius: 4,
@@ -213,7 +224,7 @@ const styles = StyleSheet.create({
         maxHeight: 220,
     },
     dropdown1: {
-        backgroundColor: "#fff",
+        // backgroundColor: "#fff",
         borderWidth: 1,
         borderColor: "#ccc",
         borderRadius: 4,
@@ -233,7 +244,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         marginVertical: 16,
-        backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.background,
     },
     line: {
         flex: 1,
@@ -242,7 +253,7 @@ const styles = StyleSheet.create({
     },
     orText: {
         marginHorizontal: 8,
-        color: "#0A152F",
+        // color: "#0A152F",
     },
     favoriteContainer: {
         flexDirection: "row",
@@ -251,12 +262,12 @@ const styles = StyleSheet.create({
         borderColor: "#9DA1AC",
         borderRadius: 8,
         padding: 8,
-        backgroundColor: "#F5F5F5",
+        // backgroundColor: "#F5F5F5",
     },
     favoriteText: {
         flex: 1,
         paddingLeft: 8,
-        color: "grey",
+        // color: "grey",
     },
     favoriteIcon: {
         marginRight: 5,
@@ -272,7 +283,7 @@ const styles = StyleSheet.create({
         // alignItems: "center",
         marginVertical: 8,
         marginTop: 15,
-        backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.background,
     },
     schoolImage: {
         width: 25,
@@ -281,13 +292,13 @@ const styles = StyleSheet.create({
     },
     recentItemText: {
         marginLeft: 8,
-        backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.background,
     },
     recentItemName: {
         fontSize: 16,
         fontWeight: "bold",
     },
     recentItemAddress: {
-        color: "#000000",
+        // color: "#000000",
     },
 });

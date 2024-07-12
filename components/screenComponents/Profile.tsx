@@ -22,30 +22,39 @@ import { useSelector } from "react-redux";
 const array = [
     {
         id: 1,
-        icon: <FontAwesome6 name="user-circle" size={24} color={APP_THEME.primary.first} />,
+        icon: <FontAwesome6 name="user-circle" size={24} color={APP_THEME.light.primary.first} />,
         label: "Profile",
         pathname: "/profile",
     },
     {
         id: 2,
-        icon: <Feather name="help-circle" size={24} color={APP_THEME.primary.first} />,
+        icon: <Feather name="help-circle" size={24} color={APP_THEME.light.primary.first} />,
         label: "Help",
         pathname: "/help",
     },
     {
         id: 3,
-        icon: <Fontisto name="wallet" size={24} color={APP_THEME.primary.first} />,
+        icon: <Fontisto name="wallet" size={24} color={APP_THEME.light.primary.first} />,
         label: "Transaction history",
         pathname: "/transactions",
     },
 ];
 function Profile() {
     const userProfileData = useSelector((state: RootState) => state.api.userProfileData);
+    const theme = useSelector((state: RootState) => state.global.theme);
     const navigation = useNavigation();
 
     return (
         <AUIThemedView style={styles.root}>
-            <AUIThemedView style={styles.banner}>
+            <AUIThemedView
+                style={[
+                    styles.banner,
+                    {
+                        backgroundColor: APP_THEME[theme].primary.first,
+                        shadowColor: APP_THEME[theme].ternary.first,
+                    },
+                ]}
+            >
                 <View style={styles.header}>
                     <Pressable
                         onPress={() => {
@@ -55,7 +64,7 @@ function Profile() {
                         <Ionicons
                             name="arrow-back-circle-outline"
                             size={30}
-                            color={APP_THEME.ternary.first}
+                            color={APP_THEME[theme].ternary.first}
                         />
                     </Pressable>
                 </View>
@@ -137,9 +146,9 @@ const styles = StyleSheet.create({
     banner: {
         height: 150,
         // backgroundColor: "rgba(91, 216, 148, 0.5)",
-        backgroundColor: APP_THEME.primary.first,
+        // backgroundColor: APP_THEME.primary.first,
         elevation: 20,
-        shadowColor: APP_THEME.ternary.first,
+        // shadowColor: APP_THEME.ternary.first,
         shadowOffset: { width: -2, height: 4 },
         shadowOpacity: 0.5,
         shadowRadius: 3,
@@ -183,8 +192,9 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        borderWidth: StyleSheet.hairlineWidth,
+        borderWidth: 2,
         borderRadius: 10,
+        borderColor: "#ccc",
         marginBottom: 10,
     },
     deleteLayout: {

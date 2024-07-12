@@ -198,7 +198,7 @@ import { AUILinearGradient } from "@/components/common/AUILinearGradient";
 import { AUISafeAreaView } from "@/components/common/AUISafeAreaView";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { APP_THEME } from "@/constants/Colors";
+import { APP_THEME, BACKGOUND_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
 import { getUserData } from "@/constants/RNAsyncStore";
 import { initialPageStyles } from "@/constants/Styles";
@@ -262,8 +262,8 @@ const InitialPage = () => {
                     <AUIThemedText
                         style={
                             Platform.OS === "ios"
-                                ? initialPageStyles.iosTitle
-                                : initialPageStyles.title
+                                ? [initialPageStyles.iosTitle, { color: "#fff" }]
+                                : [initialPageStyles.title, { color: "#fff" }]
                         }
                     >
                         {GLOBAL_TEXT.create_your_profile}
@@ -276,15 +276,21 @@ const InitialPage = () => {
                             style={[
                                 initialPageStyles.circularViewPosition,
                                 {
-                                    borderColor: APP_THEME.primary.first,
+                                    borderColor: APP_THEME[theme].primary.first,
                                     borderWidth: 5,
                                 },
                             ]}
                             locations={[0, 1]}
                             colors={
                                 profile === "student"
-                                    ? ["#5BD894", "#5BD894"]
-                                    : ["#EFFFFA", "#EFFFFA"]
+                                    ? [
+                                          APP_THEME[theme].primary.first,
+                                          APP_THEME[theme].primary.first,
+                                      ]
+                                    : [
+                                          BACKGOUND_THEME[theme].backgound,
+                                          BACKGOUND_THEME[theme].backgound,
+                                      ]
                             }
                         >
                             <AUIImage
@@ -307,7 +313,7 @@ const InitialPage = () => {
                                         color:
                                             profile === "student"
                                                 ? "#fff"
-                                                : APP_THEME.primary.first,
+                                                : APP_THEME[theme].primary.first,
                                     },
                                 ]}
                             >
@@ -320,15 +326,21 @@ const InitialPage = () => {
                             style={[
                                 initialPageStyles.circularViewPosition,
                                 {
-                                    borderColor: APP_THEME.primary.first,
+                                    borderColor: APP_THEME[theme].primary.first,
                                     borderWidth: 5,
                                 },
                             ]}
                             locations={[0, 1]}
                             colors={
                                 profile === "school"
-                                    ? ["#5BD894", "#5BD894"]
-                                    : ["#EFFFFA", "#EFFFFA"]
+                                    ? [
+                                          APP_THEME[theme].primary.first,
+                                          APP_THEME[theme].primary.first,
+                                      ]
+                                    : [
+                                          BACKGOUND_THEME[theme].backgound,
+                                          BACKGOUND_THEME[theme].backgound,
+                                      ]
                             }
                         >
                             <AUIImage
@@ -349,7 +361,9 @@ const InitialPage = () => {
                                     initialPageStyles.optionLabel,
                                     {
                                         color:
-                                            profile === "school" ? "#fff" : APP_THEME.primary.first,
+                                            profile === "school"
+                                                ? "#fff"
+                                                : APP_THEME[theme].primary.first,
                                     },
                                 ]}
                             >
@@ -374,9 +388,23 @@ const InitialPage = () => {
                 </AUIThemedView>
 
                 <AUIThemedView style={initialPageStyles.imageContainer}>
-                    <AUIImage
-                        path={Asset.fromModule(require("@/assets/images/initialPage/home.png")).uri}
-                    />
+                    {theme === "dark" ? (
+                        <AUIImage
+                            path={
+                                Asset.fromModule(
+                                    require("@/assets/images/initialPage/homeDark.png")
+                                ).uri
+                            }
+                        />
+                    ) : (
+                        <AUIImage
+                            path={
+                                Asset.fromModule(
+                                    require("@/assets/images/initialPage/homeLight.png")
+                                ).uri
+                            }
+                        />
+                    )}
                 </AUIThemedView>
                 <AUIThemedView style={initialPageStyles.bottomLayout} />
             </AUIThemedView>

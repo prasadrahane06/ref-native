@@ -16,6 +16,8 @@ import { useSelector } from "react-redux";
 
 export default function HomeScreen() {
     const { requestFn } = useApiRequest();
+    const school = useSelector((state: RootState) => state.api.individualSchool || {});
+    const theme = useSelector((state: RootState) => state.global.theme);
     const MySchoolDetails = useSelector((state: RootState) => state.api.MySchoolDetails || {});
 
     const courseInfoData = [
@@ -63,7 +65,7 @@ export default function HomeScreen() {
                                 titleStyle={{ fontSize: 21 }}
                                 subtitleStyle={{
                                     fontSize: 14,
-                                    color: APP_THEME.gray,
+                                    color: APP_THEME[theme].gray,
                                 }}
                                 title={item.title}
                                 subtitle={item.subtitle}
