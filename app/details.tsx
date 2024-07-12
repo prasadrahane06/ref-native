@@ -465,4 +465,5 @@ const ContactNumberField = ({
         </AUIThemedView>
     );
 };
+
 export default DetailsPage;

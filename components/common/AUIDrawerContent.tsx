@@ -43,8 +43,6 @@ const AUIDrawerContent = (props: any) => {
     const isDarkMode = useSelector((state: RootState) => state.global.theme === "dark");
     const { name } = useSelector((state: RootState) => state.global.user);
 
-    const [isThemeEnabled, setIsEnabled] = useState(false);
-
     const isRTL = globalState.isRTL;
     const userdetails = globalState.user;
 

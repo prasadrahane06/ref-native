@@ -81,9 +81,6 @@ const CompareSchools: React.FC = () => {
                                 <AUIThemedText style={styles.cardTitle}>
                                     {school1?.name}
                                 </AUIThemedText>
-                                <AUIThemedText style={styles.cardSubtitle}>
-                                    East, Academy The East, 60 Grey Mare Ln, ...
-                                </AUIThemedText>
                             </View>
                             {/* <View style={styles.customShape}>
               <Ionicons name="close" size={20} color="#5BD894" />
@@ -107,9 +104,6 @@ const CompareSchools: React.FC = () => {
                                     <AUIThemedText style={styles.cardTitle}>
                                         {school2?.name}
                                     </AUIThemedText>
-                                    <AUIThemedText style={styles.cardSubtitle}>
-                                        "Academy The East, behind the blue Care In, ..."
-                                    </AUIThemedText>
                                 </View>
                             </TouchableOpacity>
                         ) : (
@@ -117,7 +111,7 @@ const CompareSchools: React.FC = () => {
                                 style={styles.card}
                                 onPress={() =>
                                     router.push({
-                                        pathname: `(home)/compare/searchSchool`,
+                                        pathname: "(home)/compare/searchSchool",
                                     })
                                 }
                             >

@@ -11,10 +11,10 @@ import { FlatList, StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
 
 const AllCoursesScreen = () => {
+    const theme = useSelector((state: RootState) => state.global.theme);
     const courseResponse = useSelector(
         (state: RootState) => state.api.selectedLanguagecourse || {}
     );
-    const theme = useSelector((state: RootState) => state.global.theme);
 
     // useEffect(() => {
     //     requestFn(API_URL.course, "popularCourse");

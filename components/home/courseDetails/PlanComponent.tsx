@@ -601,7 +601,7 @@ export default function PlanComponent({
     }, []);
 
     const { requestFn } = useApiRequest();
-    const isPurchased = useSelector((state: RootState) => state.api.isPurchased);
+    const isPurchased = useSelector((state: RootState) => state.api.isPurchased );
 
     console.log("isPurchased", isPurchased);
 
