@@ -1,45 +1,90 @@
-**Edit a file, create a new file, and clone from Bitbucket in under 2 minutes**
+## Project setup
 
-When you're done, you can delete the content in this README and update the file with details for others getting started with your repository.
+### (FRONTEND)
 
-*We recommend that you open this README in another tab as you perform the tasks below. You can [watch our video](https://youtu.be/0ocf7u76WSo) for a full demo of all the steps in this tutorial. Open the video in a new tab to avoid leaving Bitbucket.*
+1. Download latest Node version from https://nodejs.org/en
+
+2. Test if Node is installed correctly using node -v
+
+3. Download nvm from https://github.com/coreybutler/nvm-windows/releases
+
+4. Test if nvm is installed correctly using nvm --version
+
+5. Download vs code from https://code.visualstudio.com/
+
+6. Test if vscode is installed correctly using code -v
+
+7. Download git from https://git-scm.com/downloads
+
+8. Test if git is installed correctly using git --version
+
+9. (optional) Download Android Studio and setup your virtual emulator using these steps https://docs.expo.dev/workflow/android-studio-emulator/
+
+10. Clone the repository from bitbucket (ask Vimit for account credentials)
+
+11. Run npm install
+
+12. Run npx expo install
+
+13. Run npm start
+
+14. Press S to start the Expo Go build
+
+15. (optional) Press A to start on Android
+
+16. Download the Expo Go App from play store or App store
+
+17. Scan the QR code on your phone
+
+### (BACKEND)
+
+1. Clone the backend repository using from bitbucket (ask Vimit for account credentials)
+
+2. Run npm install
+
+3. Run npm start
+
+4. Install Postman and go enter this url: <your_ngrok_url>/dev/hello to test the api
+
+### (NGROK)
+
+1. Setup ngrok from https://dashboard.ngrok.com/get-started/setup/windows
+
+2. Test if ngrok is installed correctly using ngrok version
+
+3. Open CMD in administrator mode and run ngrok http https://localhost:4000
+
+(If ngrok is not working correctly, then follow these steps)
+
+1. Open the backend repo in VS Code.
+
+2. Open terminal and select Ports tab
+
+3. Enter 4000 as your port and press enter
+
+4. After successful porting, go to visibility tab and select public
+
+5. Now copy the URL and paste it in Postman as your base url
 
 ---
 
-## Edit a file
-
-You’ll start by editing this README file to learn how to edit a file in Bitbucket.
-
-1. Click **Source** on the left side.
-2. Click the README.md link from the list of files.
-3. Click the **Edit** button.
-4. Delete the following text: *Delete this line to make a change to the README from Bitbucket.*
-5. After making your change, click **Commit** and then **Commit** again in the dialog. The commit page will open and you’ll see the change you just made.
-6. Go back to the **Source** page.
-
----
-
-## Create a file
+### Steps to follow for adding dark mode when you make a new screen
 
 Next, you’ll add a new file to this repository.
 
-1. Click the **New file** button at the top of the **Source** page.
-2. Give the file a filename of **contributors.txt**.
-3. Enter your name in the empty file space.
-4. Click **Commit** and then **Commit** again in the dialog.
-5. Go back to the **Source** page.
+1. Import this `const theme = useSelector((state: RootState) => state.global.theme);` or `const theme = useSelector((state: RootState) => state.global.theme) as ThemeType;`
+
+2. You will get the light or dark theme by using the `theme` variable.
+
+3. This is how you use it.
+
+// Example of usage
+
+    	<View style={[{backgroundColor: BACKGOUND_THEME[theme].backgound},
+    					style,]} />
+
+</View>
 
 Before you move on, go ahead and explore the repository. You've already seen the **Source** page, but check out the **Commits**, **Branches**, and **Settings** pages.
 
 ---
-
-## Clone a repository
-
-Use these steps to clone from SourceTree, our client for using the repository command-line free. Cloning allows you to work on your files locally. If you don't yet have SourceTree, [download and install first](https://www.sourcetreeapp.com/). If you prefer to clone from the command line, see [Clone a repository](https://confluence.atlassian.com/x/4whODQ).
-
-1. You’ll see the clone button under the **Source** heading. Click that button.
-2. Now click **Check out in SourceTree**. You may need to create a SourceTree account or log in.
-3. When you see the **Clone New** dialog in SourceTree, update the destination path and name if you’d like to and then click **Clone**.
-4. Open the directory you just created to see your repository’s files.
-
-Now that you're more familiar with your Bitbucket repository, go ahead and add a new file locally. You can [push your change back to Bitbucket with SourceTree](https://confluence.atlassian.com/x/iqyBMg), or you can [add, commit,](https://confluence.atlassian.com/x/8QhODQ) and [push from the command line](https://confluence.atlassian.com/x/NQ0zDQ).
