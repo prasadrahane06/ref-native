@@ -2,23 +2,23 @@ import Course from "@/components/Course";
 import Destination from "@/components/Destination";
 import School from "@/components/School";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
+import CarouselSlide from "@/components/home/common/CarouselSlide";
 import SectionTitle from "@/components/home/common/SectionTitle";
 import { APP_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
-import { destinationData } from "@/constants/dummy data/destinationData";
+import { carouselData } from "@/constants/dummy data/carouselData";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
-import { RootState } from "@/redux/store";
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Dimensions, FlatList, ListRenderItem, ScrollView, StyleSheet } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import Carousel, { ICarouselInstance, Pagination } from "react-native-reanimated-carousel";
-import { useSharedValue } from "react-native-reanimated";
-import { carouselData } from "@/constants/dummy data/carouselData";
-import CarouselSlide from "@/components/home/common/CarouselSlide";
-import { useFocusEffect } from "@react-navigation/native";
-import { addItemToCart } from "@/redux/cartSlice";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { addToFavorite } from "@/redux/favoriteSlice";
+import { RootState } from "@/redux/store";
+import { useFocusEffect } from "@react-navigation/native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Dimensions, FlatList, ListRenderItem, ScrollView, StyleSheet } from "react-native";
+import { useSharedValue } from "react-native-reanimated";
+import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
+import { useDispatch, useSelector } from "react-redux";
 
 interface CourseData {
     title: string;
@@ -44,15 +44,15 @@ interface CountryData {
 
 const TabTwoScreen: React.FC = () => {
     const { requestFn } = useApiRequest();
+    const { t } = useTranslation();
+    const [showAllCourses, setShowAllCourses] = useState(false);
+    const [showAllSchools, setShowAllSchools] = useState(false);
+    const [showAllCountries, setShowAllCountries] = useState(false);
     const dispatch = useDispatch();
 
     const width = Dimensions.get("window").width;
     const progress = useSharedValue<number>(0);
     const ref = useRef<ICarouselInstance>(null);
-
-    const [showAllCourses, setShowAllCourses] = useState(false);
-    const [showAllSchools, setShowAllSchools] = useState(false);
-    const [showAllCountries, setShowAllCountries] = useState(false);
 
     useFocusEffect(
         useCallback(() => {
@@ -60,7 +60,7 @@ const TabTwoScreen: React.FC = () => {
         }, [])
     );
 
-    const favorite = useSelector((state: RootState) => state.api.favorite);
+    const favorite = useLangTransformSelector((state: RootState) => state.api.favorite);
 
     const isRTL = useSelector((state: RootState) => state.global.isRTL || {});
     const theme = useSelector((state: RootState) => state.global.theme);
@@ -147,25 +147,25 @@ const TabTwoScreen: React.FC = () => {
                     height={width / 2}
                     autoPlay={true}
                     autoPlayInterval={5000}
-                    onProgressChange={progress}
+                    // onProgressChange={progress}
                     scrollAnimationDuration={1000}
                     data={carouselData}
                     renderItem={({ item }) => (
                         <CarouselSlide
                             key={item.id}
                             imageSource={item.imageSource}
-                            text={item.text}
+                            text={t(item.key)}
                         />
                     )}
                 />
-                <Pagination.Basic
+                {/* <Pagination.Basic
                     progress={progress}
                     data={carouselData}
                     containerStyle={styles.dotsContainer}
                     dotStyle={styles.dot}
                     activeDotStyle={{ backgroundColor: APP_THEME[theme].primary.first }}
                     onPress={onPressPagination}
-                />
+                /> */}
             </AUIThemedView>
 
             <AUIThemedView>

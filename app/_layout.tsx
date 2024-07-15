@@ -1,6 +1,6 @@
 import AUILoader from "@/components/common/AUILoader";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { APP_THEME, BACKGOUND_THEME, TEXT_THEME } from "@/constants/Colors";
+import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
 import { getUserData, removeUserData, storeUserDeviceData } from "@/constants/RNAsyncStore";
 import { setToken, setUser } from "@/redux/globalSlice";
 import { RootState, store } from "@/redux/store";
@@ -78,7 +78,7 @@ const InitialLayout = () => {
                         </TouchableOpacity>
                     ),
                     headerStyle: {
-                        backgroundColor: BACKGOUND_THEME[theme].backgound,
+                        backgroundColor: BACKGROUND_THEME[theme].background,
                     },
                 }}
             />
@@ -107,7 +107,7 @@ const InitialLayout = () => {
                         </Link>
                     ),
                     headerStyle: {
-                        backgroundColor: BACKGOUND_THEME[theme].backgound,
+                        backgroundColor: BACKGROUND_THEME[theme].background,
                     },
                 }}
             />
@@ -185,7 +185,7 @@ const InitialLayout = () => {
                     title: "search_school",
                     headerTitle: "Add to compare",
                     headerTitleStyle: { color: TEXT_THEME[theme].primary },
-                    headerStyle: { backgroundColor: BACKGOUND_THEME[theme].backgound },
+                    headerStyle: { backgroundColor: BACKGROUND_THEME[theme].background },
                 }}
             />
             <Stack.Screen
@@ -195,7 +195,7 @@ const InitialLayout = () => {
                     title: "compare school",
                     headerTitle: "Compare Schools",
                     headerTitleStyle: { color: TEXT_THEME[theme].primary },
-                    headerStyle: { backgroundColor: BACKGOUND_THEME[theme].backgound },
+                    headerStyle: { backgroundColor: BACKGROUND_THEME[theme].background },
                 }}
             />
             <Stack.Screen
@@ -240,7 +240,7 @@ const InitialLayout = () => {
                         </TouchableOpacity>
                     ),
                     headerTitleStyle: { color: TEXT_THEME[theme].primary },
-                    headerStyle: { backgroundColor: BACKGOUND_THEME[theme].backgound },
+                    headerStyle: { backgroundColor: BACKGROUND_THEME[theme].background },
                 }}
             />
             <Stack.Screen
@@ -253,6 +253,15 @@ const InitialLayout = () => {
                 name="(home)/cityDetails/[id]"
                 options={{
                     headerTitle: "",
+                    headerLeft: () => (
+                        <TouchableOpacity onPress={router.back}>
+                            <Ionicons
+                                name="arrow-back"
+                                size={34}
+                                color={TEXT_THEME[theme].primary}
+                            />
+                        </TouchableOpacity>
+                    )
                 }}
             />
             <Stack.Screen
@@ -266,7 +275,7 @@ const InitialLayout = () => {
                 options={{
                     headerTitle: "My Profile",
                     headerTitleStyle: { color: TEXT_THEME[theme].primary },
-                    headerStyle: { backgroundColor: BACKGOUND_THEME[theme].backgound },
+                    headerStyle: { backgroundColor: BACKGROUND_THEME[theme].background },
                 }}
             />
             <Stack.Screen

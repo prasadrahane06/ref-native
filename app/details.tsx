@@ -309,6 +309,7 @@ import { APP_THEME } from "@/constants/Colors";
 import { countriesData } from "@/constants/dummy data/countriesData";
 import { DETAILS_FIELDS, GLOBAL_TEXT } from "@/constants/Properties";
 import { signupPageStyles } from "@/constants/Styles";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { setSignupDetails } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
 import { useRouter } from "expo-router";
@@ -320,9 +321,9 @@ import { useDispatch, useSelector } from "react-redux";
 const DetailsPage = () => {
     const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
     const router = useRouter();
-    const profile = useSelector((state: RootState) => state.global.profile);
-    const signInType = useSelector((state: RootState) => state.global.signInType);
-    const signupDetails = useSelector((state: RootState) => state.global.signupDetails);
+    const profile = useLangTransformSelector((state: RootState) => state.global.profile);
+    const signInType = useLangTransformSelector((state: RootState) => state.global.signInType);
+    const signupDetails = useLangTransformSelector((state: RootState) => state.global.signupDetails);
     const dispatch = useDispatch();
     const [signupValues, setSignupValues] = useState({
         qualification: null,
@@ -335,7 +336,6 @@ const DetailsPage = () => {
 
     const handleOnSave = () => {
         dispatch(setSignupDetails({ ...signupDetails, ...signupValues }));
-        console.log(signupValues);
         router.navigate(`(home)/(${profile})`);
         // post(API_URL.sendOTP, signupValues)
         //   .then((res) => {

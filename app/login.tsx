@@ -523,7 +523,7 @@ import AUIInputField from "@/components/common/AUIInputField";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import OTPScreen from "@/components/screenComponents/OTPScreen";
-import { APP_THEME, BACKGOUND_THEME } from "@/constants/Colors";
+import { APP_THEME, BACKGROUND_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT, SIGNUP_FIELDS } from "@/constants/Properties";
 import { storeUserData } from "@/constants/RNAsyncStore";
 import { loginPageStyles, secondaryButtonStyle } from "@/constants/Styles";
@@ -546,6 +546,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import useAxios from "./services/axiosClient";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 const schema = Yup.object().shape({
     input: Yup.string().when("selectedButton", {
         is: "mobile",
@@ -565,7 +566,7 @@ const LoginPage = () => {
     const router = useRouter();
     const dispatch = useDispatch();
 
-    const globalState = useSelector((state: RootState) => state.global);
+    const globalState = useLangTransformSelector((state: RootState) => state.global);
     const theme = useSelector((state: RootState) => state.global.theme);
     const profile = globalState.profile;
     const signInType = globalState.signInType;
@@ -615,17 +616,14 @@ const LoginPage = () => {
                 : {
                       email: inputValue,
                   };
-        console.log(payload);
         dispatch(setLoader(true));
         post(API_URL.login, payload)
             .then((res) => {
-                console.log("res", res);
                 dispatch(setLoader(false));
                 setOtpSent(true);
             })
             .catch((e) => {
                 dispatch(setLoader(false));
-                console.log(e.response.data);
             });
     };
     const handleOTPChange = (newOtp: string, name: string) => {
@@ -653,19 +651,14 @@ const LoginPage = () => {
             otp: newOtp,
             verificationType: "register",
         };
-        console.log(payload);
         post(API_URL.verifyOTP, payload)
             .then((res) => {
-                console.log(res);
                 setOtpVerified({
                     ...otpVerified,
                     signUpEmail: res?.data?.emailVerified,
                 });
                 if (res?.data?.accessToken) {
                     storeUserData({ profile, ...res });
-
-                    // saving token in redux
-                    console.log("saving token in handleSubmitEmailOtp", res?.data?.accessToken);
                     dispatch(setToken(res?.data?.accessToken));
 
                     if (profile === "student") {
@@ -674,7 +667,6 @@ const LoginPage = () => {
                         router.push({ pathname: "/schooldetails" });
                     }
                 }
-                console.log("res", res);
             })
             .catch((e: any) => {
                 console.log("e", e.response.data);
@@ -686,19 +678,14 @@ const LoginPage = () => {
             otp: newOtp,
             verificationType: "register",
         };
-        console.log(payload);
         post(API_URL.verifyOTP, payload)
             .then((res) => {
-                console.log(res);
                 setOtpVerified({
                     ...otpVerified,
                     signUpPhone: res?.data?.phoneVerified,
                 });
                 if (res?.data?.accessToken) {
                     storeUserData({ profile, ...res });
-
-                    // saving token in redux
-                    console.log("saving token in handleSubmitPhoneOtp", res?.data?.accessToken);
                     dispatch(setToken(res?.data?.accessToken));
 
                     if (profile === "student") {
@@ -707,7 +694,6 @@ const LoginPage = () => {
                         router.push({ pathname: "/schooldetails" });
                     }
                 }
-                console.log("res", res);
             })
             .catch((e: any) => {
                 console.log("e", e);
@@ -733,19 +719,14 @@ const LoginPage = () => {
         dispatch(setLoader(true));
         post(API_URL.verifyOTP, payload)
             .then((res) => {
-                console.log("res otp", res);
                 dispatch(setLoader(false));
                 setOtpVerified({
                     ...otpVerified,
                     login: res?.data?.accessToken,
                 });
                 if (res?.data?.accessToken) {
-                    console.log("token got", profile);
                     storeUserData({ profile, ...res });
-                    // saving token in redux
-                    console.log("saving token in login", res?.data?.accessToken);
                     dispatch(setToken(res?.data?.accessToken));
-                    console.log("saving user data in login", res?.data?.user);
                     dispatch(setUser(res?.data?.user));
                     router.push({
                         pathname: `(home)/(${profile})`,
@@ -767,7 +748,6 @@ const LoginPage = () => {
         let payload = {
             [name]: val,
         };
-        console.log(payload);
         post(API_URL.resendOTP, payload)
             .then((res) => {
                 console.log("res", res);
@@ -784,7 +764,7 @@ const LoginPage = () => {
                     {GLOBAL_TEXT.enter_otp}
                 </AUIThemedText>
                 <KeyboardAvoidingView
-                    style={{ flex: 1, backgroundColor: BACKGOUND_THEME[theme].backgound }}
+                    style={{ flex: 1, backgroundColor: BACKGROUND_THEME[theme].background }}
                     behavior="padding"
                     keyboardVerticalOffset={keyboardVerticalOffset}
                 >
@@ -830,7 +810,7 @@ const LoginPage = () => {
                     {otpSent ? GLOBAL_TEXT.enter_otp : GLOBAL_TEXT.login_to_continue}
                 </AUIThemedText>
                 <KeyboardAvoidingView
-                    style={{ flex: 1, backgroundColor: BACKGOUND_THEME[theme].backgound }}
+                    style={{ flex: 1, backgroundColor: BACKGROUND_THEME[theme].background }}
                     behavior="padding"
                     keyboardVerticalOffset={keyboardVerticalOffset}
                 >

@@ -8,7 +8,6 @@ interface FacilitiesListProps {
 }
 
 export const FacilitiesList: React.FC<FacilitiesListProps> = ({ data }) => {
-    console.log("facilitydata", data);
     return (
         <AUIThemedView style={facilitiesListStyles.container}>
             <FlatList

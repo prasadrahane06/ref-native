@@ -1,20 +1,21 @@
 import Course from "@/components/Course";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
+import { BACKGROUND_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
+import { addItemToCart } from "@/redux/cartSlice";
 import { RootState } from "@/redux/store";
-import React, { useCallback, useEffect, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import React, { useCallback, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Dimensions, FlatList, ScrollView, StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { useFocusEffect } from "@react-navigation/native";
-import { setResponse } from "@/redux/apiSlice";
-import { addItemToCart } from "@/redux/cartSlice";
-import { BACKGOUND_THEME } from "@/constants/Colors";
 
 export default function TabFourScreen() {
-    // const [cartItems, setCartItems] = useState<any>([]);
+    const { t } = useTranslation();
     const { requestFn } = useApiRequest();
     const dispatch = useDispatch();
 
@@ -24,7 +25,7 @@ export default function TabFourScreen() {
         }, [])
     );
 
-    const cart = useSelector((state: RootState) => state.api.cart);
+    const cart = useLangTransformSelector((state: RootState) => state.api.cart);
     const theme = useSelector((state: RootState) => state.global.theme);
 
     useEffect(() => {
@@ -35,14 +36,14 @@ export default function TabFourScreen() {
         }
     }, [cart]);
 
-    const cartItems = useSelector((state: RootState) => state.cart.items);
+    const cartItems = useLangTransformSelector((state: RootState) => state.cart.items);
 
     if (cartItems?.courses?.length === 0) {
         return (
             <AUIThemedView
-                style={[styles.container, { backgroundColor: BACKGOUND_THEME[theme].backgound }]}
+                style={[styles.container, { backgroundColor: BACKGROUND_THEME[theme].background }]}
             >
-                <AUIThemedText style={styles.title}>{GLOBAL_TEXT.your_cart_is_empty}</AUIThemedText>
+                <AUIThemedText style={styles.title}>{t(GLOBAL_TEXT.your_cart_is_empty)}</AUIThemedText>
             </AUIThemedView>
         );
     }

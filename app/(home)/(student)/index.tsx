@@ -6,49 +6,41 @@ import IncreaseChanceList from "@/components/home/common/IncreaseChanceList";
 import LanguageList from "@/components/home/common/LanguageList";
 import SchoolList from "@/components/home/common/SchoolList";
 import SectionTitle from "@/components/home/common/SectionTitle";
-import { APP_THEME } from "@/constants/Colors";
-import { GLOBAL_TEXT, GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
+import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { getUserData } from "@/constants/RNAsyncStore";
 import { carouselData } from "@/constants/dummy data/carouselData";
-import { coursesData } from "@/constants/dummy data/coursesData";
 import { increaseChancesData } from "@/constants/dummy data/increaseChancesData";
 import { languagesData } from "@/constants/dummy data/languagesData";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
+import { addItemToCart } from "@/redux/cartSlice";
+import { addToFavorite } from "@/redux/favoriteSlice";
 import { RootState } from "@/redux/store";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Dimensions, I18nManager, Platform, ScrollView, StyleSheet } from "react-native";
-import { useSharedValue } from "react-native-reanimated";
-import Carousel, { ICarouselInstance, Pagination } from "react-native-reanimated-carousel";
+import { Dimensions, ScrollView, StyleSheet } from "react-native";
+import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
 import { useDispatch, useSelector } from "react-redux";
-import RNRestart from "react-native-restart";
-import { useNavigation } from "expo-router";
-import { CommonActions } from "@react-navigation/native";
-import { setIsRTL } from "@/redux/globalSlice";
-import { addToFavorite } from "@/redux/favoriteSlice";
-import { addItemToCart } from "@/redux/cartSlice";
 export default function HomeScreen() {
     const dispatch = useDispatch();
     const { requestFn } = useApiRequest();
     const width = Dimensions.get("window").width;
-    const progress = useSharedValue<number>(0);
+    // const progress = useSharedValue<number>(0);
     const ref = useRef<ICarouselInstance>(null);
 
-    const [destinationData, setDestinationData] = useState([]);
-    const { t, i18n } = useTranslation();
-    const navigation = useNavigation();
+    // const [destinationData, setDestinationData] = useState([]);
+    const { t } = useTranslation();
+    // const navigation = useNavigation();
     const [selectedLanguage, setSelectedLanguage] = useState(languagesData[0].language);
-    const displayedCourses = coursesData.slice(0, 4);
-
-    const response = useSelector((state: RootState) => state.api || {});
-    const theme = useSelector((state: RootState) => state.global.theme);
-    console.log("response in index =>", response);
+    // const displayedCourses = coursesData.slice(0, 4);
+    // const theme = useSelector((state: RootState) => state.global.theme);
+    const response = useLangTransformSelector((state: RootState) => state.api || {});
+    
     let schoolsResponse = response?.school;
     const courseResponse = response?.selectedLanguagecourse;
     const countryResponse = response?.country;
-
-
+   
     const fetchCourses = useCallback(() => {
         requestFn(API_URL.course, "selectedLanguagecourse", { similar: selectedLanguage.name });
     }, [selectedLanguage]);
@@ -69,7 +61,7 @@ export default function HomeScreen() {
         });
     }, []);
 
-    const favorite = useSelector((state: RootState) => state.api.favorite);
+    const favorite = useLangTransformSelector((state: RootState) => state.api.favorite);
     useEffect(() => {
         if (favorite && favorite.docs && favorite.docs.length > 0) {
             const favoriteItems = favorite.docs[0];
@@ -82,7 +74,7 @@ export default function HomeScreen() {
         }
     }, [favorite]);
 
-    const cart = useSelector((state: RootState) => state.api.cart);
+    const cart = useLangTransformSelector((state: RootState) => state.api.cart);
     useEffect(() => {
         if (cart && cart.docs && cart.docs.length > 0) {
             const cartItems = cart.docs[0].items;
@@ -91,19 +83,12 @@ export default function HomeScreen() {
         }
     }, [cart]);
 
-    const onPressPagination = (index: number) => {
-        ref.current?.scrollTo({
-            count: index - progress.value,
-            animated: true,
-        });
-    };
-    const changeLanguage = (lng: string) => {
-        console.log("lng", lng);
-        let language = lng === "AR" ? "ar" : "en";
-        let RTL = language === "ar";
-        i18n.changeLanguage(language);
-        dispatch(setIsRTL(RTL));
-    };
+    // const onPressPagination = (index: number) => {
+    //     ref.current?.scrollTo({
+    //         count: index - progress.value,
+    //         animated: true,
+    //     });
+    // };
 
     return (
         <ScrollView>
@@ -115,25 +100,25 @@ export default function HomeScreen() {
                     height={width / 2}
                     autoPlay={true}
                     autoPlayInterval={5000}
-                    onProgressChange={progress}
+                    // onProgressChange={progress}
                     scrollAnimationDuration={1000}
                     data={carouselData}
                     renderItem={({ item }) => (
                         <CarouselSlide
                             key={item.id}
                             imageSource={item.imageSource}
-                            text={item.text}
+                            text={t(item.key)}
                         />
                     )}
                 />
-                <Pagination.Basic
+                {/* <Pagination.Basic
                     progress={progress}
                     data={carouselData}
                     containerStyle={styles.dotsContainer}
                     dotStyle={styles.dot}
                     activeDotStyle={{ backgroundColor: APP_THEME[theme].primary.first }}
                     onPress={onPressPagination}
-                />
+                /> */}
             </AUIThemedView>
 
             <AUIThemedView>
@@ -164,7 +149,7 @@ export default function HomeScreen() {
 
             <AUIThemedView>
                 <SectionTitle viewAll="(home)/course/AllCoursesScreen">
-                    {t(GLOBAL_TRANSLATION_LABEL.popular_Courses)}
+                    {t(GLOBAL_TRANSLATION_LABEL.popular_courses)}
                 </SectionTitle>
                 <CourseList data={courseResponse?.docs.slice(0, 4)} />
             </AUIThemedView>

@@ -9,17 +9,18 @@ import AllSchoolsList from "../list/AllSchoolsList";
 import useAxios from "@/app/services/axiosClient";
 import { AUILinearGradient } from "@/components/common/AUILinearGradient";
 import { LinearGradient } from "expo-linear-gradient";
-import { APP_THEME, BACKGOUND_THEME } from "@/constants/Colors";
+import { APP_THEME, BACKGROUND_THEME } from "@/constants/Colors";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 
 interface SchoolListProps {
     data: any[];
 }
 const AllSchoolsScreen: React.FC<SchoolListProps> = ({ data }) => {
-    const schoolsResponse = useSelector((state: RootState) => state.api.school || {});
+    const schoolsResponse = useLangTransformSelector((state: RootState) => state.api.school || {});
     const theme = useSelector((state: RootState) => state.global.theme);
     return (
         <AUILinearGradient
-            colors={[`${APP_THEME[theme].primary.first}`, BACKGOUND_THEME[theme].backgound]}
+            colors={[`${APP_THEME[theme].primary.first}`, BACKGROUND_THEME[theme].background]}
             start={{ x: 1, y: 0 }} // Gradient start point
             end={{ x: 0, y: 1 }} // Gradient end point
             style={styles.container}

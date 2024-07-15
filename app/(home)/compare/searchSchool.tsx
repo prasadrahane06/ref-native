@@ -3,6 +3,7 @@ import AUIInputField from "@/components/common/AUIInputField";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { setResponse, setSelectedSchool2 } from "@/redux/apiSlice";
 import { RootState } from "@/redux/store";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
@@ -40,10 +41,10 @@ const SearchSchool: React.FC = () => {
     ]);
     const [favoriteDropdownVisible, setFavoriteDropdownVisible] = useState<boolean>(false);
     const [filteredSchools, setFilteredSchools] = useState<School[]>([]);
-    const schoolsResponse = useSelector((state: RootState) => state.api.school || {});
-    const compareSchool1 = useSelector((state: RootState) => state.api.compareSchool1);
-    const compareSchool2 = useSelector((state: RootState) => state.api.compareSchool2);
-    const getfavorite = useSelector((state: RootState) => state.api.favorite || {});
+    const schoolsResponse = useLangTransformSelector((state: RootState) => state.api.school || {});
+    const compareSchool1 = useLangTransformSelector((state: RootState) => state.api.compareSchool1);
+    const compareSchool2 = useLangTransformSelector((state: RootState) => state.api.compareSchool2);
+    const getfavorite = useLangTransformSelector((state: RootState) => state.api.favorite || {});
     const theme = useSelector((state: RootState) => state.global.theme);
     const fav = getfavorite?.docs?.[0] || { clients: [] };
 

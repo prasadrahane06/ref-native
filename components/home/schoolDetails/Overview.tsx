@@ -1,5 +1,7 @@
+import useAxios from "@/app/services/axiosClient";
 import AUIInfoCard from "@/components/AUIInfoCard";
 import AUIButton from "@/components/common/AUIButton";
+import AUIComingSoon from "@/components/common/AUIComingSoon";
 import DropdownComponent from "@/components/common/AUIDropdown";
 import AUIInputField from "@/components/common/AUIInputField";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
@@ -9,22 +11,24 @@ import SectionTitle from "@/components/home/common/SectionTitle";
 import { EventsList } from "@/components/home/schoolDetails/EventsList";
 import { FacilitiesList } from "@/components/home/schoolDetails/FacilitiesList";
 import { ReviewList } from "@/components/home/schoolDetails/ReviewList";
-import { APP_THEME, BACKGOUND_THEME, BUTTON_THEME, TEXT_THEME } from "@/constants/Colors";
+import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
 import { ENQUIRY_FIELDS, GLOBAL_TEXT, GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
+import { getUserData } from "@/constants/RNAsyncStore";
 import { inputFieldStyle } from "@/constants/Styles";
 import { accommodationData } from "@/constants/dummy data/accommodationData";
 import { countriesData } from "@/constants/dummy data/countriesData";
-import { eventsData } from "@/constants/dummy data/eventsData";
-import { facilitiesData } from "@/constants/dummy data/facilitiesData";
 import { nationalityData } from "@/constants/dummy data/nationalityData";
 import { reviewsData } from "@/constants/dummy data/reviewsData";
-import { addEnquiry } from "@/redux/enquiryformSlice";
+import { API_URL } from "@/constants/urlProperties";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
+import { setLoader } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
 import { Feather, FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import {
     Dimensions,
     FlatList,
@@ -41,14 +45,7 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
-import { API_URL } from "@/constants/urlProperties";
-import { getUserData } from "@/constants/RNAsyncStore";
-import { setLoader } from "@/redux/globalSlice";
 import ContactNow from "./ContactNow";
-import useAxios from "@/app/services/axiosClient";
-import { useTranslation } from "react-i18next";
-import AUIComingSoon from "@/components/common/AUIComingSoon";
-import { AUILinearGradient } from "@/components/common/AUILinearGradient";
 
 interface EnquireNowModalProps {
     isVisible: boolean;
@@ -92,9 +89,8 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
     const [endDate, setEndDate] = useState(oneWeek);
 
     const dispatch = useDispatch();
-    const enquiryData = useSelector((state: RootState) => state.enquiryForm);
+    const enquiryData = useLangTransformSelector((state: RootState) => state.enquiryForm);
     const theme = useSelector((state: RootState) => state.global.theme);
-    console.log("enquiryData", JSON.stringify(enquiryData));
 
     const { watch, reset, setValue, control, handleSubmit, formState, trigger } = useForm({
         resolver: yupResolver(schema),
@@ -139,7 +135,6 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
     const onSave = (data: any) => {
         dispatch(setLoader(true));
 
-        console.log("formdata", data);
         const phone = data.phoneCode + data.phoneNumber;
         const startDate = new Date(data.startDate).toISOString();
         const endDate = new Date(data.endDate).toISOString();
@@ -159,11 +154,8 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
             type: "client",
         };
 
-        console.log("enquiry-data", JSON.stringify(enquiry));
-
         post(API_URL.enquiry, enquiry)
             .then((res) => {
-                console.log("Enquiry Res =>", res);
                 const { data, message, statusCode } = res;
 
                 // dispatch(addEnquiry(enquiry));
@@ -204,7 +196,7 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
                     <AUIThemedView
                         style={[
                             enquireNowStyles.titleContainer,
-                            { backgroundColor: BACKGOUND_THEME[theme].backgound },
+                            { backgroundColor: BACKGROUND_THEME[theme].background },
                         ]}
                     >
                         <AUIThemedText style={enquireNowStyles.title}>
@@ -220,7 +212,7 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
                     </AUIThemedView>
 
                     <KeyboardAvoidingView
-                        style={{ flex: 1, backgroundColor: BACKGOUND_THEME[theme].backgound }}
+                        style={{ flex: 1, backgroundColor: BACKGROUND_THEME[theme].background }}
                         behavior="padding"
                         keyboardVerticalOffset={keyboardVerticalOffset}
                     >
@@ -604,7 +596,6 @@ export default function OverviewTab({ schoolOverView, courseId, clientId }: Over
 
     getUserData().then((data) => {
         if (data && Object.keys(data).length > 0) {
-            // console.log("user-data", data.data.user._id);
             userId = data.data.user._id;
         } else {
             console.log("no data found in user-data");

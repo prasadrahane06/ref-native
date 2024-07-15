@@ -2,21 +2,20 @@ import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useEffect } from "react";
 import { StyleSheet } from "react-native";
-import { useSelector } from "react-redux";
 
 export default function TabTwoScreen() {
     const { requestFn } = useApiRequest();
-    const schoolPurchaseCourse = useSelector((state: RootState) => state.api.schoolPurchaseCourse || {});
+    const schoolPurchaseCourse = useLangTransformSelector((state: RootState) => state.api.schoolPurchaseCourse || {});
 
     useEffect(() => {
         requestFn(API_URL.purchaseCourse, "schoolPurchaseCourse", { client: true });
     }, []);
 
-    console.log("schoolPurchaseCourse", JSON.stringify(schoolPurchaseCourse));
     return (
         <AUIThemedView style={styles.root}>
             <AUIThemedText style={styles.title}>Students Admitted through App</AUIThemedText>

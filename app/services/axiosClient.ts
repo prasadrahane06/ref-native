@@ -1,13 +1,13 @@
-import { useSelector } from "react-redux";
-import axios from "axios";
+import { ApiErrorToast } from "@/components/common/AUIToast";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
-import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
+import axios from "axios";
 
-const baseURL = "https://zmgr2gg0-4000.inc1.devtunnels.ms/dev/";
+const baseURL = "https://vqhqpfx4-4000.inc1.devtunnels.ms/dev/"
+//"https://zmgr2gg0-4000.inc1.devtunnels.ms/dev/";
 
 const useAxios = () => {
-    const token = useSelector((state: RootState) => state.global.token);
-    console.log("token in axiosClient", token);
+    const token = useLangTransformSelector((state: RootState) => state.global.token);
     const axiosClient = axios.create({
         baseURL,
         headers: {

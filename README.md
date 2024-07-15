@@ -80,7 +80,7 @@ Next, you’ll add a new file to this repository.
 
 // Example of usage
 
-    	<View style={[{backgroundColor: BACKGOUND_THEME[theme].backgound},
+    	<View style={[{backgroundColor: BACKGROUND_THEME[theme].background},
     					style,]} />
 
 </View>

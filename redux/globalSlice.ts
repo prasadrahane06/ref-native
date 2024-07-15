@@ -35,8 +35,8 @@ export interface GlobalState {
 
 const initialState: GlobalState = {
     profile: "",
-    // theme: "light",
-    theme: "dark",
+    theme: "light",
+    // theme: "dark",
     signInType: "",
     signupDetails: null,
     schoolDetails: null,

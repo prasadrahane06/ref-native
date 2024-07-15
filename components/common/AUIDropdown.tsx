@@ -1,4 +1,4 @@
-import { APP_THEME, BACKGOUND_THEME, TEXT_THEME, ThemeType } from "@/constants/Colors";
+import { APP_THEME, BACKGROUND_THEME, TEXT_THEME, ThemeType } from "@/constants/Colors";
 import { RootState } from "@/redux/store";
 import React, { useState } from "react";
 import { StyleSheet, TextStyle } from "react-native";
@@ -66,14 +66,14 @@ const DropdownComponent = ({
             <Dropdown
                 style={[
                     styles.dropdown,
-                    { backgroundColor: BACKGOUND_THEME[theme].backgound },
+                    { backgroundColor: BACKGROUND_THEME[theme].background },
                     isFocus && { borderColor: TEXT_THEME[theme].primary },
                 ]}
                 placeholderStyle={styles.placeholderStyle}
                 selectedTextStyle={[styles.selectedTextStyle, { color: TEXT_THEME[theme].primary }]}
                 inputSearchStyle={[
                     styles.inputSearchStyle,
-                    { backgroundColor: BACKGOUND_THEME[theme].backgound },
+                    { backgroundColor: BACKGROUND_THEME[theme].background },
                 ]}
                 // itemTextStyle={{ borderWidth: 1, width: "100%" }}
                 iconStyle={styles.iconStyle}
@@ -124,7 +124,7 @@ const DropdownComponent = ({
                         <RenderDefaultItem item={item} labelField={labelField} />
                     )
                 }
-                containerStyle={{ backgroundColor: BACKGOUND_THEME[theme].backgound }}
+                containerStyle={{ backgroundColor: BACKGROUND_THEME[theme].background }}
             />
         </AUIThemedView>
     );
@@ -154,7 +154,7 @@ const RenderItemWithIcon = ({
             gap: 3,
             // marginVertical: 5,
             paddingVertical: 5,
-            backgroundColor: BACKGOUND_THEME[theme].backgound,
+            backgroundColor: BACKGROUND_THEME[theme].background,
         }}
     >
         <AUIImage

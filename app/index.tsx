@@ -198,10 +198,11 @@ import { AUILinearGradient } from "@/components/common/AUILinearGradient";
 import { AUISafeAreaView } from "@/components/common/AUISafeAreaView";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { APP_THEME, BACKGOUND_THEME } from "@/constants/Colors";
+import { APP_THEME, BACKGROUND_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
 import { getUserData } from "@/constants/RNAsyncStore";
 import { initialPageStyles } from "@/constants/Styles";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { setProfile, setSignInType, setToken, setUser } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
 import { Asset } from "expo-asset";
@@ -213,7 +214,7 @@ import { useDispatch, useSelector } from "react-redux";
 const InitialPage = () => {
     const router = useRouter();
     const dispatch = useDispatch();
-    const profile = useSelector((state: RootState) => state.global.profile);
+    const profile = useLangTransformSelector((state: RootState) => state.global.profile);
     const theme = useSelector((state: RootState) => state.global.theme);
 
     const themeOptions = [
@@ -222,7 +223,6 @@ const InitialPage = () => {
     ];
     useEffect(() => {
         getUserData().then((data) => {
-            console.log("user-data", data);
             if (data && Object.keys(data).length > 0) {
                 if (data?.profile === "student") {
                     // saving token in redux
@@ -288,8 +288,8 @@ const InitialPage = () => {
                                           APP_THEME[theme].primary.first,
                                       ]
                                     : [
-                                          BACKGOUND_THEME[theme].backgound,
-                                          BACKGOUND_THEME[theme].backgound,
+                                          BACKGROUND_THEME[theme].background,
+                                          BACKGROUND_THEME[theme].background,
                                       ]
                             }
                         >
@@ -338,8 +338,8 @@ const InitialPage = () => {
                                           APP_THEME[theme].primary.first,
                                       ]
                                     : [
-                                          BACKGOUND_THEME[theme].backgound,
-                                          BACKGOUND_THEME[theme].backgound,
+                                          BACKGROUND_THEME[theme].background,
+                                          BACKGROUND_THEME[theme].background,
                                       ]
                             }
                         >

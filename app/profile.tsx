@@ -31,6 +31,7 @@ import AUIButton from "@/components/common/AUIButton";
 import useAxios from "./services/axiosClient";
 import { API_URL } from "@/constants/urlProperties";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 
 const genderData = [
     {
@@ -119,10 +120,8 @@ const schema = Yup.object().shape({
 });
 
 const Profile: React.FC = () => {
-    const userProfileData = useSelector((state: RootState) => state.api.userProfileData);
+    const userProfileData = useLangTransformSelector((state: RootState) => state.api.userProfileData);
     const theme = useSelector((state: RootState) => state.global.theme);
-    console.log("userProfileData in profile", userProfileData);
-
     const [dateOfBirth, setDateOfBirth] = useState(userProfileData?.dob);
     const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
 
@@ -163,7 +162,6 @@ const Profile: React.FC = () => {
     };
 
     const onSave = (data: any) => {
-        console.log("profile form data", data);
 
         const payload = {
             id: userProfileData?._id,
@@ -182,11 +180,9 @@ const Profile: React.FC = () => {
         patch(API_URL.user, payload)
             .then((res: any) => {
                 ApiSuccessToast(res.message);
-                console.log("res from profile post", res);
             })
             .catch((error: any) => {
                 ApiErrorToast(error.message);
-                console.log("error in profile post", error);
             });
     };
 

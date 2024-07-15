@@ -1,12 +1,12 @@
 import { AUIThemedText } from "@/components/common/AUIThemedText";
-import { APP_THEME, BACKGOUND_THEME, TEXT_THEME } from "@/constants/Colors";
-import { GLOBAL_TEXT, GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
+import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
+import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { removeUserData, storeUserData } from "@/constants/RNAsyncStore";
-import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 import { DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer";
 import { Asset } from "expo-asset";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React from "react";
 import { StyleSheet, Switch, TouchableOpacity, View } from "react-native";
 import AUIImage from "./AUIImage";
 import { AUIThemedView } from "./AUIThemedView";
@@ -14,6 +14,8 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { setTheme } from "@/redux/globalSlice";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
+import AUILangToggle from "./AUILangToggle";
 
 //interface
 export interface DrawerItem {
@@ -38,10 +40,10 @@ const AUIDrawerContent = (props: any) => {
     const dispatch = useDispatch();
     const { t, i18n } = useTranslation();
 
-    const globalState = useSelector((state: RootState) => state.global);
+    const globalState = useLangTransformSelector((state: RootState) => state.global);
     const theme = useSelector((state: RootState) => state.global.theme);
-    const isDarkMode = useSelector((state: RootState) => state.global.theme === "dark");
-    const { name } = useSelector((state: RootState) => state.global.user);
+    const isDarkMode = useLangTransformSelector((state: RootState) => state.global.theme === "dark");
+    const { name } = useLangTransformSelector((state: RootState) => state.global.user);
 
     const isRTL = globalState.isRTL;
     const userdetails = globalState.user;
@@ -50,8 +52,6 @@ const AUIDrawerContent = (props: any) => {
         const newDarkModeState = !isDarkMode;
         const newTheme = newDarkModeState ? "dark" : "light";
         dispatch(setTheme(newTheme));
-        console.log("isDarkMode", newDarkModeState);
-
         await storeUserData({ darkMode: newDarkModeState });
     };
 
@@ -98,7 +98,7 @@ const AUIDrawerContent = (props: any) => {
                 <View
                     style={{
                         flex: 1,
-                        backgroundColor: BACKGOUND_THEME[theme].backgound,
+                        backgroundColor: BACKGROUND_THEME[theme].background,
                         paddingTop: 10,
                     }}
                 >
@@ -130,6 +130,16 @@ const AUIDrawerContent = (props: any) => {
                     >
                         {t(GLOBAL_TRANSLATION_LABEL.darkMode)}
                     </AUIThemedText>
+                </AUIThemedView>
+            </View>
+            <View
+                style={{
+                    borderTopWidth: 1,
+                    borderTopColor: "#ccc",
+                }}
+            >
+                <AUIThemedView style={styles.switchTextContainer}>
+                    <AUILangToggle />
                 </AUIThemedView>
             </View>
             <View style={{ padding: 20, borderTopWidth: 1, borderTopColor: "#ccc" }}>

@@ -6,16 +6,19 @@ import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import PlanComponent from "@/components/home/courseDetails/PlanComponent";
 import { APP_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
-import { similarCoursesData } from "@/constants/dummy data/similarCoursesData";
+
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
+import useIsomorphicLayoutEffect from "@/customHooks/useIsomorphicLayoutEffect";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
+
 import { addItemToCart, removeItemFromCart } from "@/redux/cartSlice";
 import { addToFavorite, removeFromFavorite } from "@/redux/favoriteSlice";
 import { RootState } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import Animated, {
     interpolate,
@@ -34,8 +37,8 @@ function CoursePlanTabs({ courseId, clientId }: CoursePlanTabsProps) {
     const [plans, setPlans] = useState<any[]>([]);
     const [selectedPlan, setSelectedPlan] = useState("");
 
-    const individualCourse = useSelector((state: RootState) => state.api.individualCourse);
-    const similarCourse = useSelector((state: RootState) => state.api.similarCourse);
+    const individualCourse = useLangTransformSelector((state: RootState) => state.api.individualCourse);
+    const similarCourse = useLangTransformSelector((state: RootState) => state.api.similarCourse);
 
 
     useEffect(() => {
@@ -104,13 +107,13 @@ function CoursePlanTabs({ courseId, clientId }: CoursePlanTabsProps) {
 export default function CourseDetails() {
     const { requestFn } = useApiRequest();
     const dispatch = useDispatch();
+    const effect = useIsomorphicLayoutEffect();
 
     const [course, setCourse] = useState<any>({});
     const [clientId, setClientId] = useState<any>({});
 
     const { id } = useLocalSearchParams<{ id: string }>();
     const { post, del } = useAxios();
-    console.log(id);
 
     if (!id) {
         return (
@@ -124,13 +127,13 @@ export default function CourseDetails() {
         requestFn(API_URL.course, "individualCourse", { id: id });
     }, []);
 
-    const favorite = useSelector((state: RootState) => state.favorite.items);
-    const cartItems = useSelector((state: RootState) => state.cart.items);
-    const individualCourse = useSelector((state: RootState) => state.api.individualCourse);
+    const individualCourse = useLangTransformSelector((state: RootState) => state.api.individualCourse);
+    const favorite = useLangTransformSelector((state: RootState) => state.favorite.items);
+    const cartItems = useLangTransformSelector((state: RootState) => state.cart.items);
     const theme = useSelector((state: RootState) => state.global.theme);
 
     useEffect(() => {
-        if (individualCourse && individualCourse.docs && individualCourse.docs.length > 0) {
+        if (individualCourse && individualCourse.docs && individualCourse?.docs?.length > 0) {
             const course = individualCourse.docs[0];
             const clientId = course.client._id;
 
@@ -263,7 +266,7 @@ export default function CourseDetails() {
         };
     });
 
-    useLayoutEffect(() => {
+    effect(() => {
         navigation.setOptions({
             headerTransparent: true,
 

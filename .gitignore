@@ -6,6 +6,7 @@
 # Node artifact files
 node_modules/
 dist/
+.expo/
 .expo
 .expo/*
 .vscode
@@ -57,3 +58,5 @@ Thumbs.db
 
 expo-env.d.ts
 # @end expo-cli
+
+package-lock.json

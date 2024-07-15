@@ -1,35 +1,26 @@
 import AUIDrawerContent from "@/components/common/AUIDrawerContent";
 import { AUILinearGradient } from "@/components/common/AUILinearGradient";
-import { AUIThemedText } from "@/components/common/AUIThemedText";
-import { AUIThemedView } from "@/components/common/AUIThemedView";
-import PurchaseCoursesList from "@/components/home/courseDetails/PurchaseCourses";
+import MyCourses from "@/components/screenComponents/MyCourses";
 import Profile from "@/components/screenComponents/Profile";
-import { APP_THEME, BACKGOUND_THEME, TEXT_THEME, ThemeType } from "@/constants/Colors";
+import TermsAndPolicy from "@/components/screenComponents/TermsAndPolicy";
+import { APP_THEME, BACKGROUND_THEME, TEXT_THEME, ThemeType } from "@/constants/Colors";
 import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
-import { purchaseCoursesData } from "@/constants/dummy data/similarCoursesData";
 import { RootState } from "@/redux/store";
 import {
-    AntDesign,
-    EvilIcons,
     FontAwesome,
     FontAwesome5,
     FontAwesome6,
     Ionicons,
     MaterialCommunityIcons,
-    MaterialIcons,
+    MaterialIcons
 } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { Tabs } from "expo-router";
-import React, { useEffect } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
-import { Dimensions, Linking, Platform, Text, TouchableOpacity, View } from "react-native";
+import { Platform, TouchableOpacity, View } from "react-native";
 import "react-native-gesture-handler";
 import { useSelector } from "react-redux";
-import useApiRequest from "@/customHooks/useApiRequest";
-import { API_URL } from "@/constants/urlProperties";
-import MyCourses from "@/components/screenComponents/MyCourses";
-import TermsAndPolicy from "@/components/screenComponents/TermsAndPolicy";
 
 const ProfileScreen = () => <Profile />;
 const CoursesScreen = () => <MyCourses />;
@@ -67,7 +58,7 @@ const HeaderIcons = () => (
 const screenOptions = (navigation: any, isRTL: boolean, theme: ThemeType) => ({
     headerBackground: () => (
         <AUILinearGradient
-            colors={[BACKGOUND_THEME[theme].backgound, BACKGOUND_THEME[theme].backgound]} //["rgba(118, 250,178, 1)", "rgba(91, 216,148, 1)"]}
+            colors={[BACKGROUND_THEME[theme].background, BACKGROUND_THEME[theme].background]} //["rgba(118, 250,178, 1)", "rgba(91, 216,148, 1)"]}
             style={{ flex: 1 }}
         />
     ),
@@ -92,7 +83,7 @@ export default function AUIDrawer() {
     return (
         <Drawer.Navigator
             initialRouteName="Home"
-            screenOptions={({ navigation }) => screenOptions(navigation, isRTL, theme)}
+            screenOptions={({ navigation }) => screenOptions(navigation, isRTL, theme) as any}
             drawerContent={(props) => <AUIDrawerContent {...props} />}
         >
             <Drawer.Screen

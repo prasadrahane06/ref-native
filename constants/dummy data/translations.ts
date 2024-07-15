@@ -41,13 +41,21 @@ export const en = {
     confirmYourPayment: "Confirm your payment",
     facilities: "Facilities",
     latestEvents: "Latest Events",
+    learn_a_language_abroad: "LEARN A LANGUAGE ABROAD",
+    explore_new_languages: "EXPLORE NEW LANGUAGES",
+    embrace_multilingualism: "EMBRACE MULTILINGUALISM",
+    account: "Account",
+    your_cart_is_empty: "Your Cart Is Empty",
+    compare_schools: "Compare Schools",
+    add_school: "Add School",
+    compare_description: "Select and compare schools on various parameters to choose the best for you"
 };
 
 export const ar = {
     find_your_destination: "ابحث عن وجهتك",
     popular_school: "مدرسة شهيرة",
     choose_your_language_to_learn: "اختر لغتك للتعلم",
-    popular_courses: "الدورات الشهيرة(AR)",
+    popular_courses: "الدورات الشهيرة(EN)",
     starting_from: "يبدأ من",
     view_all: "عرض الكل",
     increase_your_chances: "زد فرصك",
@@ -86,4 +94,12 @@ export const ar = {
     confirmYourPayment: "أكد دفعتك",
     facilities: "المرافق",
     latestEvents: "أحدث الفعاليات",
+    learn_a_language_abroad: "تعلم لغة في الخارج",
+    explore_new_languages: "اكتشف لغات جديدة",
+    embrace_multilingualism: "احتضان التعددية اللغوية",
+    account: "حساب",
+    your_cart_is_empty: "عربة التسوق فارغة",
+    compare_schools: "قارن المدارس",
+    add_school: "أضف مدرسة",
+    compare_description: "حدد المدارس وقارن بينها وفقًا لمعايير مختلفة لاختيار الأفضل بالنسبة لك"
 };

@@ -5,9 +5,10 @@ import React from "react";
 import { ActivityIndicator } from "react-native";
 import { useSelector } from "react-redux";
 import { AUIThemedView } from "./AUIThemedView";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 
 export default function AUILoader() {
-    const loader = useSelector((state: RootState) => state.global.loader);
+    const loader = useLangTransformSelector((state: RootState) => state.global.loader);
 
     return (
         <AUIThemedView style={[loaderStyles.container, loader && { display: "flex" }]}>

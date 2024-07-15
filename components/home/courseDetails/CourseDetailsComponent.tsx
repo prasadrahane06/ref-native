@@ -2,17 +2,15 @@ import AUIAccordion from "@/components/common/AUIAccordion";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { APP_THEME } from "@/constants/Colors";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
-import { Asset } from "expo-asset";
 import React from "react";
 import { StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
 
 export default function CourseDetailsComponent({ plan }: any) {
-    console.log("plan", plan);
-    const individualCourse = useSelector((state: RootState) => state.api.individualCourse);
+    const individualCourse = useLangTransformSelector((state: RootState) => state.api.individualCourse);
     const theme = useSelector((state: RootState) => state.global.theme);
-    console.log("individualCourse =>", individualCourse?.docs);
 
     return (
         <AUIThemedView style={styles.container}>

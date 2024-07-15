@@ -1,23 +1,22 @@
 import { APP_THEME } from "@/constants/Colors";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
+import { RootState } from "@/redux/store";
 import {
-    AntDesign,
     Feather,
-    FontAwesome,
     FontAwesome6,
     Fontisto,
     Ionicons,
-    MaterialIcons,
+    MaterialIcons
 } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
 import { router, useNavigation } from "expo-router";
 import React from "react";
 import { Alert, Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
+import { useSelector } from "react-redux";
 import AUIImage from "../common/AUIImage";
 import { AUIThemedText } from "../common/AUIThemedText";
 import { AUIThemedView } from "../common/AUIThemedView";
 import { ApiSuccessToast } from "../common/AUIToast";
-import { RootState } from "@/redux/store";
-import { useSelector } from "react-redux";
 
 const array = [
     {
@@ -40,7 +39,7 @@ const array = [
     },
 ];
 function Profile() {
-    const userProfileData = useSelector((state: RootState) => state.api.userProfileData);
+    const userProfileData = useLangTransformSelector((state: RootState) => state.api.userProfileData);
     const theme = useSelector((state: RootState) => state.global.theme);
     const navigation = useNavigation();
 

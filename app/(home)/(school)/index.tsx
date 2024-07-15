@@ -9,6 +9,7 @@ import { getUserData } from "@/constants/RNAsyncStore";
 import { coursesData } from "@/constants/dummy data/coursesData";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
 import React, { useEffect } from "react";
 import { FlatList, ScrollView, StyleSheet } from "react-native";
@@ -16,9 +17,9 @@ import { useSelector } from "react-redux";
 
 export default function HomeScreen() {
     const { requestFn } = useApiRequest();
-    const school = useSelector((state: RootState) => state.api.individualSchool || {});
+    const school = useLangTransformSelector((state: RootState) => state.api.individualSchool || {});
     const theme = useSelector((state: RootState) => state.global.theme);
-    const MySchoolDetails = useSelector((state: RootState) => state.api.MySchoolDetails || {});
+    const MySchoolDetails = useLangTransformSelector((state: RootState) => state.api.MySchoolDetails || {});
 
     const courseInfoData = [
         {
@@ -48,8 +49,6 @@ export default function HomeScreen() {
     useEffect(()=>{
         requestFn(API_URL.schoolOverview , "MySchoolDetails" , {client : true })
     },[])
-
-    console.log("MySchoolDetails" , JSON.stringify(MySchoolDetails))
 
     return (
         <ScrollView>

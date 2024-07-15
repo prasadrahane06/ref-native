@@ -1,21 +1,20 @@
 import { View, Text, Dimensions } from "react-native";
 import React, { useEffect } from "react";
 import useApiRequest from "@/customHooks/useApiRequest";
-import { APP_THEME, BACKGOUND_THEME, TEXT_THEME } from "@/constants/Colors";
+import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
 import { API_URL } from "@/constants/urlProperties";
 import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
 import PurchaseCoursesList from "../home/courseDetails/PurchaseCourses";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 
 const Tab = createMaterialTopTabNavigator();
 
 export default function MyCourses() {
     const { requestFn } = useApiRequest();
-    const MyCourse = useSelector((state: RootState) => state.api.myCourse || {});
+    const MyCourse = useLangTransformSelector((state: RootState) => state.api.myCourse || {});
     const theme = useSelector((state: RootState) => state.global.theme);
-
-    console.log("myCourse", JSON.stringify(MyCourse));
     const docs = MyCourse?.docs;
     const bookMySeatData = docs ? docs.filter((item: any) => item.type === "bookYourSeat") : [];
     const buyData = docs ? docs.filter((item: any) => item.type === "buy") : [];
@@ -44,7 +43,7 @@ export default function MyCourses() {
                     height: 5,
                 },
                 tabBarStyle: {
-                    backgroundColor: BACKGOUND_THEME[theme].backgound,
+                    backgroundColor: BACKGROUND_THEME[theme].background,
                     borderBottomWidth: 1,
                     borderColor: APP_THEME[theme].primary.first,
                 },

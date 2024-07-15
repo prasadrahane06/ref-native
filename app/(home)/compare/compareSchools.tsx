@@ -1,29 +1,25 @@
+import useAxios from "@/app/services/axiosClient";
 import AUIAccordion from "@/components/common/AUIAccordion";
 import AUIImage from "@/components/common/AUIImage";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { APP_THEME } from "@/constants/Colors";
+import { API_URL } from "@/constants/urlProperties";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
-import { FontAwesome, FontAwesome6, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { Dimensions, Platform, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
-import { useSelector } from "react-redux";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import useAxios from "@/app/services/axiosClient";
-import { API_URL } from "@/constants/urlProperties";
+import { Platform, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 const CompareSchools: React.FC = () => {
     const [date1, setDate1] = useState<Date>(new Date());
     const [show1, setShow1] = useState<boolean>(false);
     const [date2, setDate2] = useState<Date>(new Date());
     const [show2, setShow2] = useState<boolean>(false);
-    const compareSchool1 = useSelector((state: RootState) => state.api.compareSchool1);
-    const compareSchool2 = useSelector((state: RootState) => state.api.compareSchool2);
+    const compareSchool1 = useLangTransformSelector((state: RootState) => state.api.compareSchool1);
+    const compareSchool2 = useLangTransformSelector((state: RootState) => state.api.compareSchool2);
     const [school1, setSchool1] = useState<any>();
     const [school2, setSchool2] = useState<any>();
-    console.log("compareSchool1", JSON.stringify(school1));
-    console.log("compareSchool2", JSON.stringify(school2));
     const { post } = useAxios();
     useEffect(() => {
         // Check if both compareSchool1 and compareSchool2 have IDs before making the API call
@@ -34,7 +30,6 @@ const CompareSchools: React.FC = () => {
             })
                 .then((response) => {
                     // Handle response
-                    console.log("Comparison API response:", response);
                     setSchool1(response.docs[0]);
                     setSchool2(response.docs[1]);
                     // Update state or perform other actions based on response

@@ -8,13 +8,14 @@ import { Asset } from "expo-asset";
 import { RootState } from "@/redux/store";
 import useApiRequest from "@/customHooks/useApiRequest";
 import { API_URL } from "@/constants/urlProperties";
-import { APP_THEME, BACKGOUND_THEME } from "@/constants/Colors";
+import { APP_THEME, BACKGROUND_THEME } from "@/constants/Colors";
 import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import AUIImage from "@/components/common/AUIImage";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import useAxios from "@/app/services/axiosClient";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 
 type RouteParams = {
     courseDetailsPurchase: {
@@ -30,7 +31,7 @@ export default function PurchaseScreen() {
 
     const newid = JSON.parse(id);
 
-    const individualPlan = useSelector((state: RootState) => state.api.individualPlan);
+    const individualPlan = useLangTransformSelector((state: RootState) => state.api.individualPlan);
     const theme = useSelector((state: RootState) => state.global.theme);
 
     const [paymentMode, setPaymentMode] = useState("");
@@ -72,7 +73,6 @@ export default function PurchaseScreen() {
         })
             .then((res: any) => {
                 ApiSuccessToast(res.message);
-                console.log("response ", res.data);
             })
             .catch((e: any) => {
                 ApiErrorToast(e.response?.data?.message);
@@ -84,7 +84,7 @@ export default function PurchaseScreen() {
         <ScrollView
             contentContainerStyle={[
                 styles.container,
-                { backgroundColor: BACKGOUND_THEME[theme].backgound },
+                { backgroundColor: BACKGROUND_THEME[theme].background },
             ]}
         >
             <AUIThemedText style={styles.header}>

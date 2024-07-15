@@ -2,13 +2,13 @@ import { AUIThemedView } from "@/components/common/AUIThemedView";
 import CourseList from "@/components/home/common/CourseList";
 import SectionTitle from "@/components/home/common/SectionTitle";
 import { GLOBAL_TEXT } from "@/constants/Properties";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
 import { StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { useSelector } from "react-redux";
 
 export default function TabThreeScreen() {
-    const school = useSelector((state: RootState) => state.api.MySchoolDetails || {});
+    const school = useLangTransformSelector((state: RootState) => state.api.MySchoolDetails || {});
 
     return (
         <AUIThemedView style={styles.root}>

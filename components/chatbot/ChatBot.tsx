@@ -70,12 +70,6 @@ const ChatBot: React.FC<ChatBotProps> = ({ consumerId, user, config }) => {
 
     const { _id: userId, name: userName, client } = user;
 
-    console.log("userId :::::", userId, userName);
-    // console.log("consumerId :::::", consumerId);
-    // console.log("outgoingMessage :::::", outgoingMessage);
-    // console.log("incomingMessages :::::", incomingMessages);
-    // console.log("isScrollingUp :::::", isScrollingUp);
-
     const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
         const currentOffset = event.nativeEvent.contentOffset.y;
         const direction = currentOffset > lastScrollOffset.current ? "down" : "up";

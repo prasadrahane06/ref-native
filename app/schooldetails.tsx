@@ -1,30 +1,24 @@
-import { View, Text, StyleSheet, ScrollView, Platform, TextInput } from "react-native";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as Yup from "yup";
-import { Controller, useForm } from "react-hook-form";
-import { useRouter } from "expo-router";
-import DATA from "@/app/services/data.json";
 import AUIButton from "@/components/common/AUIButton";
 import DropdownComponent from "@/components/common/AUIDropdown";
+import AUIInputField from "@/components/common/AUIInputField";
 import { AUISafeAreaView } from "@/components/common/AUISafeAreaView";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { inputFieldStyle, signupPageStyles } from "@/constants/Styles";
-import AUIInputField from "@/components/common/AUIInputField";
-import { RootState } from "@/redux/store";
-import useApiRequest from "@/customHooks/useApiRequest";
-import { API_URL } from "@/constants/urlProperties";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
-import useAxios from "./services/axiosClient";
-import { getUserData } from "@/constants/RNAsyncStore";
-import axios from "axios";
-import { setToken } from "@/redux/globalSlice";
-import ImageViewer from "@/components/ImageViewer";
+import { signupPageStyles } from "@/constants/Styles";
+import { API_URL } from "@/constants/urlProperties";
+import useApiRequest from "@/customHooks/useApiRequest";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
+import { RootState } from "@/redux/store";
+import { yupResolver } from "@hookform/resolvers/yup";
 import * as ImagePicker from "expo-image-picker";
-import { Asset } from "expo-asset";
-import { t } from "i18next";
+import { useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { Platform, ScrollView, StyleSheet } from "react-native";
+import { useDispatch } from "react-redux";
+import * as Yup from "yup";
+import useAxios from "./services/axiosClient";
 
 const schema = Yup.object().shape({
     remark: Yup.string().required("Remark is required"),
@@ -42,7 +36,7 @@ export default function SchoolDetails() {
 
     const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
     const router = useRouter();
-    const profile = useSelector((state: RootState) => state.global.profile);
+    const profile = useLangTransformSelector((state: RootState) => state.global.profile);
     const [locationData, setLocationData] = useState([]);
     const [selectedLogo, setSelectedLogo] = useState("");
     const [selectedBanner, setSelectedBanner] = useState("");
@@ -59,9 +53,8 @@ export default function SchoolDetails() {
             // banner: "",
         },
     });
-    console.log("form data", getValues());
 
-    const countryDataForSchool = useSelector((state: RootState) => state.api.countryDataForSchool);
+    const countryDataForSchool = useLangTransformSelector((state: RootState) => state.api.countryDataForSchool);
 
     useEffect(() => {
         requestFn(API_URL.country, "countryDataForSchool");
@@ -79,11 +72,9 @@ export default function SchoolDetails() {
     }, [countryDataForSchool]);
 
     const onSave = async (data: any) => {
-        // console.log("schooldetails form data", data);
 
         patch(API_URL.popularSchool, data)
             .then((response: any) => {
-                console.log("schooldetails response =>", response);
                 ApiSuccessToast("School Details has been saved successfully");
                 router.push({
                     pathname: `(home)/(school)`,
@@ -106,11 +97,9 @@ export default function SchoolDetails() {
             if (imageType === "logo") {
                 setSelectedLogo(result.assets[0].uri);
                 setValue(value, result.assets[0].base64);
-                console.log("logo image selected data =>", result);
             } else {
                 setSelectedBanner(result.assets[0].uri);
                 setValue(value, result.assets[0].base64);
-                console.log("banner image selected data =>", result);
             }
         } else {
             alert("You did not select any image.");

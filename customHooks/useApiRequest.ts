@@ -15,7 +15,6 @@ const useApiRequest = () => {
             .then((res) => {
                 dispatch(setLoader(false));
                 dispatch(setResponse({ storeName, data: res.data }));
-                console.log("response from API hook => ", res);
             })
             .catch((error: any) => {
                 dispatch(setLoader(false));

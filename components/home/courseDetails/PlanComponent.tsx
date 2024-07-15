@@ -1,4 +1,6 @@
+import useAxios from "@/app/services/axiosClient";
 import AUIButton from "@/components/common/AUIButton";
+import AUIComingSoon from "@/components/common/AUIComingSoon";
 import DropdownComponent from "@/components/common/AUIDropdown";
 import AUIInputField from "@/components/common/AUIInputField";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
@@ -6,9 +8,8 @@ import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import SectionTitle from "@/components/home/common/SectionTitle";
 import CourseDetailsComponent from "@/components/home/courseDetails/CourseDetailsComponent";
-import ScheduleAndLesson from "@/components/home/courseDetails/ScheduleAndLesson";
 import SimilarCoursesList from "@/components/home/courseDetails/SimilarCourses";
-import { APP_THEME, BACKGOUND_THEME, TEXT_THEME } from "@/constants/Colors";
+import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
 import { ENQUIRY_FIELDS, GLOBAL_TEXT, GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { getUserData } from "@/constants/RNAsyncStore";
 import { inputFieldStyle } from "@/constants/Styles";
@@ -16,14 +17,17 @@ import { accommodationData } from "@/constants/dummy data/accommodationData";
 import { countriesData } from "@/constants/dummy data/countriesData";
 import { nationalityData } from "@/constants/dummy data/nationalityData";
 import { API_URL } from "@/constants/urlProperties";
+import useApiRequest from "@/customHooks/useApiRequest";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { setLoader } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
 import { AntDesign, Feather, FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { router } from "expo-router";
-import React, { useEffect, useId, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import {
     KeyboardAvoidingView,
     Linking,
@@ -36,12 +40,8 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
-import { FacilitiesList } from "../schoolDetails/FacilitiesList";
-import useAxios from "@/app/services/axiosClient";
 import ContactNow from "../schoolDetails/ContactNow";
-import { useTranslation } from "react-i18next";
-import AUIComingSoon from "@/components/common/AUIComingSoon";
-import useApiRequest from "@/customHooks/useApiRequest";
+import { FacilitiesList } from "../schoolDetails/FacilitiesList";
 
 interface PlanComponentProps {
     courseId: string;
@@ -98,9 +98,8 @@ function EnquireNowModal({
     const { post } = useAxios();
 
     const dispatch = useDispatch();
-    const enquiryData = useSelector((state: RootState) => state.enquiryForm);
+    const enquiryData = useLangTransformSelector((state: RootState) => state.enquiryForm);
     const theme = useSelector((state: RootState) => state.global.theme);
-    console.log("enquiryData", JSON.stringify(enquiryData));
 
     const { watch, reset, setValue, control, handleSubmit, formState } = useForm({
         resolver: yupResolver(schema),
@@ -144,8 +143,6 @@ function EnquireNowModal({
 
     const onSave = (data: any) => {
         dispatch(setLoader(true));
-
-        console.log("formdata", data);
         const phone = data.phoneCode + data.phoneNumber;
         const startDate = new Date(data.startDate).toISOString();
         const endDate = new Date(data.endDate).toISOString();
@@ -166,11 +163,8 @@ function EnquireNowModal({
             type: "course",
         };
 
-        console.log("enquiry-data", JSON.stringify(enquiry));
-
         post(API_URL.enquiry, enquiry)
             .then((res) => {
-                console.log("Enquiry Res =>", res);
                 const { data, message, statusCode } = res;
 
                 // dispatch(addEnquiry(enquiry));
@@ -184,7 +178,6 @@ function EnquireNowModal({
             })
             .catch((e) => {
                 dispatch(setLoader(false));
-                console.log("Enquiry Error =>", e.response.data);
                 ApiErrorToast(e.response?.data?.message);
                 onClose();
                 reset();
@@ -212,7 +205,7 @@ function EnquireNowModal({
                 </AUIThemedView>
 
                 <KeyboardAvoidingView
-                    style={{ flex: 1, backgroundColor: BACKGOUND_THEME[theme].backgound }}
+                    style={{ flex: 1, backgroundColor: BACKGROUND_THEME[theme].background }}
                     behavior="padding"
                     keyboardVerticalOffset={keyboardVerticalOffset}
                 >
@@ -592,7 +585,6 @@ export default function PlanComponent({
     useEffect(() => {
         getUserData().then((data) => {
             if (data && Object.keys(data).length > 0) {
-                console.log("user-data", data.data.user._id);
                 setUserId(data.data.user._id);
             } else {
                 console.log("no data found in user-data");
@@ -601,9 +593,7 @@ export default function PlanComponent({
     }, []);
 
     const { requestFn } = useApiRequest();
-    const isPurchased = useSelector((state: RootState) => state.api.isPurchased );
-
-    console.log("isPurchased", isPurchased);
+    const isPurchased = useLangTransformSelector((state: RootState) => state.api.isPurchased );
 
     useEffect(() => {
         requestFn(API_URL.purchaseCourse, "isPurchased", { user: true, course: courseId });
@@ -665,7 +655,7 @@ export default function PlanComponent({
                     style={[
                         styles.bookContainer,
                         {
-                            backgroundColor: BACKGOUND_THEME[theme].backgound,
+                            backgroundColor: BACKGROUND_THEME[theme].background,
                             borderColor: TEXT_THEME[theme].primary,
                             opacity:
                                 (isPurchased &&

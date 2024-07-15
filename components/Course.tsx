@@ -1,22 +1,21 @@
-import { APP_THEME, TEXT_THEME, ThemeType } from "@/constants/Colors";
+import useAxios from "@/app/services/axiosClient";
+import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
+import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
+import { API_URL } from "@/constants/urlProperties";
+import { removeItemFromCart } from "@/redux/cartSlice";
+import { removeFromFavorite } from "@/redux/favoriteSlice";
+import { setLoader } from "@/redux/globalSlice";
+import { RootState } from "@/redux/store";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import AUIImage from "./common/AUIImage";
 import { AUIThemedText } from "./common/AUIThemedText";
 import { AUIThemedView } from "./common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "./common/AUIToast";
-import useAxios from "@/app/services/axiosClient";
-import { API_URL } from "@/constants/urlProperties";
-import { setResponse } from "@/redux/apiSlice";
-import { addItemToCart, removeItemFromCart } from "@/redux/cartSlice";
-import { setLoader } from "@/redux/globalSlice";
-import { useTranslation } from "react-i18next";
-import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
-import { RootState } from "@/redux/store";
-import { removeFromFavorite } from "@/redux/favoriteSlice";
 
 interface CourseProps {
     title: string;
@@ -44,7 +43,6 @@ const Course: React.FC<CourseProps> = ({
     const router = useRouter();
     const dispatch = useDispatch();
     const { t } = useTranslation();
-    console.log("courseId", courseId);
     const theme = useSelector((state: RootState) => state.global.theme);
 
     const { del } = useAxios();

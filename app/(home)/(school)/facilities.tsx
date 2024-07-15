@@ -2,12 +2,12 @@ import AUIButton from "@/components/common/AUIButton";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { FacilitiesList } from "@/components/home/schoolDetails/FacilitiesList";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
 import { StyleSheet } from "react-native";
-import { useSelector } from "react-redux";
 
 export default function TabFourScreen() {
-    const school = useSelector((state: RootState) => state.api.MySchoolDetails || {});
+    const school = useLangTransformSelector((state: RootState) => state.api.MySchoolDetails || {});
     
     const facilities = school[0]?.facilities || [];
     

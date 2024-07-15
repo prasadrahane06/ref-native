@@ -5,12 +5,14 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { Asset } from "expo-asset";
 import { router } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, TouchableOpacity } from "react-native";
 
 export default function TabThreeScreen(props: any) {
+    const { t } = useTranslation();
     return (
         <AUIThemedView style={styles.container}>
-            <AUIThemedText style={styles.title}>Compare School</AUIThemedText>
+            <AUIThemedText style={styles.title}>{t("compare_schools")}</AUIThemedText>
             <AUIImage
                 style={styles.image}
                 path={
@@ -19,7 +21,7 @@ export default function TabThreeScreen(props: any) {
                 resizeMode="contain"
             />
             <AUIThemedText style={styles.description}>
-                Select and compare schools on various parameters to choose the best for you
+                {t("compare_description")}
             </AUIThemedText>
             <AUIThemedView style={styles.cardContainer}>
                 <TouchableOpacity
@@ -31,7 +33,7 @@ export default function TabThreeScreen(props: any) {
                     }
                 >
                     <Ionicons name="add-circle-outline" size={50} color="#5BD894" />
-                    <AUIThemedText style={styles.cardText}>Add School</AUIThemedText>
+                    <AUIThemedText style={styles.cardText}>{t("add_school")}</AUIThemedText>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.card}
@@ -42,7 +44,7 @@ export default function TabThreeScreen(props: any) {
                     }
                 >
                     <Ionicons name="add-circle-outline" size={50} color="#5BD894" />
-                    <AUIThemedText style={styles.cardText}>Add School</AUIThemedText>
+                    <AUIThemedText style={styles.cardText}>{t("add_school")}</AUIThemedText>
                 </TouchableOpacity>
             </AUIThemedView>
         </AUIThemedView>

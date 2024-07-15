@@ -1,6 +1,5 @@
 import { APP_THEME } from "@/constants/Colors";
-import { useNavigation } from "expo-router";
-import React, { useLayoutEffect } from "react";
+import React from "react";
 import { Dimensions, Linking, Text, TouchableOpacity } from "react-native";
 import { AUIThemedView } from "../common/AUIThemedView";
 import { RootState } from "@/redux/store";

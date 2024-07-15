@@ -6,18 +6,19 @@ import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import CoursesTab from "@/components/home/schoolDetails/Courses";
 import OverviewTab from "@/components/home/schoolDetails/Overview";
 import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
-import { GLOBAL_TEXT, GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
+import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
+import useIsomorphicLayoutEffect from "@/customHooks/useIsomorphicLayoutEffect";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { addToFavorite, removeFromFavorite } from "@/redux/favoriteSlice";
-import { setLoader } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
-import { FontAwesome, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
-import { router, useLocalSearchParams, useNavigation } from "expo-router";
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import { useLocalSearchParams, useNavigation } from "expo-router";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Pressable, StyleSheet, TouchableOpacity, Linking } from "react-native";
+import { Linking, Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import Animated, {
     interpolate,
     useAnimatedRef,
@@ -32,7 +33,7 @@ interface TabProps {
 }
 
 function StudentDetailsTabs({ courseId, clientId }: TabProps) {
-    const schoolsResponse = useSelector((state: RootState) => state.api.individualSchool || {});
+    const schoolsResponse = useLangTransformSelector((state: RootState) => state.api.individualSchool || {});
     const theme = useSelector((state: RootState) => state.global.theme);
     const [selectedTab, setSelectedTab] = useState("overview");
     const { t, i18n } = useTranslation();
@@ -113,6 +114,7 @@ function StudentDetailsTabs({ courseId, clientId }: TabProps) {
 }
 
 export default function SchoolDetails() {
+    const effect = useIsomorphicLayoutEffect();
     const { id } = useLocalSearchParams<{ id: string }>();
 
     const { post, del } = useAxios();
@@ -121,14 +123,13 @@ export default function SchoolDetails() {
 
     const { t, i18n } = useTranslation();
 
+    
+    const user = useLangTransformSelector((state: RootState) => state.global.user);
+    const favorite = useLangTransformSelector((state: RootState) => state.favorite.items);
+    const school = useLangTransformSelector((state: RootState) => state.api.individualSchool || {});
     const isRTL = useSelector((state: RootState) => state.global.isRTL);
-    const user = useSelector((state: RootState) => state.global.user);
-
-    const favorite = useSelector((state: RootState) => state.favorite.items);
-    const school = useSelector((state: RootState) => state.api.individualSchool || {});
     const theme = useSelector((state: RootState) => state.global.theme);
 
-    console.log(id);
     if (!id) {
         return (
             <AUIThemedView>
@@ -220,7 +221,7 @@ export default function SchoolDetails() {
         Linking.openURL(`mailto:${emailAddress}`);
     };
 
-    useLayoutEffect(() => {
+    effect(() => {
         navigation.setOptions({
             headerTransparent: true,
 
@@ -291,6 +292,7 @@ export default function SchoolDetails() {
     // const consumerId: string = "667276fdb4001407af7aa8a2";
     const consumerId = id;
 
+    // Keep it for future chatbot use
     // Bilal : 66683f4f7a4338e3c14339ab
     // Agent : 667278245b62c3824a62e12f
     // const userId = "667278245b62c3824a62e12f";

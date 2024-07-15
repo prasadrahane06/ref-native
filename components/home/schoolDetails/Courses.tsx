@@ -10,7 +10,6 @@ export default function CoursesTab({ schoolCourses }: { schoolCourses: any }) {
     const [clicked, setClicked] = useState(false);
 
     const courses = schoolCourses?.courses;
-    console.log("schoolCourses", JSON.stringify(courses));
 
     return (
         <AUIThemedView>

@@ -1,6 +1,8 @@
+import useAxios from "@/app/services/axiosClient";
 import AUIImage from "@/components/common/AUIImage";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
+import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import PhotoGallaryList from "@/components/home/common/PhotoGallaryList";
 import SchoolList from "@/components/home/common/SchoolList";
 import SectionTitle from "@/components/home/common/SectionTitle";
@@ -8,10 +10,13 @@ import { APP_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
+import useIsomorphicLayoutEffect from "@/customHooks/useIsomorphicLayoutEffect";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
+import { addToFavorite, removeFromFavorite } from "@/redux/favoriteSlice";
 import { RootState } from "@/redux/store";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Animated, {
@@ -21,13 +26,10 @@ import Animated, {
     useScrollViewOffset,
 } from "react-native-reanimated";
 import { useDispatch, useSelector } from "react-redux";
-import useAxios from "@/app/services/axiosClient";
-import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
-import { addToFavorite, removeFromFavorite } from "@/redux/favoriteSlice";
 
 export default function CityDetails() {
+    const effect = useIsomorphicLayoutEffect();
     const { id } = useLocalSearchParams<{ id: string }>();
-    console.log("country id =>", id);
 
     if (!id) {
         return (
@@ -46,9 +48,9 @@ export default function CityDetails() {
     const dispatch = useDispatch();
     const { post, del } = useAxios();
 
-    const favorite = useSelector((state: RootState) => state.favorite.items);
-    const schoolsResponse = useSelector((state: RootState) => state.api.countrySchool);
-    const individualCountry = useSelector((state: RootState) => state.api.individualCountry);
+    const favorite = useLangTransformSelector((state: RootState) => state.favorite.items);
+    const schoolsResponse = useLangTransformSelector((state: RootState) => state.api.countrySchool);
+    const individualCountry = useLangTransformSelector((state: RootState) => state.api.individualCountry);
     const theme = useSelector((state: RootState) => state.global.theme);
 
     const scrollRef = useAnimatedRef<Animated.ScrollView>();
@@ -139,10 +141,10 @@ export default function CityDetails() {
         population && population >= 1000000
             ? (population / 1000000).toFixed(1) + "M"
             : population && population > 0
-            ? population.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-            : null;
+                ? population.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                : null;
 
-    useLayoutEffect(() => {
+    effect(() => {
         navigation.setOptions({
             headerTransparent: true,
 

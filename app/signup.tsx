@@ -336,14 +336,15 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import useAxios from "./services/axiosClient";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 const SignupPage = () => {
     const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
     const router = useRouter();
     const dispatch = useDispatch();
-    const profile = useSelector((state: RootState) => state.global.profile);
+    const profile = useLangTransformSelector((state: RootState) => state.global.profile);
     const { post } = useAxios();
-    const [errors, setErrors] = useState({});
-    const [signupValues, setSignupValues] = useState({
+    const [errors, setErrors] = useState<any>({});
+    const [signupValues, setSignupValues] = useState<any>({
         name: "",
         email: "",
         phone: "",
@@ -358,7 +359,6 @@ const SignupPage = () => {
         setIsButtonEnabled(isValid);
     }, [signupValues, errors]);
     const handleOnSave = () => {
-        console.log(signupValues);
         const { name, email, phone, phoneCode } = signupValues;
         // @ts-ignore
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(signupValues.email)) {
@@ -388,12 +388,10 @@ const SignupPage = () => {
         };
         dispatch(setSignupDetails(payload));
         dispatch(setLoader(true));
-        console.log(payload);
         post(API_URL.register, payload)
             .then((res) => {
                 dispatch(setLoader(false));
                 const { data, message } = res;
-                console.log("res", res);
                 ApiSuccessToast(message);
                 if (
                     Object.keys(data).includes("emailSent") &&
@@ -404,7 +402,6 @@ const SignupPage = () => {
             })
             .catch((e) => {
                 dispatch(setLoader(false));
-                console.log(e.response.data);
                 ApiErrorToast(e.response?.data?.message);
             });
     };

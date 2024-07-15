@@ -17,12 +17,19 @@ export interface ButtonVariant {
     background: string;
     color: string;
 }
+export interface ButtonVariantToggle {
+    selected_background: string;
+    selected_color: string;
+    borderColor: string;
+    textColor: string;
+}
 export interface ButtonTheme {
     primary: ButtonVariant;
     secondary: ButtonVariant;
     success: ButtonVariant;
     danger: ButtonVariant;
     disabled: ButtonVariant;
+    toggle: ButtonVariantToggle
 }
 export interface TextTheme {
     light: {
@@ -43,8 +50,8 @@ export interface TextTheme {
     };
 }
 export interface ColorThemes {
-    light: { backgound: string };
-    dark: { backgound: string };
+    light: { background: string };
+    dark: { background: string };
 }
 export interface StudentGradient {
     primary: string;
@@ -99,9 +106,9 @@ const APP_THEME: { [key in ThemeType]: AppTheme } = {
         },
     },
 };
-const BACKGOUND_THEME: ColorThemes = {
-    light: { backgound: "#fff" },
-    dark: { backgound: "#000" },
+const BACKGROUND_THEME: ColorThemes = {
+    light: { background: "#fff" },
+    dark: { background: "#000" },
 };
 
 const TEXT_THEME: TextTheme = {
@@ -145,6 +152,12 @@ const BUTTON_THEME: { [key in ThemeType]: ButtonTheme } = {
             background: "#dcdcdd",
             color: "#fff",
         },
+        toggle:{
+            selected_background: "#5BD894",
+            selected_color: "#fff",
+            borderColor:"black",
+            textColor:"black"
+        }
     },
     dark: {
         primary: {
@@ -167,6 +180,12 @@ const BUTTON_THEME: { [key in ThemeType]: ButtonTheme } = {
             background: "#777777",
             color: "#fff",
         },
+        toggle: {
+            selected_background: "#5BD894",
+            selected_color: "black",
+            borderColor: "#ffff",
+            textColor: "#ffff"
+        }
     },
 };
 
@@ -187,4 +206,4 @@ const TAB_COLORS: { [key in ThemeType]: TabColors } = {
     },
 };
 
-export { APP_THEME, BUTTON_THEME, BACKGOUND_THEME, STUDENT_GRADIENT, TAB_COLORS, TEXT_THEME };
+export { APP_THEME, BUTTON_THEME, BACKGROUND_THEME, STUDENT_GRADIENT, TAB_COLORS, TEXT_THEME };
