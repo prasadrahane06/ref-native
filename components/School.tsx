@@ -8,6 +8,12 @@ import AUIBackgroundImage from "./common/AUIBackgroundImage";
 import { AUIThemedText } from "./common/AUIThemedText";
 import { AUIThemedView } from "./common/AUIThemedView";
 import { APP_THEME } from "@/constants/Colors";
+import { useDispatch } from "react-redux";
+import useAxios from "@/app/services/axiosClient";
+import { API_URL } from "@/constants/urlProperties";
+import { removeFromFavorite } from "@/redux/favoriteSlice";
+import { setLoader } from "@/redux/globalSlice";
+import { ApiSuccessToast, ApiErrorToast } from "./common/AUIToast";
 
 interface SchoolProps {
     id: string;
@@ -20,6 +26,21 @@ interface SchoolProps {
 
 const School: React.FC<SchoolProps> = ({ id, title, image, caption, favorite, style }) => {
     const router = useRouter();
+    const dispatch = useDispatch();
+    const { del } = useAxios();
+
+    const handleRemoveFav = (id: string, type: string) => {
+        del(API_URL.favorite, { id: id, type: type })
+            .then((res: any) => {
+                ApiSuccessToast(res.message);
+                dispatch(removeFromFavorite({ id, type: "clients" }));
+                dispatch(setLoader(false));
+            })
+            .catch((e: any) => {
+                ApiErrorToast(e.response?.data?.message);
+                console.log(e);
+            });
+    };
 
     return (
         <TouchableOpacity
@@ -48,14 +69,17 @@ const School: React.FC<SchoolProps> = ({ id, title, image, caption, favorite, st
                             <AUIThemedText style={styles.schoolCaption}>{caption}</AUIThemedText>
                         )}
                         {favorite && (
-                            <AUIThemedView style={styles.iconContainer}>
+                            <TouchableOpacity
+                                onPress={() => handleRemoveFav(id, "client")}
+                                style={styles.iconContainer}
+                            >
                                 <MaterialIcons
                                     name="favorite"
                                     size={18}
                                     color="red"
                                     style={styles.icon}
                                 />
-                            </AUIThemedView>
+                            </TouchableOpacity>
                         )}
                     </AUIBackgroundImage>
                 </AUIThemedView>

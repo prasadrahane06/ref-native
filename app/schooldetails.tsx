@@ -44,16 +44,8 @@ export default function SchoolDetails() {
     const router = useRouter();
     const profile = useSelector((state: RootState) => state.global.profile);
     const [locationData, setLocationData] = useState([]);
-    const [token, settoken] = useState<any>("");
     const [selectedLogo, setSelectedLogo] = useState("");
     const [selectedBanner, setSelectedBanner] = useState("");
-
-    useEffect(() => {
-        getUserData().then((data) => {
-            console.log("user-data", data);
-            settoken(data?.data?.accessToken);
-        });
-    }, []);
 
     const { watch, reset, setValue, control, handleSubmit, formState, getValues } = useForm({
         resolver: yupResolver(schema),

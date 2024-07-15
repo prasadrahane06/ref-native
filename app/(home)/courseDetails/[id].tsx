@@ -9,7 +9,8 @@ import { GLOBAL_TEXT } from "@/constants/Properties";
 import { similarCoursesData } from "@/constants/dummy data/similarCoursesData";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
-import { addItemToCart } from "@/redux/cartSlice";
+import { addItemToCart, removeItemFromCart } from "@/redux/cartSlice";
+import { addToFavorite, removeFromFavorite } from "@/redux/favoriteSlice";
 import { RootState } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
@@ -36,7 +37,6 @@ function CoursePlanTabs({ courseId, clientId }: CoursePlanTabsProps) {
     const individualCourse = useSelector((state: RootState) => state.api.individualCourse);
     const similarCourse = useSelector((state: RootState) => state.api.similarCourse);
 
-    console.log("res of similarCourse", similarCourse?.docs);
 
     useEffect(() => {
         if (individualCourse && individualCourse.docs && individualCourse.docs.length > 0) {
@@ -48,7 +48,6 @@ function CoursePlanTabs({ courseId, clientId }: CoursePlanTabsProps) {
         }
     }, [individualCourse]);
 
-    console.log("res of plans", JSON.stringify(plans));
 
     const handlePlanClick = (planName: string) => {
         setSelectedPlan(planName);
@@ -110,7 +109,7 @@ export default function CourseDetails() {
     const [clientId, setClientId] = useState<any>({});
 
     const { id } = useLocalSearchParams<{ id: string }>();
-    const { post } = useAxios();
+    const { post, del } = useAxios();
     console.log(id);
 
     if (!id) {
@@ -125,6 +124,8 @@ export default function CourseDetails() {
         requestFn(API_URL.course, "individualCourse", { id: id });
     }, []);
 
+    const favorite = useSelector((state: RootState) => state.favorite.items);
+    const cartItems = useSelector((state: RootState) => state.cart.items);
     const individualCourse = useSelector((state: RootState) => state.api.individualCourse);
     const theme = useSelector((state: RootState) => state.global.theme);
 
@@ -138,6 +139,96 @@ export default function CourseDetails() {
             setClientId(clientId);
         }
     }, [individualCourse]);
+
+    const isCourseFavorited = (id: string) => {
+        return favorite.courses.some((favCourse: any) => favCourse._id === id);
+    };
+    const isCourseInCart = (id: string) => {
+        return cartItems.courses.some((cartItem: any) => cartItem.course._id === id);
+    };
+
+    const handleFavoriteClick = (id: string, type: string) => {
+        if (isCourseFavorited(id)) {
+            // Remove from favorites
+
+            del(API_URL.favorite, { id: id, type: type })
+                .then((res: any) => {
+                    dispatch(removeFromFavorite({ id, type: "courses" }));
+
+                    ApiSuccessToast(res.message);
+                })
+                .catch((e: any) => {
+                    ApiErrorToast(e.response?.data?.message);
+                    console.log(e);
+                });
+        } else {
+            // Add to favorites
+
+            post(API_URL.favorite, { id: id, type: type })
+                .then((res: any) => {
+                    dispatch(addToFavorite({ countries: [], courses: [course], clients: [] }));
+
+                    ApiSuccessToast(res.message);
+                })
+                .catch((e: any) => {
+                    ApiErrorToast(e.response?.data?.message);
+                    console.log(e);
+                });
+        }
+    };
+
+    const handleAddToCart = () => {
+        if (isCourseInCart(id)) {
+            // Remove from cart
+
+            del(API_URL.cart, { course: id })
+                .then((res: any) => {
+                    dispatch(removeItemFromCart({ id: id }));
+
+                    ApiSuccessToast(res.message);
+                })
+                .catch((e: any) => {
+                    ApiErrorToast(e.response?.data?.message);
+                    console.log(e);
+                });
+        } else {
+            // Add to cart
+
+            post(API_URL.cart, { course: id })
+                .then((res: any) => {
+                    const courseToAdd = {
+                        course: {
+                            _id: course._id,
+                            client: course.client,
+                            courseName: course.courseName,
+                            description: course.description,
+                            language: course.language,
+                            numberOfSeats: course.numberOfSeats,
+                            image: course.image,
+                            startDate: course.startDate,
+                            endDate: course.endDate,
+                            currencyType: course.currencyType,
+                            category: course.category,
+                            plan: course.plan,
+                            status: course.status,
+                            createdAt: course.createdAt,
+                            updatedAt: course.updatedAt,
+                            __v: course.__v,
+                        },
+                        _id: id,
+                        addedAt: new Date().toISOString(),
+                    };
+
+                    dispatch(addItemToCart({ courses: [courseToAdd] }));
+
+                    ApiSuccessToast(res.message);
+                })
+                .catch((e: any) => {
+                    ApiErrorToast(e.response?.data?.message);
+                    console.log(e);
+                });
+        }
+    };
 
     const scrollRef = useAnimatedRef<Animated.ScrollView>();
     const navigation = useNavigation();
@@ -154,20 +245,6 @@ export default function CourseDetails() {
             opacity: interpolate(scrollOffset.value, [IMG_HEIGHT / 2, IMG_HEIGHT], [0, 1]),
         };
     }, []);
-
-    const handleFavoriteClick = (id: string, type: string) => {
-        post(API_URL.favorite, { id: id, type: type })
-            .then((res: any) => {
-                ApiSuccessToast(res.message);
-                console.log("response ", res.data);
-            })
-            .catch((e: any) => {
-                ApiErrorToast(e.response?.data?.message);
-                console.log(e);
-            });
-
-        console.log(id, type);
-    };
 
     const imageAnimatedStyle = useAnimatedStyle(() => {
         return {
@@ -234,7 +311,11 @@ export default function CourseDetails() {
                             alignItems: "center",
                         }}
                     >
-                        <Ionicons name="heart" size={24} color={APP_THEME[theme].secondary.first} />
+                        <Ionicons
+                            name={isCourseFavorited(id) ? "heart" : "heart-outline"}
+                            size={24}
+                            color={APP_THEME[theme].secondary.first}
+                        />
                     </AUIThemedView>
                 </TouchableOpacity>
             ),
@@ -245,30 +326,7 @@ export default function CourseDetails() {
                 </Animated.Text>
             ),
         });
-    }, [course, id]);
-
-    const handleAddToCart = () => {
-        const courseDetails = {
-            courseId: id,
-            title: course.courseName,
-            startingDate: course.startDate,
-            image: course.image,
-        };
-
-        post(API_URL.cart, { course: id })
-            .then((res: any) => {
-                // ApiSuccessToast(res.message);
-                console.log("res from cart =>", res.data);
-
-                // dispatch(addItemToCart(courseDetails));
-                ApiSuccessToast(res.message);
-                console.log("Item added to cart");
-            })
-            .catch((e: any) => {
-                ApiErrorToast(e.response?.data?.message);
-                console.log(e);
-            });
-    };
+    }, [course, id, favorite]);
 
     const startingDate: string = new Date(course.startDate).toLocaleDateString("en-GB", {
         day: "2-digit",
@@ -326,12 +384,10 @@ export default function CourseDetails() {
                                         { backgroundColor: APP_THEME[theme].primary.first },
                                     ]}
                                 >
-                                    <AUIImage
-                                        path={
-                                            Asset.fromModule(require("@/assets/icons/cart.png")).uri
-                                        }
-                                        icon
-                                        style={{ width: 20, height: 20 }}
+                                    <Ionicons
+                                        name={isCourseInCart(id) ? "cart" : "cart-outline"}
+                                        size={24}
+                                        color="#fff"
                                     />
                                 </AUIThemedView>
                             </TouchableOpacity>

@@ -20,9 +20,10 @@ import Animated, {
     useAnimatedStyle,
     useScrollViewOffset,
 } from "react-native-reanimated";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useAxios from "@/app/services/axiosClient";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
+import { addToFavorite, removeFromFavorite } from "@/redux/favoriteSlice";
 
 export default function CityDetails() {
     const { id } = useLocalSearchParams<{ id: string }>();
@@ -42,9 +43,10 @@ export default function CityDetails() {
     const [aboutText, setAboutText] = useState("");
 
     const { requestFn } = useApiRequest();
+    const dispatch = useDispatch();
+    const { post, del } = useAxios();
 
-    const { post } = useAxios();
-
+    const favorite = useSelector((state: RootState) => state.favorite.items);
     const schoolsResponse = useSelector((state: RootState) => state.api.countrySchool);
     const individualCountry = useSelector((state: RootState) => state.api.individualCountry);
     const theme = useSelector((state: RootState) => state.global.theme);
@@ -84,7 +86,7 @@ export default function CityDetails() {
 
     useEffect(() => {
         requestFn(API_URL.country, "individualCountry", { id: id });
-        requestFn(API_URL.popularSchool , "countrySchool" , { location: id })
+        requestFn(API_URL.popularSchool, "countrySchool", { location: id });
     }, [id]);
 
     useEffect(() => {
@@ -95,24 +97,43 @@ export default function CityDetails() {
         }
     }, [individualCountry]);
 
-    console.log("individualCountry =>", individualCountry?.docs?.[0]);
-
     const wordsLimit = 50;
     const truncatedText = aboutText.split(" ").slice(0, wordsLimit).join(" ");
 
-    const handleFavoriteClick = (id: string, type: string) => {
-        post(API_URL.favorite, { id: id, type: type })
-            .then((res: any) => {
-                ApiSuccessToast(res.message);
-                console.log("response ", res.data);
-            })
-            .catch((e: any) => {
-                ApiErrorToast(e.response?.data?.message);
-                console.log(e);
-            });
-
-        console.log(id, type);
+    const isCountryFavorited = (id: string) => {
+        return favorite.courses.some((favCourse: any) => favCourse._id === id);
     };
+
+    const handleFavoriteClick = (id: string, type: string) => {
+        if (isCountryFavorited(id)) {
+            // Remove from favorites
+
+            del(API_URL.favorite, { id: id, type: type })
+                .then((res: any) => {
+                    dispatch(removeFromFavorite({ id, type: "countries" }));
+
+                    ApiSuccessToast(res.message);
+                })
+                .catch((e: any) => {
+                    ApiErrorToast(e.response?.data?.message);
+                    console.log(e);
+                });
+        } else {
+            // Add to favorites
+
+            post(API_URL.favorite, { id: id, type: type })
+                .then((res: any) => {
+                    dispatch(addToFavorite({ countries: [country], courses: [], clients: [] }));
+
+                    ApiSuccessToast(res.message);
+                })
+                .catch((e: any) => {
+                    ApiErrorToast(e.response?.data?.message);
+                    console.log(e);
+                });
+        }
+    };
+
     const population = country?.population;
     const formattedPopulation =
         population && population >= 1000000
@@ -167,7 +188,11 @@ export default function CityDetails() {
                             alignItems: "center",
                         }}
                     >
-                        <Ionicons name="heart" size={24} color={APP_THEME[theme].secondary.first} />
+                        <Ionicons
+                            name={isCountryFavorited(id) ? "heart" : "heart-outline"}
+                            size={24}
+                            color={APP_THEME[theme].secondary.first}
+                        />
                     </AUIThemedView>
                 </TouchableOpacity>
             ),

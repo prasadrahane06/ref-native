@@ -9,6 +9,7 @@ import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT, GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
+import { addToFavorite, removeFromFavorite } from "@/redux/favoriteSlice";
 import { setLoader } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
 import { FontAwesome, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -113,9 +114,19 @@ function StudentDetailsTabs({ courseId, clientId }: TabProps) {
 
 export default function SchoolDetails() {
     const { id } = useLocalSearchParams<{ id: string }>();
+
+    const { post, del } = useAxios();
+    const { requestFn } = useApiRequest();
+    const dispatch = useDispatch();
+
+    const { t, i18n } = useTranslation();
+
     const isRTL = useSelector((state: RootState) => state.global.isRTL);
     const user = useSelector((state: RootState) => state.global.user);
-    console.log("USER:::::::::", user);
+
+    const favorite = useSelector((state: RootState) => state.favorite.items);
+    const school = useSelector((state: RootState) => state.api.individualSchool || {});
+    const theme = useSelector((state: RootState) => state.global.theme);
 
     console.log(id);
     if (!id) {
@@ -125,14 +136,7 @@ export default function SchoolDetails() {
             </AUIThemedView>
         );
     }
-    const { t, i18n } = useTranslation();
 
-    const { post } = useAxios();
-    const { requestFn } = useApiRequest();
-    const dispatch = useDispatch();
-    const [isFav, setIsFav] = useState(false);
-    const school = useSelector((state: RootState) => state.api.individualSchool || {});
-    const theme = useSelector((state: RootState) => state.global.theme);
     const schoolsResponse = school[0];
 
     useEffect(() => {
@@ -172,19 +176,40 @@ export default function SchoolDetails() {
         };
     });
 
-    const handleFavoriteClick = (id: string, type: string) => {
-        post(API_URL.favorite, { id: id, type: type })
-            .then((res: any) => {
-                setIsFav(true);
-                ApiSuccessToast(res.message);
-                console.log("response ", res.data);
-            })
-            .catch((e: any) => {
-                ApiErrorToast(e.response?.data?.message);
-                console.log(e);
-            });
+    const isCourseFavorited = (id: string) => {
+        return favorite.courses.some((favCourse: any) => favCourse._id === id);
+    };
 
-        console.log(id, type);
+    const handleFavoriteClick = (id: string, type: string) => {
+        if (isCourseFavorited(id)) {
+            // Remove from favorites
+
+            del(API_URL.favorite, { id: id, type: type })
+                .then((res: any) => {
+                    dispatch(removeFromFavorite({ id, type: "clients" }));
+
+                    ApiSuccessToast(res.message);
+                })
+                .catch((e: any) => {
+                    ApiErrorToast(e.response?.data?.message);
+                    console.log(e);
+                });
+        } else {
+            // Add to favorites
+
+            post(API_URL.favorite, { id: id, type: type })
+                .then((res: any) => {
+                    dispatch(
+                        addToFavorite({ countries: [], courses: [], clients: [schoolsResponse] })
+                    );
+
+                    ApiSuccessToast(res.message);
+                })
+                .catch((e: any) => {
+                    ApiErrorToast(e.response?.data?.message);
+                    console.log(e);
+                });
+        }
     };
 
     const handlePhonePress = (phoneNumber: string) => {
@@ -245,9 +270,9 @@ export default function SchoolDetails() {
                         }}
                     >
                         <Ionicons
-                            name={isFav ? "heart" : "heart-outline"}
+                            name={isCourseFavorited(id) ? "heart" : "heart-outline"}
                             size={24}
-                            color={APP_THEME.light.secondary.first}
+                            color={APP_THEME[theme].secondary.first}
                         />
                     </AUIThemedView>
                 </TouchableOpacity>

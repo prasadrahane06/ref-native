@@ -17,6 +17,8 @@ import { useSharedValue } from "react-native-reanimated";
 import { carouselData } from "@/constants/dummy data/carouselData";
 import CarouselSlide from "@/components/home/common/CarouselSlide";
 import { useFocusEffect } from "@react-navigation/native";
+import { addItemToCart } from "@/redux/cartSlice";
+import { addToFavorite } from "@/redux/favoriteSlice";
 
 interface CourseData {
     title: string;
@@ -42,12 +44,41 @@ interface CountryData {
 
 const TabTwoScreen: React.FC = () => {
     const { requestFn } = useApiRequest();
-    const [showAllCourses, setShowAllCourses] = useState(false);
-    const [showAllSchools, setShowAllSchools] = useState(false);
-    const [showAllCountries, setShowAllCountries] = useState(false);
+    const dispatch = useDispatch();
+
     const width = Dimensions.get("window").width;
     const progress = useSharedValue<number>(0);
     const ref = useRef<ICarouselInstance>(null);
+
+    const [showAllCourses, setShowAllCourses] = useState(false);
+    const [showAllSchools, setShowAllSchools] = useState(false);
+    const [showAllCountries, setShowAllCountries] = useState(false);
+
+    useFocusEffect(
+        useCallback(() => {
+            requestFn(API_URL.favorite, "favorite", { user: true });
+        }, [])
+    );
+
+    const favorite = useSelector((state: RootState) => state.api.favorite);
+
+    const isRTL = useSelector((state: RootState) => state.global.isRTL || {});
+    const theme = useSelector((state: RootState) => state.global.theme);
+
+    useEffect(() => {
+        if (favorite && favorite.docs && favorite.docs.length > 0) {
+            const favoriteItems = favorite.docs[0];
+
+            const clients = favoriteItems.clients || [];
+            const courses = favoriteItems.courses || [];
+            const countries = favoriteItems.country || [];
+
+            dispatch(addToFavorite({ clients, courses, countries }));
+        }
+    }, [favorite]);
+
+    const fav = useSelector((state: RootState) => state.favorite.items);
+
     const handleViewAllCoursesClick = () => {
         setShowAllCourses(true);
     };
@@ -57,23 +88,7 @@ const TabTwoScreen: React.FC = () => {
     const handleViewAllCountrySchoolsClick = () => {
         setShowAllCountries(true);
     };
-    const dispatch = useDispatch();
 
-    const getfavorite = useSelector((state: RootState) => state.api.favorite || {});
-    const isRTL = useSelector((state: RootState) => state.global.isRTL || {});
-    const theme = useSelector((state: RootState) => state.global.theme);
-
-    const fav = getfavorite?.docs?.[0] || { courses: [], clients: [], country: [] }; // Providing default values
-
-    useEffect(() => {
-        console.log("getfavorite", JSON.stringify(fav));
-    }, [getfavorite]);
-
-    useFocusEffect(
-        useCallback(() => {
-            requestFn(API_URL.favorite, "favorite", { user: true });
-        }, [])
-    );
     const onPressPagination = (index: number) => {
         ref.current?.scrollTo({
             count: index - progress.value,
@@ -152,6 +167,7 @@ const TabTwoScreen: React.FC = () => {
                     onPress={onPressPagination}
                 />
             </AUIThemedView>
+
             <AUIThemedView>
                 {fav?.courses && fav?.courses.length > 0 && (
                     <AUIThemedView
@@ -214,12 +230,13 @@ const TabTwoScreen: React.FC = () => {
                         />
                     </AUIThemedView>
                 )}
-                {fav?.country && fav?.country.length > 0 && (
+
+                {fav?.countries && fav?.countries.length > 0 && (
                     <AUIThemedView style={styles.destinationContainer}>
                         <SectionTitle
                             // @ts-ignore
                             onViewAllClick={
-                                fav?.country.length > 5 ? handleViewAllCountrySchoolsClick : false
+                                fav?.countries.length > 5 ? handleViewAllCountrySchoolsClick : false
                             }
                             style={{ paddingHorizontal: 5 }}
                             titleStyle={styles.title}
@@ -227,7 +244,7 @@ const TabTwoScreen: React.FC = () => {
                             {GLOBAL_TEXT.My_Favorite_Cities}
                         </SectionTitle>
                         <FlatList
-                            data={showAllCountries ? fav?.country : fav?.country?.slice(0, 6)}
+                            data={showAllCountries ? fav?.countries : fav?.countries?.slice(0, 6)}
                             renderItem={renderCountryItem}
                             keyExtractor={(item) => item.id}
                             numColumns={2}
@@ -241,10 +258,8 @@ const TabTwoScreen: React.FC = () => {
     );
 };
 
-const windowWidth = Dimensions.get('window').width;
+const windowWidth = Dimensions.get("window").width;
 const styles = StyleSheet.create({
-
-
     container: {
         // paddingHorizontal: 12,
         // backgroundColor: APP_THEME.background,
@@ -254,7 +269,7 @@ const styles = StyleSheet.create({
         // borderBottomWidth: 1,
         borderColor: "#5BD894",
         paddingBottom: 10,
-        paddingLeft:10,
+        paddingLeft: 10,
 
         // backgroundColor: APP_THEME.background,
     },

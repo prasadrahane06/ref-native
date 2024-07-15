@@ -26,6 +26,8 @@ import RNRestart from "react-native-restart";
 import { useNavigation } from "expo-router";
 import { CommonActions } from "@react-navigation/native";
 import { setIsRTL } from "@/redux/globalSlice";
+import { addToFavorite } from "@/redux/favoriteSlice";
+import { addItemToCart } from "@/redux/cartSlice";
 export default function HomeScreen() {
     const dispatch = useDispatch();
     const { requestFn } = useApiRequest();
@@ -47,8 +49,6 @@ export default function HomeScreen() {
     const countryResponse = response?.country;
 
 
-    console.log("courseResponse => selected", JSON.stringify(courseResponse));
-
     const fetchCourses = useCallback(() => {
         requestFn(API_URL.course, "selectedLanguagecourse", { similar: selectedLanguage.name });
     }, [selectedLanguage]);
@@ -60,20 +60,36 @@ export default function HomeScreen() {
     useEffect(() => {
         requestFn(API_URL.popularSchool, "school");
         requestFn(API_URL.country, "country");
+        requestFn(API_URL.favorite, "favorite", { user: true });
+        requestFn(API_URL.cart, "cart");
 
         getUserData().then((data) => {
             const id = data?.data?.user?._id;
             requestFn(API_URL.user, "userProfileData", { id: id });
         });
     }, []);
+
+    const favorite = useSelector((state: RootState) => state.api.favorite);
     useEffect(() => {
-        // i18n.changeLanguage("ar");
-        getUserData().then((data) => {
-            const id = data?.data?.user?._id;
-            requestFn(API_URL.user, "userProfileData", { id: id });
-        });
-    }, []);
-    
+        if (favorite && favorite.docs && favorite.docs.length > 0) {
+            const favoriteItems = favorite.docs[0];
+
+            const clients = favoriteItems.clients || [];
+            const courses = favoriteItems.courses || [];
+            const countries = favoriteItems.country || [];
+
+            dispatch(addToFavorite({ clients, courses, countries }));
+        }
+    }, [favorite]);
+
+    const cart = useSelector((state: RootState) => state.api.cart);
+    useEffect(() => {
+        if (cart && cart.docs && cart.docs.length > 0) {
+            const cartItems = cart.docs[0].items;
+
+            dispatch(addItemToCart({ courses: cartItems }));
+        }
+    }, [cart]);
 
     const onPressPagination = (index: number) => {
         ref.current?.scrollTo({

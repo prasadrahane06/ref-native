@@ -30,17 +30,14 @@ export default function TabFourScreen() {
     useEffect(() => {
         if (cart && cart.docs && cart.docs.length > 0) {
             const cartItems = cart.docs[0].items;
-            console.log("cartItems in cart =>", JSON.stringify(cartItems));
 
-            dispatch(addItemToCart(cartItems));
-            // setCartItems(cartItems);
+            dispatch(addItemToCart({ courses: cartItems }));
         }
     }, [cart]);
 
     const cartItems = useSelector((state: RootState) => state.cart.items);
-    console.log("cartItems from selector =>", JSON.stringify(cartItems));
 
-    if (cartItems.length === 0) {
+    if (cartItems?.courses?.length === 0) {
         return (
             <AUIThemedView
                 style={[styles.container, { backgroundColor: BACKGOUND_THEME[theme].backgound }]}
@@ -59,7 +56,7 @@ export default function TabFourScreen() {
 
                 <AUIThemedView style={styles.coursesContainer}>
                     <FlatList
-                        data={cartItems}
+                        data={cartItems?.courses}
                         renderItem={({ item, index }) => (
                             <AUIThemedView style={styles.courseItem}>
                                 <Course
@@ -69,12 +66,11 @@ export default function TabFourScreen() {
                                     startingDate={item?.course?.startDate}
                                     ellipsizeMode="tail"
                                     numberOfLines={1}
-
                                     cart
                                 />
                             </AUIThemedView>
                         )}
-                        keyExtractor={(item) => item.courseId}
+                        keyExtractor={(item) => item._id}
                         numColumns={2}
                         columnWrapperStyle={styles.courseColumnWrapper}
                         scrollEnabled={false}

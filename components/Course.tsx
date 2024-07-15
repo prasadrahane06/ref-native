@@ -16,6 +16,7 @@ import { setLoader } from "@/redux/globalSlice";
 import { useTranslation } from "react-i18next";
 import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { RootState } from "@/redux/store";
+import { removeFromFavorite } from "@/redux/favoriteSlice";
 
 interface CourseProps {
     title: string;
@@ -51,9 +52,9 @@ const Course: React.FC<CourseProps> = ({
     const handleRemoveFromCart = (id: string) => {
         del(API_URL.cart, { course: id })
             .then((res: any) => {
+                dispatch(removeItemFromCart({ id: id }));
+
                 ApiSuccessToast(res.message);
-                dispatch(removeItemFromCart(id));
-                console.log("item removed from cart res =>", res.data);
                 dispatch(setLoader(false));
             })
             .catch((e: any) => {
@@ -72,7 +73,7 @@ const Course: React.FC<CourseProps> = ({
         del(API_URL.favorite, { id: id, type: type })
             .then((res: any) => {
                 ApiSuccessToast(res.message);
-                console.log("item removed from favourite  res =>", res.data);
+                dispatch(removeFromFavorite({ id, type: "courses" }));
                 dispatch(setLoader(false));
             })
             .catch((e: any) => {
