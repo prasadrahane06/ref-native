@@ -2,20 +2,20 @@ import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
 import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { removeUserData, storeUserData } from "@/constants/RNAsyncStore";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
+import { setTheme } from "@/redux/globalSlice";
+import { RootState } from "@/redux/store";
 import { FontAwesome } from "@expo/vector-icons";
 import { DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer";
 import { Asset } from "expo-asset";
 import { useRouter } from "expo-router";
 import React from "react";
-import { StyleSheet, Switch, TouchableOpacity, View } from "react-native";
-import AUIImage from "./AUIImage";
-import { AUIThemedView } from "./AUIThemedView";
 import { useTranslation } from "react-i18next";
+import { StyleSheet, Switch, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
-import { setTheme } from "@/redux/globalSlice";
-import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
+import AUIImage from "./AUIImage";
 import AUILangToggle from "./AUILangToggle";
+import { AUIThemedView } from "./AUIThemedView";
 
 //interface
 export interface DrawerItem {
@@ -42,8 +42,11 @@ const AUIDrawerContent = (props: any) => {
 
     const globalState = useLangTransformSelector((state: RootState) => state.global);
     const theme = useSelector((state: RootState) => state.global.theme);
-    const isDarkMode = useLangTransformSelector((state: RootState) => state.global.theme === "dark");
-    const { name } = useLangTransformSelector((state: RootState) => state.global.user);
+    const isDarkMode = useLangTransformSelector(
+        (state: RootState) => state.global.theme === "dark"
+    );
+    const data = useLangTransformSelector((state: RootState) => state.global.user);
+    const name = data?.name || "";
 
     const isRTL = globalState.isRTL;
     const userdetails = globalState.user;

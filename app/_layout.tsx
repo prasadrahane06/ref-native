@@ -1,8 +1,8 @@
 import AUILoader from "@/components/common/AUILoader";
-import { AUIThemedView } from "@/components/common/AUIThemedView";
+import "@/components/i18n/i18n.config";
 import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
-import { getUserData, removeUserData, storeUserDeviceData } from "@/constants/RNAsyncStore";
-import { setToken, setUser } from "@/redux/globalSlice";
+import { getUserData, storeUserDeviceData } from "@/constants/RNAsyncStore";
+import { setTheme } from "@/redux/globalSlice";
 import { RootState, store } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -15,7 +15,6 @@ import { TouchableOpacity } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
 import { Provider, useDispatch, useSelector } from "react-redux";
-import "@/components/i18n/i18n.config";
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 // @ts-ignore
@@ -54,7 +53,16 @@ const InitialLayout = () => {
 
     useEffect(() => {
         storeUserDeviceData();
-        getUserData().then((data) => console.log(data));
+        getUserData().then((data) => {
+            //setting theme
+            if (data && Object.keys(data).length > 0) {
+                if (data?.darkMode === true) {
+                    dispatch(setTheme("dark"));
+                } else {
+                    dispatch(setTheme("light"));
+                }
+            }
+        });
     }, []);
 
     if (!loaded) {
@@ -144,7 +152,11 @@ const InitialLayout = () => {
                     headerTitle: "",
                     headerLeft: () => (
                         <TouchableOpacity onPress={router.back}>
-                            <Ionicons name="arrow-back" size={34} color={APP_THEME.light.ternary.first} />
+                            <Ionicons
+                                name="arrow-back"
+                                size={34}
+                                color={APP_THEME.light.ternary.first}
+                            />
                         </TouchableOpacity>
                     ),
                     headerRight: () => (
@@ -261,7 +273,7 @@ const InitialLayout = () => {
                                 color={TEXT_THEME[theme].primary}
                             />
                         </TouchableOpacity>
-                    )
+                    ),
                 }}
             />
             <Stack.Screen

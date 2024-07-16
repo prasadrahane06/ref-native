@@ -73,7 +73,7 @@ export default function SchoolDetails() {
 
     const onSave = async (data: any) => {
 
-        patch(API_URL.popularSchool, data)
+        patch(API_URL.school, data)
             .then((response: any) => {
                 ApiSuccessToast("School Details has been saved successfully");
                 router.push({

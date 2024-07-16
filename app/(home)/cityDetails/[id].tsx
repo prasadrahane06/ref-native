@@ -88,7 +88,7 @@ export default function CityDetails() {
 
     useEffect(() => {
         requestFn(API_URL.country, "individualCountry", { id: id });
-        requestFn(API_URL.popularSchool, "countrySchool", { location: id });
+        requestFn(API_URL.school, "countrySchool", { location: id });
     }, [id]);
 
     useEffect(() => {

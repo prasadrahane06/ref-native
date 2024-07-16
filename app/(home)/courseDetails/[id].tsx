@@ -6,12 +6,10 @@ import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import PlanComponent from "@/components/home/courseDetails/PlanComponent";
 import { APP_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
-
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import useIsomorphicLayoutEffect from "@/customHooks/useIsomorphicLayoutEffect";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
-
 import { addItemToCart, removeItemFromCart } from "@/redux/cartSlice";
 import { addToFavorite, removeFromFavorite } from "@/redux/favoriteSlice";
 import { RootState } from "@/redux/store";
@@ -37,9 +35,10 @@ function CoursePlanTabs({ courseId, clientId }: CoursePlanTabsProps) {
     const [plans, setPlans] = useState<any[]>([]);
     const [selectedPlan, setSelectedPlan] = useState("");
 
-    const individualCourse = useLangTransformSelector((state: RootState) => state.api.individualCourse);
+    const individualCourse = useLangTransformSelector(
+        (state: RootState) => state.api.individualCourse
+    );
     const similarCourse = useLangTransformSelector((state: RootState) => state.api.similarCourse);
-
 
     useEffect(() => {
         if (individualCourse && individualCourse.docs && individualCourse.docs.length > 0) {
@@ -50,7 +49,6 @@ function CoursePlanTabs({ courseId, clientId }: CoursePlanTabsProps) {
             }
         }
     }, [individualCourse]);
-
 
     const handlePlanClick = (planName: string) => {
         setSelectedPlan(planName);
@@ -127,7 +125,9 @@ export default function CourseDetails() {
         requestFn(API_URL.course, "individualCourse", { id: id });
     }, []);
 
-    const individualCourse = useLangTransformSelector((state: RootState) => state.api.individualCourse);
+    const individualCourse = useLangTransformSelector(
+        (state: RootState) => state.api.individualCourse
+    );
     const favorite = useLangTransformSelector((state: RootState) => state.favorite.items);
     const cartItems = useLangTransformSelector((state: RootState) => state.cart.items);
     const theme = useSelector((state: RootState) => state.global.theme);

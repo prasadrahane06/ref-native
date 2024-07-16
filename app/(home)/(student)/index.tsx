@@ -50,7 +50,7 @@ export default function HomeScreen() {
     }, [fetchCourses]);
 
     useEffect(() => {
-        requestFn(API_URL.popularSchool, "school");
+        requestFn(API_URL.school, "school");
         requestFn(API_URL.country, "country");
         requestFn(API_URL.favorite, "favorite", { user: true });
         requestFn(API_URL.cart, "cart");
