@@ -29,7 +29,7 @@ export interface ButtonTheme {
     success: ButtonVariant;
     danger: ButtonVariant;
     disabled: ButtonVariant;
-    toggle: ButtonVariantToggle
+    toggle: ButtonVariantToggle;
 }
 export interface TextTheme {
     light: {
@@ -152,12 +152,12 @@ const BUTTON_THEME: { [key in ThemeType]: ButtonTheme } = {
             background: "#dcdcdd",
             color: "#fff",
         },
-        toggle:{
+        toggle: {
             selected_background: "#5BD894",
             selected_color: "#fff",
-            borderColor:"black",
-            textColor:"black"
-        }
+            borderColor: "black",
+            textColor: "black",
+        },
     },
     dark: {
         primary: {
@@ -184,8 +184,8 @@ const BUTTON_THEME: { [key in ThemeType]: ButtonTheme } = {
             selected_background: "#5BD894",
             selected_color: "black",
             borderColor: "#ffff",
-            textColor: "#ffff"
-        }
+            textColor: "#ffff",
+        },
     },
 };
 

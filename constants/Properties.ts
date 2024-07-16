@@ -67,6 +67,7 @@ export const GLOBAL_TRANSLATION_LABEL = {
     courses: "courses",
     welcome_back: "welcome_back",
     termsPolicy: "termsPolicy",
+    notifications: "notifications",
     darkMode: "darkMode",
     lightMode: "lightMode",
     logout: "logout",

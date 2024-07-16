@@ -1,20 +1,22 @@
-import { Tabs } from "expo-router";
-import React from "react";
-
-import { TabBarIcon } from "@/components/navigation/TabBarIcon";
-import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { AUIThemedText } from "@/components/common/AUIThemedText";
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import { AUILinearGradient } from "@/components/common/AUILinearGradient";
-import { Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
-import { TouchableOpacity, View } from "react-native";
 import AUIDrawerContent from "@/components/common/AUIDrawerContent";
+import { AUILinearGradient } from "@/components/common/AUILinearGradient";
+import { AUIThemedText } from "@/components/common/AUIThemedText";
+import { AUIThemedView } from "@/components/common/AUIThemedView";
+import HeaderIcons from "@/components/icons/HeaderIcon";
+import { TabBarIcon } from "@/components/navigation/TabBarIcon";
+import { BACKGROUND_THEME, TEXT_THEME, ThemeType } from "@/constants/Colors";
+import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
+import { RootState } from "@/redux/store";
+import { Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Asset } from "expo-asset";
+import { Tabs } from "expo-router";
+import React, { useState } from "react";
+import { Modal, StyleSheet, TouchableOpacity, View } from "react-native";
+import { useSelector } from "react-redux";
+import NotificationDrawer from "../notification/notification";
 
-//declearation
 const Drawer = createDrawerNavigator();
-
-//dummy Screens
 
 const EventsScreen = () => (
     <AUIThemedView>
@@ -22,7 +24,10 @@ const EventsScreen = () => (
     </AUIThemedView>
 );
 
-//user Data and School Screen
+const NotificationsScreen = ({ onClose }: { onClose: () => void }) => (
+    <NotificationDrawer onClose={onClose} />
+);
+
 const user = {
     name: "Manchester School",
     avatarUrl:
@@ -48,33 +53,67 @@ const items = [
     },
 ];
 
-//creating Drawer
 export default function AUIDrawer() {
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
+    const theme = useSelector((state: RootState) => state.global.theme);
+    const handleNotificationPress = () => {
+        setModalVisible(true);
+    };
+
+    const closeModal = () => {
+        setModalVisible(false);
+    };
+
     return (
-        <Drawer.Navigator
-            initialRouteName="Home"
-            screenOptions={({ navigation }) => screenOptions(navigation)}
-            drawerContent={(props) => (
-                <AUIDrawerContent
-                    {...props}
-                    isLoggedIn={true}
-                    user={user}
-                    items={items}
-                    onLogout={() => {
-                        // Implement logout logic here
-                    }}
-                    school
-                />
-            )}
-        >
-            <Drawer.Screen name="Home" component={TabLayout} />
-            {/* <Drawer.Screen name="SchoolProfile" component={SchoolProfileScreen} />
+        <>
+            <Drawer.Navigator
+                initialRouteName="Home"
+                screenOptions={({ navigation }) => screenOptions(navigation, theme)}
+                drawerContent={(props) => (
+                    <AUIDrawerContent
+                        {...props}
+                        isLoggedIn={true}
+                        user={user}
+                        items={items}
+                        onLogout={() => {}}
+                        school
+                    />
+                )}
+            >
+                <Drawer.Screen name="Home" component={TabLayout} />
+                {/* <Drawer.Screen name="SchoolProfile" component={SchoolProfileScreen} />
             <Drawer.Screen name="SchoolCourses" component={SchoolCoursesScreen} />
             <Drawer.Screen name="Facilities" component={FacilitiesScreen} />
             <Drawer.Screen name="Admission" component={AdmissionScreen} />
             <Drawer.Screen name="Contact" component={ContactScreen} /> */}
-            <Drawer.Screen name="Events" component={EventsScreen} />
-        </Drawer.Navigator>
+                <Drawer.Screen name="Events" component={EventsScreen} />
+                <Drawer.Screen
+                    name="Notifications"
+                    component={() => <NotificationsScreen onClose={closeModal} />}
+                    options={{
+                        headerShown: false,
+                        title: GLOBAL_TRANSLATION_LABEL.notifications,
+                        drawerIcon: ({ color }) => (
+                            <MaterialIcons name="notifications" size={24} color={color} />
+                        ),
+                    }}
+                />
+            </Drawer.Navigator>
+
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={closeModal}
+            >
+                <View style={styles.modalContainer}>
+                    <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
+                        <Ionicons name="close" size={24} color={TEXT_THEME[theme].primary} />
+                    </TouchableOpacity>
+                    <NotificationDrawer onClose={closeModal} />
+                </View>
+            </Modal>
+        </>
     );
 }
 
@@ -159,26 +198,28 @@ const MenuButton = ({ navigation }: any) => (
     </TouchableOpacity>
 );
 
-const HeaderIcons = () => (
-    <View style={{ flexDirection: "row", marginRight: 15 }}>
-        <TouchableOpacity onPress={() => alert("Search")}>
-            <Ionicons name="search" size={25} style={{ marginRight: 20 }} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => alert("Notifications")}>
-            <Ionicons name="notifications" size={25} />
-        </TouchableOpacity>
-    </View>
-);
-
-const screenOptions = (navigation: any) => ({
+const screenOptions = (navigation: any, theme: ThemeType) => ({
     headerBackground: () => (
         <AUILinearGradient
-            colors={["#ffffff", "#ffffff"]} //["rgba(118, 250,178, 1)", "rgba(91, 216,148, 1)"]}
+            colors={[BACKGROUND_THEME[theme].background, BACKGROUND_THEME[theme].background]}
             style={{ flex: 1 }}
         />
     ),
     headerTitle: "",
 
     headerLeft: () => <MenuButton navigation={navigation} />,
-    headerRight: () => <HeaderIcons />,
+    headerRight: () => (
+        <HeaderIcons onNotificationPress={() => navigation.navigate("Notifications")} />
+    ),
+});
+
+const styles = StyleSheet.create({
+    modalContainer: {
+        flex: 1,
+        paddingTop: 50,
+    },
+    closeButton: {
+        alignSelf: "flex-end",
+        padding: 16,
+    },
 });

@@ -1,5 +1,6 @@
 import AUIDrawerContent from "@/components/common/AUIDrawerContent";
 import { AUILinearGradient } from "@/components/common/AUILinearGradient";
+import HeaderIcons from "@/components/icons/HeaderIcon";
 import MyCourses from "@/components/screenComponents/MyCourses";
 import Profile from "@/components/screenComponents/Profile";
 import TermsAndPolicy from "@/components/screenComponents/TermsAndPolicy";
@@ -12,19 +13,24 @@ import {
     FontAwesome6,
     Ionicons,
     MaterialCommunityIcons,
-    MaterialIcons
+    MaterialIcons,
 } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Tabs } from "expo-router";
-import React from "react";
+import { default as React, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Platform, TouchableOpacity, View } from "react-native";
+import { Modal, Platform, StyleSheet, TouchableOpacity, View } from "react-native";
 import "react-native-gesture-handler";
 import { useSelector } from "react-redux";
+import NotificationDrawer from "../notification/notification";
+import { AUIThemedView } from "@/components/common/AUIThemedView";
 
 const ProfileScreen = () => <Profile />;
 const CoursesScreen = () => <MyCourses />;
 const TermsPolicyScreen = () => <TermsAndPolicy />;
+const NotificationsScreen = ({ onClose }: { onClose: () => void }) => (
+    <NotificationDrawer onClose={onClose} />
+);
 
 const Drawer = createDrawerNavigator();
 
@@ -39,22 +45,6 @@ const MenuButton = ({ navigation }: any) => (
     </TouchableOpacity>
 );
 
-const HeaderIcons = () => (
-    <View style={{ flexDirection: "row", marginRight: 15 }}>
-        <TouchableOpacity onPress={() => alert("Search")}>
-            <Ionicons
-                name="search"
-                size={25}
-                style={{ marginRight: 20 }}
-                color={APP_THEME.light.primary.first}
-            />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => alert("Notifications")}>
-            <Ionicons name="notifications" size={25} color={APP_THEME.light.primary.first} />
-        </TouchableOpacity>
-    </View>
-);
-
 const screenOptions = (navigation: any, isRTL: boolean, theme: ThemeType) => ({
     headerBackground: () => (
         <AUILinearGradient
@@ -63,68 +53,80 @@ const screenOptions = (navigation: any, isRTL: boolean, theme: ThemeType) => ({
         />
     ),
     headerLeft: () => <MenuButton navigation={navigation} />,
-    headerRight: () => <HeaderIcons />,
+    headerRight: () => (
+        <HeaderIcons onNotificationPress={() => navigation.navigate("Notifications")} />
+    ),
     headerTitle: "",
     drawerLabelStyle: { marginLeft: -20, fontSize: 15, color: TEXT_THEME[theme].gray },
     drawerActiveBackgroundColor: APP_THEME[theme].primary.first,
     drawerActiveTintColor: "#ffffff",
     drawerPosition: isRTL ? "right" : "left",
-    // drawerItemStyle: { flexDirection: "row-reverse" },
-
-    // drawerLabelStyle: { textAlign: "right" },
 });
 
-//creating Drawer
 export default function AUIDrawer() {
     const { t, i18n } = useTranslation();
     const isRTL = useSelector((state: RootState) => state.global.isRTL);
     const theme = useSelector((state: RootState) => state.global.theme);
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
+
+    const handleNotificationPress = () => {
+        setModalVisible(true);
+    };
+
+    const closeModal = () => {
+        setModalVisible(false);
+    };
 
     return (
-        <Drawer.Navigator
-            initialRouteName="Home"
-            screenOptions={({ navigation }) => screenOptions(navigation, isRTL, theme) as any}
-            drawerContent={(props) => <AUIDrawerContent {...props} />}
-        >
-            <Drawer.Screen
-                name="Home"
-                component={TabLayout}
-                options={{
-                    title: t(GLOBAL_TRANSLATION_LABEL.home),
+        <>
+            <Drawer.Navigator
+                initialRouteName="Home"
+                screenOptions={({ navigation }) => screenOptions(navigation, isRTL, theme) as any}
+                drawerContent={(props) => <AUIDrawerContent {...props} />}
+            >
+                <Drawer.Screen
+                    name="Home"
+                    component={TabLayout}
+                    options={{
+                        title: t(GLOBAL_TRANSLATION_LABEL.home),
 
-                    // drawerItemStyle: { alignItems: "flex-end", flexDirection: "row-reverse" },
-                    drawerIcon: ({ color }) => (
-                        <FontAwesome name="home" size={24} color={TEXT_THEME[theme].gray} />
-                    ),
-                }}
-            />
-            <Drawer.Screen
-                name="Profile"
-                component={ProfileScreen}
-                options={{
-                    headerShown: false,
-                    title: t(GLOBAL_TRANSLATION_LABEL.account),
-                    drawerIcon: ({ color }) => (
-                        <MaterialCommunityIcons
-                            name="account"
-                            size={24}
-                            color={TEXT_THEME[theme].gray}
-                        />
-                    ),
-                }}
-            />
-            <Drawer.Screen
-                name="Courses"
-                component={CoursesScreen}
-                options={{
-                    title: t(GLOBAL_TRANSLATION_LABEL.courses),
+                        // drawerItemStyle: { alignItems: "flex-end", flexDirection: "row-reverse" },
+                        drawerIcon: ({ color }) => (
+                            <FontAwesome name="home" size={24} color={TEXT_THEME[theme].gray} />
+                        ),
+                    }}
+                />
+                <Drawer.Screen
+                    name="Profile"
+                    component={ProfileScreen}
+                    options={{
+                        headerShown: false,
+                        title: t(GLOBAL_TRANSLATION_LABEL.account),
+                        drawerIcon: ({ color }) => (
+                            <MaterialCommunityIcons
+                                name="account"
+                                size={24}
+                                color={TEXT_THEME[theme].gray}
+                            />
+                        ),
+                    }}
+                />
+                <Drawer.Screen
+                    name="Courses"
+                    component={CoursesScreen}
+                    options={{
+                        title: t(GLOBAL_TRANSLATION_LABEL.courses),
 
-                    drawerIcon: ({ color }) => (
-                        <FontAwesome5 name="book-reader" size={24} color={TEXT_THEME[theme].gray} />
-                    ),
-                }}
-            />
-            {/* <Drawer.Screen
+                        drawerIcon: ({ color }) => (
+                            <FontAwesome5
+                                name="book-reader"
+                                size={24}
+                                color={TEXT_THEME[theme].gray}
+                            />
+                        ),
+                    }}
+                />
+                {/* <Drawer.Screen
                 name="Accommodation"
                 component={AccommodationScreen}
                 options={{
@@ -142,18 +144,43 @@ export default function AUIDrawer() {
                     ),
                 }}
             /> */}
-            <Drawer.Screen
-                name="TermsPolicy"
-                component={TermsPolicyScreen}
-                options={{
-                    title: t(GLOBAL_TRANSLATION_LABEL.termsPolicy),
+                <Drawer.Screen
+                    name="TermsPolicy"
+                    component={TermsPolicyScreen}
+                    options={{
+                        title: t(GLOBAL_TRANSLATION_LABEL.termsPolicy),
 
-                    drawerIcon: ({ color }) => (
-                        <MaterialIcons name="policy" size={24} color={TEXT_THEME[theme].gray} />
-                    ),
-                }}
-            />
-        </Drawer.Navigator>
+                        drawerIcon: ({ color }) => (
+                            <MaterialIcons name="policy" size={24} color={TEXT_THEME[theme].gray} />
+                        ),
+                    }}
+                />
+                <Drawer.Screen
+                    name="Notifications"
+                    component={() => <NotificationsScreen onClose={closeModal} />}
+                    options={{
+                        headerShown: false,
+                        title: t(GLOBAL_TRANSLATION_LABEL.notifications),
+                        drawerIcon: ({ color }) => (
+                            <MaterialIcons name="notifications" size={24} color={color} />
+                        ),
+                    }}
+                />
+            </Drawer.Navigator>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={closeModal}
+            >
+                <AUIThemedView style={styles.modalContainer}>
+                    <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
+                        <Ionicons name="close" size={24} color={TEXT_THEME[theme].primary} />
+                    </TouchableOpacity>
+                    <NotificationDrawer onClose={closeModal} />
+                </AUIThemedView>
+            </Modal>
+        </>
     );
 }
 
@@ -241,3 +268,14 @@ export function TabLayout() {
         </Tabs>
     );
 }
+
+const styles = StyleSheet.create({
+    modalContainer: {
+        flex: 1,
+        paddingTop: 50,
+    },
+    closeButton: {
+        alignSelf: "flex-end",
+        padding: 16,
+    },
+});

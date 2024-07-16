@@ -3,7 +3,7 @@ import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector
 import { RootState } from "@/redux/store";
 import axios from "axios";
 
-const baseURL = "https://vqhqpfx4-4000.inc1.devtunnels.ms/dev/"
+const baseURL = "https://vqhqpfx4-4000.inc1.devtunnels.ms/dev/";
 //"https://zmgr2gg0-4000.inc1.devtunnels.ms/dev/";
 
 const useAxios = () => {
@@ -12,7 +12,7 @@ const useAxios = () => {
         baseURL,
         headers: {
             "Content-Type": "application/json",
-            "Authorization" : `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
         },
     });
 
