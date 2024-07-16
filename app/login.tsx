@@ -547,6 +547,7 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import useAxios from "./services/axiosClient";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
+import { ApiErrorToast } from "@/components/common/AUIToast";
 const schema = Yup.object().shape({
     input: Yup.string().when("selectedButton", {
         is: "mobile",
@@ -719,6 +720,10 @@ const LoginPage = () => {
         dispatch(setLoader(true));
         post(API_URL.verifyOTP, payload)
             .then((res) => {
+                if (res.statusCode === 400) {
+                    return ApiErrorToast(res.message);
+                }
+
                 dispatch(setLoader(false));
                 setOtpVerified({
                     ...otpVerified,
