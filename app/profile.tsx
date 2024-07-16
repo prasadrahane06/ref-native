@@ -120,9 +120,12 @@ const schema = Yup.object().shape({
 });
 
 const Profile: React.FC = () => {
-    const userProfileData = useLangTransformSelector((state: RootState) => state.api.userProfileData);
+    const userProfileData = useLangTransformSelector(
+        (state: RootState) => state.api.userProfileData
+    );
+
     const theme = useSelector((state: RootState) => state.global.theme);
-    const [dateOfBirth, setDateOfBirth] = useState(userProfileData?.dob);
+    const [dateOfBirth, setDateOfBirth] = useState(new Date(userProfileData?.dob));
     const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
 
     const { patch } = useAxios();
@@ -135,7 +138,7 @@ const Profile: React.FC = () => {
             phoneNumber: userProfileData?.phone,
             email: userProfileData?.email,
             language: userProfileData?.language,
-            dateOfBirth: dateOfBirth,
+            dateOfBirth: dateOfBirth.toISOString(),
             gender: "",
             qualification: userProfileData?.qualification,
             academicSession: userProfileData?.academicSession,
@@ -162,7 +165,6 @@ const Profile: React.FC = () => {
     };
 
     const onSave = (data: any) => {
-
         const payload = {
             id: userProfileData?._id,
             name: data.name,

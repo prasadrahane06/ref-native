@@ -36,11 +36,12 @@ export default function HomeScreen() {
     // const displayedCourses = coursesData.slice(0, 4);
     // const theme = useSelector((state: RootState) => state.global.theme);
     const response = useLangTransformSelector((state: RootState) => state.api || {});
-    
+    const { _id } = useLangTransformSelector((state: RootState) => state.global.user);
+
     let schoolsResponse = response?.school;
     const courseResponse = response?.selectedLanguagecourse;
     const countryResponse = response?.country;
-   
+
     const fetchCourses = useCallback(() => {
         requestFn(API_URL.course, "selectedLanguagecourse", { similar: selectedLanguage.name });
     }, [selectedLanguage]);
@@ -54,11 +55,7 @@ export default function HomeScreen() {
         requestFn(API_URL.country, "country");
         requestFn(API_URL.favorite, "favorite", { user: true });
         requestFn(API_URL.cart, "cart");
-
-        getUserData().then((data) => {
-            const id = data?.data?.user?._id;
-            requestFn(API_URL.user, "userProfileData", { id: id });
-        });
+        requestFn(API_URL.user, "userProfileData", { id: _id });
     }, []);
 
     const favorite = useLangTransformSelector((state: RootState) => state.api.favorite);
