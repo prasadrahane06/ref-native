@@ -305,6 +305,14 @@ const InitialLayout = () => {
                     ),
                 }}
             />
+            <Stack.Screen
+                name="(home)/studentInfo/[id]"
+                options={{
+                    headerShown: true,
+                    title: "",
+                    headerTitle: "Student Information",
+                }}
+            />
         </Stack>
     );
 };

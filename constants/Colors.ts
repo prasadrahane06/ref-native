@@ -68,7 +68,7 @@ const APP_THEME: { [key in ThemeType]: AppTheme } = {
     light: {
         background: "#fff",
         gray: "#595959",
-        lightGray: "",
+        lightGray: "9DA1AC",
         primary: {
             first: "#5BD894", //"#93D1BF",
             second: "#A5D7B9",

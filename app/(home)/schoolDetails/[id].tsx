@@ -25,7 +25,7 @@ import Animated, {
     useScrollViewOffset,
 } from "react-native-reanimated";
 import { useDispatch, useSelector } from "react-redux";
-import { ChatBot } from "at-chatbot-native";
+// import { ChatBot } from "at-chatbot-native";
 
 interface TabProps {
     courseId: string;
