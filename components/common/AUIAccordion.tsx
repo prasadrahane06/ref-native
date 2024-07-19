@@ -12,20 +12,26 @@ interface AccordionProps {
     title: string;
     children: ReactNode;
     icon?: string;
+    style?: any;
+    innerStyle?: any;
 }
 
-const AUIAccordion: React.FC<AccordionProps> = ({ title, children, icon }) => {
+const AUIAccordion: React.FC<AccordionProps> = ({ title, children, icon, style, innerStyle }) => {
     const theme = useSelector((state: RootState) => state.global.theme);
     const [expanded, setExpanded] = useState(false);
 
     return (
-        <AUIThemedView style={styles.accordionContainer}>
+        <AUIThemedView style={[styles.accordionContainer, style]}>
             <TouchableOpacity
-                style={[styles.accordionHeader, expanded && styles.accordionHeaderExpanded]}
+                style={[
+                    styles.accordionHeader,
+                    expanded && styles.accordionHeaderExpanded,
+                    innerStyle,
+                ]}
                 onPress={() => setExpanded(!expanded)}
             >
                 <AUIThemedView style={styles.accordionTitle}>
-                    <AUIImage style={styles.icon} path={icon} resizeMode="cover" />
+                    {icon && <AUIImage style={styles.icon} path={icon} resizeMode="cover" />}
                     <AUIThemedText style={styles.accordionTitleText}>{title}</AUIThemedText>
                 </AUIThemedView>
 
@@ -43,7 +49,7 @@ const AUIAccordion: React.FC<AccordionProps> = ({ title, children, icon }) => {
 const styles = StyleSheet.create({
     accordionContainer: {
         borderWidth: 1,
-        borderColor: "#5BD894",
+        // borderColor: "#5BD894",
         borderRadius: 10,
         marginBottom: 12,
         overflow: "hidden",

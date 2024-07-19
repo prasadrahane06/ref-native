@@ -173,7 +173,9 @@ const RenderItemWithIcon = ({
     </AUIThemedView>
 );
 
-const RenderDefaultItem = ({ item, labelField }: any) => item[labelField];
+const RenderDefaultItem = ({ item, labelField }: any) => (
+    <AUIThemedText style={styles.renderDefaultItem}>{item[labelField]}</AUIThemedText>
+);
 const styles = StyleSheet.create({
     dropdown: {
         height: 50,
@@ -207,4 +209,5 @@ const styles = StyleSheet.create({
         height: 40,
         fontSize: 16,
     },
+    renderDefaultItem:{paddingVertical:12,paddingHorizontal:5, borderBottomWidth:1,borderBottomColor:"#ccc"}
 });

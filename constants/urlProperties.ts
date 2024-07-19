@@ -16,4 +16,6 @@ export const API_URL = {
     plan: "plan",
     purchaseCourse: "course/purchaseCourse",
     schoolComparison: "school/schoolComparison",
+    event:"event",
+    facility:"facility"
 };

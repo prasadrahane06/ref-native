@@ -313,6 +313,14 @@ const InitialLayout = () => {
                     headerTitle: "Student Information",
                 }}
             />
+            <Stack.Screen
+                name="(home)/AddNewCourse/AddCourse"
+                options={{
+                    headerShown: true,
+                    title: "Add New Course",
+                    headerTitle: "Add New Course",
+                }}
+            />
         </Stack>
     );
 };

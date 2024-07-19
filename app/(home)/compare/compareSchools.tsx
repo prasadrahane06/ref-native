@@ -118,6 +118,7 @@ const CompareSchools: React.FC = () => {
                     <AUIThemedView style={styles.accordionSection}>
                         <AUIAccordion
                             title="School Infomtion"
+                            style={styles.AUIAccordion}
                             icon={
                                 Asset.fromModule(
                                     require("@/assets/images/compareScreen/compareSchoolsPage/Group 36763.png")
@@ -519,6 +520,7 @@ const styles = StyleSheet.create({
     accordionSection: {
         width: "100%",
     },
+    AUIAccordion:{borderColor: "#5BD894"},
     rowContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
