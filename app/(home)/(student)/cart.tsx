@@ -1,14 +1,17 @@
 import Course from "@/components/Course";
+import AUIImage from "@/components/common/AUIImage";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { BACKGROUND_THEME } from "@/constants/Colors";
+import { BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { addItemToCart } from "@/redux/cartSlice";
 import { RootState } from "@/redux/store";
+import { AntDesign } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
+import { Asset } from "expo-asset";
 import React, { useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Dimensions, FlatList, ScrollView, StyleSheet } from "react-native";
@@ -43,7 +46,13 @@ export default function TabFourScreen() {
             <AUIThemedView
                 style={[styles.container, { backgroundColor: BACKGROUND_THEME[theme].background }]}
             >
-                <AUIThemedText style={styles.title}>{t(GLOBAL_TEXT.your_cart_is_empty)}</AUIThemedText>
+                <AUIThemedText style={styles.title}>
+                    {t(GLOBAL_TEXT.your_cart_is_empty)}
+                </AUIThemedText>
+
+                <AUIThemedView style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+                    <AntDesign name="shoppingcart" size={70} color="#777777" />
+                </AUIThemedView>
             </AUIThemedView>
         );
     }

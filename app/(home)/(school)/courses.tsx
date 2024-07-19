@@ -39,7 +39,6 @@ export default function TabThreeScreen() {
 const styles = StyleSheet.create({
     root: {
         flex: 1,
-        backgroundColor: "#ffffff",
     },
     headerImage: {
         color: "#808080",

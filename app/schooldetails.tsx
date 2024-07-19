@@ -5,7 +5,7 @@ import { AUISafeAreaView } from "@/components/common/AUISafeAreaView";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
-import { signupPageStyles } from "@/constants/Styles";
+import { inputFieldStyle, signupPageStyles } from "@/constants/Styles";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
@@ -15,17 +15,19 @@ import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Platform, ScrollView, StyleSheet } from "react-native";
+import { Platform, ScrollView, StyleSheet, Text } from "react-native";
 import { useDispatch } from "react-redux";
 import * as Yup from "yup";
 import useAxios from "./services/axiosClient";
+import ImageViewer from "@/components/ImageViewer";
+import { Asset } from "expo-asset";
 
 const schema = Yup.object().shape({
     remark: Yup.string().required("Remark is required"),
     website: Yup.string().required("Website is required"),
     location: Yup.string().required("Location is required"),
-    // logo: Yup.string().required("Logo is required"),
-    // banner: Yup.string().required("Banner is required"),
+    logo: Yup.string().required("Logo is required"),
+    banner: Yup.string().required("Banner is required"),
     description: Yup.string().required("Description is required"),
 });
 
@@ -43,18 +45,20 @@ export default function SchoolDetails() {
 
     const { watch, reset, setValue, control, handleSubmit, formState, getValues } = useForm({
         resolver: yupResolver(schema),
-        mode: "onChange",
+        mode: "all",
         defaultValues: {
             remark: "",
             website: "",
             location: "",
             description: "",
-            // logo: "",
-            // banner: "",
+            logo: "",
+            banner: "",
         },
     });
 
-    const countryDataForSchool = useLangTransformSelector((state: RootState) => state.api.countryDataForSchool);
+    const countryDataForSchool = useLangTransformSelector(
+        (state: RootState) => state.api.countryDataForSchool
+    );
 
     useEffect(() => {
         requestFn(API_URL.country, "countryDataForSchool");
@@ -64,7 +68,7 @@ export default function SchoolDetails() {
         if (countryDataForSchool && countryDataForSchool.docs) {
             const locationData = countryDataForSchool?.docs?.map((doc: any) => ({
                 _id: doc._id,
-                location: doc.name.en,
+                location: doc.name,
             }));
 
             setLocationData(locationData);
@@ -72,10 +76,21 @@ export default function SchoolDetails() {
     }, [countryDataForSchool]);
 
     const onSave = async (data: any) => {
+        const logoBase64 = `data:image/png;base64,${data.logo}`;
+        const bannerBase64 = `data:image/png;base64,${data.banner}`;
 
-        patch(API_URL.school, data)
-            .then((response: any) => {
-                ApiSuccessToast("School Details has been saved successfully");
+        const payload = {
+            remark: data.remark,
+            website: data.website,
+            location: data.location,
+            description: data.description,
+            logo: logoBase64,
+            banner: bannerBase64,
+        };
+
+        patch(API_URL.school, payload)
+            .then((res: any) => {
+                ApiSuccessToast(res.message);
                 router.push({
                     pathname: `(home)/(school)`,
                 });
@@ -86,7 +101,7 @@ export default function SchoolDetails() {
             });
     };
 
-    const pickImageAsync = async (value: any, imageType: any) => {
+    const pickImageAsync = async (value: any) => {
         let result = await ImagePicker.launchImageLibraryAsync({
             base64: true,
             allowsEditing: true,
@@ -94,12 +109,12 @@ export default function SchoolDetails() {
         });
 
         if (!result.canceled) {
-            if (imageType === "logo") {
+            if (value === "logo") {
+                setValue(value, result.assets[0].base64);
                 setSelectedLogo(result.assets[0].uri);
-                setValue(value, result.assets[0].base64);
             } else {
-                setSelectedBanner(result.assets[0].uri);
                 setValue(value, result.assets[0].base64);
+                setSelectedBanner(result.assets[0].uri);
             }
         } else {
             alert("You did not select any image.");
@@ -128,7 +143,10 @@ export default function SchoolDetails() {
                                         />
                                         <AUIThemedView>
                                             {error && (
-                                                <AUIThemedText style={styles.fieldError}>
+                                                <AUIThemedText
+                                                    style={styles.fieldError}
+                                                    type="subtitle"
+                                                >
                                                     {error.message}
                                                 </AUIThemedText>
                                             )}
@@ -141,7 +159,7 @@ export default function SchoolDetails() {
                                 name="website"
                                 control={control}
                                 render={({ field: { onChange, value }, fieldState: { error } }) => (
-                                    <AUIThemedView>
+                                    <AUIThemedView style={{ marginTop: 10 }}>
                                         <AUIInputField
                                             value={value}
                                             onChangeText={onChange}
@@ -150,7 +168,10 @@ export default function SchoolDetails() {
                                         />
                                         <AUIThemedView>
                                             {error && (
-                                                <AUIThemedText style={styles.fieldError}>
+                                                <AUIThemedText
+                                                    style={styles.fieldError}
+                                                    type="subtitle"
+                                                >
                                                     {error.message}
                                                 </AUIThemedText>
                                             )}
@@ -172,7 +193,10 @@ export default function SchoolDetails() {
                                         />
                                         <AUIThemedView>
                                             {error && (
-                                                <AUIThemedText style={styles.fieldError}>
+                                                <AUIThemedText
+                                                    style={styles.fieldError}
+                                                    type="subtitle"
+                                                >
                                                     {error.message}
                                                 </AUIThemedText>
                                             )}
@@ -201,35 +225,55 @@ export default function SchoolDetails() {
                                             position="top"
                                             listWithIcon
                                         />
+
+                                        <AUIThemedView>
+                                            {error && (
+                                                <AUIThemedText
+                                                    style={styles.fieldError}
+                                                    type="subtitle"
+                                                >
+                                                    {error.message}
+                                                </AUIThemedText>
+                                            )}
+                                        </AUIThemedView>
                                     </AUIThemedView>
                                 )}
                             />
 
-                            {/* <Controller
+                            <Controller
                                 name="logo"
                                 control={control}
                                 render={({ field: { onChange, value }, fieldState: { error } }) => (
                                     <AUIThemedView>
-                                        <Text style={inputFieldStyle.label}>
+                                        <AUIThemedText style={inputFieldStyle.label}>
                                             Pick your school logo
-                                        </Text>
+                                        </AUIThemedText>
+
+                                        <AUIThemedView>
+                                            {error && (
+                                                <AUIThemedText
+                                                    style={{
+                                                        color: "red",
+                                                        fontSize: 12,
+                                                    }}
+                                                    type="subtitle"
+                                                >
+                                                    {error.message}
+                                                </AUIThemedText>
+                                            )}
+                                        </AUIThemedView>
+
                                         <AUIThemedView style={styles.imageContainer}>
                                             <ImageViewer
                                                 selectedImage={selectedLogo}
-                                                placeholderImageSource={
-                                                    Asset.fromModule(
-                                                        require("@/assets/images/favicon.png")
-                                                    ).uri
-                                                }
                                                 style={{ width: 200, height: 200 }}
                                             />
                                         </AUIThemedView>
 
                                         <AUIThemedView style={{ marginTop: 20 }}>
                                             <AUIButton
-                                                selected
                                                 title="Choose a photo"
-                                                onPress={() => pickImageAsync("logo", "logo")}
+                                                onPress={() => pickImageAsync("logo")}
                                             />
                                         </AUIThemedView>
                                     </AUIThemedView>
@@ -241,7 +285,23 @@ export default function SchoolDetails() {
                                 control={control}
                                 render={({ field: { onChange, value }, fieldState: { error } }) => (
                                     <AUIThemedView>
-                                        <Text style={inputFieldStyle.label}>School Banner</Text>
+                                        <AUIThemedText style={inputFieldStyle.label}>
+                                            School Banner
+                                        </AUIThemedText>
+                                        <AUIThemedView>
+                                            {error && (
+                                                <AUIThemedText
+                                                    style={{
+                                                        color: "red",
+                                                        fontSize: 12,
+                                                    }}
+                                                    type="subtitle"
+                                                >
+                                                    {error.message}
+                                                </AUIThemedText>
+                                            )}
+                                        </AUIThemedView>
+
                                         <AUIThemedView style={styles.imageContainer}>
                                             <ImageViewer
                                                 selectedImage={selectedBanner}
@@ -256,14 +316,13 @@ export default function SchoolDetails() {
 
                                         <AUIThemedView style={{ marginTop: 20 }}>
                                             <AUIButton
-                                                selected
                                                 title="Choose a photo"
-                                                onPress={() => pickImageAsync("banner", "banner")}
+                                                onPress={() => pickImageAsync("banner")}
                                             />
                                         </AUIThemedView>
                                     </AUIThemedView>
                                 )}
-                            /> */}
+                            />
                         </AUIThemedView>
 
                         <AUIThemedView
@@ -293,6 +352,6 @@ const styles = StyleSheet.create({
     fieldError: {
         position: "absolute",
         color: "red",
-        fontSize: 13,
+        fontSize: 12,
     },
 });

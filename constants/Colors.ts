@@ -86,7 +86,7 @@ const APP_THEME: { [key in ThemeType]: AppTheme } = {
         },
     },
     dark: {
-        background: "#000",
+        background: "#0B1710",
         gray: "#fff",
         lightGray: "",
         primary: {
@@ -108,17 +108,17 @@ const APP_THEME: { [key in ThemeType]: AppTheme } = {
 };
 const BACKGROUND_THEME: ColorThemes = {
     light: { background: "#fff" },
-    dark: { background: "#000" },
+    dark: { background: "#0B1710" },
 };
 
 const TEXT_THEME: TextTheme = {
     light: {
-        primary: "#000",
+        primary: "#0B1710",
         secondary: "#ccc",
         danger: "#dc3545",
         warning: "#ffc107",
         info: "#17a2b8",
-        gray: "#000",
+        gray: "#0B1710",
     },
     dark: {
         primary: "#fff",
@@ -201,7 +201,7 @@ const TAB_COLORS: { [key in ThemeType]: TabColors } = {
         inactive: "#265451",
     },
     dark: {
-        active: "#000",
+        active: "#0B1710",
         inactive: "#fff",
     },
 };

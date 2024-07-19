@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const botUrl = "https://60bf-223-233-85-160.ngrok-free.app";
+const botUrl = "https://e3c3-223-233-87-106.ngrok-free.app";
 
 // Create an Axios instance
 const axiosClient = axios.create({

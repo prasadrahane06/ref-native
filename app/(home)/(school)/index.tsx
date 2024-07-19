@@ -5,12 +5,11 @@ import ChartComponent from "@/components/home/common/LinearChart";
 import SectionTitle from "@/components/home/common/SectionTitle";
 import { APP_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
-import { getUserData } from "@/constants/RNAsyncStore";
-import { coursesData } from "@/constants/dummy data/coursesData";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
+import formatNumberWithComma from "@/utils/numberFomatter";
 import React, { useEffect } from "react";
 import { FlatList, ScrollView, StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
@@ -19,7 +18,9 @@ export default function HomeScreen() {
     const { requestFn } = useApiRequest();
     const school = useLangTransformSelector((state: RootState) => state.api.individualSchool || {});
     const theme = useSelector((state: RootState) => state.global.theme);
-    const MySchoolDetails = useLangTransformSelector((state: RootState) => state.api.MySchoolDetails || {});
+    const MySchoolDetails = useLangTransformSelector(
+        (state: RootState) => state.api.MySchoolDetails || {}
+    );
 
     const courseInfoData = [
         {
@@ -44,11 +45,9 @@ export default function HomeScreen() {
         },
     ];
 
-  
-
-    useEffect(()=>{
-        requestFn(API_URL.schoolOverview , "MySchoolDetails" , {client : true })
-    },[])
+    useEffect(() => {
+        requestFn(API_URL.schoolOverview, "MySchoolDetails", { client: true });
+    }, []);
 
     return (
         <ScrollView>
@@ -66,7 +65,7 @@ export default function HomeScreen() {
                                     fontSize: 14,
                                     color: APP_THEME[theme].gray,
                                 }}
-                                title={item.title}
+                                title={formatNumberWithComma(item.title)}
                                 subtitle={item.subtitle}
                             />
                         )}
@@ -102,7 +101,7 @@ export default function HomeScreen() {
                     <SectionTitle style={{ paddingBottom: 10 }}>
                         {GLOBAL_TEXT.ongoing_courses}
                     </SectionTitle>
-                    <CourseList data={MySchoolDetails[0]?.courses?.slice(0,4)} />
+                    <CourseList data={MySchoolDetails[0]?.courses?.slice(0, 4)} />
                 </AUIThemedView>
             </AUIThemedView>
         </ScrollView>

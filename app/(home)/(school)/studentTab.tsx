@@ -10,7 +10,9 @@ import { StyleSheet } from "react-native";
 
 export default function TabTwoScreen() {
     const { requestFn } = useApiRequest();
-    const schoolPurchaseCourse = useLangTransformSelector((state: RootState) => state.api.schoolPurchaseCourse || {});
+    const schoolPurchaseCourse = useLangTransformSelector(
+        (state: RootState) => state.api.schoolPurchaseCourse || {}
+    );
 
     useEffect(() => {
         requestFn(API_URL.purchaseCourse, "schoolPurchaseCourse", { client: true });
@@ -21,10 +23,14 @@ export default function TabTwoScreen() {
             <AUIThemedText style={styles.title}>Students Admitted through App</AUIThemedText>
             <AUIThemedView>
                 {schoolPurchaseCourse.docs && Array.isArray(schoolPurchaseCourse.docs) ? (
-                    schoolPurchaseCourse.docs.map((item : any ) => (
+                    schoolPurchaseCourse.docs.map((item: any) => (
                         <AUIThemedView key={item._id} style={styles.layout}>
-                            <AUIThemedText style={styles.name}>{item.user?.name || 'No name available'}</AUIThemedText>
-                            <AUIThemedText style={styles.id}>ID: {item.user?._id || 'No ID available'}</AUIThemedText>
+                            <AUIThemedText style={styles.name}>
+                                {item.user?.name || "No name available"}
+                            </AUIThemedText>
+                            <AUIThemedText style={styles.id}>
+                                ID: {item.user?._id || "No ID available"}
+                            </AUIThemedText>
                             <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
                         </AUIThemedView>
                     ))
@@ -39,7 +45,6 @@ export default function TabTwoScreen() {
 const styles = StyleSheet.create({
     root: {
         flex: 1,
-        backgroundColor: "#ffffff",
         padding: 20,
     },
     title: {
@@ -58,10 +63,12 @@ const styles = StyleSheet.create({
     name: {
         fontWeight: "bold",
         flex: 1,
+        color: "#000",
     },
     id: {
         flex: 1,
         fontWeight: "bold",
+        color: "#000",
     },
     noData: {
         padding: 10,

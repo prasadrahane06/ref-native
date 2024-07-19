@@ -593,7 +593,7 @@ export default function PlanComponent({
     }, []);
 
     const { requestFn } = useApiRequest();
-    const isPurchased = useLangTransformSelector((state: RootState) => state.api.isPurchased );
+    const isPurchased = useLangTransformSelector((state: RootState) => state.api.isPurchased);
 
     useEffect(() => {
         requestFn(API_URL.purchaseCourse, "isPurchased", { user: true, course: courseId });
@@ -722,12 +722,15 @@ export default function PlanComponent({
             </AUIThemedView>
 
             <AUIThemedView>
-                <AUIButton
-                    title={t(GLOBAL_TRANSLATION_LABEL.enquireNow)}
-                    style={styles.enquireButton}
-                    borderColor="#5BD894"
-                    onPress={() => setIsModalVisible(true)}
-                />
+                <Pressable style={buttonStyle.container} onPress={() => setIsModalVisible(true)}>
+                    <AUIThemedView style={[buttonStyle.buttonInner]}>
+                        <AUIThemedText
+                            style={[buttonStyle.buttonText, { color: TEXT_THEME[theme].primary }]}
+                        >
+                            {t(GLOBAL_TRANSLATION_LABEL.enquireNow)}
+                        </AUIThemedText>
+                    </AUIThemedView>
+                </Pressable>
             </AUIThemedView>
 
             <AUIThemedView style={{ marginTop: 25 }}>
@@ -760,6 +763,39 @@ export default function PlanComponent({
         </AUIThemedView>
     );
 }
+
+const buttonStyle = StyleSheet.create({
+    container: {
+        marginVertical: 20,
+        paddingHorizontal: 15,
+        backgroundColor: "transparent",
+        borderColor: APP_THEME.light.primary.first,
+    },
+    button: {
+        borderRadius: 5,
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "row",
+    },
+    buttonInner: {
+        flex: 1,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 10,
+        borderRadius: 5,
+        height: 40,
+        paddingHorizontal: 10,
+        borderWidth: 1,
+        borderColor: APP_THEME.light.primary.first,
+    },
+    buttonText: {
+        fontSize: 16,
+        fontWeight: "bold",
+        textAlign: "center",
+        justifyContent: "center",
+    },
+});
 
 const enquiryFormStyles = StyleSheet.create({
     container: {

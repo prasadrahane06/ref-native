@@ -1,5 +1,4 @@
 import useAxios from "@/app/services/axiosClient";
-import ChatBot from "@/components/chatbot/ChatBot";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
@@ -26,6 +25,7 @@ import Animated, {
     useScrollViewOffset,
 } from "react-native-reanimated";
 import { useDispatch, useSelector } from "react-redux";
+import { ChatBot } from "at-chatbot-native";
 
 interface TabProps {
     courseId: string;
@@ -33,7 +33,9 @@ interface TabProps {
 }
 
 function StudentDetailsTabs({ courseId, clientId }: TabProps) {
-    const schoolsResponse = useLangTransformSelector((state: RootState) => state.api.individualSchool || {});
+    const schoolsResponse = useLangTransformSelector(
+        (state: RootState) => state.api.individualSchool || {}
+    );
     const theme = useSelector((state: RootState) => state.global.theme);
     const [selectedTab, setSelectedTab] = useState("overview");
     const { t, i18n } = useTranslation();
@@ -123,7 +125,6 @@ export default function SchoolDetails() {
 
     const { t, i18n } = useTranslation();
 
-    
     const user = useLangTransformSelector((state: RootState) => state.global.user);
     const favorite = useLangTransformSelector((state: RootState) => state.favorite.items);
     const school = useLangTransformSelector((state: RootState) => state.api.individualSchool || {});
@@ -366,7 +367,7 @@ export default function SchoolDetails() {
                         >
                             <Ionicons name="star" size={20} color={APP_THEME.light.primary.first} />
                             <AUIThemedText style={styles.ratingsText}>4.6</AUIThemedText>
-                            <AUIThemedText style={styles.rankText}>QS Rank 276</AUIThemedText>
+                            {/* <AUIThemedText style={styles.rankText}>QS Rank 276</AUIThemedText> */}
                         </AUIThemedView>
 
                         <AUIThemedView style={styles.contactsContainer}>

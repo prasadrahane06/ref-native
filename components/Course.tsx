@@ -10,12 +10,13 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { StyleProp, StyleSheet, Text, TouchableOpacity, ViewStyle } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import AUIImage from "./common/AUIImage";
 import { AUIThemedText } from "./common/AUIThemedText";
 import { AUIThemedView } from "./common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "./common/AUIToast";
+import { TouchableOpacityProps } from "react-native-gesture-handler";
 
 interface CourseProps {
     title: string;
@@ -24,7 +25,7 @@ interface CourseProps {
     startingDate?: string;
     cart?: boolean;
     courseId: any;
-    style?: object;
+    style?: ViewStyle;
     numberOfLines?: number;
     ellipsizeMode?: "head" | "middle" | "tail" | "clip";
 }
@@ -40,12 +41,12 @@ const Course: React.FC<CourseProps> = ({
     numberOfLines,
     ellipsizeMode,
 }) => {
-    const router = useRouter();
-    const dispatch = useDispatch();
-    const { t } = useTranslation();
-    const theme = useSelector((state: RootState) => state.global.theme);
-
     const { del } = useAxios();
+    const dispatch = useDispatch();
+    const router = useRouter();
+    const { t } = useTranslation();
+
+    const theme = useSelector((state: RootState) => state.global.theme);
 
     const handleRemoveFromCart = (id: string) => {
         del(API_URL.cart, { course: id })
@@ -107,7 +108,7 @@ const Course: React.FC<CourseProps> = ({
                     >
                         {title}
                     </Text>
-                    <AUIThemedText style={{ fontSize: 12 }}>
+                    <AUIThemedText style={styles.dateStyle}>
                         <AUIThemedText style={styles.courseCaption}>
                             {t(GLOBAL_TRANSLATION_LABEL.starting_from)}:{" "}
                         </AUIThemedText>
@@ -144,6 +145,7 @@ const Course: React.FC<CourseProps> = ({
 };
 
 const styles = StyleSheet.create({
+    dateStyle: { fontSize: 11 },
     courseContainer: {},
     layout: {
         backgroundColor: "transparent",
@@ -151,15 +153,12 @@ const styles = StyleSheet.create({
     courseItemContainer: {
         paddingLeft: 10,
         width: "100%",
-        // height: 50,
         paddingVertical: 4,
         borderBottomWidth: 1,
         borderLeftWidth: 1,
         borderRightWidth: 1,
         borderBottomLeftRadius: 8,
         borderBottomRightRadius: 8,
-        // borderColor: APP_THEME[theme].primary,
-        // shadowColor: APP_THEME[theme].primary,
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.8,
         shadowRadius: 2,
@@ -175,7 +174,7 @@ const styles = StyleSheet.create({
         fontWeight: "700",
     },
     courseCaption: {
-        fontSize: 12,
+        fontSize: 11,
         fontWeight: "bold",
     },
     iconContainer: {
@@ -190,7 +189,6 @@ const styles = StyleSheet.create({
         position: "absolute",
         top: 10,
         right: 10,
-        // backgroundColor: APP_THEME.primary.first,
         borderRadius: 20,
         padding: 5,
     },

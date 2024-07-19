@@ -2,8 +2,12 @@ import { StyleSheet, Image } from "react-native";
 import AUIImage from "./common/AUIImage";
 import { Asset } from "expo-asset";
 
-export default function ImageViewer({ placeholderImageSource, selectedImage, style }: any) {
-    const imageSource = selectedImage ? { uri: selectedImage } : placeholderImageSource;
+export default function ImageViewer({ selectedImage, style }: any) {
+    const imageSource = selectedImage
+        ? { uri: selectedImage }
+        : {
+              uri: Asset.fromModule(require("@/assets/images/common/no-image.png")).uri,
+          };
 
     return <Image source={imageSource} style={[styles.image, style]} />;
 }

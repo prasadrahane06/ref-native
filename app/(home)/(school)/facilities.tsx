@@ -8,9 +8,7 @@ import { StyleSheet } from "react-native";
 
 export default function TabFourScreen() {
     const school = useLangTransformSelector((state: RootState) => state.api.MySchoolDetails || {});
-    
     const facilities = school[0]?.facilities || [];
-    
 
     return (
         <AUIThemedView style={styles.root}>
@@ -30,7 +28,6 @@ export default function TabFourScreen() {
 const styles = StyleSheet.create({
     root: {
         flex: 1,
-        backgroundColor: "#ffffff",
         padding: 20,
     },
     title: {

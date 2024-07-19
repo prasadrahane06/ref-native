@@ -20,6 +20,7 @@ import AUIImage from "../common/AUIImage";
 import { Asset } from "expo-asset";
 import { get, post } from "@/app/services/botAxiosClient";
 import { GoogleTranslatorTokenFree } from "@translate-tools/core/translators/GoogleTranslator";
+import { ApiSuccessToast } from "../common/AUIToast";
 
 interface User {
     _id: string;
@@ -61,8 +62,8 @@ const ChatBot: React.FC<ChatBotProps> = ({ consumerId, user, config }) => {
     const fadeAnimation = useRef(new Animated.Value(0)).current;
     const [outgoingMessage, setOutgoingMessage] = useState("");
     const [incomingMessages, setIncomingMessages] = useState<Message[]>([]);
-
-    const roomId = "6686af041d2e9b25dfcda4ba";
+    const [roomId, setRoomId] = useState("");
+    console.log("roomId", roomId);
 
     const [isScrollingUp, setIsScrollingUp] = useState(false);
     const scrollViewRef = useRef<ScrollView>(null);
@@ -92,12 +93,13 @@ const ChatBot: React.FC<ChatBotProps> = ({ consumerId, user, config }) => {
     useEffect(() => {
         if (modalVisible) {
             post("/room/join", {
-                name: "school-1-student-1",
+                name: `${userId}-${consumerId}`,
                 // username: "Bilal",
                 username: userName,
                 user: userId,
             })
                 .then((res) => {
+                    setRoomId(res._id);
                     console.log("Room joined successfully");
                     console.log("res from /room/join =>", res);
                 })

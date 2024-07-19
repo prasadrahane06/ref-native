@@ -109,7 +109,9 @@ export const loginPageStyles = StyleSheet.create({
     },
     mobileEmailButtonContainer: {
         flexDirection: "row",
-        gap: 5,
+        gap: 15,
+        justifyContent: "center",
+        alignItems: "center",
         marginTop: 20,
         // backgroundColor: "#ffffff",
     },

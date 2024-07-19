@@ -88,6 +88,7 @@ const AUIDrawerContent = (props: any) => {
                         <View style={styles.nameContainer}>
                             <AUIThemedText
                                 style={[styles.name, { color: APP_THEME[theme].primary.first }]}
+                                numberOfLines={2}
                             >{`${t(GLOBAL_TRANSLATION_LABEL.hii)} ${name}`}</AUIThemedText>
                             <AUIThemedText
                                 style={[styles.welcome, { color: TEXT_THEME[theme].primary }]}
@@ -199,12 +200,11 @@ const styles = StyleSheet.create({
     },
     nameContainer: {
         paddingTop: 10,
+        width: "55%",
     },
     name: {
         fontSize: 18,
         fontWeight: "bold",
-        textAlign: "center",
-        flexWrap: "wrap",
         // color: APP_THEME.ternary.first,
     },
     welcome: {
