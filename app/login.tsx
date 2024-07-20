@@ -553,7 +553,7 @@ const buttonStyle = StyleSheet.create({
         height: 40,
         paddingHorizontal: 10,
         borderWidth: 1,
-        borderColor: APP_THEME.light.primary.first,
+        // borderColor: APP_THEME.light.primary.first,
     },
     buttonText: {
         fontSize: 16,

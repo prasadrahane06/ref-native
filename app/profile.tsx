@@ -125,7 +125,7 @@ const Profile: React.FC = () => {
     );
 
     const theme = useSelector((state: RootState) => state.global.theme);
-    const [dateOfBirth, setDateOfBirth] = useState(new Date(userProfileData?.dob));
+    const [dateOfBirth, setDateOfBirth] = useState(userProfileData?.dob && new Date(userProfileData?.dob) || '');
     const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
 
     const { patch } = useAxios();
@@ -138,7 +138,7 @@ const Profile: React.FC = () => {
             phoneNumber: userProfileData?.phone,
             email: userProfileData?.email,
             language: userProfileData?.language,
-            dateOfBirth: dateOfBirth.toISOString(),
+            dateOfBirth: dateOfBirth && dateOfBirth?.toISOString(),
             gender: "",
             qualification: userProfileData?.qualification,
             academicSession: userProfileData?.academicSession,

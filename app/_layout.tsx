@@ -99,7 +99,7 @@ const InitialLayout = () => {
                             <Ionicons
                                 name="arrow-back"
                                 size={34}
-                                color={theme === "light" ? "#000" : "#fff"}
+                                color={TEXT_THEME[theme].primary}
                             />
                         </TouchableOpacity>
                     ),
@@ -109,7 +109,7 @@ const InitialLayout = () => {
                                 <Ionicons
                                     name="help-circle-outline"
                                     size={34}
-                                    color={theme === "light" ? "#000" : "#fff"}
+                                    color={TEXT_THEME[theme].primary}
                                 />
                             </TouchableOpacity>
                         </Link>
@@ -128,7 +128,7 @@ const InitialLayout = () => {
                             <Ionicons
                                 name="arrow-back"
                                 size={34}
-                                color={APP_THEME.light.ternary.first}
+                                color={TEXT_THEME[theme].primary}
                             />
                         </TouchableOpacity>
                     ),
@@ -138,7 +138,7 @@ const InitialLayout = () => {
                                 <Ionicons
                                     name="help-circle-outline"
                                     size={34}
-                                    color={APP_THEME.light.ternary.first}
+                                    color={TEXT_THEME[theme].primary}
                                 />
                             </TouchableOpacity>
                         </Link>
@@ -155,7 +155,7 @@ const InitialLayout = () => {
                             <Ionicons
                                 name="arrow-back"
                                 size={34}
-                                color={APP_THEME.light.ternary.first}
+                                color={TEXT_THEME[theme].primary}
                             />
                         </TouchableOpacity>
                     ),
@@ -165,7 +165,7 @@ const InitialLayout = () => {
                                 <Ionicons
                                     name="help-circle-outline"
                                     size={34}
-                                    color={APP_THEME.light.ternary.first}
+                                    color={TEXT_THEME[theme].primary}
                                 />
                             </TouchableOpacity>
                         </Link>
@@ -198,6 +198,15 @@ const InitialLayout = () => {
                     headerTitle: "Add to compare",
                     headerTitleStyle: { color: TEXT_THEME[theme].primary },
                     headerStyle: { backgroundColor: BACKGROUND_THEME[theme].background },
+                    headerLeft: () => (
+                        <TouchableOpacity onPress={router.back}>
+                            <Ionicons
+                                name="arrow-back"
+                                size={34}
+                                color={TEXT_THEME[theme].primary}
+                            />
+                        </TouchableOpacity>
+                    ),
                 }}
             />
             <Stack.Screen
@@ -208,6 +217,15 @@ const InitialLayout = () => {
                     headerTitle: "Compare Schools",
                     headerTitleStyle: { color: TEXT_THEME[theme].primary },
                     headerStyle: { backgroundColor: BACKGROUND_THEME[theme].background },
+                    headerLeft: () => (
+                        <TouchableOpacity onPress={router.back}>
+                            <Ionicons
+                                name="arrow-back"
+                                size={34}
+                                color={TEXT_THEME[theme].primary}
+                            />
+                        </TouchableOpacity>
+                    ),
                 }}
             />
             <Stack.Screen
@@ -220,7 +238,7 @@ const InitialLayout = () => {
                     headerTransparent: true,
                     headerLeft: () => (
                         <TouchableOpacity onPress={router.back}>
-                            <Ionicons name="arrow-back" size={34} color={"#fff"} />
+                            <Ionicons name="arrow-back" size={34} color={TEXT_THEME[theme].primary} />
                         </TouchableOpacity>
                     ),
                 }}
@@ -236,7 +254,7 @@ const InitialLayout = () => {
                     headerTransparent: true,
                     headerLeft: () => (
                         <TouchableOpacity onPress={router.back}>
-                            <Ionicons name="arrow-back" size={34} color={"white"} />
+                            <Ionicons name="arrow-back" size={34} color={TEXT_THEME[theme].primary} />
                         </TouchableOpacity>
                     ),
                 }}
@@ -248,7 +266,7 @@ const InitialLayout = () => {
                     headerShown: true,
                     headerLeft: () => (
                         <TouchableOpacity onPress={router.back}>
-                            <Ionicons name="arrow-back" size={34} color={"#000"} />
+                            <Ionicons name="arrow-back" size={34} color={TEXT_THEME[theme].primary} />
                         </TouchableOpacity>
                     ),
                     headerTitleStyle: { color: TEXT_THEME[theme].primary },
@@ -288,6 +306,32 @@ const InitialLayout = () => {
                     headerTitle: "My Profile",
                     headerTitleStyle: { color: TEXT_THEME[theme].primary },
                     headerStyle: { backgroundColor: BACKGROUND_THEME[theme].background },
+                    headerLeft: () => (
+                        <TouchableOpacity onPress={router.back}>
+                            <Ionicons
+                                name="arrow-back"
+                                size={34}
+                                color={TEXT_THEME[theme].primary}
+                            />
+                        </TouchableOpacity>
+                    ),
+                }}
+            />
+             <Stack.Screen
+                name="schoolProfile"
+                options={{
+                    headerTitle: "School Profile",
+                    headerTitleStyle: { color: TEXT_THEME[theme].primary },
+                    headerStyle: { backgroundColor: BACKGROUND_THEME[theme].background },
+                    headerLeft: () => (
+                        <TouchableOpacity onPress={router.back}>
+                            <Ionicons
+                                name="arrow-back"
+                                size={34}
+                                color={TEXT_THEME[theme].primary}
+                            />
+                        </TouchableOpacity>
+                    ),
                 }}
             />
             <Stack.Screen

@@ -23,6 +23,7 @@ import * as ImagePicker from "expo-image-picker";
 import { Tabs } from "expo-router";
 import { default as React, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import schoolProfile from "@/components/screenComponents/schoolProfile";
 import {
     Dimensions,
     FlatList,
@@ -35,6 +36,8 @@ import {
 } from "react-native";
 import { useSelector } from "react-redux";
 import NotificationDrawer from "../notification/notification";
+import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
+import { t } from "i18next";
 
 interface AddEvent {
     visible: boolean;
@@ -397,8 +400,9 @@ export default function AUIDrawer() {
                         ),
                     }}
                 />
-                {/* <Drawer.Screen name="SchoolProfile" component={SchoolProfileScreen} />
-            <Drawer.Screen name="SchoolCourses" component={SchoolCoursesScreen} />
+                
+                {/* <Drawer.Screen name="SchoolProfile" component={schoolProfile} /> */}
+            {/* <Drawer.Screen name="SchoolCourses" component={SchoolCoursesScreen} />
             <Drawer.Screen name="Facilities" component={FacilitiesScreen} />
             <Drawer.Screen name="Admission" component={AdmissionScreen} />
             <Drawer.Screen name="Contact" component={ContactScreen} /> */}
@@ -409,6 +413,21 @@ export default function AUIDrawer() {
                         drawerIcon: () => (
                             <MaterialIcons
                                 name="emoji-events"
+                                size={24}
+                                color={TEXT_THEME[theme].gray}
+                            />
+                        ),
+                    }}
+                />
+                   <Drawer.Screen
+                    name="Profile"
+                    component={schoolProfile}
+                    options={{
+                        headerShown: false,
+                        title: t(GLOBAL_TRANSLATION_LABEL.account),
+                        drawerIcon: ({ color }) => (
+                            <MaterialCommunityIcons
+                                name="account"
                                 size={24}
                                 color={TEXT_THEME[theme].gray}
                             />
