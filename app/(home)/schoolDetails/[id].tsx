@@ -27,8 +27,8 @@ import Animated, {
 import { StarRatingDisplay } from "react-native-star-rating-widget";
 import { useDispatch, useSelector } from "react-redux";
 
-// import { ChatBot } from "at-chatbot-native";
-import ChatBot from "@/components/chatbot/ChatBot";
+import { ChatBot } from "at-chatbot-native";
+// import ChatBot from "@/components/chatbot/ChatBot";
 
 interface TabProps {
     courseId: string;

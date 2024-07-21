@@ -14,12 +14,16 @@ import "react-native-gesture-handler";
 import React, { useEffect, useState } from "react";
 import { FlatList, ScrollView, StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
+import { post as botPost } from "@/app/services/botAxiosClient";
+import useAxios from "@/app/services/axiosClient";
+import { ApiSuccessToast } from "@/components/common/AUIToast";
 
-// import { ChatBot } from "at-chatbot-native";
-import ChatBot from "@/components/chatbot/ChatBot";
+import { ChatBot } from "at-chatbot-native";
+// import ChatBot from "@/components/chatbot/ChatBot";
 
 export default function HomeScreen() {
     const { requestFn } = useApiRequest();
+    const { patch } = useAxios();
     const user = useLangTransformSelector((state: RootState) => state.global.user);
     const school = useLangTransformSelector((state: RootState) => state.api.individualSchool || {});
     const theme = useSelector((state: RootState) => state.global.theme);
@@ -33,7 +37,33 @@ export default function HomeScreen() {
         requestFn(API_URL.course, "myCourse", { client: true });
     }, []);
 
-    // chatbot code below botId
+    useEffect(() => {
+        // create bot
+        botPost("/bot", {
+            name: user.name,
+            consumer: user.client,
+            config: {
+                color: "green",
+                language: "English",
+            },
+        })
+            .then((res) => {
+                patch(API_URL.school, {
+                    botId: res.data._id,
+                })
+                    .then((res) => {
+                        ApiSuccessToast(res.message);
+                    })
+                    .catch((e) => {
+                        console.log("Error in update school =>", e);
+                    });
+            })
+            .catch((e) => {
+                console.log("Error in create bot =>", e);
+            });
+    }, []);
+
+    // chatbot code below
     const [config, setConfig] = useState({});
     // const consumerId: string = "667276fdb4001407af7aa8a2";
 
