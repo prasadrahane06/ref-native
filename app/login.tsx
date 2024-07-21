@@ -31,13 +31,22 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import useAxios from "./services/axiosClient";
+
 const schema = Yup.object().shape({
     input: Yup.string().when("selectedButton", {
         is: "mobile",
         then: (schema) =>
             schema
-                .matches(/^[0-9]{10}$/, GLOBAL_TEXT.validate_mobile)
-                .required(GLOBAL_TEXT.validate_mobile),
+                .required(GLOBAL_TEXT.validate_mobile)
+                .test("mobile-phoneCode-length", "Mobile number is not valid", function (value) {
+                    if (value) {
+                        const { phoneCode } = this.parent;
+                        const onlyPhoneCode = phoneCode.split("+")[1];
+                        const totalLength =
+                            (value ? value.length : 0) + (onlyPhoneCode ? onlyPhoneCode.length : 0);
+                        return totalLength === 12;
+                    }
+                }),
         otherwise: (schema) =>
             schema
                 .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, GLOBAL_TEXT.validate_email)

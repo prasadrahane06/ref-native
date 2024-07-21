@@ -3,8 +3,9 @@ import { StyleSheet } from "react-native";
 import AUIImage from "./common/AUIImage";
 import { AUIThemedText } from "./common/AUIThemedText";
 import { AUIThemedView } from "./common/AUIThemedView";
+import { StarRatingDisplay } from "react-native-star-rating-widget";
 
-export const Review = ({ name, role, image, comment }: any) => {
+export const Review = ({ name, role, image, comment, ratings }: any) => {
 
     return (
         <AUIThemedView style={reviewStyle.container}>
@@ -15,6 +16,7 @@ export const Review = ({ name, role, image, comment }: any) => {
                         <AUIThemedText style={reviewStyle.name}>{name}</AUIThemedText>
                         <AUIThemedText style={[reviewStyle.role]}>{role}</AUIThemedText>
                     </AUIThemedView>
+                    <StarRatingDisplay starSize={20} rating={ratings} style={reviewStyle.rating} />
                 </AUIThemedView>
                 <AUIThemedView>
                     <AUIThemedText style={reviewStyle.comment}>{comment}</AUIThemedText>
@@ -30,7 +32,7 @@ const reviewStyle = StyleSheet.create({
         marginRight: 18,
     },
     item: {
-        width: 300,
+        width: 380,
         borderRadius: 10,
         overflow: "hidden",
         padding: 15,
@@ -60,5 +62,12 @@ const reviewStyle = StyleSheet.create({
         fontWeight: "400",
         backgroundColor: "#D3FFE7",
         color: "#000",
+    },
+    rating: {
+        position: "absolute",
+        fontSize: 14,
+        height:12,
+        top: 5,
+        right: 5,
     },
 });

@@ -25,6 +25,7 @@ import Animated, {
     useAnimatedStyle,
     useScrollViewOffset,
 } from "react-native-reanimated";
+import { StarRatingDisplay } from "react-native-star-rating-widget";
 import { useDispatch, useSelector } from "react-redux";
 
 interface TabProps {
@@ -131,13 +132,31 @@ export default function SchoolDetails() {
     const user = useLangTransformSelector((state: RootState) => state.global.user);
     const favorite = useLangTransformSelector((state: RootState) => state.favorite.items);
     const school = useLangTransformSelector((state: RootState) => state.api.individualSchool || {});
+    const ratingsOfTheSchool = useLangTransformSelector(
+        (state: RootState) => state.api.ratingsOfTheSchool || {}
+    );
     const isRTL = useSelector((state: RootState) => state.global.isRTL);
     const theme = useSelector((state: RootState) => state.global.theme);
+    const [overallRatings,setRatings] = useState(0);
+
+    useEffect(() => {
+        if (ratingsOfTheSchool?.docs) {
+            let overallRatings = 0;
+            ratingsOfTheSchool?.docs.forEach((rtng: any) => {
+                overallRatings += rtng?.rating;
+            });
+            setRatings(overallRatings / ratingsOfTheSchool?.docs?.length);
+        }
+    }, [ratingsOfTheSchool]);
 
     const schoolsResponse = school[0];
 
     useEffect(() => {
         requestFn(API_URL.schoolOverview, "individualSchool", { id: id });
+    }, []);
+
+    useEffect(() => {
+        requestFn(API_URL.rating, "ratingsOfTheSchool", { client: id ? id : {} });
     }, []);
 
     const scrollRef = useAnimatedRef<Animated.ScrollView>();
@@ -229,18 +248,19 @@ export default function SchoolDetails() {
                 />
             ),
             headerLeft: () => (
-                <Ionicons
-                    name="arrow-back"
-                    size={30}
-                    color={"#fff"}
-                    style={{
-                        position: "absolute",
-                        left: -57,
-                        alignItems: "center",
-                        justifyContent: "center",
-                    }}
-                    onPress={() => navigation.goBack()}
-                />
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Ionicons
+                        name="arrow-back"
+                        size={30}
+                        color={"#fff"}
+                        style={{
+                            position: "absolute",
+                            left: -57,
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}
+                    />
+                </TouchableOpacity>
             ),
             headerRight: () => (
                 <TouchableOpacity onPress={() => handleFavoriteClick(id, "client")}>
@@ -361,9 +381,10 @@ export default function SchoolDetails() {
                                 },
                             ]}
                         >
-                            <Ionicons name="star" size={20} color={APP_THEME.light.primary.first} />
-                            <AUIThemedText style={styles.ratingsText}>4.6</AUIThemedText>
-                            {/* <AUIThemedText style={styles.rankText}>QS Rank 276</AUIThemedText> */}
+                            <StarRatingDisplay
+                                color={APP_THEME.light.primary.first}
+                                rating={overallRatings}
+                            />
                         </AUIThemedView>
 
                         <AUIThemedView style={styles.contactsContainer}>

@@ -24,7 +24,7 @@ import { RootState } from "@/redux/store";
 import { Feather, FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
@@ -44,6 +44,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import ContactNow from "./ContactNow";
+import { Asset } from "expo-asset";
 
 interface EnquireNowModalProps {
     isVisible: boolean;
@@ -601,6 +602,10 @@ export default function OverviewTab({ schoolOverView, courseId, clientId }: Over
     //     }
     // });
 
+    const [overallReviews, setReviews] = useState([]);
+    const reviewOfTheSchool = useLangTransformSelector(
+        (state: RootState) => state.api.ratingsOfTheSchool || {}
+    );
     const handlePhonePress = (number: string) => {
         Linking.openURL("tel:${number}");
     };
@@ -612,6 +617,24 @@ export default function OverviewTab({ schoolOverView, courseId, clientId }: Over
     const handleWebPress = (website: string) => {
         Linking.openURL("https://${website}");
     };
+
+    useEffect(() => {
+        if (reviewOfTheSchool?.docs) {
+            const overallReviewsData = reviewOfTheSchool?.docs.map((rtng: any) => {
+                return {
+                    id: "a1",
+                    name: rtng?.user?.name,
+                    image: rtng?.user?.photo
+                        ? rtng?.user?.photo
+                        : Asset.fromModule(require("@/assets/images/user.png")).uri,
+                    role: "Student",
+                    comment: rtng?.comment,
+                    rating: rtng?.rating,
+                };
+            });
+            setReviews(overallReviewsData);
+        }
+    }, [reviewOfTheSchool]);
 
     return (
         <AUIThemedView>
@@ -701,7 +724,7 @@ export default function OverviewTab({ schoolOverView, courseId, clientId }: Over
                 <SectionTitle viewAll="(home)/ratingsAndReview/AUIRatingsAndReview">
                     {t(GLOBAL_TRANSLATION_LABEL.ratingsAndReview)}
                 </SectionTitle>
-                <ReviewList data={reviewsData} horizontal />
+                <ReviewList data={overallReviews} horizontal />
             </AUIThemedView>
 
             <EnquireNowModal

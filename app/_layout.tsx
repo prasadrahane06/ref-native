@@ -1,6 +1,6 @@
 import AUILoader from "@/components/common/AUILoader";
 import "@/components/i18n/i18n.config";
-import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
+import { BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
 import { getUserData, storeUserDeviceData } from "@/constants/RNAsyncStore";
 import { setTheme } from "@/redux/globalSlice";
 import { RootState, store } from "@/redux/store";
@@ -12,7 +12,7 @@ import { Link, Stack, useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import { Alert, TouchableOpacity } from "react-native";
+import { Alert, Pressable, TouchableOpacity } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
 import { Provider, useDispatch, useSelector } from "react-redux";
@@ -80,13 +80,13 @@ const InitialLayout = () => {
                 options={{
                     headerTitle: "",
                     headerLeft: () => (
-                        <TouchableOpacity onPress={router.back}>
+                        <Pressable onPress={router.back}>
                             <Ionicons
                                 name="arrow-back"
                                 size={34}
                                 color={TEXT_THEME[theme].primary}
                             />
-                        </TouchableOpacity>
+                        </Pressable>
                     ),
                     headerStyle: {
                         backgroundColor: BACKGROUND_THEME[theme].background,
@@ -98,13 +98,13 @@ const InitialLayout = () => {
                 options={{
                     headerTitle: "",
                     headerLeft: () => (
-                        <TouchableOpacity onPress={router.back}>
+                        <Pressable onPress={router.back}>
                             <Ionicons
                                 name="arrow-back"
                                 size={34}
                                 color={TEXT_THEME[theme].primary}
                             />
-                        </TouchableOpacity>
+                        </Pressable>
                     ),
                     headerRight: () => (
                         <Link href={"/help"} asChild>
@@ -127,13 +127,13 @@ const InitialLayout = () => {
                 options={{
                     headerTitle: "",
                     headerLeft: () => (
-                        <TouchableOpacity onPress={router.back}>
+                        <Pressable onPress={router.back}>
                             <Ionicons
                                 name="arrow-back"
                                 size={34}
                                 color={TEXT_THEME[theme].primary}
                             />
-                        </TouchableOpacity>
+                        </Pressable>
                     ),
                     headerRight: () => (
                         <Link href={"/help"} asChild>
@@ -154,13 +154,13 @@ const InitialLayout = () => {
                 options={{
                     headerTitle: "",
                     headerLeft: () => (
-                        <TouchableOpacity onPress={router.back}>
+                        <Pressable onPress={router.back}>
                             <Ionicons
                                 name="arrow-back"
                                 size={34}
                                 color={TEXT_THEME[theme].primary}
                             />
-                        </TouchableOpacity>
+                        </Pressable>
                     ),
                     headerRight: () => (
                         <Link href={"/help"} asChild>
@@ -437,6 +437,6 @@ const RootLayoutNav = () => {
 };
 export {
     // Catch any errors thrown by the Layout component.
-    ErrorBoundary,
+    ErrorBoundary
 } from "expo-router";
 export default RootLayoutNav;

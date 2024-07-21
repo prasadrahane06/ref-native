@@ -16,11 +16,11 @@ export const API_URL = {
     plan: "plan",
     purchaseCourse: "course/purchaseCourse",
     schoolComparison: "school/schoolComparison",
-    event:"event",
-    facility:"facility",
-    schoolSearch:"school/schoolSearch",
-    schoolStudentSearch : "/school/studentSearch",
-    schoolAnalytics : "/school/schoolAnylytics",
-    search : "search"
-
+    event: "event",
+    facility: "facility",
+    rating: "rating",
+    schoolSearch: "school/schoolSearch",
+    schoolStudentSearch: "/school/studentSearch",
+    schoolAnalytics: "/school/schoolAnylytics",
+    search: "search",
 };

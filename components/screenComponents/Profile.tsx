@@ -11,12 +11,11 @@ import {
 import { Asset } from "expo-asset";
 import { router, useNavigation } from "expo-router";
 import React from "react";
-import { Alert, Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
 import AUIImage from "../common/AUIImage";
 import { AUIThemedText } from "../common/AUIThemedText";
 import { AUIThemedView } from "../common/AUIThemedView";
-import { ApiSuccessToast } from "../common/AUIToast";
 
 const array = [
     {
@@ -98,7 +97,7 @@ function Profile() {
                 ))}
 
                 {/* Delete Account */}
-                <TouchableOpacity
+                {/* <TouchableOpacity
                     style={styles.deleteLayout}
                     onPress={() => {
                         Alert.alert(
@@ -124,7 +123,7 @@ function Profile() {
                         <AUIThemedText style={{ color: "white" }}>Delete Account</AUIThemedText>
                     </View>
                     <MaterialIcons name="keyboard-arrow-right" size={24} color="white" />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
             </AUIThemedView>
         </AUIThemedView>
     );

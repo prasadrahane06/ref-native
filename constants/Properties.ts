@@ -3,7 +3,7 @@ export const GLOBAL_TEXT = {
     school: "School",
     student: "Student",
     create_account: "Continue to create account",
-    login_to_continue: "Please enter your details to sign in",
+    login_to_continue: "Enter your sign-in details",
     tell_about_yourself: "Tell us about yourself",
     enter_mobile_number: "Enter your mobile number",
     enter_email_id: "Enter your email",
