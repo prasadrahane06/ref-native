@@ -6,7 +6,7 @@ import { RootState } from "@/redux/store";
 import { Link } from "expo-router";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { I18nManager, StyleSheet, TextStyle, TouchableOpacity, ViewStyle } from "react-native";
+import { StyleSheet, TextStyle, TouchableOpacity, ViewStyle } from "react-native";
 import { useSelector } from "react-redux";
 
 interface SectionTitleProps {
@@ -24,7 +24,7 @@ const SectionTitle: React.FC<SectionTitleProps> = ({
     style,
     titleStyle,
 }) => {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const isRTL = useSelector((state: RootState) => state.global.isRTL);
     const theme = useSelector((state: RootState) => state.global.theme);
 

@@ -48,7 +48,8 @@ export const en = {
     your_cart_is_empty: "Your Cart Is Empty",
     compare_schools: "Compare Schools",
     add_school: "Add School",
-    compare_description: "Select and compare schools on various parameters to choose the best for you"
+    compare_description: "Select and compare schools on various parameters to choose the best for you",
+    events: "Events"
 };
 
 export const ar = {
@@ -101,5 +102,6 @@ export const ar = {
     your_cart_is_empty: "عربة التسوق فارغة",
     compare_schools: "قارن المدارس",
     add_school: "أضف مدرسة",
-    compare_description: "حدد المدارس وقارن بينها وفقًا لمعايير مختلفة لاختيار الأفضل بالنسبة لك"
+    compare_description: "حدد المدارس وقارن بينها وفقًا لمعايير مختلفة لاختيار الأفضل بالنسبة لك",
+    events : "الفعاليات"
 };

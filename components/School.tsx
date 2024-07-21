@@ -1,19 +1,18 @@
+import useAxios from "@/app/services/axiosClient";
+import { API_URL } from "@/constants/urlProperties";
+import { removeFromFavorite } from "@/redux/favoriteSlice";
+import { setLoader } from "@/redux/globalSlice";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React from "react";
 import { StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
 import "react-native-gesture-handler";
+import { useDispatch } from "react-redux";
 import AUIBackgroundImage from "./common/AUIBackgroundImage";
 import { AUIThemedText } from "./common/AUIThemedText";
 import { AUIThemedView } from "./common/AUIThemedView";
-import { APP_THEME } from "@/constants/Colors";
-import { useDispatch } from "react-redux";
-import useAxios from "@/app/services/axiosClient";
-import { API_URL } from "@/constants/urlProperties";
-import { removeFromFavorite } from "@/redux/favoriteSlice";
-import { setLoader } from "@/redux/globalSlice";
-import { ApiSuccessToast, ApiErrorToast } from "./common/AUIToast";
+import { ApiErrorToast, ApiSuccessToast } from "./common/AUIToast";
 
 interface SchoolProps {
     id: string;

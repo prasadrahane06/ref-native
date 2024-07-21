@@ -1,37 +1,33 @@
-import DATA from "@/app/services/data.json";
+import AUIButton from "@/components/common/AUIButton";
 import DropdownComponent from "@/components/common/AUIDropdown";
 import AUIImage from "@/components/common/AUIImage";
+import AUIInputField from "@/components/common/AUIInputField";
+import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { DETAILS_FIELDS, GLOBAL_TEXT } from "@/constants/Properties";
+import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
+import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
+import { countriesData } from "@/constants/dummy data/countriesData";
+import { GLOBAL_TEXT } from "@/constants/Properties";
+import { API_URL } from "@/constants/urlProperties";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
-import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import { Asset } from "expo-asset";
 import React, { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import {
     Platform,
     Pressable,
     ScrollView,
     StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+    TextInput
 } from "react-native";
-import * as Yup from "yup";
 import "react-native-gesture-handler";
 import { useSelector } from "react-redux";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Controller, useForm } from "react-hook-form";
-import AUIInputField from "@/components/common/AUIInputField";
-import { AUIThemedText } from "@/components/common/AUIThemedText";
-import { countriesData } from "@/constants/dummy data/countriesData";
-import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
-import AUIButton from "@/components/common/AUIButton";
+import * as Yup from "yup";
 import useAxios from "./services/axiosClient";
-import { API_URL } from "@/constants/urlProperties";
-import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
-import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 
 const genderData = [
     {
@@ -130,7 +126,7 @@ const Profile: React.FC = () => {
 
     const { patch } = useAxios();
 
-    const { watch, reset, setValue, control, handleSubmit, formState } = useForm({
+    const { reset, setValue, control, handleSubmit, formState } = useForm({
         resolver: yupResolver(schema),
         mode: "onChange",
         defaultValues: {

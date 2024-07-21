@@ -6,7 +6,7 @@ export const increaseChancesData = [
         courseName: "Last 2 Days to remaining",
         schoolName: "English Learning Course",
         image: Asset.fromModule(
-            require("@/assets/images/studentHomePage/increaseChance/image-1.png")
+            require("@/assets/images/studentHomePage/increaseChance/image_1.png")
         ).uri,
         daysRemaining: "2",
     },
@@ -15,7 +15,7 @@ export const increaseChancesData = [
         courseName: "Last 5 Days to remaining",
         schoolName: "Intensive English course",
         image: Asset.fromModule(
-            require("@/assets/images/studentHomePage/increaseChance/image-2.png")
+            require("@/assets/images/studentHomePage/increaseChance/image_2.png")
         ).uri,
         daysRemaining: "2",
     },

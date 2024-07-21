@@ -109,21 +109,11 @@ export default function CourseDetails() {
 
     const [course, setCourse] = useState<any>({});
     const [clientId, setClientId] = useState<any>({});
-
-    const { id } = useLocalSearchParams<{ id: string }>();
+    const { id } = useLocalSearchParams<{ id: any }>();
     const { post, del } = useAxios();
-
-    if (!id) {
-        return (
-            <AUIThemedView style={{ justifyContent: "center", alignItems: "center" }}>
-                <AUIThemedText>Course not found</AUIThemedText>
-            </AUIThemedView>
-        );
-    }
-
-    useEffect(() => {
-        requestFn(API_URL.course, "individualCourse", { id: id });
-    }, []);
+    const scrollRef = useAnimatedRef<Animated.ScrollView>();
+    const navigation = useNavigation();
+    const scrollOffset = useScrollViewOffset(scrollRef);
 
     const individualCourse = useLangTransformSelector(
         (state: RootState) => state.api.individualCourse
@@ -133,158 +123,111 @@ export default function CourseDetails() {
     const theme = useSelector((state: RootState) => state.global.theme);
 
     useEffect(() => {
-        if (individualCourse && individualCourse.docs && individualCourse?.docs?.length > 0) {
+        requestFn(API_URL.course, "individualCourse", { id: id });
+    }, []);
+
+    useEffect(() => {
+        if (individualCourse && individualCourse.docs && individualCourse.docs.length > 0) {
             const course = individualCourse.docs[0];
             const clientId = course.client._id;
-
             setCourse(course);
             requestFn(API_URL.course, "similarCourse", { similar: course.language, limit: 4 });
             setClientId(clientId);
         }
     }, [individualCourse]);
 
-    const isCourseFavorited = (id: string) => {
-        return favorite.courses.some((favCourse: any) => favCourse._id === id);
-    };
-    const isCourseInCart = (id: string) => {
-        return cartItems.courses.some((cartItem: any) => cartItem.course._id === id);
-    };
+    const isCourseFavorited = (id: string) =>
+        favorite.courses.some((favCourse: any) => favCourse._id === id);
+    const isCourseInCart = (id: string) =>
+        cartItems.courses.some((cartItem: any) => cartItem.course._id === id);
 
     const handleFavoriteClick = (id: string, type: string) => {
         if (isCourseFavorited(id)) {
-            // Remove from favorites
-
-            del(API_URL.favorite, { id: id, type: type })
+            del(API_URL.favorite, { id, type })
                 .then((res: any) => {
                     dispatch(removeFromFavorite({ id, type: "courses" }));
-
                     ApiSuccessToast(res.message);
                 })
                 .catch((e: any) => {
                     ApiErrorToast(e.response?.data?.message);
-                    console.log(e);
                 });
         } else {
-            // Add to favorites
-
-            post(API_URL.favorite, { id: id, type: type })
+            post(API_URL.favorite, { id, type })
                 .then((res: any) => {
                     dispatch(addToFavorite({ countries: [], courses: [course], clients: [] }));
-
                     ApiSuccessToast(res.message);
                 })
                 .catch((e: any) => {
                     ApiErrorToast(e.response?.data?.message);
-                    console.log(e);
                 });
         }
     };
 
     const handleAddToCart = () => {
         if (isCourseInCart(id)) {
-            // Remove from cart
-
             del(API_URL.cart, { course: id })
                 .then((res: any) => {
-                    dispatch(removeItemFromCart({ id: id }));
-
+                    dispatch(removeItemFromCart({ id }));
                     ApiSuccessToast(res.message);
                 })
                 .catch((e: any) => {
                     ApiErrorToast(e.response?.data?.message);
-                    console.log(e);
                 });
         } else {
-            // Add to cart
-
             post(API_URL.cart, { course: id })
                 .then((res: any) => {
                     const courseToAdd = {
-                        course: {
-                            _id: course._id,
-                            client: course.client,
-                            courseName: course.courseName,
-                            description: course.description,
-                            language: course.language,
-                            numberOfSeats: course.numberOfSeats,
-                            image: course.image,
-                            startDate: course.startDate,
-                            endDate: course.endDate,
-                            currencyType: course.currencyType,
-                            category: course.category,
-                            plan: course.plan,
-                            status: course.status,
-                            createdAt: course.createdAt,
-                            updatedAt: course.updatedAt,
-                            __v: course.__v,
-                        },
+                        course: { ...course },
                         _id: id,
                         addedAt: new Date().toISOString(),
                     };
-
                     dispatch(addItemToCart({ courses: [courseToAdd] }));
-
                     ApiSuccessToast(res.message);
                 })
                 .catch((e: any) => {
                     ApiErrorToast(e.response?.data?.message);
-                    console.log(e);
                 });
         }
     };
 
-    const scrollRef = useAnimatedRef<Animated.ScrollView>();
-    const navigation = useNavigation();
-    const scrollOffset = useScrollViewOffset(scrollRef);
+    const headerBackgroundAnimatedStyle = useAnimatedStyle(() => ({
+        opacity: interpolate(scrollOffset.value, [0, IMG_HEIGHT / 1.5], [0, 1]),
+    }));
 
-    const headerBackgroundAnimatedStyle = useAnimatedStyle(() => {
-        return {
-            opacity: interpolate(scrollOffset.value, [0, IMG_HEIGHT / 1.5], [0, 1]),
-        };
-    }, []);
+    const headerTitleAnimatedStyle = useAnimatedStyle(() => ({
+        opacity: interpolate(scrollOffset.value, [IMG_HEIGHT / 2, IMG_HEIGHT], [0, 1]),
+    }));
 
-    const headerTitleAnimatedStyle = useAnimatedStyle(() => {
-        return {
-            opacity: interpolate(scrollOffset.value, [IMG_HEIGHT / 2, IMG_HEIGHT], [0, 1]),
-        };
-    }, []);
-
-    const imageAnimatedStyle = useAnimatedStyle(() => {
-        return {
-            transform: [
-                {
-                    translateY: interpolate(
-                        scrollOffset.value,
-                        [-IMG_HEIGHT, 0, IMG_HEIGHT, IMG_HEIGHT],
-                        [-IMG_HEIGHT / 2, 0, IMG_HEIGHT * 0.75]
-                    ),
-                },
-                {
-                    scale: interpolate(scrollOffset.value, [-IMG_HEIGHT, 0, IMG_HEIGHT], [2, 1, 1]),
-                },
-            ],
-        };
-    });
+    const imageAnimatedStyle = useAnimatedStyle(() => ({
+        transform: [
+            {
+                translateY: interpolate(
+                    scrollOffset.value,
+                    [-IMG_HEIGHT, 0, IMG_HEIGHT, IMG_HEIGHT],
+                    [-IMG_HEIGHT / 2, 0, IMG_HEIGHT * 0.75]
+                ),
+            },
+            {
+                scale: interpolate(scrollOffset.value, [-IMG_HEIGHT, 0, IMG_HEIGHT], [2, 1, 1]),
+            },
+        ],
+    }));
 
     effect(() => {
         navigation.setOptions({
             headerTransparent: true,
-
             headerBackground: () => (
                 <Animated.View
                     style={[
                         headerBackgroundAnimatedStyle,
-                        [
-                            styles.screenHeader,
-                            {
-                                backgroundColor: APP_THEME[theme].primary.first,
-                                borderColor: APP_THEME[theme].gray,
-                            },
-                        ],
+                        styles.screenHeader,
+                        {
+                            backgroundColor: APP_THEME[theme].primary.first,
+                            borderColor: APP_THEME[theme].gray,
+                        },
                     ]}
                 />
             ),
-
             headerLeft: () => (
                 <Ionicons
                     name="arrow-back"
@@ -300,11 +243,7 @@ export default function CourseDetails() {
                 />
             ),
             headerRight: () => (
-                <TouchableOpacity
-                    onPress={() => {
-                        handleFavoriteClick(id, "course");
-                    }}
-                >
+                <TouchableOpacity onPress={() => handleFavoriteClick(id, "course")}>
                     <AUIThemedView
                         style={{
                             backgroundColor: "rgba(91, 216, 148, 0.3)",
@@ -322,20 +261,35 @@ export default function CourseDetails() {
                     </AUIThemedView>
                 </TouchableOpacity>
             ),
-
             headerTitle: () => (
                 <Animated.Text style={[headerTitleAnimatedStyle, styles.screenTitle]}>
                     {course.courseName}
                 </Animated.Text>
             ),
         });
-    }, [course, id, favorite]);
+    }, [
+        course,
+        id,
+        favorite,
+        navigation,
+        theme,
+        headerBackgroundAnimatedStyle,
+        headerTitleAnimatedStyle,
+    ]);
 
     const startingDate: string = new Date(course.startDate).toLocaleDateString("en-GB", {
         day: "2-digit",
         month: "2-digit",
         year: "2-digit",
     });
+
+    if (!id) {
+        return (
+            <AUIThemedView style={{ justifyContent: "center", alignItems: "center" }}>
+                <AUIThemedText>Course not found</AUIThemedText>
+            </AUIThemedView>
+        );
+    }
 
     return (
         <AUIThemedView>

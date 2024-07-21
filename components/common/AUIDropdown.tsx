@@ -1,4 +1,4 @@
-import { APP_THEME, BACKGROUND_THEME, TEXT_THEME, ThemeType } from "@/constants/Colors";
+import { BACKGROUND_THEME, TEXT_THEME, ThemeType } from "@/constants/Colors";
 import { RootState } from "@/redux/store";
 import React, { useState } from "react";
 import { StyleSheet, TextStyle } from "react-native";

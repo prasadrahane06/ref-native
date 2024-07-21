@@ -6,15 +6,17 @@ import { setTheme } from "@/redux/globalSlice";
 import { RootState, store } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import messaging from "@react-native-firebase/messaging";
 import { useFonts } from "expo-font";
 import { Link, Stack, useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import { TouchableOpacity } from "react-native";
+import { Alert, TouchableOpacity } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
 import { Provider, useDispatch, useSelector } from "react-redux";
+
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 // @ts-ignore
@@ -27,6 +29,7 @@ const _XHR = global.originalXMLHttpRequest
       global.XMLHttpRequest;
 
 XMLHttpRequest = _XHR;
+
 const InitialLayout = () => {
     const [loaded, error] = useFonts({
         SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
@@ -370,6 +373,57 @@ const InitialLayout = () => {
 };
 
 const RootLayoutNav = () => {
+    // uncomment when building
+
+    // const requestUserPermission = async () => {
+    //     const authStatus = await messaging().requestPermission();
+    //     const enabled =
+    //         authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+    //         authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+    //     if (enabled) {
+    //         console.log("Authorization status:", authStatus);
+    //     }
+    // };
+
+    // useEffect(() => {
+    //     //@ts-ignore
+    //     if (requestUserPermission()) {
+    //         messaging()
+    //             .getToken()
+    //             .then((token) => {
+    //                 console.log("fcm token", token);
+    //                 Alert.alert("fcm token", token);
+    //             });
+    //     } else {
+    //         console.log("Permission not granted");
+    //     }
+
+    //     // Check if an initial notification is available
+    //     messaging()
+    //         .getInitialNotification()
+    //         .then(async (remoteMessage) => {
+    //             if (remoteMessage) {
+    //                 console.log("Notification caused app to open from quit state:", remoteMessage);
+    //             }
+    //         });
+
+    //     // Assume a message-notification contains a "type" property in the data payload of the screen
+    //     messaging().onNotificationOpenedApp(async (remoteMessage) => {
+    //         console.log("Notification caused app to open from background state:", remoteMessage);
+    //     });
+
+    //     // Register background handler
+    //     messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+    //         console.log("Notification caused app to open from background state:", remoteMessage);
+    //     });
+
+    //     const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+    //         Alert.alert("A new FCM message arrived!", JSON.stringify(remoteMessage));
+    //     });
+
+    //     return unsubscribe;
+    // }, []);
+
     return (
         <Provider store={store}>
             <GestureHandlerRootView style={{ flex: 1 }}>

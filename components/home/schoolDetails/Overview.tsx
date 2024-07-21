@@ -13,14 +13,12 @@ import { FacilitiesList } from "@/components/home/schoolDetails/FacilitiesList";
 import { ReviewList } from "@/components/home/schoolDetails/ReviewList";
 import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
 import { ENQUIRY_FIELDS, GLOBAL_TEXT, GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
-import { getUserData } from "@/constants/RNAsyncStore";
 import { inputFieldStyle } from "@/constants/Styles";
 import { accommodationData } from "@/constants/dummy data/accommodationData";
 import { countriesData } from "@/constants/dummy data/countriesData";
 import { nationalityData } from "@/constants/dummy data/nationalityData";
 import { reviewsData } from "@/constants/dummy data/reviewsData";
 import { API_URL } from "@/constants/urlProperties";
-import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { setLoader } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
 import { Feather, FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
@@ -89,10 +87,9 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
     const [endDate, setEndDate] = useState(oneWeek);
 
     const dispatch = useDispatch();
-    const enquiryData = useLangTransformSelector((state: RootState) => state.enquiryForm);
     const theme = useSelector((state: RootState) => state.global.theme);
 
-    const { watch, reset, setValue, control, handleSubmit, formState, trigger } = useForm({
+    const {  reset, setValue, control, handleSubmit, formState, trigger } = useForm({
         resolver: yupResolver(schema),
         mode: "onBlur",
         defaultValues: {
@@ -156,13 +153,11 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
 
         post(API_URL.enquiry, enquiry)
             .then((res) => {
-                const { data, message, statusCode } = res;
-
                 // dispatch(addEnquiry(enquiry));
 
-                if (statusCode === 200) {
+                if (res.statusCode === 200) {
                     dispatch(setLoader(false));
-                    ApiSuccessToast(message);
+                    ApiSuccessToast(res.message);
                     onClose();
                     reset();
                 }
@@ -589,41 +584,22 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
 
 export default function OverviewTab({ schoolOverView, courseId, clientId }: OverviewTabProps) {
     const theme = useSelector((state: RootState) => state.global.theme);
+    const userData = useSelector((state: RootState) => state.global.user);
+
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const { t, i18n } = useTranslation();
 
-    let userId: string = "";
+    const { t } = useTranslation();
+    const userId = userData._id;
 
-    getUserData().then((data) => {
-        if (data && Object.keys(data).length > 0) {
-            userId = data.data.user._id;
-        } else {
-            console.log("no data found in user-data");
-        }
-    });
+    // let userId: string = "";
 
-    const courseInfoData = [
-        {
-            id: "1",
-            title: "3505+",
-            subtitle: "Total Numbers of student",
-        },
-        {
-            id: "2",
-            title: "206+",
-            subtitle: "Total Number of Courses",
-        },
-        {
-            id: "3",
-            title: "103+",
-            subtitle: "Total Pending Admission",
-        },
-        {
-            id: "4",
-            title: "$10024",
-            subtitle: "Total Revenue of School",
-        },
-    ];
+    // getUserData().then((data) => {
+    //     if (data && Object.keys(data).length > 0) {
+    //         userId = data.data.user._id;
+    //     } else {
+    //         console.log("no data found in user-data");
+    //     }
+    // });
 
     const handlePhonePress = (number: string) => {
         Linking.openURL("tel:${number}");

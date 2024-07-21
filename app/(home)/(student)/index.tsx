@@ -7,7 +7,6 @@ import LanguageList from "@/components/home/common/LanguageList";
 import SchoolList from "@/components/home/common/SchoolList";
 import SectionTitle from "@/components/home/common/SectionTitle";
 import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
-import { getUserData } from "@/constants/RNAsyncStore";
 import { carouselData } from "@/constants/dummy data/carouselData";
 import { increaseChancesData } from "@/constants/dummy data/increaseChancesData";
 import { languagesData } from "@/constants/dummy data/languagesData";
@@ -19,9 +18,9 @@ import { addToFavorite } from "@/redux/favoriteSlice";
 import { RootState } from "@/redux/store";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Dimensions, ScrollView, StyleSheet } from "react-native";
+import { Dimensions, ScrollView } from "react-native";
 import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 export default function HomeScreen() {
     const dispatch = useDispatch();
     const { requestFn } = useApiRequest();
@@ -159,11 +158,11 @@ export default function HomeScreen() {
     );
 }
 
-const styles = StyleSheet.create({
-    dotsContainer: {
-        position: "absolute",
-        bottom: "5%",
-        gap: 10,
-    },
-    dot: { backgroundColor: "#fff", borderRadius: 100, width: 20, height: 3 },
-});
+// const styles = StyleSheet.create({
+//     dotsContainer: {
+//         position: "absolute",
+//         bottom: "5%",
+//         gap: 10,
+//     },
+//     dot: { backgroundColor: "#fff", borderRadius: 100, width: 20, height: 3 },
+// });

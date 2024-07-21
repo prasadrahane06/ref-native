@@ -23,10 +23,6 @@ const InitialPage = () => {
     const profile = useLangTransformSelector((state: RootState) => state.global.profile);
     const theme = useSelector((state: RootState) => state.global.theme);
 
-    const themeOptions = [
-        { label: "Light", value: "light" },
-        { label: "Dark", value: "dark" },
-    ];
     useEffect(() => {
         getUserData().then((data) => {
             if (data && Object.keys(data).length > 0) {
@@ -104,7 +100,7 @@ const InitialPage = () => {
                                 path={
                                     profile === "student"
                                         ? Asset.fromModule(
-                                              require("@/assets/images/initialPage/fi_3135773 (1).png")
+                                              require("@/assets/images/initialPage/fi_3135773.png")
                                           ).uri
                                         : Asset.fromModule(
                                               require("@/assets/images/initialPage/student.png")
@@ -154,7 +150,7 @@ const InitialPage = () => {
                                 path={
                                     profile === "school"
                                         ? Asset.fromModule(
-                                              require("@/assets/images/initialPage/school-white.png")
+                                              require("@/assets/images/initialPage/school_white.png")
                                           ).uri
                                         : Asset.fromModule(
                                               require("@/assets/images/initialPage/school.png")
@@ -209,7 +205,7 @@ const InitialPage = () => {
                         <AUIImage
                             path={
                                 Asset.fromModule(
-                                    require("@/assets/images/initialPage/homeDark.png")
+                                    require("@/assets/images/initialPage/home_dark.png")
                                 ).uri
                             }
                         />
@@ -217,7 +213,7 @@ const InitialPage = () => {
                         <AUIImage
                             path={
                                 Asset.fromModule(
-                                    require("@/assets/images/initialPage/homeLight.png")
+                                    require("@/assets/images/initialPage/home_light.png")
                                 ).uri
                             }
                         />

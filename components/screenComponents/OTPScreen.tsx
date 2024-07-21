@@ -1,10 +1,10 @@
+import { RootState } from "@/redux/store";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
+import { useSelector } from "react-redux";
 import AUIOTPInput from "../common/AUIOtpInput";
 import { AUIThemedText } from "../common/AUIThemedText";
 import { AUIThemedView } from "../common/AUIThemedView";
-import { RootState } from "@/redux/store";
-import { useSelector } from "react-redux";
 
 const OTPScreen = ({
     length,
@@ -16,7 +16,7 @@ const OTPScreen = ({
     disabled,
 }: any) => {
     const theme = useSelector((state: RootState) => state.global.theme);
-    const [otp, setOtp] = useState(Array(length).fill(""));
+    // const [otp, setOtp] = useState(Array(length).fill(""));
     const [timer, setTimer] = useState(30);
     const [canResend, setCanResend] = useState(false);
 

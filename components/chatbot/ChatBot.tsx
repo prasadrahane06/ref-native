@@ -1,5 +1,9 @@
+import { get, post } from "@/app/services/botAxiosClient";
 import { APP_THEME } from "@/constants/Colors";
+import { socket } from "@/webSocket/socket";
 import { Entypo, Ionicons } from "@expo/vector-icons";
+import { GoogleTranslatorTokenFree } from "@translate-tools/core/translators/GoogleTranslator";
+import { Asset } from "expo-asset";
 import React, { useEffect, useRef, useState } from "react";
 import {
     Animated,
@@ -15,12 +19,7 @@ import {
     TouchableOpacity,
     View,
 } from "react-native";
-import { socket } from "@/webSocket/socket";
 import AUIImage from "../common/AUIImage";
-import { Asset } from "expo-asset";
-import { get, post } from "@/app/services/botAxiosClient";
-import { GoogleTranslatorTokenFree } from "@translate-tools/core/translators/GoogleTranslator";
-import { ApiSuccessToast } from "../common/AUIToast";
 
 interface User {
     _id: string;
@@ -240,7 +239,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ consumerId, user, config }) => {
         <View style={styles.container}>
             <TouchableOpacity style={styles.floatingButton} onPress={openChat}>
                 <AUIImage
-                    path={Asset.fromModule(require("@/assets/images/chat-logo.png")).uri}
+                    path={Asset.fromModule(require("@/assets/images/chat_logo.png")).uri}
                     style={styles.floatingButtonLogo}
                 />
             </TouchableOpacity>
@@ -262,7 +261,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ consumerId, user, config }) => {
                             <View style={styles.logoContainer}>
                                 <AUIImage
                                     path={
-                                        Asset.fromModule(require("@/assets/images/chat-logo.png"))
+                                        Asset.fromModule(require("@/assets/images/chat_logo.png"))
                                             .uri
                                     }
                                     style={styles.logo}
@@ -276,7 +275,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ consumerId, user, config }) => {
                         <Animated.View style={[styles.splashScreen, { opacity: fadeAnimation }]}>
                             <AUIImage
                                 path={
-                                    Asset.fromModule(require("@/assets/images/chat-logo.png")).uri
+                                    Asset.fromModule(require("@/assets/images/chat_logo.png")).uri
                                 }
                                 style={{
                                     width: 45,
@@ -322,7 +321,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ consumerId, user, config }) => {
                                             {message.username === "BOT" && (
                                                 <Image
                                                     style={chatStyles.botLogo}
-                                                    source={require("@/assets/images/chat-logo.png")}
+                                                    source={require("@/assets/images/chat_logo.png")}
                                                 />
                                             )}
                                         </View>

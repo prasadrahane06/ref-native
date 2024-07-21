@@ -6,7 +6,7 @@ import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { setResponse, setSelectedSchool2 } from "@/redux/apiSlice";
 import { RootState } from "@/redux/store";
-import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -90,7 +90,7 @@ const SearchSchool: React.FC = () => {
         >
             <AUIImage
                 style={styles.schoolImage}
-                path={Asset.fromModule(require("@/assets/images/compareScreen/Group (1).png")).uri}
+                path={Asset.fromModule(require("@/assets/images/compareScreen/group_11.png")).uri}
                 resizeMode="contain"
             />
             <AUIThemedView

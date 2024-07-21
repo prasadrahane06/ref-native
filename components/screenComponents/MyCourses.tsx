@@ -1,13 +1,13 @@
-import { View, Text, Dimensions } from "react-native";
-import React, { useEffect } from "react";
-import useApiRequest from "@/customHooks/useApiRequest";
 import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
 import { API_URL } from "@/constants/urlProperties";
+import useApiRequest from "@/customHooks/useApiRequest";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import React, { useEffect } from "react";
+import { Dimensions } from "react-native";
 import { useSelector } from "react-redux";
 import PurchaseCoursesList from "../home/courseDetails/PurchaseCourses";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 
 const Tab = createMaterialTopTabNavigator();
 

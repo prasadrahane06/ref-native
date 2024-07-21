@@ -3,13 +3,15 @@ import DropdownComponent from "@/components/common/AUIDropdown";
 import AUIInputField from "@/components/common/AUIInputField";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
+import { ApiErrorToast } from "@/components/common/AUIToast";
 import OTPScreen from "@/components/screenComponents/OTPScreen";
-import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
+import { APP_THEME, BACKGROUND_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT, SIGNUP_FIELDS } from "@/constants/Properties";
 import { storeUserData } from "@/constants/RNAsyncStore";
 import { loginPageStyles, secondaryButtonStyle } from "@/constants/Styles";
 import { countriesData } from "@/constants/dummy data/countriesData";
 import { API_URL } from "@/constants/urlProperties";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { setLoader, setToken, setUser } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -29,8 +31,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import useAxios from "./services/axiosClient";
-import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
-import { ApiErrorToast } from "@/components/common/AUIToast";
 const schema = Yup.object().shape({
     input: Yup.string().when("selectedButton", {
         is: "mobile",
@@ -55,7 +55,6 @@ const LoginPage = () => {
     const profile = globalState.profile;
     const signInType = globalState.signInType;
     const signupDetails = globalState.signupDetails;
-    const schoolDetails = globalState.schoolDetails;
 
     // const [countryData, setCountryData] = useState(countriesData);
 
@@ -320,17 +319,7 @@ const LoginPage = () => {
                                     }}
                                 >
                                     <View style={[buttonStyle.buttonInner]}>
-                                        <AUIThemedText
-                                            style={[
-                                                buttonStyle.buttonText,
-                                                {
-                                                    color:
-                                                        selectedButton === "mobile"
-                                                            ? "#fff"
-                                                            : "#000",
-                                                },
-                                            ]}
-                                        >
+                                        <AUIThemedText style={[buttonStyle.buttonText]}>
                                             Mobile Number
                                         </AUIThemedText>
                                     </View>
@@ -343,7 +332,6 @@ const LoginPage = () => {
                                     ]}
                                     onPress={() => {
                                         setValue("selectedButton", "email");
-                                        // setValue("input", "");
                                         reset({
                                             input: "",
                                             selectedButton: "email",
@@ -351,17 +339,7 @@ const LoginPage = () => {
                                     }}
                                 >
                                     <View style={[buttonStyle.buttonInner]}>
-                                        <AUIThemedText
-                                            style={[
-                                                buttonStyle.buttonText,
-                                                {
-                                                    color:
-                                                        selectedButton === "email"
-                                                            ? "#fff"
-                                                            : "#000",
-                                                },
-                                            ]}
-                                        >
+                                        <AUIThemedText style={[buttonStyle.buttonText]}>
                                             Email ID
                                         </AUIThemedText>
                                     </View>

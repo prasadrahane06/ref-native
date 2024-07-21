@@ -1,16 +1,12 @@
+import { AUILinearGradient } from "@/components/common/AUILinearGradient";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { API_URL } from "@/constants/urlProperties";
-import useApiRequest from "@/customHooks/useApiRequest";
+import { APP_THEME, BACKGROUND_THEME } from "@/constants/Colors";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
-import React, { useEffect } from "react";
+import React from "react";
 import { StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
 import AllSchoolsList from "../list/AllSchoolsList";
-import useAxios from "@/app/services/axiosClient";
-import { AUILinearGradient } from "@/components/common/AUILinearGradient";
-import { LinearGradient } from "expo-linear-gradient";
-import { APP_THEME, BACKGROUND_THEME } from "@/constants/Colors";
-import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 
 interface SchoolListProps {
     data: any[];

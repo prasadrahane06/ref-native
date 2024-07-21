@@ -11,7 +11,6 @@ import CourseDetailsComponent from "@/components/home/courseDetails/CourseDetail
 import SimilarCoursesList from "@/components/home/courseDetails/SimilarCourses";
 import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
 import { ENQUIRY_FIELDS, GLOBAL_TEXT, GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
-import { getUserData } from "@/constants/RNAsyncStore";
 import { inputFieldStyle } from "@/constants/Styles";
 import { accommodationData } from "@/constants/dummy data/accommodationData";
 import { countriesData } from "@/constants/dummy data/countriesData";
@@ -98,10 +97,9 @@ function EnquireNowModal({
     const { post } = useAxios();
 
     const dispatch = useDispatch();
-    const enquiryData = useLangTransformSelector((state: RootState) => state.enquiryForm);
     const theme = useSelector((state: RootState) => state.global.theme);
 
-    const { watch, reset, setValue, control, handleSubmit, formState } = useForm({
+    const { reset, setValue, control, handleSubmit, formState } = useForm({
         resolver: yupResolver(schema),
         mode: "onChange",
         defaultValues: {
@@ -165,13 +163,9 @@ function EnquireNowModal({
 
         post(API_URL.enquiry, enquiry)
             .then((res) => {
-                const { data, message, statusCode } = res;
-
-                // dispatch(addEnquiry(enquiry));
-
-                if (statusCode === 200) {
+                if (res.statusCode === 200) {
                     dispatch(setLoader(false));
-                    ApiSuccessToast(message);
+                    ApiSuccessToast(res.message);
                     onClose();
                     reset();
                 }
@@ -577,20 +571,12 @@ export default function PlanComponent({
     similarCourses,
 }: PlanComponentProps) {
     const theme = useSelector((state: RootState) => state.global.theme);
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const [userId, setUserId] = useState("");
-    const { t } = useTranslation();
-    const [isSeatBooked, setIsSeatBooked] = useState(false);
+    const userData = useSelector((state: RootState) => state.global.user);
 
-    useEffect(() => {
-        getUserData().then((data) => {
-            if (data && Object.keys(data).length > 0) {
-                setUserId(data.data.user._id);
-            } else {
-                console.log("no data found in user-data");
-            }
-        });
-    }, []);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+
+    const userId = userData?._id;
+    const { t } = useTranslation();
 
     const { requestFn } = useApiRequest();
     const isPurchased = useLangTransformSelector((state: RootState) => state.api.isPurchased);
@@ -599,9 +585,9 @@ export default function PlanComponent({
         requestFn(API_URL.purchaseCourse, "isPurchased", { user: true, course: courseId });
     }, []);
 
-    const handleBookSeat = () => {
-        setIsSeatBooked(true);
-    };
+    // const handleBookSeat = () => {
+    //     setIsSeatBooked(true);
+    // };
 
     const handlePhonePress = () => {
         Linking.openURL("tel:+1234567890");

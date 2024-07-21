@@ -1,12 +1,11 @@
-import { StyleSheet, Image } from "react-native";
-import AUIImage from "./common/AUIImage";
 import { Asset } from "expo-asset";
+import { Image, StyleSheet } from "react-native";
 
 export default function ImageViewer({ selectedImage, style }: any) {
     const imageSource = selectedImage
         ? { uri: selectedImage }
         : {
-              uri: Asset.fromModule(require("@/assets/images/common/no-image.png")).uri,
+              uri: Asset.fromModule(require("@/assets/images/common/no_image.png")).uri,
           };
 
     return <Image source={imageSource} style={[styles.image, style]} />;

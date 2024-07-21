@@ -1,8 +1,7 @@
 import Course from "@/components/Course";
-import AUIImage from "@/components/common/AUIImage";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
+import { BACKGROUND_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
@@ -11,7 +10,6 @@ import { addItemToCart } from "@/redux/cartSlice";
 import { RootState } from "@/redux/store";
 import { AntDesign } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
-import { Asset } from "expo-asset";
 import React, { useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Dimensions, FlatList, ScrollView, StyleSheet } from "react-native";
@@ -37,7 +35,7 @@ export default function TabFourScreen() {
 
             dispatch(addItemToCart({ courses: cartItems }));
         }
-    }, [cart]);
+    }, [cart, dispatch]);
 
     const cartItems = useLangTransformSelector((state: RootState) => state.cart.items);
 

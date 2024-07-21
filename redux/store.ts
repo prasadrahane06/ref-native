@@ -1,7 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import apiSlice from "./apiSlice";
 import cartSlice from "./cartSlice";
-import enquiryformSlice from "./enquiryformSlice";
 import globalSlice from "./globalSlice";
 import favoriteSlice from "./favoriteSlice";
 
@@ -9,7 +8,6 @@ export const store = configureStore({
     reducer: {
         global: globalSlice,
         api: apiSlice,
-        enquiryForm: enquiryformSlice,
         cart: cartSlice,
         favorite: favoriteSlice,
     },

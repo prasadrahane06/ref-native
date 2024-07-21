@@ -37,7 +37,7 @@ import {
 import { useSelector } from "react-redux";
 import NotificationDrawer from "../notification/notification";
 import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 interface AddEvent {
     visible: boolean;
@@ -295,9 +295,9 @@ const EventsScreen = () => {
         setModalVisible(false);
     };
 
-    const handleEventAdded = () => {
-        setModalVisible(false);
-    };
+    // const handleEventAdded = () => {
+    //     setModalVisible(false);
+    // };
     const renderItem = ({ item }: { item: event }) => (
         <AUIThemedView style={styles.facility}>
             <Image source={{ uri: item.eventImage }} style={styles.image} />
@@ -332,9 +332,9 @@ const EventsScreen = () => {
     );
 };
 
-const NotificationsScreen = ({ onClose }: { onClose: () => void }) => (
-    <NotificationDrawer onClose={onClose} />
-);
+// const NotificationsScreen = ({ onClose }: { onClose: () => void }) => (
+//     <NotificationDrawer onClose={onClose} />
+// );
 
 const user = {
     name: "Manchester School",
@@ -345,18 +345,18 @@ const user = {
 const items = [
     {
         label: "Facilities",
-        iconPath: Asset.fromModule(require("@/assets/images/drawerIcons/courses-icon.png")).uri,
+        iconPath: Asset.fromModule(require("@/assets/images/drawerIcons/courses_icon.png")).uri,
         navigateTo: "Facilities",
     },
     {
         label: "Terms and Policy",
-        iconPath: Asset.fromModule(require("@/assets/images/drawerIcons/terms-and-policy-icon.png"))
+        iconPath: Asset.fromModule(require("@/assets/images/drawerIcons/terms_and_policy_icon.png"))
             .uri,
         navigateTo: "Contact",
     },
     {
         label: "Share the app",
-        iconPath: Asset.fromModule(require("@/assets/images/drawerIcons/share-icon.png")).uri,
+        iconPath: Asset.fromModule(require("@/assets/images/drawerIcons/share_icon.png")).uri,
         navigateTo: "#",
     },
 ];
@@ -364,10 +364,13 @@ const items = [
 export default function AUIDrawer() {
     const theme = useSelector((state: RootState) => state.global.theme);
     const isRTL = useSelector((state: RootState) => state.global.isRTL);
+
+    const { t, i18n } = useTranslation();
+
     const [modalVisible, setModalVisible] = useState<boolean>(false);
-    const handleNotificationPress = () => {
-        setModalVisible(true);
-    };
+    // const handleNotificationPress = () => {
+    //     setModalVisible(true);
+    // };
 
     const closeModal = () => {
         setModalVisible(false);
@@ -378,23 +381,13 @@ export default function AUIDrawer() {
             <Drawer.Navigator
                 initialRouteName="Home"
                 screenOptions={({ navigation }) => screenOptions(navigation, isRTL, theme) as any}
-                drawerContent={(props) => (
-                    <AUIDrawerContent
-                        {...props}
-                        isLoggedIn={true}
-                        user={user}
-                        items={items}
-                        onLogout={() => {
-                            // Implement logout logic here
-                        }}
-                        school
-                    />
-                )}
+                drawerContent={(props) => <AUIDrawerContent {...props} />}
             >
                 <Drawer.Screen
                     name="Home"
                     component={TabLayout}
                     options={{
+                        title: t(GLOBAL_TRANSLATION_LABEL.home),
                         drawerIcon: () => (
                             <FontAwesome name="home" size={24} color={TEXT_THEME[theme].gray} />
                         ),
@@ -410,6 +403,7 @@ export default function AUIDrawer() {
                     name="Events"
                     component={EventsScreen}
                     options={{
+                        title: t(GLOBAL_TRANSLATION_LABEL.events),
                         drawerIcon: () => (
                             <MaterialIcons
                                 name="emoji-events"
@@ -557,7 +551,6 @@ const screenOptions = (navigation: any, isRTL: boolean, theme: ThemeType) => ({
     drawerPosition: isRTL ? "right" : "left",
 });
 
-const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 const styles = StyleSheet.create({
     mainContainer: {

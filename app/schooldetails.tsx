@@ -5,22 +5,21 @@ import { AUISafeAreaView } from "@/components/common/AUISafeAreaView";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
+import ImageViewer from "@/components/ImageViewer";
 import { inputFieldStyle, signupPageStyles } from "@/constants/Styles";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Asset } from "expo-asset";
 import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Platform, ScrollView, StyleSheet, Text } from "react-native";
-import { useDispatch } from "react-redux";
+import { ScrollView, StyleSheet } from "react-native";
 import * as Yup from "yup";
 import useAxios from "./services/axiosClient";
-import ImageViewer from "@/components/ImageViewer";
-import { Asset } from "expo-asset";
 
 const schema = Yup.object().shape({
     remark: Yup.string().required("Remark is required"),
@@ -34,16 +33,14 @@ const schema = Yup.object().shape({
 export default function SchoolDetails() {
     const { requestFn } = useApiRequest();
     const { patch } = useAxios();
-    const dispatch = useDispatch();
 
-    const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
+    // const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
     const router = useRouter();
-    const profile = useLangTransformSelector((state: RootState) => state.global.profile);
     const [locationData, setLocationData] = useState([]);
     const [selectedLogo, setSelectedLogo] = useState("");
     const [selectedBanner, setSelectedBanner] = useState("");
 
-    const { watch, reset, setValue, control, handleSubmit, formState, getValues } = useForm({
+    const { setValue, control, handleSubmit } = useForm({
         resolver: yupResolver(schema),
         mode: "all",
         defaultValues: {

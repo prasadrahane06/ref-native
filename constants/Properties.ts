@@ -95,6 +95,7 @@ export const GLOBAL_TRANSLATION_LABEL = {
     confirmYourPayment: "confirmYourPayment",
     facilities: "facilities",
     latestEvents: "latestEvents",
+    events: "events",
 };
 export const SIGNUP_FIELDS = {
     name: { label: "Name", placeholder: "e.g John Doe", type: "INPUT" },

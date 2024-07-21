@@ -1,5 +1,6 @@
 import AUIDrawerContent from "@/components/common/AUIDrawerContent";
 import { AUILinearGradient } from "@/components/common/AUILinearGradient";
+import { AUIThemedView } from "@/components/common/AUIThemedView";
 import HeaderIcons from "@/components/icons/HeaderIcon";
 import MyCourses from "@/components/screenComponents/MyCourses";
 import Profile from "@/components/screenComponents/Profile";
@@ -19,11 +20,10 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Tabs } from "expo-router";
 import { default as React, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Modal, Platform, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Modal, Platform, StyleSheet, TouchableOpacity } from "react-native";
 import "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 import NotificationDrawer from "../notification/notification";
-import { AUIThemedView } from "@/components/common/AUIThemedView";
 
 const ProfileScreen = () => <Profile />;
 const CoursesScreen = () => <MyCourses />;
@@ -45,7 +45,12 @@ const MenuButton = ({ navigation }: any) => (
     </TouchableOpacity>
 );
 
-const screenOptions = (navigation: any, isRTL: boolean, theme: ThemeType) => ({
+const screenOptions = (
+    navigation: any,
+    isRTL: boolean,
+    theme: ThemeType,
+    setModalVisible: any
+) => ({
     headerBackground: () => (
         <AUILinearGradient
             colors={[BACKGROUND_THEME[theme].background, BACKGROUND_THEME[theme].background]} //["rgba(118, 250,178, 1)", "rgba(91, 216,148, 1)"]}
@@ -54,7 +59,8 @@ const screenOptions = (navigation: any, isRTL: boolean, theme: ThemeType) => ({
     ),
     headerLeft: () => <MenuButton navigation={navigation} />,
     headerRight: () => (
-        <HeaderIcons onNotificationPress={() => navigation.navigate("Notifications")} />
+        // <HeaderIcons onNotificationPress={() => navigation.navigate("Notifications")} />
+        <HeaderIcons onNotificationPress={() => setModalVisible(true)} />
     ),
     headerTitle: "",
     drawerLabelStyle: { marginLeft: -20, fontSize: 15, color: TEXT_THEME[theme].gray },
@@ -64,14 +70,14 @@ const screenOptions = (navigation: any, isRTL: boolean, theme: ThemeType) => ({
 });
 
 export default function AUIDrawer() {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const isRTL = useSelector((state: RootState) => state.global.isRTL);
     const theme = useSelector((state: RootState) => state.global.theme);
     const [modalVisible, setModalVisible] = useState<boolean>(false);
 
-    const handleNotificationPress = () => {
-        setModalVisible(true);
-    };
+    // const handleNotificationPress = () => {
+    //     setModalVisible(true);
+    // };
 
     const closeModal = () => {
         setModalVisible(false);
@@ -81,7 +87,9 @@ export default function AUIDrawer() {
         <>
             <Drawer.Navigator
                 initialRouteName="Home"
-                screenOptions={({ navigation }) => screenOptions(navigation, isRTL, theme) as any}
+                screenOptions={({ navigation }) =>
+                    screenOptions(navigation, isRTL, theme, setModalVisible) as any
+                }
                 drawerContent={(props) => <AUIDrawerContent {...props} />}
             >
                 <Drawer.Screen
@@ -155,7 +163,7 @@ export default function AUIDrawer() {
                         ),
                     }}
                 />
-                <Drawer.Screen
+                {/* <Drawer.Screen
                     name="Notifications"
                     component={() => <NotificationsScreen onClose={closeModal} />}
                     options={{
@@ -165,7 +173,7 @@ export default function AUIDrawer() {
                             <MaterialIcons name="notifications" size={24} color={color} />
                         ),
                     }}
-                />
+                /> */}
             </Drawer.Navigator>
             <Modal
                 animationType="slide"
@@ -174,9 +182,6 @@ export default function AUIDrawer() {
                 onRequestClose={closeModal}
             >
                 <AUIThemedView style={styles.modalContainer}>
-                    <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
-                        <Ionicons name="close" size={24} color={TEXT_THEME[theme].primary} />
-                    </TouchableOpacity>
                     <NotificationDrawer onClose={closeModal} />
                 </AUIThemedView>
             </Modal>
@@ -185,7 +190,7 @@ export default function AUIDrawer() {
 }
 
 export function TabLayout() {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     return (
         <Tabs
@@ -272,7 +277,6 @@ export function TabLayout() {
 const styles = StyleSheet.create({
     modalContainer: {
         flex: 1,
-        paddingTop: 50,
     },
     closeButton: {
         alignSelf: "flex-end",

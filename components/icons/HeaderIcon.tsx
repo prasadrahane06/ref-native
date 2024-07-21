@@ -1,4 +1,4 @@
-import { TEXT_THEME } from "@/constants/Colors";
+import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { RootState } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
@@ -15,10 +15,15 @@ const HeaderIcons: React.FC<HeaderIconsProps> = ({ onNotificationPress }) => {
     return (
         <View style={{ flexDirection: "row", marginRight: 15 }}>
             <TouchableOpacity onPress={() => alert("Search")}>
-                <Ionicons name="search" size={25} style={{ marginRight: 20 }} />
+                <Ionicons
+                    name="search"
+                    size={25}
+                    style={{ marginRight: 20 }}
+                    color={APP_THEME.light.primary.first}
+                />
             </TouchableOpacity>
             <TouchableOpacity onPress={onNotificationPress}>
-                <Ionicons name="notifications" size={25} color={TEXT_THEME[theme].primary} />
+                <Ionicons name="notifications" size={25} color={APP_THEME.light.primary.first} />
             </TouchableOpacity>
         </View>
     );

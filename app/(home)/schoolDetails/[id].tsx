@@ -1,4 +1,5 @@
 import useAxios from "@/app/services/axiosClient";
+import ChatBot from "@/components/chatbot/ChatBot";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
@@ -17,7 +18,7 @@ import { Asset } from "expo-asset";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Linking, Pressable, StyleSheet, TouchableOpacity } from "react-native";
+import { Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import Animated, {
     interpolate,
     useAnimatedRef,
@@ -25,12 +26,13 @@ import Animated, {
     useScrollViewOffset,
 } from "react-native-reanimated";
 import { useDispatch, useSelector } from "react-redux";
-// import { ChatBot } from "at-chatbot-native";
 
 interface TabProps {
     courseId: string;
     clientId: string;
 }
+
+const IMG_HEIGHT = 250;
 
 function StudentDetailsTabs({ courseId, clientId }: TabProps) {
     const schoolsResponse = useLangTransformSelector(
@@ -38,7 +40,7 @@ function StudentDetailsTabs({ courseId, clientId }: TabProps) {
     );
     const theme = useSelector((state: RootState) => state.global.theme);
     const [selectedTab, setSelectedTab] = useState("overview");
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     const handleTabClick = (tabName: string) => {
         setSelectedTab(tabName);
@@ -116,14 +118,15 @@ function StudentDetailsTabs({ courseId, clientId }: TabProps) {
 }
 
 export default function SchoolDetails() {
-    const effect = useIsomorphicLayoutEffect();
-    const { id } = useLocalSearchParams<{ id: string }>();
-
+    const { id } = useLocalSearchParams<{ id: any }>();
     const { post, del } = useAxios();
     const { requestFn } = useApiRequest();
     const dispatch = useDispatch();
+    // const { t, i18n } = useTranslation();
+    const effect = useIsomorphicLayoutEffect();
 
-    const { t, i18n } = useTranslation();
+    // chatbot
+    const [config, setConfig] = useState({});
 
     const user = useLangTransformSelector((state: RootState) => state.global.user);
     const favorite = useLangTransformSelector((state: RootState) => state.favorite.items);
@@ -131,18 +134,10 @@ export default function SchoolDetails() {
     const isRTL = useSelector((state: RootState) => state.global.isRTL);
     const theme = useSelector((state: RootState) => state.global.theme);
 
-    if (!id) {
-        return (
-            <AUIThemedView>
-                <AUIThemedText>course not found</AUIThemedText>
-            </AUIThemedView>
-        );
-    }
-
     const schoolsResponse = school[0];
 
     useEffect(() => {
-        requestFn(API_URL.schoolOverview, "individualSchool", { id: id ? id : {} });
+        requestFn(API_URL.schoolOverview, "individualSchool", { id: id });
     }, []);
 
     const scrollRef = useAnimatedRef<Animated.ScrollView>();
@@ -185,11 +180,9 @@ export default function SchoolDetails() {
     const handleFavoriteClick = (id: string, type: string) => {
         if (isCourseFavorited(id)) {
             // Remove from favorites
-
-            del(API_URL.favorite, { id: id, type: type })
+            del(API_URL.favorite, { id, type })
                 .then((res: any) => {
                     dispatch(removeFromFavorite({ id, type: "clients" }));
-
                     ApiSuccessToast(res.message);
                 })
                 .catch((e: any) => {
@@ -198,13 +191,11 @@ export default function SchoolDetails() {
                 });
         } else {
             // Add to favorites
-
-            post(API_URL.favorite, { id: id, type: type })
+            post(API_URL.favorite, { id, type })
                 .then((res: any) => {
                     dispatch(
                         addToFavorite({ countries: [], courses: [], clients: [schoolsResponse] })
                     );
-
                     ApiSuccessToast(res.message);
                 })
                 .catch((e: any) => {
@@ -214,33 +205,29 @@ export default function SchoolDetails() {
         }
     };
 
-    const handlePhonePress = (phoneNumber: string) => {
-        Linking.openURL(`tel:${phoneNumber}`);
-    };
+    // const handlePhonePress = (phoneNumber: string) => {
+    //     Linking.openURL(`tel:${phoneNumber}`);
+    // };
 
-    const handleEmailPress = (emailAddress: string) => {
-        Linking.openURL(`mailto:${emailAddress}`);
-    };
+    // const handleEmailPress = (emailAddress: string) => {
+    //     Linking.openURL(`mailto:${emailAddress}`);
+    // };
 
     effect(() => {
         navigation.setOptions({
             headerTransparent: true,
-
             headerBackground: () => (
                 <Animated.View
                     style={[
                         headerBackgroundAnimatedStyle,
-                        [
-                            styles.screenHeader,
-                            {
-                                backgroundColor: APP_THEME[theme].primary.first,
-                                borderColor: APP_THEME[theme].gray,
-                            },
-                        ],
+                        styles.screenHeader,
+                        {
+                            backgroundColor: APP_THEME[theme].primary.first,
+                            borderColor: APP_THEME[theme].gray,
+                        },
                     ]}
                 />
             ),
-
             headerLeft: () => (
                 <Ionicons
                     name="arrow-back"
@@ -255,13 +242,8 @@ export default function SchoolDetails() {
                     onPress={() => navigation.goBack()}
                 />
             ),
-
             headerRight: () => (
-                <TouchableOpacity
-                    onPress={() => {
-                        handleFavoriteClick(id, "client");
-                    }}
-                >
+                <TouchableOpacity onPress={() => handleFavoriteClick(id, "client")}>
                     <AUIThemedView
                         style={{
                             backgroundColor: "rgba(91, 216, 148, 0.3)",
@@ -279,19 +261,33 @@ export default function SchoolDetails() {
                     </AUIThemedView>
                 </TouchableOpacity>
             ),
-
             headerTitle: () => (
                 <Animated.Text style={[headerTitleAnimatedStyle, styles.screenTitle]}>
                     {schoolsResponse?.name}
                 </Animated.Text>
             ),
         });
-    }, [schoolsResponse, id]);
+    }, [
+        schoolsResponse,
+        id,
+        theme,
+        navigation,
+        headerBackgroundAnimatedStyle,
+        headerTitleAnimatedStyle,
+    ]);
+
+    if (!id) {
+        return (
+            <AUIThemedView>
+                <AUIThemedText>course not found</AUIThemedText>
+            </AUIThemedView>
+        );
+    }
 
     // chatbot code below
-    const [config, setConfig] = useState({});
-    // const consumerId: string = "667276fdb4001407af7aa8a2";
     const consumerId = id;
+
+    // const consumerId: string = "667276fdb4001407af7aa8a2";
 
     // Keep it for future chatbot use
     // Bilal : 66683f4f7a4338e3c14339ab
@@ -421,7 +417,6 @@ const tabStyles = StyleSheet.create({
     },
 });
 
-const IMG_HEIGHT = 250;
 const styles = StyleSheet.create({
     screenHeader: {
         // backgroundColor: APP_THEME.primary.first,

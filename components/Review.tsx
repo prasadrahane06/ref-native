@@ -1,14 +1,10 @@
-import { APP_THEME } from "@/constants/Colors";
 import React from "react";
 import { StyleSheet } from "react-native";
 import AUIImage from "./common/AUIImage";
 import { AUIThemedText } from "./common/AUIThemedText";
 import { AUIThemedView } from "./common/AUIThemedView";
-import { RootState } from "@/redux/store";
-import { useSelector } from "react-redux";
 
 export const Review = ({ name, role, image, comment }: any) => {
-    const theme = useSelector((state: RootState) => state.global.theme);
 
     return (
         <AUIThemedView style={reviewStyle.container}>

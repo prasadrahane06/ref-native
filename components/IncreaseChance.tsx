@@ -1,11 +1,9 @@
-import { APP_THEME, STUDENT_GRADIENT, TEXT_THEME } from "@/constants/Colors";
-import { LinearGradient } from "expo-linear-gradient";
-import { Dimensions, StyleSheet, Text } from "react-native";
-import { AUIThemedText } from "./common/AUIThemedText";
-import { AUIThemedView } from "./common/AUIThemedView";
-import AUIImage from "./common/AUIImage";
+import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { RootState } from "@/redux/store";
+import { Dimensions, StyleSheet, Text } from "react-native";
 import { useSelector } from "react-redux";
+import AUIImage from "./common/AUIImage";
+import { AUIThemedView } from "./common/AUIThemedView";
 
 interface IncreaseChanceItem {
     image: string;

@@ -8,7 +8,7 @@ const AUIImage = ({ path, style, preview, icon, ...props }: any) => {
     return (
         <Image
             source={{ uri: path || Asset.fromModule(
-                require("@/assets/images/common/no-image.png")
+                require("@/assets/images/common/no_image.png")
 
                 // "https://linguest-assets-dev.s3.ap-south-1.amazonaws.com/1718884990288-6296.jpeg"
             ).uri }}

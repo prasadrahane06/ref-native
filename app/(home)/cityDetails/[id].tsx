@@ -29,30 +29,22 @@ import { useDispatch, useSelector } from "react-redux";
 
 export default function CityDetails() {
     const effect = useIsomorphicLayoutEffect();
-    const { id } = useLocalSearchParams<{ id: string }>();
-
-    if (!id) {
-        return (
-            <AUIThemedView style={{ justifyContent: "center", alignItems: "center" }}>
-                <AUIThemedText>City not found</AUIThemedText>
-            </AUIThemedView>
-        );
-    }
+    const { id } = useLocalSearchParams<{ id: any }>();
 
     const [readMore, setReadMore] = useState(false);
     const [country, setCountry] = useState<any>({});
     const [photoGallary, setPhotoGallary] = useState<any>([]);
     const [aboutText, setAboutText] = useState("");
-
     const { requestFn } = useApiRequest();
     const dispatch = useDispatch();
     const { post, del } = useAxios();
-
     const favorite = useLangTransformSelector((state: RootState) => state.favorite.items);
     const schoolsResponse = useLangTransformSelector((state: RootState) => state.api.countrySchool);
-    const individualCountry = useLangTransformSelector((state: RootState) => state.api.individualCountry);
+    const individualCountry = useLangTransformSelector(
+        (state: RootState) => state.api.individualCountry
+    );
+    const isRTL = useSelector((state: RootState) => state.global.isRTL);
     const theme = useSelector((state: RootState) => state.global.theme);
-
     const scrollRef = useAnimatedRef<Animated.ScrollView>();
     const navigation = useNavigation();
     const scrollOffset = useScrollViewOffset(scrollRef);
@@ -62,11 +54,13 @@ export default function CityDetails() {
             opacity: interpolate(scrollOffset.value, [0, IMG_HEIGHT / 1.5], [0, 1]),
         };
     }, []);
+
     const headerTitleAnimatedStyle = useAnimatedStyle(() => {
         return {
             opacity: interpolate(scrollOffset.value, [IMG_HEIGHT / 2, IMG_HEIGHT], [0, 1]),
         };
     }, []);
+
     const imageAnimatedStyle = useAnimatedStyle(() => {
         return {
             transform: [
@@ -84,12 +78,10 @@ export default function CityDetails() {
         };
     });
 
-    const isRTL = useSelector((state: RootState) => state.global.isRTL || {});
-
     useEffect(() => {
         requestFn(API_URL.country, "individualCountry", { id: id });
         requestFn(API_URL.school, "countrySchool", { location: id });
-    }, [id]);
+    }, []);
 
     useEffect(() => {
         if (individualCountry?.docs && individualCountry.docs.length > 0) {
@@ -109,11 +101,9 @@ export default function CityDetails() {
     const handleFavoriteClick = (id: string, type: string) => {
         if (isCountryFavorited(id)) {
             // Remove from favorites
-
             del(API_URL.favorite, { id: id, type: type })
                 .then((res: any) => {
                     dispatch(removeFromFavorite({ id, type: "countries" }));
-
                     ApiSuccessToast(res.message);
                 })
                 .catch((e: any) => {
@@ -122,11 +112,9 @@ export default function CityDetails() {
                 });
         } else {
             // Add to favorites
-
             post(API_URL.favorite, { id: id, type: type })
                 .then((res: any) => {
                     dispatch(addToFavorite({ countries: [country], courses: [], clients: [] }));
-
                     ApiSuccessToast(res.message);
                 })
                 .catch((e: any) => {
@@ -141,13 +129,12 @@ export default function CityDetails() {
         population && population >= 1000000
             ? (population / 1000000).toFixed(1) + "M"
             : population && population > 0
-                ? population.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                : null;
+            ? population.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+            : null;
 
     effect(() => {
         navigation.setOptions({
             headerTransparent: true,
-
             headerBackground: () => (
                 <Animated.View
                     style={[
@@ -160,7 +147,6 @@ export default function CityDetails() {
                     ]}
                 />
             ),
-
             headerLeft: () => (
                 <Ionicons
                     name="arrow-back"
@@ -176,11 +162,7 @@ export default function CityDetails() {
                 />
             ),
             headerRight: () => (
-                <TouchableOpacity
-                    onPress={() => {
-                        handleFavoriteClick(country._id, "country");
-                    }}
-                >
+                <TouchableOpacity onPress={() => handleFavoriteClick(country._id, "country")}>
                     <AUIThemedView
                         style={{
                             backgroundColor: "rgba(91, 216, 148, 0.3)",
@@ -198,14 +180,29 @@ export default function CityDetails() {
                     </AUIThemedView>
                 </TouchableOpacity>
             ),
-
             headerTitle: () => (
                 <Animated.Text style={[headerTitleAnimatedStyle, styles.screenTitle]}>
                     {isRTL ? country?.name?.en : country?.name?.ar}
                 </Animated.Text>
             ),
         });
-    }, [id, country]);
+    }, [
+        id,
+        country,
+        headerBackgroundAnimatedStyle,
+        headerTitleAnimatedStyle,
+        isCountryFavorited,
+        navigation,
+        theme,
+    ]);
+
+    if (!id) {
+        return (
+            <AUIThemedView style={{ justifyContent: "center", alignItems: "center" }}>
+                <AUIThemedText>City not found</AUIThemedText>
+            </AUIThemedView>
+        );
+    }
 
     return (
         <AUIThemedView>

@@ -1,12 +1,11 @@
 import { APP_THEME } from "@/constants/Colors";
-import React from "react";
-import { Dimensions, Linking, Text, TouchableOpacity } from "react-native";
-import { AUIThemedView } from "../common/AUIThemedView";
 import { RootState } from "@/redux/store";
+import React from "react";
+import { Linking, TouchableOpacity } from "react-native";
 import { useSelector } from "react-redux";
 import { AUIThemedText } from "../common/AUIThemedText";
+import { AUIThemedView } from "../common/AUIThemedView";
 
-const { height: windowHeight } = Dimensions.get("window");
 export default function TermsAndPolicy() {
     const theme = useSelector((state: RootState) => state.global.theme);
 

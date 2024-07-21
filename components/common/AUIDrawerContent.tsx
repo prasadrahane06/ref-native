@@ -38,7 +38,7 @@ export interface DrawerProps {
 const AUIDrawerContent = (props: any) => {
     const router = useRouter();
     const dispatch = useDispatch();
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     const globalState = useLangTransformSelector((state: RootState) => state.global);
     const theme = useSelector((state: RootState) => state.global.theme);
@@ -49,7 +49,6 @@ const AUIDrawerContent = (props: any) => {
     const name = data?.name || "";
 
     const isRTL = globalState.isRTL;
-    const userdetails = globalState.user;
 
     const toggleSwitch = async () => {
         const newDarkModeState = !isDarkMode;

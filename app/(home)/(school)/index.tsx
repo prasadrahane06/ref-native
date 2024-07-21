@@ -16,34 +16,10 @@ import { useSelector } from "react-redux";
 
 export default function HomeScreen() {
     const { requestFn } = useApiRequest();
-    const school = useLangTransformSelector((state: RootState) => state.api.individualSchool || {});
     const theme = useSelector((state: RootState) => state.global.theme);
     const MySchoolDetails = useLangTransformSelector(
         (state: RootState) => state.api.MySchoolDetails || {}
     );
-
-    const courseInfoData = [
-        {
-            id: "1",
-            title: "2+",
-            subtitle: "Total Numbers of student",
-        },
-        {
-            id: "2",
-            title: "4+",
-            subtitle: "Total Number of Courses",
-        },
-        {
-            id: "3",
-            title: "103+",
-            subtitle: "Total Pending Admission",
-        },
-        {
-            id: "4",
-            title: "$10024",
-            subtitle: "Total Revenue of School",
-        },
-    ];
 
     useEffect(() => {
         requestFn(API_URL.schoolOverview, "MySchoolDetails", { client: true });

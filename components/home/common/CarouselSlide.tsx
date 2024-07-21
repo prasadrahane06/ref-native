@@ -1,7 +1,6 @@
 import AUIBackgroundImage from "@/components/common/AUIBackgroundImage";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { APP_THEME } from "@/constants/Colors";
 import { StyleSheet } from "react-native";
 
 interface CarouselSlideProps {

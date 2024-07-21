@@ -16,7 +16,7 @@ export default function TabThreeScreen(props: any) {
             <AUIImage
                 style={styles.image}
                 path={
-                    Asset.fromModule(require("@/assets/images/compareScreen/Group 36754.png")).uri
+                    Asset.fromModule(require("@/assets/images/compareScreen/group_36754.png")).uri
                 }
                 resizeMode="contain"
             />

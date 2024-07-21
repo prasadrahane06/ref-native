@@ -4,7 +4,7 @@ import { FlatList } from "react-native";
 import { AvailableCourses } from "./AvailableCourses";
 
 interface AvailableCoursesProps {
-    courses: Array<{
+    courses: {
         _id: string;
         courseName: string;
         description: string;
@@ -17,7 +17,7 @@ interface AvailableCoursesProps {
         currencyType: string;
         category: string;
         status: number;
-    }>;
+    }[];
 }
 
 export const AvailableCoursesList: React.FC<AvailableCoursesProps> = ({ courses }) => {

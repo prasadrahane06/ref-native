@@ -5,10 +5,10 @@ import { AUISafeAreaView } from "@/components/common/AUISafeAreaView";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast, FormValidateToast } from "@/components/common/AUIToast";
-import { APP_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT, SIGNUP_FIELDS } from "@/constants/Properties";
 import { countriesData } from "@/constants/dummy data/countriesData";
 import { API_URL } from "@/constants/urlProperties";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { setLoader, setSignInType, setSignupDetails } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
 import { useRouter } from "expo-router";
@@ -21,9 +21,8 @@ import {
     TouchableWithoutFeedback,
     View,
 } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import useAxios from "./services/axiosClient";
-import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 const SignupPage = () => {
     const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
     const router = useRouter();
@@ -236,7 +235,6 @@ const ContactNumberField = ({
     placeholder,
     onBlur,
 }: any) => {
-    const theme = useSelector((state: RootState) => state.global.theme);
 
     return (
         <AUIThemedView>

@@ -51,7 +51,7 @@ const TabTwoScreen: React.FC = () => {
     const dispatch = useDispatch();
 
     const width = Dimensions.get("window").width;
-    const progress = useSharedValue<number>(0);
+    // const progress = useSharedValue<number>(0);
     const ref = useRef<ICarouselInstance>(null);
 
     useFocusEffect(
@@ -75,7 +75,7 @@ const TabTwoScreen: React.FC = () => {
 
             dispatch(addToFavorite({ clients, courses, countries }));
         }
-    }, [favorite]);
+    }, [favorite, dispatch]);
 
     const fav = useSelector((state: RootState) => state.favorite.items);
 
@@ -89,12 +89,12 @@ const TabTwoScreen: React.FC = () => {
         setShowAllCountries(true);
     };
 
-    const onPressPagination = (index: number) => {
-        ref.current?.scrollTo({
-            count: index - progress.value,
-            animated: true,
-        });
-    };
+    // const onPressPagination = (index: number) => {
+    //     ref.current?.scrollTo({
+    //         count: index - progress.value,
+    //         animated: true,
+    //     });
+    // };
     const renderCourseItem: ListRenderItem<CourseData> = ({ item }: any) => (
         <AUIThemedView
             style={[styles.courseItem, { backgroundColor: APP_THEME[theme].background }]}

@@ -1,12 +1,12 @@
 import AUIImage from "@/components/common/AUIImage";
-import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
+import { TEXT_THEME } from "@/constants/Colors";
+import { RootState } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";
 import { ReactNode, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
+import { useSelector } from "react-redux";
 import { AUIThemedText } from "./AUIThemedText";
 import { AUIThemedView } from "./AUIThemedView";
-import { RootState } from "@/redux/store";
-import { useSelector } from "react-redux";
 
 interface AccordionProps {
     title: string;

@@ -1,28 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
-import { useSelector } from "react-redux";
-import { useLocalSearchParams } from "expo-router";
-import { t } from "i18next";
-import { RouteProp, useRoute } from "@react-navigation/native";
-import { Asset } from "expo-asset";
-import { RootState } from "@/redux/store";
-import useApiRequest from "@/customHooks/useApiRequest";
-import { API_URL } from "@/constants/urlProperties";
-import { APP_THEME, BACKGROUND_THEME } from "@/constants/Colors";
-import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
+import useAxios from "@/app/services/axiosClient";
 import AUIImage from "@/components/common/AUIImage";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import useAxios from "@/app/services/axiosClient";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
+import { APP_THEME, BACKGROUND_THEME } from "@/constants/Colors";
+import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
+import { API_URL } from "@/constants/urlProperties";
+import useApiRequest from "@/customHooks/useApiRequest";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
-
-type RouteParams = {
-    courseDetailsPurchase: {
-        courseId: string;
-        planId: string;
-    };
-};
+import { RootState } from "@/redux/store";
+import { Asset } from "expo-asset";
+import { useLocalSearchParams } from "expo-router";
+import { t } from "i18next";
+import React, { useEffect, useState } from "react";
+import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import { useSelector } from "react-redux";
 
 export default function PurchaseScreen() {
     const { id } = useLocalSearchParams<{ id: any }>();
@@ -46,7 +38,7 @@ export default function PurchaseScreen() {
 
     useEffect(() => {
         requestFn(API_URL.plan, "individualPlan", { id: newid.planId });
-    }, []);
+    }, [newid.planId]);
 
     useEffect(() => {
         if (individualPlan) {
@@ -63,7 +55,7 @@ export default function PurchaseScreen() {
                 total: total,
             });
         }
-    }, [individualPlan, paymentMode]);
+    }, [individualPlan, paymentMode, newid.planId]);
 
     const handlePayment = () => {
         post(API_URL.purchaseCourse, {
@@ -204,7 +196,7 @@ export default function PurchaseScreen() {
                     onPress={() => setPaymentMode("Net Banking")}
                 >
                     <AUIImage
-                        path={Asset.fromModule(require("@/assets/icons/net-banking.png")).uri}
+                        path={Asset.fromModule(require("@/assets/icons/net_banking.png")).uri}
                         style={{ width: 30, height: 30 }}
                     />
                     <AUIThemedText style={styles.paymentModeText}>

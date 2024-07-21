@@ -98,6 +98,7 @@ const AUIAddNewCourse = () => {
             reset();
             navigation.goBack();
         } catch (error) {
+            console.log("error in add new course", error);
             ApiErrorToast("Failed to Add New Course");
         }
     };
