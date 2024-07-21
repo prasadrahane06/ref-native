@@ -449,7 +449,8 @@ const RootLayoutNav = () => {
     const { post } = useAxios();
     const dispatch = useDispatch();
 
-    // uncomment when building
+    // comment requestUserPermission and useEffect when in development to avoid firbase error
+    // and uncomment when building for production
 
     const requestUserPermission = async () => {
         const authStatus = await messaging().requestPermission();
