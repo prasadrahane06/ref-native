@@ -319,7 +319,7 @@ export default function SchoolDetails() {
 
     return (
         <AUIThemedView style={{ flex: 1 }}>
-            <ChatBot consumerId={consumerId} config={config} user={user} />
+            {/* <ChatBot consumerId={consumerId} config={config} user={user} /> */}
 
             <Animated.ScrollView ref={scrollRef} scrollEventThrottle={16}>
                 <AUIThemedView style={styles.container}>

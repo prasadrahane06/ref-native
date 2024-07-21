@@ -25,6 +25,17 @@ const apiSlice = createSlice({
         setResponse(state, action: PayloadAction<SetResponsePayload>) {
             state[action.payload.storeName] = action.payload.data;
         },
+        setUpdatedResponse(state, action: PayloadAction<SetResponsePayload>) {
+            const { storeName, data } = action.payload;
+            state[storeName] = {
+                ...state[storeName],
+                ...data,
+                docs: [
+                    ...(state[storeName]?.docs || []),
+                    ...(data.docs || [])
+                ],
+            };
+        },
         setSelectedSchool1(state, action: PayloadAction<any>) {
             state.compareSchool1 = action.payload;
         },
@@ -34,5 +45,7 @@ const apiSlice = createSlice({
     },
 });
 
-export const { setResponse, setSelectedSchool1, setSelectedSchool2 } = apiSlice.actions;
+export const { setResponse, setSelectedSchool1, setSelectedSchool2, setUpdatedResponse } = apiSlice.actions;
 export default apiSlice.reducer;
+
+

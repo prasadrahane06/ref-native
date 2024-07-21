@@ -7,9 +7,9 @@ import { useSelector } from "react-redux";
 
 interface ChartComponentProps {
     title: string;
-    labels: string[];
-    pendingData: number[];
-    doneData: number[];
+    labels?: string[];
+    pendingData?: number[];
+    doneData?: number[];
     yAxisLabel?: string;
     yAxisSuffix?: string;
     yAxisInterval?: number;
@@ -17,14 +17,16 @@ interface ChartComponentProps {
 
 const ChartComponent: React.FC<ChartComponentProps> = ({
     title,
-    labels,
-    pendingData,
-    doneData,
+    labels = [],
+    pendingData = [],
+    doneData = [],
     yAxisLabel,
     yAxisSuffix,
     yAxisInterval,
 }) => {
     const theme = useSelector((state: RootState) => state.global.theme);
+
+    const isDataEmpty = labels.length === 0 || pendingData.length === 0 || doneData.length === 0;
 
     const chartConfig = {
         backgroundGradientFrom: APP_THEME[theme].background,
@@ -36,6 +38,11 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
         barPercentage: 0.5,
         useShadowColorFromDataset: false,
         labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+        propsForDots: {
+            r: "6",
+            strokeWidth: "2",
+            stroke: APP_THEME[theme].ternary.first,
+        },
     };
 
     return (
@@ -44,59 +51,65 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
                 <Text style={[styles.title, { color: APP_THEME[theme].ternary.first }]}>
                     {title}
                 </Text>
-                <View style={styles.legendContainer}>
-                    <View style={styles.legendItem}>
-                        <View
-                            style={[
-                                styles.legendColorBox,
-                                { backgroundColor: "rgba(144, 238, 144, 1)" }, // Faint green
-                            ]}
+                {isDataEmpty ? (
+                    <Text style={styles.noDataText}>No Data Available</Text>
+                ) : (
+                    <>
+                        <View style={styles.legendContainer}>
+                            <View style={styles.legendItem}>
+                                <View
+                                    style={[
+                                        styles.legendColorBox,
+                                        { backgroundColor: "rgba(144, 238, 144, 1)" }, // Faint green
+                                    ]}
+                                />
+                                <Text
+                                    style={[styles.legendText, { color: APP_THEME[theme].ternary.first }]}
+                                >
+                                    Pending Payments
+                                </Text>
+                            </View>
+                            <View style={styles.legendItem}>
+                                <View
+                                    style={[
+                                        styles.legendColorBox,
+                                        { backgroundColor: "rgba(0, 100, 0, 1)" }, // Dark green
+                                    ]}
+                                />
+                                <Text
+                                    style={[styles.legendText, { color: APP_THEME[theme].ternary.first }]}
+                                >
+                                    Done Payments
+                                </Text>
+                            </View>
+                        </View>
+                        <LineChart
+                            data={{
+                                labels: labels,
+                                datasets: [
+                                    {
+                                        data: pendingData,
+                                        color: (opacity = 1) => `rgba(144, 238, 144, ${opacity})`, // Faint green for pending payments
+                                        strokeWidth: 2,
+                                    },
+                                    {
+                                        data: doneData,
+                                        color: (opacity = 1) => `rgba(0, 100, 0, ${opacity})`, // Dark green for done payments
+                                        strokeWidth: 2,
+                                    },
+                                ],
+                            }}
+                            width={Dimensions.get("window").width * 0.9}
+                            height={220}
+                            yAxisLabel={yAxisLabel}
+                            yAxisSuffix={yAxisSuffix}
+                            yAxisInterval={yAxisInterval}
+                            chartConfig={chartConfig}
+                            bezier={false} // Set to false to get straight lines
+                            style={styles.chart}
                         />
-                        <Text
-                            style={[styles.legendText, { color: APP_THEME[theme].ternary.first }]}
-                        >
-                            Pending Payments
-                        </Text>
-                    </View>
-                    <View style={styles.legendItem}>
-                        <View
-                            style={[
-                                styles.legendColorBox,
-                                { backgroundColor: "rgba(0, 100, 0, 1)" }, // Dark green
-                            ]}
-                        />
-                        <Text
-                            style={[styles.legendText, { color: APP_THEME[theme].ternary.first }]}
-                        >
-                            Done Payments
-                        </Text>
-                    </View>
-                </View>
-                <LineChart
-                    data={{
-                        labels: labels,
-                        datasets: [
-                            {
-                                data: pendingData,
-                                color: (opacity = 1) => `rgba(144, 238, 144, ${opacity})`, // Faint green for pending payments
-                                strokeWidth: 2,
-                            },
-                            {
-                                data: doneData,
-                                color: (opacity = 1) => `rgba(0, 100, 0, ${opacity})`, // Dark green for done payments
-                                strokeWidth: 2,
-                            },
-                        ],
-                    }}
-                    width={Dimensions.get("window").width * 0.9}
-                    height={220}
-                    yAxisLabel={yAxisLabel}
-                    yAxisSuffix={yAxisSuffix}
-                    yAxisInterval={yAxisInterval}
-                    chartConfig={chartConfig}
-                    bezier={false} // Set to false to get straight lines
-                    style={styles.chart}
-                />
+                    </>
+                )}
             </View>
         </View>
     );
@@ -108,20 +121,17 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         padding: 16,
-        // backgroundColor: APP_THEME.background,
     },
     container: {
         justifyContent: "center",
         alignItems: "flex-start",
         padding: 16,
-        // backgroundColor: APP_THEME.background,
         borderRadius: 0,
     },
     title: {
         fontSize: 20,
         fontWeight: "bold",
         marginBottom: 16,
-        // color: APP_THEME.ternary.first,
     },
     chart: {
         marginVertical: 8,
@@ -144,7 +154,12 @@ const styles = StyleSheet.create({
     },
     legendText: {
         fontSize: 14,
-        // color: APcP_THEME.ternary.first,
+    },
+    noDataText: {
+        fontSize: 18,
+        // color: APP_THEME[theme].ternary.first,
+        textAlign: "center",
+        marginTop: 20,
     },
 });
 

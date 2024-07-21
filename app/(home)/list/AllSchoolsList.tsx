@@ -38,7 +38,7 @@ const AllSchoolsList: React.FC<SchoolListProps> = ({ data, style }) => {
                 keyExtractor={(item) => item?.id}
                 numColumns={2}
                 columnWrapperStyle={styles.schoolContainer}
-                scrollEnabled={true}
+                scrollEnabled={false}
             />
         </AUIThemedView>
     );

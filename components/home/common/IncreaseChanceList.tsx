@@ -15,10 +15,10 @@ const IncreaseChanceList: React.FC<IncreaseChanceListProps> = ({ data }) => {
                 data={data}
                 renderItem={({ item }) => (
                     <IncreaseChance
-                        courseName={item.courseName}
-                        schoolName={item.schoolName}
-                        image={item.image}
-                        daysRemaining={item.daysRemaining}
+                        courseName={item?.courseName}
+                        schoolName={item?.client?.name}
+                        image={item?.image}
+                        daysRemaining={item?.startDate}
                     />
                 )}
                 keyExtractor={(item) => item.id}

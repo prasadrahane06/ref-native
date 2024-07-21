@@ -1,24 +1,35 @@
 import useAxios from "@/app/services/axiosClient";
-import { setResponse } from "@/redux/apiSlice";
+import { setResponse, setUpdatedResponse } from "@/redux/apiSlice";
 import { setLoader } from "@/redux/globalSlice";
 import { useDispatch } from "react-redux";
+
+interface Query {
+
+    [key : string] : any
+
+}
 
 const useApiRequest = () => {
     const dispatch = useDispatch();
     const { get } = useAxios();
-    // dispatch(setLoader(true));
 
-    const requestFn = (url: string, storeName: string, query?: {}) => {
+    const requestFn = (url: string, storeName: string, query: Query = {}) => {
         dispatch(setLoader(true));
 
-        get(url, query || {})
+        get(url, query)
             .then((res) => {
                 dispatch(setLoader(false));
-                dispatch(setResponse({ storeName, data: res.data }));
+                if (query.page && query.page > 1) {
+                    console.log("updated response");
+                    dispatch(setUpdatedResponse({ storeName, data: res.data }));
+                } else {
+                    console.log("first response");
+                    dispatch(setResponse({ storeName, data: res.data }));
+                }
             })
             .catch((error: any) => {
                 dispatch(setLoader(false));
-                console.log("error from API hook => ", error);
+                console.error("error from API hook => ", error);
             });
     };
 
@@ -26,5 +37,6 @@ const useApiRequest = () => {
         requestFn,
     };
 };
+
 
 export default useApiRequest;

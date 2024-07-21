@@ -1,18 +1,36 @@
 import Course from "@/components/Course";
 import { AUILinearGradient } from "@/components/common/AUILinearGradient";
+import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { APP_THEME, BACKGROUND_THEME } from "@/constants/Colors";
+import { API_URL } from "@/constants/urlProperties";
+import useApiRequest from "@/customHooks/useApiRequest";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
-import React from "react";
-import { FlatList, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 
 const AllCoursesScreen = () => {
+    //state
+    const [page, setPage] = useState(1);
     const theme = useSelector((state: RootState) => state.global.theme);
-    const courseResponse = useLangTransformSelector(
-        (state: RootState) => state.api.selectedLanguagecourse || {}
+    const selectedLanguage = useLangTransformSelector(
+        (state: RootState) => state.global.selectedLanguage
     );
+    const courseResponse = useLangTransformSelector(
+        (state: RootState) => state.api.selectedLanguageCourse
+    );
+
+    const { requestFn } = useApiRequest();
+
+    useEffect(() => {
+        if (selectedLanguage) {
+            requestFn(API_URL.course, "selectedLanguageCourse", { similar: selectedLanguage });
+        }
+    }, [page]);
+
     return (
         <AUILinearGradient
             colors={[`${APP_THEME[theme].primary.first}`, BACKGROUND_THEME[theme].background]}
@@ -20,9 +38,10 @@ const AllCoursesScreen = () => {
             end={{ x: 0, y: 1 }} // Gradient end point
             style={styles.container}
         >
-            <AUIThemedView style={styles.wrapper}>
+            <ScrollView style={styles.wrapper}>
                 <FlatList
-                    data={courseResponse.docs}
+                    data={courseResponse?.docs}
+                    scrollEnabled={false}
                     renderItem={({ item }) => (
                         <Course
                             title={item.courseName}
@@ -38,7 +57,16 @@ const AllCoursesScreen = () => {
                     numColumns={2}
                     columnWrapperStyle={styles.column}
                 />
-            </AUIThemedView>
+                <TouchableOpacity
+                    style={styles.loadMoreButton}
+                    disabled={page === courseResponse?.totalPages}
+                    onPress={() => setPage(page + 1)}
+                >
+                    <AUIThemedText>
+                        {page === courseResponse.totalPages ? "You are Caught Up" : "Load More"}
+                    </AUIThemedText>
+                </TouchableOpacity>
+            </ScrollView>
         </AUILinearGradient>
     );
 };
@@ -63,5 +91,8 @@ const styles = StyleSheet.create({
     course: {
         marginVertical: 5,
         width: "48%",
+    },
+    loadMoreButton: {
+        padding: 10,
     },
 });

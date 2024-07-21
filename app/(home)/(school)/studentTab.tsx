@@ -7,48 +7,88 @@ import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector
 import { RootState } from "@/redux/store";
 import { MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { useEffect } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity, View, ScrollView } from "react-native";
+import { useEffect, useState } from "react";
+import useDebounce from "@/customHooks/useDebounce";
+import AUISearchBar from "@/components/common/AUISearchBar";
 
 export default function TabTwoScreen() {
     const { requestFn } = useApiRequest();
+    const [page, setPage] = useState<any>(1);
+    const [searchPhrase, setSearchPhrase] = useState("");
+    const [clicked, setClicked] = useState(false);
+    const debouncedSearchPhrase = useDebounce(searchPhrase, 500);
     const schoolPurchaseCourse = useLangTransformSelector(
         (state: RootState) => state.api.schoolPurchaseCourse || {}
     );
 
+    console.log("schoolPurchaseCourse", JSON.stringify(schoolPurchaseCourse));
+
     useEffect(() => {
-        requestFn(API_URL.purchaseCourse, "schoolPurchaseCourse", { client: true });
-    }, []);
+        requestFn(API_URL.purchaseCourse, "schoolPurchaseCourse", { client: true, page: `${page}` });
+    }, [page]);
+
+    useEffect(() => {
+        if (debouncedSearchPhrase) {
+            requestFn(API_URL.schoolStudentSearch, "schoolPurchaseCourse", { client: true, student: debouncedSearchPhrase });
+        } else {
+            requestFn(API_URL.purchaseCourse, "schoolPurchaseCourse", { client: true, page: '1' });
+            setPage(1); 
+        }
+    }, [debouncedSearchPhrase]);
 
     return (
         <AUIThemedView style={styles.root}>
-            <AUIThemedText style={styles.title}>Students Admitted through App</AUIThemedText>
-            <AUIThemedView>
-                {schoolPurchaseCourse.docs && Array.isArray(schoolPurchaseCourse.docs) ? (
-                    schoolPurchaseCourse.docs.map((item: any) => (
-                        <TouchableOpacity
-                            key={item._id}
-                            style={styles.layout}
-                            onPress={() =>
-                                router.push({
-                                    pathname: `(home)/studentInfo/${item.user._id}`,
-                                    params: { student: JSON.stringify(item) },
-                                })
-                            }
-                        >
-                            <AUIThemedText style={styles.name}>
-                                {item.user?.name || "No name available"}
-                            </AUIThemedText>
-                            <AUIThemedText style={styles.id}>
-                                ID: {item.user?._id || "No ID available"}
-                            </AUIThemedText>
-                            <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
-                        </TouchableOpacity>
-                    ))
-                ) : (
-                    <AUIThemedText style={styles.noData}>No data available</AUIThemedText>
-                )}
-            </AUIThemedView>
+  <View style={styles.centeredContainer}>
+                <AUISearchBar
+                    clicked={clicked}
+                    searchPhrase={searchPhrase}
+                    setSearchPhrase={setSearchPhrase}
+                    setClicked={setClicked}
+                />
+            </View>
+            <ScrollView>
+                <AUIThemedView>
+                    <AUIThemedText style={styles.title}>Students Admitted through App</AUIThemedText>
+                    <AUIThemedView>
+                        {schoolPurchaseCourse.docs && Array.isArray(schoolPurchaseCourse.docs) ? (
+                            schoolPurchaseCourse.docs.map((item: any) => (
+                                <TouchableOpacity
+                                    key={item._id}
+                                    style={styles.layout}
+                                    onPress={() =>
+                                        router.push({
+                                            pathname: `(home)/studentInfo/${item.user._id}`,
+                                            params: { student: JSON.stringify(item) },
+                                        })
+                                    }
+                                >
+                                    <AUIThemedText style={styles.name}>
+                                        {item.user?.name || "No name available"}
+                                    </AUIThemedText>
+                                    <AUIThemedText style={styles.id}>
+                                        ID: {item.user?._id || "No ID available"}
+                                    </AUIThemedText>
+                                    <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
+                                </TouchableOpacity>
+                            ))
+                        ) : (
+                            <AUIThemedText style={styles.noData}>No data available</AUIThemedText>
+                        )}
+                    </AUIThemedView>
+                    <TouchableOpacity
+                        style={{ padding: 10 }}
+                        disabled={page === schoolPurchaseCourse.totalPages}
+                        onPress={() => {
+                            setPage(page + 1);
+                        }}
+                    >
+                        <AUIThemedText>
+                            {page === schoolPurchaseCourse.totalPages ? "You are Cought Up" : "Load More"}
+                        </AUIThemedText>
+                    </TouchableOpacity>
+                </AUIThemedView>
+            </ScrollView>
         </AUIThemedView>
     );
 }
@@ -86,4 +126,11 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: TEXT_THEME.light.danger,
     },
+    centeredContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginVertical: 10,
+    },
+    
 });

@@ -5,11 +5,8 @@ import { FlatList, StyleSheet } from "react-native";
 
 interface LanguageListProps {
     data: any[];
-    selectedLanguage: {
-        name: string;
-        code: string;
-    };
-    setSelectedLanguage: (code: { name: string; code: string }) => void;
+    selectedLanguage : string 
+    setSelectedLanguage: any;
 }
 
 const LanguageList: React.FC<LanguageListProps> = ({
@@ -28,7 +25,7 @@ const LanguageList: React.FC<LanguageListProps> = ({
                             countryName={item.language.name}
                             flag = {item.flag}
                             countryCode={item.code}
-                            isSelected={item.language.name === selectedLanguage?.name}
+                            isSelected={item.language === selectedLanguage}
                             onSelect={() => setSelectedLanguage(item.language)}
                         />
                     );

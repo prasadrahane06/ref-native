@@ -39,7 +39,7 @@ const array = [
         pathname: "/transactions",
     },
 ];
-function schoolProfile() {
+function SchoolProfile() {
     const userProfileData = useLangTransformSelector((state: RootState) => state.api.userProfileData);
     const theme = useSelector((state: RootState) => state.global.theme);
     const navigation = useNavigation();
@@ -131,7 +131,7 @@ function schoolProfile() {
     );
 }
 
-export default schoolProfile;
+export default SchoolProfile;
 
 const styles = StyleSheet.create({
     root: {

@@ -17,9 +17,9 @@ const DestinationList: React.FC<DestinationListProps> = ({ data }) => {
             data={data}
             renderItem={({ item }) => (
                 <Destination
-                    title={isRTL ? item.name?.en : item.name?.ar}
-                    image={item.images[0]}
-                    id={item._id}
+                    title={item?.name}
+                    image={item?.images[0]}
+                    id={item?._id}
                 />
             )}
             keyExtractor={(item) => item._id}

@@ -23,7 +23,7 @@ import * as ImagePicker from "expo-image-picker";
 import { Tabs } from "expo-router";
 import { default as React, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import schoolProfile from "@/components/screenComponents/schoolProfile";
+import SchoolProfile from "@/components/screenComponents/schoolProfile";
 import {
     Dimensions,
     FlatList,
@@ -415,7 +415,7 @@ export default function AUIDrawer() {
                 />
                    <Drawer.Screen
                     name="Profile"
-                    component={schoolProfile}
+                    component={SchoolProfile}
                     options={{
                         headerShown: false,
                         title: t(GLOBAL_TRANSLATION_LABEL.account),

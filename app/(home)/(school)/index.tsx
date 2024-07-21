@@ -10,7 +10,8 @@ import useApiRequest from "@/customHooks/useApiRequest";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
 import formatNumberWithComma from "@/utils/numberFomatter";
-import React, { useEffect } from "react";
+import "react-native-gesture-handler";
+import React, { useEffect, useState } from "react";
 import { FlatList, ScrollView, StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
 
@@ -18,21 +19,29 @@ export default function HomeScreen() {
     const { requestFn } = useApiRequest();
     const theme = useSelector((state: RootState) => state.global.theme);
     const MySchoolDetails = useLangTransformSelector(
-        (state: RootState) => state.api.MySchoolDetails || {}
+        (state: RootState) => state.api.MySchoolDetails 
+    );
+    const myCourse = useLangTransformSelector(
+        (state: RootState) => state.api.myCourse
     );
 
+
     useEffect(() => {
-        requestFn(API_URL.schoolOverview, "MySchoolDetails", { client: true });
+        requestFn(API_URL.schoolAnalytics, "MySchoolDetails", { client: true });
+        requestFn(API_URL.course , "myCourse" , { client: true });
     }, []);
 
     return (
-        <ScrollView>
+<AUIThemedView>
+<ScrollView>
             <AUIThemedView style={styles.section}>
-                <SectionTitle>{`${MySchoolDetails[0]?.name}`}</SectionTitle>
+                <SectionTitle>{MySchoolDetails?.name || "School Name"}</SectionTitle>
                 <AUIThemedView style={{ alignItems: "center", marginTop: 15 }}>
-                    <FlatList
+                   {
+                     MySchoolDetails?.schoolInfoData && (
+                        <FlatList
                         scrollEnabled={false}
-                        data={MySchoolDetails[0]?.schoolInfo}
+                        data={MySchoolDetails?.schoolInfoData}
                         numColumns={2}
                         renderItem={({ item }) => (
                             <AUIInfoCard
@@ -47,40 +56,28 @@ export default function HomeScreen() {
                         )}
                         keyExtractor={(item) => item.id}
                     />
+                     )
+                   }
                 </AUIThemedView>
 
                 <ChartComponent
                     title="Earnings"
-                    labels={["Jan", "Feb", "Mar", "Apr", "May", "Jun"]}
-                    pendingData={[
-                        Math.random() * 100,
-                        Math.random() * 100,
-                        Math.random() * 100,
-                        Math.random() * 100,
-                        Math.random() * 100,
-                        Math.random() * 100,
-                    ]}
-                    doneData={[
-                        Math.random() * 100,
-                        Math.random() * 100,
-                        Math.random() * 100,
-                        Math.random() * 100,
-                        Math.random() * 100,
-                        Math.random() * 100,
-                    ]}
+                    labels={MySchoolDetails?.graphData?.labels || []}
+                    pendingData={MySchoolDetails?.graphData?.pendingData || []}
+                    doneData={MySchoolDetails?.graphData?.doneData || []}
                     yAxisLabel="$"
-                    yAxisSuffix="k"
-                    yAxisInterval={1}
+                    yAxisInterval={10}
                 />
 
                 <AUIThemedView style={styles.section}>
                     <SectionTitle style={{ paddingBottom: 10 }}>
                         {GLOBAL_TEXT.ongoing_courses}
                     </SectionTitle>
-                    <CourseList data={MySchoolDetails[0]?.courses?.slice(0, 4)} />
+                    <CourseList data={myCourse?.docs?.slice(0, 4) || []} />
                 </AUIThemedView>
             </AUIThemedView>
         </ScrollView>
+</AUIThemedView>
     );
 }
 

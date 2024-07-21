@@ -4,8 +4,10 @@ import DropdownComponent from "@/components/common/AUIDropdown";
 import { AUISafeAreaView } from "@/components/common/AUISafeAreaView";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
+import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import { DETAILS_FIELDS, GLOBAL_TEXT } from "@/constants/Properties";
 import { signupPageStyles } from "@/constants/Styles";
+import { API_URL } from "@/constants/urlProperties";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { setSignupDetails } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
@@ -14,19 +16,20 @@ import { useState } from "react";
 import { ScrollView } from "react-native";
 import "react-native-gesture-handler";
 import { useDispatch } from "react-redux";
+import useAxios from "./services/axiosClient";
+
 
 const DetailsPage = () => {
     // const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
     const router = useRouter();
     const profile = useLangTransformSelector((state: RootState) => state.global.profile);
-    // const signInType = useLangTransformSelector((state: RootState) => state.global.signInType);
-    const signupDetails = useLangTransformSelector(
-        (state: RootState) => state.global.signupDetails
-    );
+    const {patch} = useAxios();
+
+
     const dispatch = useDispatch();
     const [signupValues, setSignupValues] = useState({
         qualification: null,
-        academic: null,
+        academicSession: null,
         language: null,
         country: null,
         city: null,
@@ -34,15 +37,16 @@ const DetailsPage = () => {
     });
 
     const handleOnSave = () => {
-        dispatch(setSignupDetails({ ...signupDetails, ...signupValues }));
-        router.navigate(`(home)/(${profile})`);
-        // post(API_URL.sendOTP, signupValues)
-        //   .then((res) => {
-        //     console.log("res", res);
-        //   })
-        //   .catch((e) => {
-        //     console.log(e);
-        //   });
+        dispatch(setSignupDetails({ ...signupValues }));
+       
+        patch(API_URL.user, { ...signupValues })
+            .then((res: any) => {
+                ApiSuccessToast(res.message);
+                router.navigate(`(home)/(${profile})`);
+            })
+            .catch((error: any) => {
+                ApiErrorToast(error.message);
+            });
     };
 
     return (

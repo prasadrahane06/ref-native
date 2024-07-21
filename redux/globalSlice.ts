@@ -30,12 +30,14 @@ export interface GlobalState {
     loader: boolean;
     token: string;
     isRTL: boolean;
+    selectedLanguage : string
     user: UserState;
 }
 
 const initialState: GlobalState = {
     profile: "",
     theme: "light",
+    selectedLanguage: "",
     // theme: "dark",
     signInType: "",
     signupDetails: null,
@@ -96,6 +98,9 @@ export const globalSlice = createSlice({
         setIsRTL: (state, action: PayloadAction<boolean>) => {
             state.isRTL = action.payload;
         },
+        setselectedLanguage : (state , action : PayloadAction<string>) => {
+            state.selectedLanguage = action.payload
+        },
         setUser: (
             state,
             action: PayloadAction<{
@@ -133,6 +138,7 @@ export const {
     setToken,
     setUser,
     setIsRTL,
+    setselectedLanguage
 } = globalSlice.actions;
 
 export default globalSlice.reducer;

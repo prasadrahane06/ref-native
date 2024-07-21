@@ -17,5 +17,10 @@ export const API_URL = {
     purchaseCourse: "course/purchaseCourse",
     schoolComparison: "school/schoolComparison",
     event:"event",
-    facility:"facility"
+    facility:"facility",
+    schoolSearch:"school/schoolSearch",
+    schoolStudentSearch : "/school/studentSearch",
+    schoolAnalytics : "/school/schoolAnylytics",
+    search : "search"
+
 };

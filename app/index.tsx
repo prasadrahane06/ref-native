@@ -36,6 +36,12 @@ const InitialPage = () => {
                     router.replace("/(home)/(student)");
                 }
                 if (data?.profile === "school") {
+                    
+                    dispatch(setToken(data?.data?.accessToken));
+
+                    // saving user in redux
+                    dispatch(setUser(data?.data?.user));
+
                     router.replace("/(home)/(school)");
                 }
             }

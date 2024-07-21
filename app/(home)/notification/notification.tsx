@@ -1,17 +1,15 @@
+import { AUIThemedText } from "@/components/common/AUIThemedText";
+import { AUIThemedView } from "@/components/common/AUIThemedView";
+import { APP_THEME } from "@/constants/Colors";
+import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 import {
-    View,
-    Text,
-    StyleSheet,
     FlatList,
     ListRenderItem,
+    StyleSheet,
     TouchableOpacity,
-    Dimensions,
+    View
 } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
-import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
-import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { AUIThemedText } from "@/components/common/AUIThemedText";
 
 interface NotificationItem {
     id: string;
