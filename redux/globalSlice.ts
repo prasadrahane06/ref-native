@@ -29,8 +29,9 @@ export interface GlobalState {
     schoolDetails: any;
     loader: boolean;
     token: string;
+    deviceToken: string;
     isRTL: boolean;
-    selectedLanguage : string
+    selectedLanguage: string;
     user: UserState;
 }
 
@@ -44,6 +45,7 @@ const initialState: GlobalState = {
     schoolDetails: null,
     loader: false,
     token: "",
+    deviceToken: "",
     isRTL: false,
     user: {
         _id: "",
@@ -95,11 +97,14 @@ export const globalSlice = createSlice({
         setToken: (state, action: PayloadAction<string>) => {
             state.token = action.payload;
         },
+        setDeviceToken: (state, action: PayloadAction<string>) => {
+            state.deviceToken = action.payload;
+        },
         setIsRTL: (state, action: PayloadAction<boolean>) => {
             state.isRTL = action.payload;
         },
-        setselectedLanguage : (state , action : PayloadAction<string>) => {
-            state.selectedLanguage = action.payload
+        setselectedLanguage: (state, action: PayloadAction<string>) => {
+            state.selectedLanguage = action.payload;
         },
         setUser: (
             state,
@@ -136,9 +141,10 @@ export const {
     setSchoolDetails,
     setLoader,
     setToken,
+    setDeviceToken,
     setUser,
     setIsRTL,
-    setselectedLanguage
+    setselectedLanguage,
 } = globalSlice.actions;
 
 export default globalSlice.reducer;
