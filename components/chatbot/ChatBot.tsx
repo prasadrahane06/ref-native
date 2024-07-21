@@ -8,6 +8,7 @@ import React, { useEffect, useRef, useState } from "react";
 import {
     Animated,
     Dimensions,
+    FlatList,
     Image,
     Modal,
     NativeScrollEvent,
@@ -41,9 +42,9 @@ interface User {
 }
 
 interface ChatBotProps {
-    consumerId: string;
+    consumerId: any;
     user: User;
-    config: object;
+    config: any;
 }
 
 interface Message {
@@ -53,22 +54,36 @@ interface Message {
     createdAt: string;
 }
 
-const ChatBot: React.FC<ChatBotProps> = ({ consumerId, user, config }) => {
+const botBaseUrl = "https://8622-223-233-80-47.ngrok-free.app";
+
+const Chats = ({
+    user,
+    showSplash,
+    consumerId,
+    modalVisible,
+    isClient,
+    roomData,
+    onClose,
+}: any) => {
     const translator = new GoogleTranslatorTokenFree();
 
-    const [modalVisible, setModalVisible] = useState(false);
-    const [showSplash, setShowSplash] = useState(true);
-    const fadeAnimation = useRef(new Animated.Value(0)).current;
-    const [outgoingMessage, setOutgoingMessage] = useState("");
+    const { _id: userId, name: userName, client } = user;
+
     const [incomingMessages, setIncomingMessages] = useState<Message[]>([]);
+    const [outgoingMessage, setOutgoingMessage] = useState("");
     const [roomId, setRoomId] = useState("");
-    console.log("roomId", roomId);
 
     const [isScrollingUp, setIsScrollingUp] = useState(false);
-    const scrollViewRef = useRef<ScrollView>(null);
     const lastScrollOffset = useRef(0);
 
-    const { _id: userId, name: userName, client } = user;
+    const resetChatState = () => {
+        console.log("---------------------------State Clean Up---------------------------");
+        setIncomingMessages([]);
+        setOutgoingMessage("");
+        setRoomId("");
+        setIsScrollingUp(false);
+        lastScrollOffset.current = 0;
+    };
 
     const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
         const currentOffset = event.nativeEvent.contentOffset.y;
@@ -83,61 +98,102 @@ const ChatBot: React.FC<ChatBotProps> = ({ consumerId, user, config }) => {
         }
     };
 
-    useEffect(() => {
-        if (!isScrollingUp && !showSplash) {
-            handleScrollDown();
-        }
-    }, [incomingMessages, showSplash]);
-
-    useEffect(() => {
-        if (modalVisible) {
-            post("/room/join", {
-                name: `${userId}-${consumerId}`,
-                // username: "Bilal",
-                username: userName,
+    function sendMessage(message: string) {
+        if (outgoingMessage.trim().length > 0) {
+            post("/chat", {
                 user: userId,
+                roomId: roomId,
+                message: message,
             })
-                .then((res) => {
-                    setRoomId(res._id);
-                    console.log("Room joined successfully");
-                    console.log("res from /room/join =>", res);
+                .then((res: any) => {
+                    console.log("sendMessage in /chat =>", res.data);
                 })
-                .catch((err) => {
-                    console.log("Error in /room/join =>", err);
+                .catch((err: any) => {
+                    console.log("Error in sendMessage /chat =>", err);
                 });
 
-            socket.on("previousMessages", async () => {
-                const res = await get(`/chat?room=${roomId}`);
-                console.log("previousMessages from /chat =>", res);
-                const translatedMessages = await Promise.all(
-                    res.map(async (message: any) => {
-                        const translatedMessage = await (client
-                            ? translator.translate(message.message, "ar", "en")
-                            : message.message);
-                        return {
-                            message: translatedMessage,
-                            userId: message?.user?.user,
-                            username: message?.user?.name,
-                            createdAt: new Date(message.createdAt).toLocaleTimeString([], {
-                                hour: "numeric",
-                                minute: "numeric",
-                                hour12: true,
-                            }),
-                        };
-                    })
-                );
+            setOutgoingMessage("");
+        }
+    }
 
-                setIncomingMessages((prevMesaages) => [...prevMesaages, ...translatedMessages]);
-            });
-
-            return () => {
-                socket.off("previousMessages");
-            };
+    useEffect(() => {
+        if (!modalVisible) {
+            resetChatState();
         }
     }, [modalVisible]);
 
     useEffect(() => {
-        socket.on("message", (data) => {
+        if (modalVisible) {
+            const joinRoom = async () => {
+                const res = await post("/room/join", {
+                    name: isClient ? roomData?.name : `${userId}-${consumerId}`,
+                    username: userName,
+                    user: userId,
+                    bot: consumerId,
+                });
+
+                if (res.status === 200) {
+                    console.log("res from /room/join =>", res.data);
+                    console.log("setting room id => ", res.data._id);
+                    setRoomId(res.data._id);
+                    console.log("Room joined successfully");
+                } else {
+                    console.log("Error in /room/join =>", res);
+                }
+            };
+
+            joinRoom();
+        }
+    }, [modalVisible]);
+
+    useEffect(() => {
+        if (roomId) {
+            const fetchPreviousMessages = async () => {
+                console.log("inside previousMessages ");
+                console.log("roomId =>", roomId);
+
+                const res = await get(`/chat?room=${roomId}`);
+
+                if (res.status === 200) {
+                    console.log("previousMessages from /chat =>", res.data);
+
+                    const translatedMessages = await Promise.all(
+                        res.data.map(async (message: any) => {
+                            const translatedMessage = await (client
+                                ? translator.translate(message.message, "ar", "en")
+                                : message.message);
+                            return {
+                                message: translatedMessage,
+                                userId: message?.user?.user,
+                                username: message?.user?.name,
+                                createdAt: new Date(message.createdAt).toLocaleTimeString([], {
+                                    hour: "numeric",
+                                    minute: "numeric",
+                                    hour12: true,
+                                }),
+                            };
+                        })
+                    );
+
+                    setIncomingMessages((prevMessages) => [...prevMessages, ...translatedMessages]);
+                } else {
+                    console.log("Error in /chat =>", res);
+                }
+            };
+
+            fetchPreviousMessages();
+
+            console.log("doing socket on previousMessages");
+            socket.on("previousMessages", fetchPreviousMessages);
+
+            return () => {
+                socket.off("previousMessages", fetchPreviousMessages);
+            };
+        }
+    }, [roomId]);
+
+    useEffect(() => {
+        socket.on("message", (data: any) => {
             console.log(`res from message =>`, data);
 
             if (client) {
@@ -173,10 +229,10 @@ const ChatBot: React.FC<ChatBotProps> = ({ consumerId, user, config }) => {
             }
         });
 
-        socket.on("joinMessage", (data) => {
+        socket.on("joinMessage", (data: any) => {
             // User Bilal has joined the room school-1-student-1
             // userID from FE
-            // Room ID from BE
+            // Room ID from BE9325826155
             console.log("joinMessage data =>", data);
         });
 
@@ -186,23 +242,212 @@ const ChatBot: React.FC<ChatBotProps> = ({ consumerId, user, config }) => {
         };
     }, [socket]);
 
-    function sendMessage(message: string) {
-        if (outgoingMessage.trim().length > 0) {
-            post("/chat", {
-                user: userId,
-                roomId: roomId,
-                message: message,
-            })
-                .then((res) => {
-                    console.log("sendMessage in /chat =>", res);
-                })
-                .catch((err) => {
-                    console.log("Error in sendMessage /chat =>", err);
-                });
-
-            setOutgoingMessage("");
+    useEffect(() => {
+        if (!isScrollingUp && !showSplash) {
+            handleScrollDown();
         }
-    }
+    }, [incomingMessages, showSplash]);
+
+    const scrollViewRef = useRef<ScrollView>(null);
+
+    return (
+        <View style={styles.chatContainer}>
+            <ScrollView ref={scrollViewRef} onScroll={handleScroll}>
+                <View style={chatStyles.container}>
+                    {incomingMessages.map((message, index) => (
+                        <View
+                            key={index}
+                            style={[
+                                chatStyles.messageContainer,
+                                message.userId === userId
+                                    ? chatStyles.messageRight
+                                    : chatStyles.messageLeft,
+                            ]}
+                        >
+                            <View style={chatStyles.userContainer}>
+                                <Text style={chatStyles.userText}>
+                                    {message.userId === userId
+                                        ? `${message.username} (You)`
+                                        : message.username}
+                                </Text>
+                            </View>
+                            <Text
+                                style={
+                                    message.userId === userId
+                                        ? chatStyles.messageTextRight
+                                        : chatStyles.messageTextLeft
+                                }
+                            >
+                                {message.message}
+                            </Text>
+                            <Text style={chatStyles.timeText}>{message.createdAt}</Text>
+
+                            {message.username === "BOT" && (
+                                <Image
+                                    style={chatStyles.botLogo}
+                                    source={{
+                                        uri: Asset.fromModule(
+                                            require("../../assets/images/chat-logo.png")
+                                        ).uri,
+                                    }}
+                                />
+                            )}
+                        </View>
+                    ))}
+                    {/* <View style={{ height: 10 }} /> */}
+                </View>
+            </ScrollView>
+
+            <View>
+                {isScrollingUp && (
+                    <View style={chatStyles.scrollButtonContainer}>
+                        <TouchableOpacity
+                            style={chatStyles.scrollButton}
+                            onPress={handleScrollDown}
+                        >
+                            <Entypo name="chevron-small-down" size={24} color="#fff" />
+                        </TouchableOpacity>
+                    </View>
+                )}
+                <View style={styles.inputContainer}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Write your message"
+                        value={outgoingMessage}
+                        onChangeText={setOutgoingMessage}
+                    />
+                    <TouchableOpacity onPress={() => sendMessage(outgoingMessage)}>
+                        <Ionicons name="send" size={24} color="#5BD894" />
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </View>
+    );
+};
+
+const SchoolChatModal = ({
+    animationType,
+    transparent,
+    modalVisible,
+    setModalVisible,
+    roomData,
+    consumerId,
+    user,
+}: any) => {
+    const closeChat = () => {
+        setModalVisible(false);
+    };
+
+    return (
+        <Modal
+            animationType={animationType}
+            transparent={transparent}
+            visible={modalVisible}
+            onRequestClose={closeChat}
+        >
+            <View style={styles.schoolChatHeader}>
+                <TouchableOpacity style={styles.closeButton} onPress={closeChat}>
+                    <Text style={styles.buttonText}>
+                        <Ionicons name="arrow-back-sharp" size={24} color="black" />
+                    </Text>
+                </TouchableOpacity>
+
+                <View style={styles.schoolChatText}>
+                    <Text style={styles.logoText}>{roomData?.participants[0]?.name}</Text>
+                </View>
+            </View>
+            <Chats
+                user={user}
+                showSplash={false}
+                consumerId={consumerId}
+                modalVisible={modalVisible}
+                isClient={true}
+                roomData={roomData}
+                onClose={closeChat}
+            />
+        </Modal>
+    );
+};
+
+const StudentsList = ({ consumerId, user }: any) => {
+    const [rooms, setRooms] = useState([]);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selectedRoom, setSelectedRoom] = useState(null);
+
+    useEffect(() => {
+        const getStudents = async () => {
+            const res = await get("/room", { consumerId });
+            setRooms(res.data);
+        };
+
+        getStudents();
+    }, [consumerId]);
+
+    const joinChatRoom = (item: any) => {
+        setSelectedRoom(item);
+        setModalVisible(true);
+    };
+
+    return (
+        <View>
+            <FlatList
+                data={rooms}
+                renderItem={({ item }: any) => (
+                    <TouchableOpacity
+                        key={item?._id}
+                        style={{
+                            marginTop: 10,
+                            paddingHorizontal: 20,
+                            paddingVertical: 20,
+                            borderWidth: 1,
+                            borderRadius: 10,
+                        }}
+                        onPress={() => joinChatRoom(item)}
+                    >
+                        <Text>{item?.participants[0]?.name}</Text>
+                    </TouchableOpacity>
+                )}
+                keyExtractor={(item: any) => item?._id}
+            />
+            <SchoolChatModal
+                animationType="slide"
+                transparent={false}
+                modalVisible={modalVisible}
+                setModalVisible={setModalVisible}
+                roomData={selectedRoom}
+                consumerId={consumerId}
+                user={user}
+            />
+        </View>
+    );
+};
+
+// const handleJoinRoom = ({ userId, consumerId, userName, setRoomId }: any) => {
+//     post("/room/join", {
+//         name: `${userId}-${consumerId}`,
+//         // username: "Bilal",
+//         username: userName,
+//         user: userId,
+//         bot: consumerId,
+//     })
+//         .then((res: any) => {
+//             setRoomId(res._id);
+//             console.log("Room joined successfully");
+//             console.log("res from /room/join =>", res);
+//         })
+//         .catch((err: any) => {
+//             console.log("Error in /room/join =>", err);
+//         });
+// };
+
+const ChatBot: React.FC<ChatBotProps> = ({ consumerId, user, config }) => {
+    const [modalVisible, setModalVisible] = useState(false);
+    const [showSplash, setShowSplash] = useState(true);
+    const fadeAnimation = useRef(new Animated.Value(0)).current;
+
+    // console.log("roomId", roomId);
+
+    const { _id: userId, name: userName, client } = user;
 
     const fadeIn = () => {
         Animated.timing(fadeAnimation, {
@@ -232,14 +477,15 @@ const ChatBot: React.FC<ChatBotProps> = ({ consumerId, user, config }) => {
 
     const closeChat = () => {
         setModalVisible(false);
-        setIncomingMessages([]);
     };
 
     return (
         <View style={styles.container}>
             <TouchableOpacity style={styles.floatingButton} onPress={openChat}>
-                <AUIImage
-                    path={Asset.fromModule(require("@/assets/images/chat_logo.png")).uri}
+                <Image
+                    source={{
+                        uri: Asset.fromModule(require("../../assets/images/chat-logo.png")).uri,
+                    }}
                     style={styles.floatingButtonLogo}
                 />
             </TouchableOpacity>
@@ -259,11 +505,12 @@ const ChatBot: React.FC<ChatBotProps> = ({ consumerId, user, config }) => {
                             </TouchableOpacity>
 
                             <View style={styles.logoContainer}>
-                                <AUIImage
-                                    path={
-                                        Asset.fromModule(require("@/assets/images/chat_logo.png"))
-                                            .uri
-                                    }
+                                <Image
+                                    source={{
+                                        uri: Asset.fromModule(
+                                            require("../../assets/images/chat-logo.png")
+                                        ).uri,
+                                    }}
                                     style={styles.logo}
                                 />
                                 <Text style={styles.logoText}>Chat Support</Text>
@@ -273,10 +520,12 @@ const ChatBot: React.FC<ChatBotProps> = ({ consumerId, user, config }) => {
 
                     {showSplash ? (
                         <Animated.View style={[styles.splashScreen, { opacity: fadeAnimation }]}>
-                            <AUIImage
-                                path={
-                                    Asset.fromModule(require("@/assets/images/chat_logo.png")).uri
-                                }
+                            <Image
+                                source={{
+                                    uri: Asset.fromModule(
+                                        require("../../assets/images/chat-logo.png")
+                                    ).uri,
+                                }}
                                 style={{
                                     width: 45,
                                     height: 30,
@@ -284,96 +533,17 @@ const ChatBot: React.FC<ChatBotProps> = ({ consumerId, user, config }) => {
                             />
                             <Text style={styles.splashText}>Chat Support</Text>
                         </Animated.View>
+                    ) : client ? (
+                        <StudentsList consumerId={consumerId} user={user} />
                     ) : (
-                        <View style={styles.chatContainer}>
-                            <ScrollView ref={scrollViewRef} onScroll={handleScroll}>
-                                <View style={chatStyles.container}>
-                                    {incomingMessages.map((message, index) => (
-                                        <View
-                                            key={index}
-                                            style={[
-                                                chatStyles.messageContainer,
-                                                message.userId === userId
-                                                    ? chatStyles.messageRight
-                                                    : chatStyles.messageLeft,
-                                            ]}
-                                        >
-                                            <View style={chatStyles.userContainer}>
-                                                <Text style={chatStyles.userText}>
-                                                    {message.userId === userId
-                                                        ? `${message.username} (You)`
-                                                        : message.username}
-                                                </Text>
-                                            </View>
-                                            <Text
-                                                style={
-                                                    message.userId === userId
-                                                        ? chatStyles.messageTextRight
-                                                        : chatStyles.messageTextLeft
-                                                }
-                                            >
-                                                {message.message}
-                                            </Text>
-                                            <Text style={chatStyles.timeText}>
-                                                {message.createdAt}
-                                            </Text>
-
-                                            {message.username === "BOT" && (
-                                                <Image
-                                                    style={chatStyles.botLogo}
-                                                    source={require("@/assets/images/chat_logo.png")}
-                                                />
-                                            )}
-                                        </View>
-                                    ))}
-                                    {/* <View style={{ height: 10 }} /> */}
-                                </View>
-                            </ScrollView>
-
-                            <View>
-                                {isScrollingUp && (
-                                    <View style={chatStyles.scrollButtonContainer}>
-                                        <TouchableOpacity
-                                            style={chatStyles.scrollButton}
-                                            onPress={handleScrollDown}
-                                        >
-                                            <Entypo
-                                                name="chevron-small-down"
-                                                size={24}
-                                                color="#fff"
-                                            />
-                                        </TouchableOpacity>
-                                    </View>
-                                )}
-                                <View style={styles.inputContainer}>
-                                    <TextInput
-                                        style={styles.input}
-                                        placeholder="Write your message"
-                                        value={outgoingMessage}
-                                        onChangeText={setOutgoingMessage}
-                                    />
-                                    <TouchableOpacity onPress={() => sendMessage(outgoingMessage)}>
-                                        <Ionicons
-                                            name="send"
-                                            size={24}
-                                            color={APP_THEME.light.primary.first}
-                                        />
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        </View>
-
-                        // <View
-                        //     style={{
-                        //         flex: 1,
-                        //         backgroundColor: "#fff",
-                        //         alignItems: "center",
-                        //         justifyContent: "center",
-                        //     }}
-                        // >
-                        //     <Text>Status: {isConnected ? "connected" : "disconnected"}</Text>
-                        //     <Text>Transport: {transport}</Text>
-                        // </View>
+                        <Chats
+                            user={user}
+                            showSplash={showSplash}
+                            consumerId={consumerId}
+                            modalVisible={modalVisible}
+                            isClient={false}
+                            onClose={closeChat}
+                        />
                     )}
                 </View>
             </Modal>
@@ -400,7 +570,7 @@ const chatStyles = StyleSheet.create({
         right: "5%",
     },
     scrollButton: {
-        backgroundColor: APP_THEME.light.primary.first,
+        backgroundColor: "#5BD894",
         borderRadius: 25,
         width: 40,
         height: 40,
@@ -457,11 +627,24 @@ const styles = StyleSheet.create({
         right: 20,
         zIndex: 1000,
     },
+    schoolChatText: {
+        position: "absolute",
+        top: "37%",
+        left: "20%",
+    },
+    schoolChatHeader: {
+        justifyContent: "center",
+        alignItems: "flex-start",
+        height: height / 8,
+        backgroundColor: "#5BD894",
+        borderBottomRightRadius: 15,
+        borderBottomLeftRadius: 15,
+    },
     headerContainer: {
         justifyContent: "center",
         alignItems: "center",
         height: height / 8,
-        backgroundColor: APP_THEME.light.primary.first,
+        backgroundColor: "#5BD894",
         borderBottomRightRadius: 15,
         borderBottomLeftRadius: 15,
     },
@@ -479,7 +662,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
     floatingButton: {
-        backgroundColor: APP_THEME.light.primary.first,
+        backgroundColor: "#5BD894",
         width: 60,
         height: 60,
         borderRadius: 30,
@@ -514,7 +697,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: APP_THEME.light.primary.first,
+        backgroundColor: "#5BD894",
         gap: 10,
     },
     splashText: {

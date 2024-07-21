@@ -31,6 +31,65 @@ const _XHR = global.originalXMLHttpRequest
 XMLHttpRequest = _XHR;
 
 const InitialLayout = () => {
+    const requestUserPermission = async (): Promise<boolean> => {
+        const authStatus = await messaging().requestPermission();
+        const enabled =
+            authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+            authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+        if (enabled) {
+            console.log("Authorization status:", authStatus);
+        }
+        return enabled;
+    };
+
+    useEffect(() => {
+        const initializeMessaging = async () => {
+            const permissionGranted = await requestUserPermission();
+            if (permissionGranted) {
+                messaging()
+                    .getToken()
+                    .then((token) => {
+                        console.log("fcm token", token);
+                    });
+            } else {
+                console.log("Permission not granted");
+            }
+
+            // Check if an initial notification is available
+            const initialNotification = await messaging().getInitialNotification();
+            if (initialNotification) {
+                console.log(
+                    "Notification caused app to open from quit state:",
+                    initialNotification
+                );
+            }
+
+            // Assume a message-notification contains a "type" property in the data payload of the screen
+            messaging().onNotificationOpenedApp(async (remoteMessage) => {
+                console.log(
+                    "Notification caused app to open from background state:",
+                    remoteMessage
+                );
+            });
+
+            // Register background handler
+            messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+                console.log(
+                    "Notification caused app to open from background state:",
+                    remoteMessage
+                );
+            });
+
+            const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+                Alert.alert("A new FCM message arrived!", JSON.stringify(remoteMessage));
+            });
+
+            return unsubscribe;
+        };
+
+        initializeMessaging();
+    }, []);
+
     const [loaded, error] = useFonts({
         SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
         Inter: require("../assets/fonts/Inter/static/Inter-Regular.ttf"),

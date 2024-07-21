@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const botUrl = "https://e3c3-223-233-87-106.ngrok-free.app";
+const botUrl = "https://1d79-223-233-86-189.ngrok-free.app";
 
 // Create an Axios instance
 const axiosClient = axios.create({
@@ -9,17 +9,7 @@ const axiosClient = axios.create({
         "Content-Type": "application/json",
     },
 });
-// Request Interceptor
-axiosClient.interceptors.request.use(
-    (config) => {
-        // Modify config here (e.g., add authorization token if available)
-        // config.headers.Authorization = `Bearer ${token}`;
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
-    }
-);
+
 // Response Interceptor
 axiosClient.interceptors.response.use(
     (response) => {
@@ -27,40 +17,45 @@ axiosClient.interceptors.response.use(
     },
     (error) => {
         // Handle error here (e.g., show a notification)
+        console.log("error in interceptors", error);
         return Promise.reject(error);
     }
 );
+
 export default axiosClient;
 export const get = async (url: string, params = {}) => {
     try {
         const response = await axiosClient.get(url, { params });
-        return response.data;
+        return response;
     } catch (error) {
+        console.log("error in get", error);
         throw error;
     }
 };
 export const post = async (url: string, payload: any) => {
     try {
         const response = await axiosClient.post(url, payload);
-
-        return response.data;
-    } catch (error: any) {
+        return response;
+    } catch (error) {
+        console.log("error in post", error);
         throw error;
     }
 };
 export const put = async (url: string, payload: any) => {
     try {
         const response = await axiosClient.put(url, payload);
-        return response.data;
+        return response;
     } catch (error) {
+        console.log("error in put", error);
         throw error;
     }
 };
 export const del = async (url: string) => {
     try {
         const response = await axiosClient.delete(url);
-        return response.data;
+        return response;
     } catch (error) {
+        console.log("error in delete", error);
         throw error;
     }
 };
