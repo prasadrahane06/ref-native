@@ -2,7 +2,7 @@ import AUILoader from "@/components/common/AUILoader";
 import "@/components/i18n/i18n.config";
 import { BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
 import { getUserData, storeUserDeviceData } from "@/constants/RNAsyncStore";
-import { setTheme } from "@/redux/globalSlice";
+import { setDeviceToken, setTheme } from "@/redux/globalSlice";
 import { RootState, store } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -16,6 +16,8 @@ import { Alert, Pressable, TouchableOpacity } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
 import { Provider, useDispatch, useSelector } from "react-redux";
+import useAxios from "./services/axiosClient";
+import { API_URL } from "@/constants/urlProperties";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -31,6 +33,76 @@ const _XHR = global.originalXMLHttpRequest
 XMLHttpRequest = _XHR;
 
 const InitialLayout = () => {
+    const { post } = useAxios();
+    const dispatch = useDispatch();
+
+    const theme = useSelector((state: RootState) => state.global.theme);
+
+    // comment requestUserPermission and useEffect when in development to avoid firbase error
+    // and uncomment when building for production
+
+    // const requestUserPermission = async () => {
+    //     const authStatus = await messaging().requestPermission();
+    //     const enabled =
+    //         authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+    //         authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+    //     if (enabled) {
+    //         console.log("Authorization status:", authStatus);
+    //     }
+    // };
+
+    // useEffect(() => {
+    //     //@ts-ignore
+    //     if (requestUserPermission()) {
+    //         messaging()
+    //             .getToken()
+    //             .then((token) => {
+    //                 dispatch(setDeviceToken(token));
+    //                 console.log("fcm token", token);
+    //                 Alert.alert("fcm token", token);
+
+    //                 // send token to server
+    //                 // post(API_URL.login, {
+    //                 //     fcmToken: token,
+    //                 // })
+    //                 //     .then((res) => {
+    //                 //         Alert.alert("fcm token send to server", token);
+    //                 //     })
+    //                 //     .catch((error) => {
+    //                 //         console.log("res", error);
+    //                 //         Alert.alert("error in sending fcm token to server", token);
+    //                 //     });
+    //             });
+    //     } else {
+    //         console.log("Permission not granted");
+    //     }
+
+    //     // Check if an initial notification is available
+    //     messaging()
+    //         .getInitialNotification()
+    //         .then(async (remoteMessage) => {
+    //             if (remoteMessage) {
+    //                 console.log("Notification caused app to open from quit state:", remoteMessage);
+    //             }
+    //         });
+
+    //     // Assume a message-notification contains a "type" property in the data payload of the screen
+    //     messaging().onNotificationOpenedApp(async (remoteMessage) => {
+    //         console.log("Notification caused app to open from background state:", remoteMessage);
+    //     });
+
+    //     // Register background handler
+    //     messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+    //         console.log("Notification caused app to open from background state:", remoteMessage);
+    //     });
+
+    //     const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+    //         Alert.alert("A new FCM message arrived!", JSON.stringify(remoteMessage));
+    //     });
+
+    //     return unsubscribe;
+    // }, []);
+
     const [loaded, error] = useFonts({
         SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
         Inter: require("../assets/fonts/Inter/static/Inter-Regular.ttf"),
@@ -50,9 +122,6 @@ const InitialLayout = () => {
             SplashScreen.hideAsync();
         }
     }, [loaded]);
-
-    const dispatch = useDispatch();
-    const theme = useSelector((state: RootState) => state.global.theme);
 
     useEffect(() => {
         storeUserDeviceData();
@@ -241,7 +310,11 @@ const InitialLayout = () => {
                     headerTransparent: true,
                     headerLeft: () => (
                         <TouchableOpacity onPress={router.back}>
-                            <Ionicons name="arrow-back" size={34} color={TEXT_THEME[theme].primary} />
+                            <Ionicons
+                                name="arrow-back"
+                                size={34}
+                                color={TEXT_THEME[theme].primary}
+                            />
                         </TouchableOpacity>
                     ),
                 }}
@@ -257,7 +330,11 @@ const InitialLayout = () => {
                     headerTransparent: true,
                     headerLeft: () => (
                         <TouchableOpacity onPress={router.back}>
-                            <Ionicons name="arrow-back" size={34} color={TEXT_THEME[theme].primary} />
+                            <Ionicons
+                                name="arrow-back"
+                                size={34}
+                                color={TEXT_THEME[theme].primary}
+                            />
                         </TouchableOpacity>
                     ),
                 }}
@@ -269,7 +346,11 @@ const InitialLayout = () => {
                     headerShown: true,
                     headerLeft: () => (
                         <TouchableOpacity onPress={router.back}>
-                            <Ionicons name="arrow-back" size={34} color={TEXT_THEME[theme].primary} />
+                            <Ionicons
+                                name="arrow-back"
+                                size={34}
+                                color={TEXT_THEME[theme].primary}
+                            />
                         </TouchableOpacity>
                     ),
                     headerTitleStyle: { color: TEXT_THEME[theme].primary },
@@ -320,7 +401,7 @@ const InitialLayout = () => {
                     ),
                 }}
             />
-             <Stack.Screen
+            <Stack.Screen
                 name="schoolProfile"
                 options={{
                     headerTitle: "School Profile",
@@ -373,57 +454,6 @@ const InitialLayout = () => {
 };
 
 const RootLayoutNav = () => {
-    // uncomment when building
-
-    // const requestUserPermission = async () => {
-    //     const authStatus = await messaging().requestPermission();
-    //     const enabled =
-    //         authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-    //         authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-    //     if (enabled) {
-    //         console.log("Authorization status:", authStatus);
-    //     }
-    // };
-
-    // useEffect(() => {
-    //     //@ts-ignore
-    //     if (requestUserPermission()) {
-    //         messaging()
-    //             .getToken()
-    //             .then((token) => {
-    //                 console.log("fcm token", token);
-    //                 Alert.alert("fcm token", token);
-    //             });
-    //     } else {
-    //         console.log("Permission not granted");
-    //     }
-
-    //     // Check if an initial notification is available
-    //     messaging()
-    //         .getInitialNotification()
-    //         .then(async (remoteMessage) => {
-    //             if (remoteMessage) {
-    //                 console.log("Notification caused app to open from quit state:", remoteMessage);
-    //             }
-    //         });
-
-    //     // Assume a message-notification contains a "type" property in the data payload of the screen
-    //     messaging().onNotificationOpenedApp(async (remoteMessage) => {
-    //         console.log("Notification caused app to open from background state:", remoteMessage);
-    //     });
-
-    //     // Register background handler
-    //     messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-    //         console.log("Notification caused app to open from background state:", remoteMessage);
-    //     });
-
-    //     const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-    //         Alert.alert("A new FCM message arrived!", JSON.stringify(remoteMessage));
-    //     });
-
-    //     return unsubscribe;
-    // }, []);
-
     return (
         <Provider store={store}>
             <GestureHandlerRootView style={{ flex: 1 }}>
@@ -437,6 +467,6 @@ const RootLayoutNav = () => {
 };
 export {
     // Catch any errors thrown by the Layout component.
-    ErrorBoundary
+    ErrorBoundary,
 } from "expo-router";
 export default RootLayoutNav;

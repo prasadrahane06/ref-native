@@ -153,11 +153,11 @@ const styles = StyleSheet.create({
     description: {
         fontSize: 13,
         marginVertical: 4,
-        color: "#9DA1AC",
+        color:"#9DA1AC"
     },
     time: {
         fontSize: 12,
-        color: "#9DA1AC",
+        color:"#9DA1AC",
         alignSelf: "flex-end",
         marginRight: 15,
     },
@@ -254,53 +254,3 @@ const styles = StyleSheet.create({
 //     });
 // }
 
-// async function registerForPushNotificationsAsync() {
-//     let token;
-
-//     if (Platform.OS === "android") {
-//         await Notifications.setNotificationChannelAsync("default", {
-//             name: "default",
-//             importance: Notifications.AndroidImportance.MAX,
-//             vibrationPattern: [0, 250, 250, 250],
-//             lightColor: "#FF231F7C",
-//         });
-//     }
-
-//     if (Device.isDevice) {
-//         const { status: existingStatus } = await Notifications.getPermissionsAsync();
-//         let finalStatus = existingStatus;
-//         if (existingStatus !== "granted") {
-//             const { status } = await Notifications.requestPermissionsAsync();
-//             finalStatus = status;
-//         }
-//         if (finalStatus !== "granted") {
-//             alert("Failed to get push token for push notification!");
-//             return;
-//         }
-//         // Learn more about projectId:
-//         // https://docs.expo.dev/push-notifications/push-notifications-setup/#configure-projectid
-//         // EAS projectId is used here.
-//         try {
-//             const projectId =
-//                 Constants?.expoConfig?.extra?.eas?.projectId ?? Constants?.easConfig?.projectId;
-//             if (!projectId) {
-//                 throw new Error("Project ID not found");
-//             }
-//             // token = (
-//             //     await Notifications.getExpoPushTokenAsync({
-//             //         projectId,
-//             //     })
-//             // ).data;
-
-//             const token = (await Notifications.getDevicePushTokenAsync()).data;
-//             // send token to your server
-//             console.log(token);
-//         } catch (e) {
-//             token = `${e}`;
-//         }
-//     } else {
-//         alert("Must use physical device for Push Notifications");
-//     }
-
-//     return token;
-// }

@@ -1,5 +1,4 @@
 import useAxios from "@/app/services/axiosClient";
-import ChatBot from "@/components/chatbot/ChatBot";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
@@ -27,6 +26,9 @@ import Animated, {
 } from "react-native-reanimated";
 import { StarRatingDisplay } from "react-native-star-rating-widget";
 import { useDispatch, useSelector } from "react-redux";
+
+import { ChatBot } from "at-chatbot-native";
+// import ChatBot from "@/components/chatbot/ChatBot";
 
 interface TabProps {
     courseId: string;
@@ -137,7 +139,7 @@ export default function SchoolDetails() {
     );
     const isRTL = useSelector((state: RootState) => state.global.isRTL);
     const theme = useSelector((state: RootState) => state.global.theme);
-    const [overallRatings,setRatings] = useState(0);
+    const [overallRatings, setRatings] = useState(0);
 
     useEffect(() => {
         if (ratingsOfTheSchool?.docs) {
@@ -339,7 +341,7 @@ export default function SchoolDetails() {
 
     return (
         <AUIThemedView style={{ flex: 1 }}>
-            {/* <ChatBot consumerId={consumerId} config={config} user={user} /> */}
+            <ChatBot consumerId={consumerId} config={config} user={user} />
 
             <Animated.ScrollView ref={scrollRef} scrollEventThrottle={16}>
                 <AUIThemedView style={styles.container}>

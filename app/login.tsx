@@ -61,6 +61,8 @@ const LoginPage = () => {
 
     const globalState = useLangTransformSelector((state: RootState) => state.global);
     const theme = useSelector((state: RootState) => state.global.theme);
+    const deviceToken = useSelector((state: RootState) => state.global.deviceToken);
+
     const profile = globalState.profile;
     const signInType = globalState.signInType;
     const signupDetails = globalState.signupDetails;
@@ -104,9 +106,11 @@ const LoginPage = () => {
             selectedButton === "mobile"
                 ? {
                       phone: `${code}${inputValue}`,
+                      deviceToken: deviceToken,
                   }
                 : {
                       email: inputValue,
+                      deviceToken: deviceToken,
                   };
         dispatch(setLoader(true));
         post(API_URL.login, payload)

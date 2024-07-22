@@ -45,6 +45,7 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import ContactNow from "./ContactNow";
 import { Asset } from "expo-asset";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 
 interface EnquireNowModalProps {
     isVisible: boolean;
