@@ -41,67 +41,67 @@ const InitialLayout = () => {
     // comment requestUserPermission and useEffect when in development to avoid firbase error
     // and uncomment when building for production
 
-    const requestUserPermission = async () => {
-        const authStatus = await messaging().requestPermission();
-        const enabled =
-            authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-            authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-        if (enabled) {
-            console.log("Authorization status:", authStatus);
-        }
-    };
+    // const requestUserPermission = async () => {
+    //     const authStatus = await messaging().requestPermission();
+    //     const enabled =
+    //         authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+    //         authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+    //     if (enabled) {
+    //         console.log("Authorization status:", authStatus);
+    //     }
+    // };
 
-    useEffect(() => {
-        //@ts-ignore
-        if (requestUserPermission()) {
-            messaging()
-                .getToken()
-                .then((token) => {
-                    dispatch(setDeviceToken(token));
-                    console.log("fcm token", token);
-                    Alert.alert("fcm token", token);
+    // useEffect(() => {
+    //     //@ts-ignore
+    //     if (requestUserPermission()) {
+    //         messaging()
+    //             .getToken()
+    //             .then((token) => {
+    //                 dispatch(setDeviceToken(token));
+    //                 console.log("fcm token", token);
+    //                 Alert.alert("fcm token", token);
 
-                    // send token to server
-                    // post(API_URL.login, {
-                    //     fcmToken: token,
-                    // })
-                    //     .then((res) => {
-                    //         Alert.alert("fcm token send to server", token);
-                    //     })
-                    //     .catch((error) => {
-                    //         console.log("res", error);
-                    //         Alert.alert("error in sending fcm token to server", token);
-                    //     });
-                });
-        } else {
-            console.log("Permission not granted");
-        }
+    //                 // send token to server
+    //                 // post(API_URL.login, {
+    //                 //     fcmToken: token,
+    //                 // })
+    //                 //     .then((res) => {
+    //                 //         Alert.alert("fcm token send to server", token);
+    //                 //     })
+    //                 //     .catch((error) => {
+    //                 //         console.log("res", error);
+    //                 //         Alert.alert("error in sending fcm token to server", token);
+    //                 //     });
+    //             });
+    //     } else {
+    //         console.log("Permission not granted");
+    //     }
 
-        // Check if an initial notification is available
-        messaging()
-            .getInitialNotification()
-            .then(async (remoteMessage) => {
-                if (remoteMessage) {
-                    console.log("Notification caused app to open from quit state:", remoteMessage);
-                }
-            });
+    //     // Check if an initial notification is available
+    //     messaging()
+    //         .getInitialNotification()
+    //         .then(async (remoteMessage) => {
+    //             if (remoteMessage) {
+    //                 console.log("Notification caused app to open from quit state:", remoteMessage);
+    //             }
+    //         });
 
-        // Assume a message-notification contains a "type" property in the data payload of the screen
-        messaging().onNotificationOpenedApp(async (remoteMessage) => {
-            console.log("Notification caused app to open from background state:", remoteMessage);
-        });
+    //     // Assume a message-notification contains a "type" property in the data payload of the screen
+    //     messaging().onNotificationOpenedApp(async (remoteMessage) => {
+    //         console.log("Notification caused app to open from background state:", remoteMessage);
+    //     });
 
-        // Register background handler
-        messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-            console.log("Notification caused app to open from background state:", remoteMessage);
-        });
+    //     // Register background handler
+    //     messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+    //         console.log("Notification caused app to open from background state:", remoteMessage);
+    //     });
 
-        const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-            Alert.alert("A new FCM message arrived!", JSON.stringify(remoteMessage));
-        });
+    //     const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+    //         Alert.alert("A new FCM message arrived!", JSON.stringify(remoteMessage));
+    //     });
 
-        return unsubscribe;
-    }, []);
+    //     return unsubscribe;
+    // }, []);
 
     const [loaded, error] = useFonts({
         SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
