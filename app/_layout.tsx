@@ -33,7 +33,15 @@ const _XHR = global.originalXMLHttpRequest
 XMLHttpRequest = _XHR;
 
 const InitialLayout = () => {
-    const requestUserPermission = async (): Promise<boolean> => {
+    const { post } = useAxios();
+    const dispatch = useDispatch();
+
+    const theme = useSelector((state: RootState) => state.global.theme);
+
+    // comment requestUserPermission and useEffect when in development to avoid firbase error
+    // and uncomment when building for production
+
+    const requestUserPermission = async () => {
         const authStatus = await messaging().requestPermission();
         const enabled =
             authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
@@ -41,55 +49,58 @@ const InitialLayout = () => {
         if (enabled) {
             console.log("Authorization status:", authStatus);
         }
-        return enabled;
     };
 
     useEffect(() => {
-        const initializeMessaging = async () => {
-            const permissionGranted = await requestUserPermission();
-            if (permissionGranted) {
-                messaging()
-                    .getToken()
-                    .then((token) => {
-                        console.log("fcm token", token);
-                    });
-            } else {
-                console.log("Permission not granted");
-            }
+        //@ts-ignore
+        if (requestUserPermission()) {
+            messaging()
+                .getToken()
+                .then((token) => {
+                    dispatch(setDeviceToken(token));
+                    console.log("fcm token", token);
+                    Alert.alert("fcm token", token);
 
-            // Check if an initial notification is available
-            const initialNotification = await messaging().getInitialNotification();
-            if (initialNotification) {
-                console.log(
-                    "Notification caused app to open from quit state:",
-                    initialNotification
-                );
-            }
+                    // send token to server
+                    // post(API_URL.login, {
+                    //     fcmToken: token,
+                    // })
+                    //     .then((res) => {
+                    //         Alert.alert("fcm token send to server", token);
+                    //     })
+                    //     .catch((error) => {
+                    //         console.log("res", error);
+                    //         Alert.alert("error in sending fcm token to server", token);
+                    //     });
+                });
+        } else {
+            console.log("Permission not granted");
+        }
 
-            // Assume a message-notification contains a "type" property in the data payload of the screen
-            messaging().onNotificationOpenedApp(async (remoteMessage) => {
-                console.log(
-                    "Notification caused app to open from background state:",
-                    remoteMessage
-                );
+        // Check if an initial notification is available
+        messaging()
+            .getInitialNotification()
+            .then(async (remoteMessage) => {
+                if (remoteMessage) {
+                    console.log("Notification caused app to open from quit state:", remoteMessage);
+                }
             });
 
-            // Register background handler
-            messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-                console.log(
-                    "Notification caused app to open from background state:",
-                    remoteMessage
-                );
-            });
+        // Assume a message-notification contains a "type" property in the data payload of the screen
+        messaging().onNotificationOpenedApp(async (remoteMessage) => {
+            console.log("Notification caused app to open from background state:", remoteMessage);
+        });
 
-            const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-                Alert.alert("A new FCM message arrived!", JSON.stringify(remoteMessage));
-            });
+        // Register background handler
+        messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+            console.log("Notification caused app to open from background state:", remoteMessage);
+        });
 
-            return unsubscribe;
-        };
+        const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+            Alert.alert("A new FCM message arrived!", JSON.stringify(remoteMessage));
+        });
 
-        initializeMessaging();
+        return unsubscribe;
     }, []);
 
     const [loaded, error] = useFonts({
@@ -111,9 +122,6 @@ const InitialLayout = () => {
             SplashScreen.hideAsync();
         }
     }, [loaded]);
-
-    const dispatch = useDispatch();
-    const theme = useSelector((state: RootState) => state.global.theme);
 
     useEffect(() => {
         storeUserDeviceData();
@@ -446,74 +454,6 @@ const InitialLayout = () => {
 };
 
 const RootLayoutNav = () => {
-    const { post } = useAxios();
-    const dispatch = useDispatch();
-
-    // comment requestUserPermission and useEffect when in development to avoid firbase error
-    // and uncomment when building for production
-
-    const requestUserPermission = async () => {
-        const authStatus = await messaging().requestPermission();
-        const enabled =
-            authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-            authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-        if (enabled) {
-            console.log("Authorization status:", authStatus);
-        }
-    };
-
-    useEffect(() => {
-        //@ts-ignore
-        if (requestUserPermission()) {
-            messaging()
-                .getToken()
-                .then((token) => {
-                    dispatch(setDeviceToken(token));
-                    console.log("fcm token", token);
-                    Alert.alert("fcm token", token);
-
-                    // // send token to server
-                    // post(API_URL.login, {
-                    //     fcmToken: token,
-                    // })
-                    //     .then((res) => {
-                    //         Alert.alert("fcm token send to server", token);
-                    //     })
-                    //     .catch((error) => {
-                    //         console.log("res", error);
-                    //         Alert.alert("error in sending fcm token to server", token);
-                    //     });
-                });
-        } else {
-            console.log("Permission not granted");
-        }
-
-        // Check if an initial notification is available
-        messaging()
-            .getInitialNotification()
-            .then(async (remoteMessage) => {
-                if (remoteMessage) {
-                    console.log("Notification caused app to open from quit state:", remoteMessage);
-                }
-            });
-
-        // Assume a message-notification contains a "type" property in the data payload of the screen
-        messaging().onNotificationOpenedApp(async (remoteMessage) => {
-            console.log("Notification caused app to open from background state:", remoteMessage);
-        });
-
-        // Register background handler
-        messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-            console.log("Notification caused app to open from background state:", remoteMessage);
-        });
-
-        const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-            Alert.alert("A new FCM message arrived!", JSON.stringify(remoteMessage));
-        });
-
-        return unsubscribe;
-    }, []);
-
     return (
         <Provider store={store}>
             <GestureHandlerRootView style={{ flex: 1 }}>
