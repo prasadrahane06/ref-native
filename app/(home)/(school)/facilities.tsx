@@ -1,6 +1,7 @@
 import useAxios from "@/app/services/axiosClient";
 import AUIButton from "@/components/common/AUIButton";
 import AUIInputField from "@/components/common/AUIInputField";
+import AUIModal from "@/components/common/AUIModal";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
@@ -14,14 +15,15 @@ import * as ImageManipulator from "expo-image-manipulator";
 import * as ImagePicker from "expo-image-picker";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Image, Modal, StyleSheet, TouchableOpacity } from "react-native";
+import { Image, StyleSheet, TouchableOpacity } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 
 interface AddFacilities {
     visible: boolean;
     onClose: () => void;
-    onFacilityAdded: () => void;
+    facility?: Facility;
+    refreshFacilities: () => void;
 }
 interface Facility {
     _id: string;
@@ -31,11 +33,48 @@ interface Facility {
     status: number;
 }
 
-const AddNewFacilities: React.FC<AddFacilities> = ({ visible, onClose, onFacilityAdded }) => {
+const AddNewFacilities: React.FC<AddFacilities> = ({
+    visible,
+    onClose,
+    facility,
+    refreshFacilities,
+}) => {
     const user = useSelector((state: RootState) => state.global.user);
-    const { post } = useAxios();
-    const { control, handleSubmit, reset, getValues } = useForm();
-    const [image, setImage] = useState<string | null>(null);
+    const { post, patch, del } = useAxios();
+    const { control, handleSubmit, reset, setValue, getValues } = useForm();
+    const [image, setImage] = useState<string | null>(facility?.image || null);
+    const [initialValues, setInitialValues] = useState<any>({});
+    const [showConfirmation, setShowConfirmation] = useState(false);
+
+    useEffect(() => {
+        if (facility) {
+            const initialFacilityValues = {
+                facilityName: facility.name,
+                description: facility.description,
+                image: facility.image,
+            };
+            setInitialValues(initialFacilityValues);
+            setValue("facilityName", facility.name);
+            setValue("description", facility.description);
+            setImage(facility.image);
+        } else {
+            resetFields();
+        }
+    }, [facility, setValue]);
+
+    useEffect(() => {
+        if (!facility && visible) {
+            resetFields();
+        }
+    }, [visible]);
+
+    const resetFields = () => {
+        reset({
+            facilityName: "",
+            description: "",
+        });
+        setImage(null);
+    };
 
     const handleSave = () => {
         const values = getValues();
@@ -47,12 +86,52 @@ const AddNewFacilities: React.FC<AddFacilities> = ({ visible, onClose, onFacilit
         };
         post(API_URL.facility, payload)
             .then((res) => {
-                ApiSuccessToast("New Plan added successfully.");
+                ApiSuccessToast("New Facility Added Successfully.");
+                refreshFacilities();
                 reset();
-                onFacilityAdded();
             })
             .catch((e) => {
-                ApiErrorToast("Failed to add facilities")
+                ApiErrorToast("Failed to add facility");
+                console.log(e);
+            });
+    };
+
+    const handleEdit = () => {
+        const values = getValues();
+        const payload: any = { id: facility?._id };
+
+        if (values.facilityName !== initialValues.facilityName) {
+            payload.name = values.facilityName;
+        }
+        if (values.description !== initialValues.description) {
+            payload.description = values.description;
+        }
+        if (image !== initialValues.image) {
+            payload.image = image;
+        }
+
+        patch(API_URL.facility, payload)
+            .then((res) => {
+                ApiSuccessToast("Facility updated successfully.");
+                refreshFacilities();
+                reset();
+            })
+            .catch((e) => {
+                ApiErrorToast("Failed to update facility");
+                console.log(e);
+            });
+    };
+
+    const handleDelete = () => {
+        if (!facility?._id) return;
+        del(`${API_URL.facility}?id=${facility._id}`)
+            .then((res) => {
+                setShowConfirmation(false);
+                ApiSuccessToast(`Facility deleted`);
+                refreshFacilities();
+            })
+            .catch((e) => {
+                ApiErrorToast("Failed to delete facility");
                 console.log(e);
             });
     };
@@ -106,82 +185,122 @@ const AddNewFacilities: React.FC<AddFacilities> = ({ visible, onClose, onFacilit
     };
 
     return (
-        <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
-            <AUIThemedView style={styles.modalContainer}>
-                <AUIThemedView style={styles.modalContent}>
-                    <AUIThemedView style={styles.headerRow}>
-                        <AUIThemedText style={styles.header}>Add your Facilities</AUIThemedText>
-                        <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-                            <MaterialIcons name="close" size={28} />
-                        </TouchableOpacity>
-                    </AUIThemedView>
-
-                    <Controller
-                        control={control}
-                        name="facilityName"
-                        defaultValue=""
-                        render={({ field: { onChange, value } }) => (
-                            <AUIInputField
-                                label="Enter Facility name"
-                                placeholder="Facility Name"
-                                value={value}
-                                onChangeText={onChange}
-                                style={styles.input}
-                            />
-                        )}
-                    />
-
-                    <Controller
-                        control={control}
-                        name="description"
-                        defaultValue=""
-                        render={({ field: { onChange, value } }) => (
-                            <AUIInputField
-                                label="Enter Description"
-                                placeholder="Description"
-                                value={value}
-                                onChangeText={onChange}
-                                style={styles.input}
-                            />
-                        )}
-                    />
-
-                    <AUIThemedText>Select image</AUIThemedText>
-                    <AUIThemedView style={styles.imagePickerContainer}>
-                        <TouchableOpacity onPress={pickImage} style={styles.uploadButton}>
-                            <MaterialIcons name="cloud-upload" size={24} color="#5BD894" />
-                            <AUIThemedText style={styles.uploadButtonText}>
-                                Upload File
-                            </AUIThemedText>
-                        </TouchableOpacity>
-                        <AUIThemedText style={styles.fileName}>
-                            {image
-                                ? truncateFileName(image.split("/").pop()!, 18)
-                                : "No file chosen"}
-                        </AUIThemedText>
-                    </AUIThemedView>
-
-                    {image && <Image source={{ uri: image }} style={styles.image} />}
-
-                    <AUIThemedView style={styles.buttonContainer}>
-                        <AUIButton
-                            title="Clear"
-                            onPress={() => {
-                                reset();
-                                clearFields();
-                            }}
-                            style={{ width: "48%" }}
+        <>
+            <AUIModal
+                visible={visible}
+                onClose={onClose}
+                title={facility ? "Edit Facility" : "Add your Facilities"}
+            >
+                <Controller
+                    control={control}
+                    name="facilityName"
+                    defaultValue=""
+                    render={({ field: { onChange, value } }) => (
+                        <AUIInputField
+                            label="Enter Facility name"
+                            placeholder="Facility Name"
+                            value={value}
+                            onChangeText={onChange}
+                            style={styles.input}
                         />
-                        <AUIButton
-                            title="Save"
-                            selected
-                            onPress={handleSubmit(handleSave)}
-                            style={{ width: "48%" }}
+                    )}
+                />
+                <Controller
+                    control={control}
+                    name="description"
+                    defaultValue=""
+                    render={({ field: { onChange, value } }) => (
+                        <AUIInputField
+                            label="Enter Description"
+                            placeholder="Description"
+                            value={value}
+                            onChangeText={onChange}
+                            style={styles.input}
                         />
-                    </AUIThemedView>
+                    )}
+                />
+                <AUIThemedText>Select image</AUIThemedText>
+                <AUIThemedView style={styles.imagePickerContainer}>
+                    <TouchableOpacity onPress={pickImage} style={styles.uploadButton}>
+                        <MaterialIcons name="cloud-upload" size={24} color="#5BD894" />
+                        <AUIThemedText style={styles.uploadButtonText}>Upload File</AUIThemedText>
+                    </TouchableOpacity>
+                    <AUIThemedText style={styles.fileName}>
+                        {image ? truncateFileName(image.split("/").pop()!, 18) : "No file chosen"}
+                    </AUIThemedText>
                 </AUIThemedView>
-            </AUIThemedView>
-        </Modal>
+                {image && <Image source={{ uri: image }} style={styles.image} />}
+                <AUIThemedView style={styles.buttonContainer}>
+                    {facility ? (
+                        <AUIThemedView style={styles.buttonMainContainer}>
+                            <AUIThemedView style={styles.buttonContainer}>
+                                <AUIButton
+                                    title="Clear"
+                                    onPress={() => {
+                                        reset();
+                                        clearFields();
+                                    }}
+                                    style={{ width: "48%" }}
+                                />
+                                <AUIButton
+                                    title="Update"
+                                    selected
+                                    style={{ width: "48%" }}
+                                    onPress={handleSubmit(handleEdit)}
+                                />
+                            </AUIThemedView>
+                            <AUIButton
+                                title="Delete"
+                                selected
+                                background={TEXT_THEME.light.danger}
+                                style={{ width: "100%" }}
+                                onPress={() => {
+                                    setShowConfirmation(true);
+                                }}
+                            />
+                        </AUIThemedView>
+                    ) : (
+                        <AUIThemedView style={styles.buttonContainer}>
+                            <AUIButton
+                                title="Clear"
+                                onPress={() => {
+                                    reset();
+                                    clearFields();
+                                }}
+                                style={{ width: "48%" }}
+                            />
+                            <AUIButton
+                                title="Save"
+                                selected
+                                style={{ width: "48%" }}
+                                onPress={handleSubmit(handleSave)}
+                            />
+                        </AUIThemedView>
+                    )}
+                </AUIThemedView>
+            </AUIModal>
+            <AUIModal
+                visible={showConfirmation}
+                onClose={() => setShowConfirmation(false)}
+                title="Confirm Delete"
+            >
+                <AUIThemedText>Are you sure you want to delete this facility?</AUIThemedText>
+                <AUIThemedView style={styles.buttonContainer}>
+                    <AUIButton
+                        title="Cancel"
+                        onPress={() => setShowConfirmation(false)}
+                        style={{ width: "48%" }}
+                    />
+                    <AUIButton
+                        title="Delete"
+                        selected
+                        background={TEXT_THEME.light.danger}
+                        style={{ width: "48%" }}
+                        onPress={handleDelete}
+                    />
+                </AUIThemedView>
+            </AUIModal>
+        </>
     );
 };
 
@@ -190,34 +309,47 @@ export default function TabFourScreen() {
     const { requestFn } = useApiRequest();
     const isRTL = useSelector((state: RootState) => state.global.isRTL || {});
     const [isAddFacilityVisible, setAddFacilityVisible] = useState(false);
-
+    const [selectedFacility, setSelectedFacility] = useState<Facility | undefined>(undefined);
     const [facilities, setFacilities] = useState<Facility[]>([]);
 
-    useEffect(() => {
+    const refreshFacilities = () => {
         requestFn(API_URL.facility, "myFacilitys", { client: true });
-    }, []);
-
-    useEffect(() => {
-        if (school?.docs?.length > 0) {
-            setFacilities(school?.docs);
-        }
-    }, [school?.docs?.length]);
-
-    const handleFacilityAdded = () => {
         setAddFacilityVisible(false);
     };
 
+    useEffect(() => {
+        refreshFacilities();
+    }, []);
+
+    useEffect(() => {
+        if (school?.docs?.length > 0 || !isAddFacilityVisible) {
+            setFacilities(school?.docs);
+        }
+    }, [school?.docs?.length, isAddFacilityVisible]);
+
+    const handleAddNewFacility = () => {
+        setSelectedFacility(undefined);
+        setAddFacilityVisible(true);
+    };
+
+    const handleEditFacility = (facility: Facility) => {
+        setSelectedFacility(facility);
+        setAddFacilityVisible(true);
+    };
+
     const renderItem = ({ item }: { item: Facility }) => (
-        <AUIThemedView style={styles.facility}> 
-            <Image source={{ uri: item.image }} style={styles.image} />
-            <AUIThemedText style={styles.name}>
-                {typeof item.name === "string"
-                    ? item.name
-                    : isRTL
-                    ? item.name.ar
-                    : item.name.en}
-            </AUIThemedText>
-        </AUIThemedView>
+        <TouchableOpacity onPress={() => handleEditFacility(item)}>
+            <AUIThemedView style={styles.facility}>
+                <Image source={{ uri: item.image }} style={styles.image} />
+                <AUIThemedText style={styles.name}>
+                    {typeof item.name === "string"
+                        ? item.name
+                        : isRTL
+                        ? item.name.ar
+                        : item.name.en}
+                </AUIThemedText>
+            </AUIThemedView>
+        </TouchableOpacity>
     );
 
     return (
@@ -227,20 +359,21 @@ export default function TabFourScreen() {
                 title="Add New Facilities"
                 selected
                 style={styles.button}
-                onPress={() => setAddFacilityVisible(true)}
+                onPress={handleAddNewFacility}
             />
             <FlatList
                 data={facilities}
                 renderItem={renderItem}
                 keyExtractor={(item) => item._id}
-                numColumns={3} 
-                columnWrapperStyle={styles.row} 
-                contentContainerStyle={styles.container} 
+                numColumns={3}
+                columnWrapperStyle={styles.row}
+                contentContainerStyle={styles.container}
             />
             <AddNewFacilities
                 visible={isAddFacilityVisible}
                 onClose={() => setAddFacilityVisible(false)}
-                onFacilityAdded={handleFacilityAdded}
+                refreshFacilities={refreshFacilities}
+                facility={selectedFacility}
             />
         </AUIThemedView>
     );
@@ -261,15 +394,17 @@ const styles = StyleSheet.create({
     container: {
         marginTop: 20,
     },
-    row: { 
+    row: {
         flex: 1,
         justifyContent: "space-between",
         marginBottom: 20,
     },
-    facility: { 
+    facility: {
         flex: 1,
         alignItems: "center",
         marginHorizontal: 5,
+        height: 100,
+        width: 80,
     },
 
     name: {
@@ -280,33 +415,12 @@ const styles = StyleSheet.create({
         color: TEXT_THEME.light.danger,
     },
     input: { marginBottom: 10 },
+    buttonMainContainer: { gap: 5 },
     buttonContainer: {
         marginTop: 10,
         flexDirection: "row",
         justifyContent: "space-between",
         gap: 10,
-    },
-    modalContainer: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-    },
-    modalContent: {
-        width: "90%",
-        borderRadius: 10,
-        padding: 20,
-    },
-    headerRow: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: 15,
-    },
-    closeButton: {},
-    header: {
-        fontSize: 20,
-        fontWeight: "bold",
     },
     imagePickerContainer: {
         flexDirection: "row",

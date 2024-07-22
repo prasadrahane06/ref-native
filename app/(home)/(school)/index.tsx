@@ -39,31 +39,31 @@ export default function HomeScreen() {
         requestFn(API_URL.course, "myCourse", { client: true });
     }, []);
 
-    useEffect(() => {
-        // create bot
-        botPost("/bot", {
-            name: user.name,
-            consumer: user.client,
-            config: {
-                color: "green",
-                language: "English",
-            },
-        })
-            .then((res) => {
-                patch(API_URL.school, {
-                    botId: res.data._id,
-                })
-                    .then((res) => {
-                        ApiSuccessToast(res.message);
-                    })
-                    .catch((e) => {
-                        console.log("Error in update school =>", e);
-                    });
-            })
-            .catch((e) => {
-                console.log("Error in create bot =>", e);
-            });
-    }, []);
+    // useEffect(() => {
+    //     // create bot
+    //     botPost("/bot", {
+    //         name: user.name,
+    //         consumer: user.client,
+    //         config: {
+    //             color: "green",
+    //             language: "English",
+    //         },
+    //     })
+    //         .then((res) => {
+    //             patch(API_URL.school, {
+    //                 botId: res.data._id,
+    //             })
+    //                 .then((res) => {
+    //                     ApiSuccessToast(res.message);
+    //                 })
+    //                 .catch((e) => {
+    //                     console.log("Error in update school =>", e);
+    //                 });
+    //         })
+    //         .catch((e) => {
+    //             console.log("Error in create bot =>", e);
+    //         });
+    // }, []);
 
     // chatbot code below
     const [config, setConfig] = useState({});

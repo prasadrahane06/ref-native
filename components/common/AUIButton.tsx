@@ -47,6 +47,7 @@ const AUIButton: React.FC<ButtonProps> = ({
                     icon={icon}
                     regularText={regularText}
                     theme={theme}
+                    background={background}
                 />
             ) : (
                 <DefaultBtn
@@ -67,15 +68,26 @@ interface HighlightedBtnProps {
     icon?: any;
     regularText?: any;
     theme: ThemeType;
+    background?: string;
 }
 
-const HighlightedBtn = ({ disabled, title, icon, regularText, theme }: HighlightedBtnProps) => (
+const HighlightedBtn = ({
+    disabled,
+    title,
+    icon,
+    regularText,
+    theme,
+    background,
+}: HighlightedBtnProps) => (
     <AUILinearGradient
         style={buttonStyle.buttonInner}
         colors={
             disabled
                 ? [BUTTON_THEME[theme].disabled.background, BUTTON_THEME[theme].disabled.background]
-                : [APP_THEME[theme].primary.first, APP_THEME[theme].primary.first]
+                : [
+                      background || APP_THEME[theme].primary.first,
+                      background || APP_THEME[theme].primary.first,
+                  ]
         }
     >
         <AUIThemedText
@@ -97,6 +109,7 @@ interface DefaultBtnProps {
     icon?: any;
     borderColor?: any;
     theme: ThemeType;
+    background?: string;
 }
 
 const DefaultBtn = ({ disabled, title, icon, borderColor, theme }: DefaultBtnProps) => (
