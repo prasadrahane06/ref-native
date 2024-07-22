@@ -182,7 +182,7 @@ export default function CityDetails() {
             ),
             headerTitle: () => (
                 <Animated.Text style={[headerTitleAnimatedStyle, styles.screenTitle]}>
-                    {isRTL ? country?.name?.en : country?.name?.ar}
+                    {country?.name}
                 </Animated.Text>
             ),
         });
@@ -227,7 +227,7 @@ export default function CityDetails() {
                         ]}
                     >
                         <AUIThemedText style={styles.name}>
-                            Why study in {isRTL ? country?.name?.en : country?.name?.ar}
+                            Why study in {country?.name}
                         </AUIThemedText>
                         <AUIThemedView
                             style={[
@@ -348,7 +348,9 @@ export default function CityDetails() {
                             { backgroundColor: APP_THEME[theme].background },
                         ]}
                     >
-                        <SectionTitle viewAll="#">{GLOBAL_TEXT.popular_schools}</SectionTitle>
+                        <SectionTitle viewAll="(home)/school/AllSchoolsScreen">
+                            {GLOBAL_TEXT.popular_schools}
+                        </SectionTitle>
                         <SchoolList data={schoolsResponse?.docs} />
                     </AUIThemedView>
                 </AUIThemedView>

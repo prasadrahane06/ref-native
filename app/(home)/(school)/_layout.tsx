@@ -38,6 +38,7 @@ import { useSelector } from "react-redux";
 import NotificationDrawer from "../notification/notification";
 import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { useTranslation } from "react-i18next";
+import { ChatBot } from "at-chatbot-native";
 
 interface AddEvent {
     visible: boolean;
@@ -393,9 +394,9 @@ export default function AUIDrawer() {
                         ),
                     }}
                 />
-                
+
                 {/* <Drawer.Screen name="SchoolProfile" component={schoolProfile} /> */}
-            {/* <Drawer.Screen name="SchoolCourses" component={SchoolCoursesScreen} />
+                {/* <Drawer.Screen name="SchoolCourses" component={SchoolCoursesScreen} />
             <Drawer.Screen name="Facilities" component={FacilitiesScreen} />
             <Drawer.Screen name="Admission" component={AdmissionScreen} />
             <Drawer.Screen name="Contact" component={ContactScreen} /> */}
@@ -413,7 +414,7 @@ export default function AUIDrawer() {
                         ),
                     }}
                 />
-                   <Drawer.Screen
+                <Drawer.Screen
                     name="Profile"
                     component={SchoolProfile}
                     options={{
@@ -447,77 +448,96 @@ export default function AUIDrawer() {
 }
 
 export function TabLayout() {
+    const [config, setConfig] = useState({});
+
+    const user = useLangTransformSelector((state: RootState) => state.global.user);
+
     return (
-        <Tabs
-            screenOptions={{
-                headerShown: false,
-                tabBarBackground: () => (
-                    <AUILinearGradient
-                        colors={["rgba(118, 250,178, 1)", "rgba(91, 216,148, 1)"]}
-                        style={{ flex: 1 }}
-                    />
-                ),
-            }}
-        >
-            <Tabs.Screen
-                name="index"
-                options={{
-                    headerTitle: "",
-                    title: "Home",
-                    tabBarInactiveTintColor: "#0A152F",
-                    tabBarActiveTintColor: "white",
-                    tabBarLabelStyle: { fontSize: 13 },
-                    tabBarIcon: ({ focused }) => (
-                        <MaterialIcons
-                            name={"home"}
-                            color={focused ? "white" : "#0A152F"}
-                            size={24}
+        <View style={{ flex: 1 }}>
+            <ChatBot
+                consumerId={user?.client}
+                config={config}
+                user={user}
+                widgetStyle={{ bottom: "10%" }}
+            />
+            <Tabs
+                screenOptions={{
+                    headerShown: false,
+                    tabBarBackground: () => (
+                        <AUILinearGradient
+                            colors={["rgba(118, 250,178, 1)", "rgba(91, 216,148, 1)"]}
+                            style={{ flex: 1 }}
                         />
                     ),
                 }}
-            />
-            <Tabs.Screen
-                name="studentTab"
-                options={{
-                    title: "Student",
-                    headerTitle: "",
-                    tabBarInactiveTintColor: "#0A152F",
-                    tabBarActiveTintColor: "white",
-                    tabBarLabelStyle: { fontSize: 13 },
-                    tabBarIcon: ({ focused }) => (
-                        <Ionicons name={"person"} color={focused ? "white" : "#0A152F"} size={24} />
-                    ),
-                }}
-            />
-            <Tabs.Screen
-                name="courses"
-                options={{
-                    title: "Courses",
-                    tabBarInactiveTintColor: "#0A152F",
-                    tabBarActiveTintColor: "white",
-                    tabBarLabelStyle: { fontSize: 13 },
-                    tabBarIcon: ({ color, focused }) => (
-                        <MaterialCommunityIcons
-                            name={"book-education"}
-                            size={24}
-                            color={focused ? "white" : "#0A152F"}
-                        />
-                    ),
-                }}
-            />
-            <Tabs.Screen
-                name="facilities"
-                options={{
-                    title: "Facilities",
-                    tabBarInactiveTintColor: "#0A152F",
-                    tabBarActiveTintColor: "white",
-                    tabBarLabelStyle: { fontSize: 13 },
-                    tabBarIcon: ({ color, focused }) => (
-                        <TabBarIcon name={"business-sharp"} color={focused ? "white" : "#0A152F"} />
-                    ),
-                }}
-            />
-        </Tabs>
+            >
+                <Tabs.Screen
+                    name="index"
+                    options={{
+                        headerTitle: "",
+                        title: "Home",
+                        tabBarInactiveTintColor: "#0A152F",
+                        tabBarActiveTintColor: "white",
+                        tabBarLabelStyle: { fontSize: 13 },
+                        tabBarIcon: ({ focused }) => (
+                            <MaterialIcons
+                                name={"home"}
+                                color={focused ? "white" : "#0A152F"}
+                                size={24}
+                            />
+                        ),
+                    }}
+                />
+                <Tabs.Screen
+                    name="studentTab"
+                    options={{
+                        title: "Student",
+                        headerTitle: "",
+                        tabBarInactiveTintColor: "#0A152F",
+                        tabBarActiveTintColor: "white",
+                        tabBarLabelStyle: { fontSize: 13 },
+                        tabBarIcon: ({ focused }) => (
+                            <Ionicons
+                                name={"person"}
+                                color={focused ? "white" : "#0A152F"}
+                                size={24}
+                            />
+                        ),
+                    }}
+                />
+                <Tabs.Screen
+                    name="courses"
+                    options={{
+                        title: "Courses",
+                        tabBarInactiveTintColor: "#0A152F",
+                        tabBarActiveTintColor: "white",
+                        tabBarLabelStyle: { fontSize: 13 },
+                        tabBarIcon: ({ color, focused }) => (
+                            <MaterialCommunityIcons
+                                name={"book-education"}
+                                size={24}
+                                color={focused ? "white" : "#0A152F"}
+                            />
+                        ),
+                    }}
+                />
+                <Tabs.Screen
+                    name="facilities"
+                    options={{
+                        title: "Facilities",
+                        tabBarInactiveTintColor: "#0A152F",
+                        tabBarActiveTintColor: "white",
+                        tabBarLabelStyle: { fontSize: 13 },
+                        tabBarIcon: ({ color, focused }) => (
+                            <TabBarIcon
+                                name={"business-sharp"}
+                                color={focused ? "white" : "#0A152F"}
+                            />
+                        ),
+                    }}
+                />
+            </Tabs>
+        </View>
     );
 }
 

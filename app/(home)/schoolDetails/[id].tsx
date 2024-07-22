@@ -250,7 +250,7 @@ export default function SchoolDetails() {
                 />
             ),
             headerLeft: () => (
-                <TouchableOpacity onPress={() => navigation.goBack()}>
+                <Pressable onPress={() => navigation.goBack()}>
                     <Ionicons
                         name="arrow-back"
                         size={30}
@@ -258,11 +258,12 @@ export default function SchoolDetails() {
                         style={{
                             position: "absolute",
                             left: -57,
+                            top: -15,
                             alignItems: "center",
                             justifyContent: "center",
                         }}
                     />
-                </TouchableOpacity>
+                </Pressable>
             ),
             headerRight: () => (
                 <TouchableOpacity onPress={() => handleFavoriteClick(id, "client")}>

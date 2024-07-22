@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import { StyleSheet, ScrollView, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
 import AUISearchBar from "@/components/common/AUISearchBar";
-import useDebounce from "@/customHooks/useDebounce"; 
+import useDebounce from "@/customHooks/useDebounce";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 
 export default function TabThreeScreen() {
@@ -24,7 +24,7 @@ export default function TabThreeScreen() {
     const [page, setPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(1);
 
-    const debouncedSearchPhrase = useDebounce(searchPhrase, 500); 
+    const debouncedSearchPhrase = useDebounce(searchPhrase, 500);
 
     const { requestFn } = useApiRequest();
 
@@ -32,7 +32,11 @@ export default function TabThreeScreen() {
 
     useEffect(() => {
         if (debouncedSearchPhrase) {
-            requestFn(API_URL.schoolSearch, "myCourse", { client: true, courseName: debouncedSearchPhrase, page: `${page}` });
+            requestFn(API_URL.schoolSearch, "myCourse", {
+                client: true,
+                courseName: debouncedSearchPhrase,
+                page: `${page}`,
+            });
         } else {
             requestFn(API_URL.course, "myCourse", { client: true, page: `${page}` });
         }
@@ -40,19 +44,20 @@ export default function TabThreeScreen() {
 
     useEffect(() => {
         setCourses(myCourse?.docs || []);
-        setTotalPages(myCourse?.totalPages || 1); 
+        setTotalPages(myCourse?.totalPages || 1);
     }, [myCourse?.docs?.length, myCourse?.totalPages]);
 
     return (
         <AUIThemedView style={styles.root}>
-         <View style={styles.centeredContainer}>
+            <AUIThemedView style={{ paddingBottom: 20 }}>
                 <AUISearchBar
                     clicked={clicked}
                     searchPhrase={searchPhrase}
                     setSearchPhrase={setSearchPhrase}
                     setClicked={setClicked}
+                    containerStyle={{ width: "100%", marginVertical: 0 }}
                 />
-            </View>
+            </AUIThemedView>
             <ScrollView>
                 <AUIThemedView style={styles.section}>
                     <AUIThemedView style={styles.headerContainer}>
@@ -73,10 +78,10 @@ export default function TabThreeScreen() {
                     </AUIThemedView>
                     <CourseList data={courses} />
                     <TouchableOpacity
-                        style={{ padding: 10, alignItems: 'center' }}
+                        style={{ padding: 10, alignItems: "center" }}
                         disabled={page === totalPages}
                         onPress={() => {
-                            setPage(prevPage => prevPage + 1);
+                            setPage((prevPage) => prevPage + 1);
                         }}
                     >
                         <AUIThemedText>
@@ -105,12 +110,12 @@ const styles = StyleSheet.create({
     AddNewCourseButton: {
         width: "35%",
         marginHorizontal: 15,
-        padding : 10
+        padding: 10,
     },
     centeredContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
         marginVertical: 10,
     },
 });

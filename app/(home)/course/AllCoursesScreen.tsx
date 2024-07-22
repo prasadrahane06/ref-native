@@ -63,7 +63,7 @@ const AllCoursesScreen = () => {
                     onPress={() => setPage(page + 1)}
                 >
                     <AUIThemedText>
-                        {page === courseResponse.totalPages ? "You are Caught Up" : "Load More"}
+                        {page === courseResponse?.totalPages ? "You are Caught Up" : "Load More"}
                     </AUIThemedText>
                 </TouchableOpacity>
             </ScrollView>

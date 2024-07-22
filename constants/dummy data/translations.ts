@@ -46,10 +46,12 @@ export const en = {
     embrace_multilingualism: "EMBRACE MULTILINGUALISM",
     account: "Account",
     your_cart_is_empty: "Your Cart Is Empty",
+    your_favourite_is_empty: "Your Favourite Is Empty",
     compare_schools: "Compare Schools",
     add_school: "Add School",
-    compare_description: "Select and compare schools on various parameters to choose the best for you",
-    events: "Events"
+    compare_description:
+        "Select and compare schools on various parameters to choose the best for you",
+    events: "Events",
 };
 
 export const ar = {
@@ -100,8 +102,9 @@ export const ar = {
     embrace_multilingualism: "احتضان التعددية اللغوية",
     account: "حساب",
     your_cart_is_empty: "عربة التسوق فارغة",
+    your_favourite_is_empty: "عربة المفضلة فارغة",
     compare_schools: "قارن المدارس",
     add_school: "أضف مدرسة",
     compare_description: "حدد المدارس وقارن بينها وفقًا لمعايير مختلفة لاختيار الأفضل بالنسبة لك",
-    events : "الفعاليات"
+    events: "الفعاليات",
 };

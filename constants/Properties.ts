@@ -50,6 +50,7 @@ export const GLOBAL_TEXT = {
     confirm_your_payment: "Confirm your payment",
     my_added_courses_in_cart: "My added courses in cart",
     your_cart_is_empty: "your_cart_is_empty",
+    your_favourite_is_empty: "your_favourite_is_empty",
 };
 export const GLOBAL_TRANSLATION_LABEL = {
     find_your_destination: "find_your_destination",

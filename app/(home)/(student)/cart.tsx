@@ -1,4 +1,5 @@
 import Course from "@/components/Course";
+import AUIImage from "@/components/common/AUIImage";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { BACKGROUND_THEME } from "@/constants/Colors";
@@ -10,6 +11,7 @@ import { addItemToCart } from "@/redux/cartSlice";
 import { RootState } from "@/redux/store";
 import { AntDesign } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
+import { Asset } from "expo-asset";
 import React, { useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Dimensions, FlatList, ScrollView, StyleSheet } from "react-native";
@@ -49,7 +51,11 @@ export default function TabFourScreen() {
                 </AUIThemedText>
 
                 <AUIThemedView style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-                    <AntDesign name="shoppingcart" size={70} color="#777777" />
+                    <AUIImage
+                        path={
+                            Asset.fromModule(require("@/assets/images/common/cart_image.png")).uri
+                        }
+                    />
                 </AUIThemedView>
             </AUIThemedView>
         );

@@ -28,7 +28,7 @@
     "@react-navigation/native": "^6.1.17",
     "@reduxjs/toolkit": "^2.2.5",
     "@translate-tools/core": "^1.0.0",
-    "at-chatbot-native": "^1.0.4",
+    "at-chatbot-native": "^1.0.8",
     "axios": "^1.7.2",
     "expo": "~51.0.21",
     "expo-asset": "~10.0.9",
@@ -41,6 +41,7 @@
     "expo-image-picker": "~15.0.7",
     "expo-linear-gradient": "~13.0.2",
     "expo-linking": "~6.3.1",
+    "expo-notifications": "~0.28.10",
     "expo-router": "~3.5.18",
     "expo-splash-screen": "~0.27.5",
     "expo-status-bar": "~1.12.1",
@@ -68,8 +69,7 @@
     "react-native-web": "~0.19.10",
     "react-redux": "^9.1.2",
     "socket.io-client": "^4.7.5",
-    "yup": "^1.4.0",
-    "expo-notifications": "~0.28.10"
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -367,15 +367,6 @@ const InitialLayout = () => {
                 name="(home)/cityDetails/[id]"
                 options={{
                     headerTitle: "",
-                    headerLeft: () => (
-                        <TouchableOpacity onPress={router.back}>
-                            <Ionicons
-                                name="arrow-back"
-                                size={34}
-                                color={TEXT_THEME[theme].primary}
-                            />
-                        </TouchableOpacity>
-                    ),
                 }}
             />
             <Stack.Screen
