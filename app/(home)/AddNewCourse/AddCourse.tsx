@@ -22,10 +22,10 @@ import { useSelector } from "react-redux";
 
 interface Plan {
     _id: string;
-    duration: string | { en: string; ar?: string };
-    price: string | { en: string; ar?: string };
-    bookYourSeat: string | { en: string; ar?: string };
-    rating: string | { en: string; ar?: string };
+    duration: any | { en: string; ar?: string };
+    price: any | { en: string; ar?: string };
+    bookYourSeat: any | { en: string; ar?: string };
+    rating: any | { en: string; ar?: string };
 }
 interface AddPlanProps {
     visible: boolean;
@@ -596,6 +596,7 @@ const AUIAddNewCourse = () => {
                     selected
                     onPress={() => setAddPlanVisible(true)}
                     style={{ width: "100%" }}
+                    disabled={plans.length > 2}
                 />
             </AUIThemedView>
 
