@@ -34,6 +34,7 @@ export default function HomeScreen() {
     );
     const myCourse = useLangTransformSelector((state: RootState) => state.api.myCourse);
 
+
     useEffect(() => {
         requestFn(API_URL.schoolAnalytics, "MySchoolDetails", { client: true });
         requestFn(API_URL.course, "myCourse", { client: true });

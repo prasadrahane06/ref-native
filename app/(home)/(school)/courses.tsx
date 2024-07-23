@@ -66,7 +66,7 @@ export default function TabThreeScreen() {
                         </SectionTitle>
                         <AUIButton
                             style={styles.AddNewCourseButton}
-                            title={"Add new course"}
+                            title={"Add course"}
                             selected
                             onPress={() =>
                                 router.push({

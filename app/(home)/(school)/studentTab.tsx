@@ -67,7 +67,7 @@ export default function TabTwoScreen() {
                                     style={styles.layout}
                                     onPress={() =>
                                         router.push({
-                                            pathname: `(home)/studentInfo/${item.user._id}`,
+                                            pathname: `(home)/studentInfo/${item._id}`,
                                             params: { student: JSON.stringify(item) },
                                         })
                                     }
