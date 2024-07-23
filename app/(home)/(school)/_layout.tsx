@@ -1,265 +1,29 @@
-import useAxios from "@/app/services/axiosClient";
 import AUIButton from "@/components/common/AUIButton";
 import AUIDrawerContent from "@/components/common/AUIDrawerContent";
-import AUIInputField from "@/components/common/AUIInputField";
 import { AUILinearGradient } from "@/components/common/AUILinearGradient";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { ApiSuccessToast } from "@/components/common/AUIToast";
 import HeaderIcons from "@/components/icons/HeaderIcon";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
+import SchoolProfile from "@/components/screenComponents/schoolProfile";
 import { APP_THEME, BACKGROUND_THEME, TEXT_THEME, ThemeType } from "@/constants/Colors";
+import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
 import { FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import { ChatBot } from "at-chatbot-native";
 import { Asset } from "expo-asset";
 import { Image } from "expo-image";
-import * as ImageManipulator from "expo-image-manipulator";
-import * as ImagePicker from "expo-image-picker";
 import { Tabs } from "expo-router";
 import { default as React, useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import SchoolProfile from "@/components/screenComponents/schoolProfile";
-import {
-    Dimensions,
-    FlatList,
-    Modal,
-    Platform,
-    Pressable,
-    StyleSheet,
-    TouchableOpacity,
-    View,
-} from "react-native";
-import { useSelector } from "react-redux";
-import NotificationDrawer from "../notification/notification";
-import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { useTranslation } from "react-i18next";
-
-import { ChatBot } from "at-chatbot-native";
-// import ChatBot from "@/components/chatbot/ChatBot";
-
-interface AddEvent {
-    visible: boolean;
-    onClose: () => void;
-}
-
-const Drawer = createDrawerNavigator();
-
-const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose }) => {
-    const [image, setImage] = useState<string | null>(null);
-    const user = useSelector((state: RootState) => state.global.user);
-    const { post } = useAxios();
-    const { control, handleSubmit, reset, getValues } = useForm({
-        defaultValues: {
-            eventName: "",
-            description: "",
-            eventDate: "",
-            location: "",
-            eventImage: null,
-        },
-    });
-    const [datePickerVisible, setDatePickerVisible] = useState(false);
-    const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-
-    const handleSave = () => {
-        const values = getValues();
-        const payload = {
-            client: user?.client,
-            eventName: values.eventName,
-            description: values.description,
-            date: selectedDate?.toISOString(),
-            location: values.location,
-            eventImage: image,
-        };
-        post(API_URL.event, payload)
-            .then((res) => {
-                ApiSuccessToast("New Event added successfully.");
-                reset();
-                onClose();
-            })
-            .catch((e) => {
-                console.log(e);
-            });
-    };
-
-    const clearFields = () => {
-        reset({
-            eventName: "",
-            description: "",
-            eventDate: "",
-            location: "",
-            eventImage: null,
-        });
-        setSelectedDate(undefined);
-    };
-
-    const handleDateChange = (event: any, date?: Date) => {
-        setDatePickerVisible(Platform.OS === "ios");
-        if (date) {
-            setSelectedDate(date);
-        }
-    };
-
-    const pickImage = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
-
-        if (!result.canceled) {
-            const assetUri = result.assets[0].uri;
-            const manipResult = await ImageManipulator.manipulateAsync(
-                assetUri,
-                [{ resize: { width: 500 } }],
-                { compress: 0.2, format: ImageManipulator.SaveFormat.JPEG }
-            );
-            const base64Image = await convertImageToBase64(manipResult.uri);
-            setImage(base64Image);
-        }
-    };
-
-    const convertImageToBase64 = (uri: string) => {
-        return new Promise<string>((resolve, reject) => {
-            const xhr = new XMLHttpRequest();
-            xhr.onload = function () {
-                const reader = new FileReader();
-                reader.onloadend = function () {
-                    resolve(reader.result as string);
-                };
-                reader.readAsDataURL(xhr.response);
-            };
-            xhr.onerror = function () {
-                reject(new Error("Failed to convert image to Base64"));
-            };
-            xhr.open("GET", uri);
-            xhr.responseType = "blob";
-            xhr.send();
-        });
-    };
-
-    const truncateFileName = (fileName: string, maxLength: number) => {
-        if (fileName.length <= maxLength) return fileName;
-        return fileName.substring(0, maxLength - 3) + "...";
-    };
-
-    return (
-        <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
-            <AUIThemedView style={styles.eventModalContainer}>
-                <AUIThemedView style={styles.eventModalContent}>
-                    <AUIThemedView style={styles.headerRow}>
-                        <AUIThemedText style={styles.header}>Add your Event</AUIThemedText>
-                        <TouchableOpacity onPress={onClose} style={styles.eventCloseButton}>
-                            <MaterialIcons name="close" size={28} />
-                        </TouchableOpacity>
-                    </AUIThemedView>
-
-                    <Controller
-                        control={control}
-                        name="eventName"
-                        defaultValue=""
-                        render={({ field: { onChange, value } }) => (
-                            <AUIInputField
-                                label="Enter Event name"
-                                placeholder="Event Name"
-                                value={value}
-                                onChangeText={onChange}
-                                style={styles.input}
-                            />
-                        )}
-                    />
-
-                    <Controller
-                        control={control}
-                        name="description"
-                        defaultValue=""
-                        render={({ field: { onChange, value } }) => (
-                            <AUIInputField
-                                label="Enter Event Description"
-                                placeholder="Description"
-                                value={value}
-                                onChangeText={onChange}
-                                style={styles.input}
-                            />
-                        )}
-                    />
-                    <AUIThemedView>
-                        <Controller
-                            control={control}
-                            name="eventDate"
-                            defaultValue=""
-                            render={({ field: { onChange, value } }) => (
-                                <Pressable onPress={() => setDatePickerVisible(true)}>
-                                    <AUIInputField
-                                        label="Event Date"
-                                        placeholder="Select Date"
-                                        value={selectedDate ? selectedDate.toDateString() : ""}
-                                        style={styles.input}
-                                        editable={false}
-                                    />
-                                </Pressable>
-                            )}
-                        />
-                        {datePickerVisible && (
-                            <DateTimePicker
-                                value={selectedDate || new Date()}
-                                mode="date"
-                                display="default"
-                                onChange={handleDateChange}
-                            />
-                        )}
-                    </AUIThemedView>
-
-                    <Controller
-                        control={control}
-                        name="location"
-                        defaultValue=""
-                        render={({ field: { onChange, value } }) => (
-                            <AUIInputField
-                                label="Enter Event Location"
-                                placeholder="Event Location"
-                                value={value}
-                                onChangeText={onChange}
-                                style={styles.input}
-                            />
-                        )}
-                    />
-                    <AUIThemedText>Select image</AUIThemedText>
-                    <AUIThemedView style={styles.imagePickerContainer}>
-                        <TouchableOpacity onPress={pickImage} style={styles.uploadButton}>
-                            <MaterialIcons name="cloud-upload" size={24} color="#5BD894" />
-                            <AUIThemedText style={styles.uploadButtonText}>
-                                Upload File
-                            </AUIThemedText>
-                        </TouchableOpacity>
-                        <AUIThemedText style={styles.fileName}>
-                            {image
-                                ? truncateFileName(image.split("/").pop()!, 18)
-                                : "No file chosen"}
-                        </AUIThemedText>
-                    </AUIThemedView>
-
-                    {image && <Image source={{ uri: image }} style={styles.image} />}
-
-                    <AUIThemedView style={styles.buttonContainer}>
-                        <AUIButton title="Clear" onPress={clearFields} style={{ width: "48%" }} />
-                        <AUIButton
-                            title="Save"
-                            selected
-                            onPress={handleSubmit(handleSave)}
-                            style={{ width: "48%" }}
-                        />
-                    </AUIThemedView>
-                </AUIThemedView>
-            </AUIThemedView>
-        </Modal>
-    );
-};
+import { Dimensions, FlatList, Modal, StyleSheet, TouchableOpacity, View } from "react-native";
+import { useSelector } from "react-redux";
+import AddNewEvent from "../events/AddNewEvent";
+import NotificationDrawer from "../notification/notification";
 
 interface event {
     _id: string;
@@ -272,16 +36,22 @@ interface event {
     location: string;
     eventImage: string;
 }
+const Drawer = createDrawerNavigator();
 
 const EventsScreen = () => {
     const [isModalVisible, setModalVisible] = useState(false);
+    const [selectedEvent, setSelectedEvent] = useState<event | undefined>(undefined);
     const eventData = useLangTransformSelector((state: RootState) => state.api.myEvent || {});
     const isRTL = useSelector((state: RootState) => state.global.isRTL || {});
     const [event, setEvent] = useState<event[]>([]);
     const { requestFn } = useApiRequest();
 
-    useEffect(() => {
+    const refreshEvents = () => {
         requestFn(API_URL.event, "myEvent", { client: true });
+    };
+
+    useEffect(() => {
+        refreshEvents();
     }, []);
 
     useEffect(() => {
@@ -291,27 +61,31 @@ const EventsScreen = () => {
     }, [eventData?.docs?.length]);
 
     const handleAddNewEvent = () => {
+        setSelectedEvent(undefined);
         setModalVisible(true);
     };
-
+    const handleEditEvent = (event: event) => {
+        setSelectedEvent(event);
+        setModalVisible(true);
+    };
     const handleCloseModal = () => {
         setModalVisible(false);
+        refreshEvents();
     };
 
-    // const handleEventAdded = () => {
-    //     setModalVisible(false);
-    // };
     const renderItem = ({ item }: { item: event }) => (
-        <AUIThemedView style={styles.facility}>
-            <Image source={{ uri: item.eventImage }} style={styles.image} />
-            <AUIThemedText style={styles.name}>
-                {typeof item.eventName === "string"
-                    ? item?.eventName
-                    : isRTL
-                    ? item?.eventName?.ar
-                    : item?.eventName?.en}
-            </AUIThemedText>
-        </AUIThemedView>
+        <TouchableOpacity onPress={() => handleEditEvent(item)}>
+            <AUIThemedView style={styles.event}>
+                <Image source={{ uri: item.eventImage }} style={styles.image} />
+                <AUIThemedText style={styles.name} numberOfLines={1}>
+                    {typeof item.eventName === "string"
+                        ? item?.eventName
+                        : isRTL
+                        ? item?.eventName?.ar
+                        : item?.eventName?.en}
+                </AUIThemedText>
+            </AUIThemedView>
+        </TouchableOpacity>
     );
 
     return (
@@ -330,7 +104,12 @@ const EventsScreen = () => {
                 columnWrapperStyle={styles.row}
                 contentContainerStyle={styles.container}
             />
-            <AddNewEvent visible={isModalVisible} onClose={handleCloseModal} />
+            <AddNewEvent
+                visible={isModalVisible}
+                onClose={handleCloseModal}
+                event={selectedEvent}
+                refreshEvents={refreshEvents}
+            />
         </AUIThemedView>
     );
 };
@@ -586,66 +365,20 @@ const styles = StyleSheet.create({
         alignSelf: "flex-end",
         padding: 16,
     },
-    input: { marginBottom: 10 },
-    buttonContainer: {
-        marginTop: 10,
-        flexDirection: "row",
-        justifyContent: "space-between",
-        gap: 10,
-    },
     AddEventButton: {
         marginHorizontal: 15,
     },
-    eventModalContainer: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-    },
-    eventModalContent: {
-        width: "90%",
-        borderRadius: 10,
-        padding: 20,
-    },
-    headerRow: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: 15,
-    },
-    eventCloseButton: {},
-    header: {
-        fontSize: 20,
-        fontWeight: "bold",
-    },
-    imagePickerContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        marginVertical: 5,
-        borderWidth: 2,
-        borderColor: APP_THEME.light.lightGray,
-        borderRadius: 5,
-        padding: 10,
-    },
-    uploadButton: {
-        flexDirection: "row",
-        alignItems: "center",
-        marginRight: 10,
-    },
-    uploadButtonText: {
-        marginLeft: 5,
-        color: APP_THEME.light.primary.first,
-    },
-    fileName: {},
     image: {
         width: 60,
         height: 60,
         marginTop: 10,
     },
-    facility: {
+    event: {
         flex: 1,
         alignItems: "center",
-        marginHorizontal: 5,
+        marginHorizontal: 20,
+        height: 100,
+        width: 80,
     },
     name: {
         fontSize: 16,
