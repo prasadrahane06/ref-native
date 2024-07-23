@@ -28,7 +28,7 @@
     "@react-navigation/native": "^6.1.17",
     "@reduxjs/toolkit": "^2.2.5",
     "@translate-tools/core": "^1.0.0",
-    "at-chatbot-native": "^1.0.8",
+    "at-chatbot-native": "^1.0.9",
     "axios": "^1.7.2",
     "expo": "~51.0.21",
     "expo-asset": "~10.0.9",

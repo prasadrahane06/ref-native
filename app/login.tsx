@@ -228,7 +228,7 @@ const LoginPage = () => {
                     storeUserData({ profile, ...res });
                     dispatch(setToken(res?.data?.accessToken));
                     dispatch(setUser(res?.data?.user));
-                    router.push({
+                    router.replace({
                         pathname: `(home)/(${profile})`,
                     });
                 }
@@ -544,7 +544,7 @@ const buttonStyle = StyleSheet.create({
         height: 40,
         paddingHorizontal: 10,
         borderWidth: 1,
-        // borderColor: APP_THEME.light.primary.first,
+        borderColor: APP_THEME.light.primary.first,
     },
     buttonText: {
         fontSize: 16,

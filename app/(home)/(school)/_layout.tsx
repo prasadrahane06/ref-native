@@ -38,7 +38,9 @@ import { useSelector } from "react-redux";
 import NotificationDrawer from "../notification/notification";
 import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { useTranslation } from "react-i18next";
+
 import { ChatBot } from "at-chatbot-native";
+// import ChatBot from "@/components/chatbot/ChatBot";
 
 interface AddEvent {
     visible: boolean;
