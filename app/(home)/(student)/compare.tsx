@@ -20,15 +20,14 @@ export default function TabThreeScreen(props: any) {
                 }
                 resizeMode="contain"
             />
-            <AUIThemedText style={styles.description}>
-                {t("compare_description")}
-            </AUIThemedText>
+            <AUIThemedText style={styles.description}>{t("compare_description")}</AUIThemedText>
             <AUIThemedView style={styles.cardContainer}>
                 <TouchableOpacity
                     style={styles.card}
                     onPress={() =>
                         router.push({
                             pathname: `(home)/compare/searchSchool`,
+                            params: { compareSlot: "compareSchool1" },
                         })
                     }
                 >
@@ -40,6 +39,7 @@ export default function TabThreeScreen(props: any) {
                     onPress={() =>
                         router.push({
                             pathname: `(home)/compare/searchSchool`,
+                            params: { compareSlot: "compareSchool2" },
                         })
                     }
                 >
