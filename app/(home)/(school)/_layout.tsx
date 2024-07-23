@@ -24,6 +24,7 @@ import { Dimensions, FlatList, Modal, StyleSheet, TouchableOpacity, View } from 
 import { useSelector } from "react-redux";
 import AddNewEvent from "../events/AddNewEvent";
 import NotificationDrawer from "../notification/notification";
+import schoolProfile from "@/components/screenComponents/schoolProfile";
 
 interface event {
     _id: string;
@@ -197,7 +198,8 @@ export default function AUIDrawer() {
                 />
                 <Drawer.Screen
                     name="Profile"
-                    component={SchoolProfile}
+                    component={schoolProfile}
+
                     options={{
                         headerShown: false,
                         title: t(GLOBAL_TRANSLATION_LABEL.account),

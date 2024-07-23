@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { View, Image, StyleSheet, ScrollView, ImageBackground } from 'react-native';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -41,8 +41,24 @@ const SchoolProfile = () => {
             email: userProfileData?.email,
             description: userProfileData?.description,
             remark: userProfileData?.remark,
+            // name: "",
+            // phoneNumber: "",
+            // email: "",
+            // description: "",
+            // remark: "",
         },
     });
+    useEffect(() => {
+        if (userProfileData) {
+            reset({
+                name: userProfileData.name || '',
+                phoneNumber: userProfileData.phone || '',
+                email: userProfileData.email || '',
+                description: userProfileData.description || '',
+                remark: userProfileData.remark || '',
+            });
+        }
+    }, [userProfileData]);
     const pickImageAsync = async (value: any) => {
         let result = await ImagePicker.launchImageLibraryAsync({
             base64: true,
@@ -262,3 +278,4 @@ const styles = StyleSheet.create({
 });
 
 export default SchoolProfile;
+
