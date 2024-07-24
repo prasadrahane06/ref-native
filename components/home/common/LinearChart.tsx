@@ -1,4 +1,6 @@
-import { APP_THEME } from "@/constants/Colors";
+import { AUIThemedText } from "@/components/common/AUIThemedText";
+import { AUIThemedView } from "@/components/common/AUIThemedView";
+import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { RootState } from "@/redux/store";
 import React from "react";
 import { Dimensions, StyleSheet, Text, View } from "react-native";
@@ -37,7 +39,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
         strokeWidth: 4,
         barPercentage: 0.5,
         useShadowColorFromDataset: false,
-        labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+        labelColor: (opacity = 1) => TEXT_THEME[theme].primary,
         propsForDots: {
             r: "6",
             strokeWidth: "2",
@@ -46,43 +48,41 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     };
 
     return (
-        <View style={[styles.mainContainer, { backgroundColor: APP_THEME[theme].background }]}>
-            <View style={[styles.container, { backgroundColor: APP_THEME[theme].background }]}>
-                <Text style={[styles.title, { color: APP_THEME[theme].ternary.first }]}>
-                    {title}
-                </Text>
+        <AUIThemedView
+            style={[styles.mainContainer, { backgroundColor: APP_THEME[theme].background }]}
+        >
+            <AUIThemedView
+                style={[styles.container, { backgroundColor: APP_THEME[theme].background }]}
+            >
+                <AUIThemedText style={[styles.title]}>{title}</AUIThemedText>
                 {isDataEmpty ? (
-                    <Text style={styles.noDataText}>No Data Available</Text>
+                    <AUIThemedText style={styles.noDataText}>No Data Available</AUIThemedText>
                 ) : (
                     <>
-                        <View style={styles.legendContainer}>
-                            <View style={styles.legendItem}>
-                                <View
+                        <AUIThemedView style={styles.legendContainer}>
+                            <AUIThemedView style={styles.legendItem}>
+                                <AUIThemedView
                                     style={[
                                         styles.legendColorBox,
                                         { backgroundColor: "rgba(144, 238, 144, 1)" }, // Faint green
                                     ]}
                                 />
-                                <Text
-                                    style={[styles.legendText, { color: APP_THEME[theme].ternary.first }]}
-                                >
+                                <AUIThemedText style={[styles.legendText]}>
                                     Pending Payments
-                                </Text>
-                            </View>
-                            <View style={styles.legendItem}>
-                                <View
+                                </AUIThemedText>
+                            </AUIThemedView>
+                            <AUIThemedView style={styles.legendItem}>
+                                <AUIThemedView
                                     style={[
                                         styles.legendColorBox,
                                         { backgroundColor: "rgba(0, 100, 0, 1)" }, // Dark green
                                     ]}
                                 />
-                                <Text
-                                    style={[styles.legendText, { color: APP_THEME[theme].ternary.first }]}
-                                >
+                                <AUIThemedText style={[styles.legendText]}>
                                     Done Payments
-                                </Text>
-                            </View>
-                        </View>
+                                </AUIThemedText>
+                            </AUIThemedView>
+                        </AUIThemedView>
                         <LineChart
                             data={{
                                 labels: labels,
@@ -110,8 +110,8 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
                         />
                     </>
                 )}
-            </View>
-        </View>
+            </AUIThemedView>
+        </AUIThemedView>
     );
 };
 

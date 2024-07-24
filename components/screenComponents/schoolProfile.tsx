@@ -1,14 +1,7 @@
-
-import { APP_THEME } from "@/constants/Colors";
+import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
-import {
-    Feather,
-    FontAwesome6,
-    Fontisto,
-    Ionicons,
-    MaterialIcons
-} from "@expo/vector-icons";
+import { Feather, FontAwesome6, Fontisto, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
 import { router, useNavigation } from "expo-router";
 import React from "react";
@@ -40,7 +33,14 @@ const array = [
     },
 ];
 function schoolProfile() {
-    const userProfileData = useLangTransformSelector((state: RootState) => state.api.userProfileData);
+    // const userProfileData = useLangTransformSelector(
+    //     (state: RootState) => state.api.userProfileData
+    // );
+
+    const MySchoolDetails = useLangTransformSelector(
+        (state: RootState) => state.api.MySchoolDetails
+    );
+
     const theme = useSelector((state: RootState) => state.global.theme);
     const navigation = useNavigation();
 
@@ -71,15 +71,17 @@ function schoolProfile() {
                 <View style={styles.avatarContainer}>
                     <AUIImage
                         path={
-                            Asset.fromModule(
-                                require("@/assets/images/user.png")
-                                // "https://linguest-assets-dev.s3.ap-south-1.amazonaws.com/1718884990288-6296.jpeg"
-                            ).uri
+                            // Asset.fromModule(
+                            //     require("@/assets/images/user.png")
+                            //     // "https://linguest-assets-dev.s3.ap-south-1.amazonaws.com/1718884990288-6296.jpeg"
+                            // ).uri
+
+                            MySchoolDetails?.logo
                         }
                         style={styles.avatar}
                     />
-                    <AUIThemedText style={styles.name}>{userProfileData?.name}</AUIThemedText>
-                    <AUIThemedText style={styles.email}>{userProfileData?.email}</AUIThemedText>
+                    <AUIThemedText style={styles.name}>{MySchoolDetails?.name}</AUIThemedText>
+                    <AUIThemedText style={styles.email}>{MySchoolDetails?.email}</AUIThemedText>
                 </View>
             </AUIThemedView>
 
@@ -94,7 +96,11 @@ function schoolProfile() {
                             {item.icon}
                             <AUIThemedText>{item.label}</AUIThemedText>
                         </View>
-                        <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
+                        <MaterialIcons
+                            name="keyboard-arrow-right"
+                            size={24}
+                            color={TEXT_THEME[theme].primary}
+                        />
                     </TouchableOpacity>
                 ))}
 

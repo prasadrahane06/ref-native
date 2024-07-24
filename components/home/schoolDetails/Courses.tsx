@@ -19,9 +19,10 @@ export default function CoursesTab({ schoolCourses }: { schoolCourses: any }) {
                     setSearchPhrase={setSearchPhrase}
                     clicked={clicked}
                     setClicked={setClicked}
+                    containerStyle={{ width: "100%" }}
                 />
 
-                <AUIFilter />
+                {/* <AUIFilter /> */}
             </AUIThemedView>
 
             {courses && (
