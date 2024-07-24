@@ -256,7 +256,7 @@ export default function CourseDetails() {
                         <Ionicons
                             name={isCourseFavorited(id) ? "heart" : "heart-outline"}
                             size={24}
-                            color={APP_THEME[theme].secondary.first}
+                            color={isCourseFavorited(id) ? "red" : APP_THEME[theme].secondary.first}
                         />
                     </AUIThemedView>
                 </TouchableOpacity>

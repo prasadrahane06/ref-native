@@ -14,15 +14,21 @@ import "react-native-gesture-handler";
 import React, { useEffect, useState } from "react";
 import { FlatList, ScrollView, StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
+// import { post as botPost } from "@/app/services/botAxiosClient";
 import useAxios from "@/app/services/axiosClient";
 import { ApiSuccessToast } from "@/components/common/AUIToast";
 
-import { ChatBot,useAxiosClient } from "at-chatbot-native";
+import { useAxiosClient as useBotAxios } from "at-chatbot-native";
+import { useTranslation } from "react-i18next";
+// import { post as botPost } from "@/app/services/botAxiosClient";
+// import ChatBot from "@/components/chatbot/ChatBot";
 
 export default function HomeScreen() {
     const { requestFn } = useApiRequest();
     const { patch } = useAxios();
-    const { botPost } = useAxiosClient();
+    const { botPost } = useBotAxios();
+    const { t } = useTranslation();
+
     const user = useLangTransformSelector((state: RootState) => state.global.user);
     const school = useLangTransformSelector((state: RootState) => state.api.individualSchool || {});
     const theme = useSelector((state: RootState) => state.global.theme);
@@ -97,8 +103,6 @@ export default function HomeScreen() {
     return (
         <AUIThemedView>
             <ScrollView>
-                <ChatBot consumerId={user?.client} config={config} user={user} />
-
                 <AUIThemedView style={styles.section}>
                     <SectionTitle>{MySchoolDetails?.name || "School Name"}</SectionTitle>
                     <AUIThemedView style={{ alignItems: "center", marginTop: 15 }}>
@@ -112,7 +116,7 @@ export default function HomeScreen() {
                                         titleStyle={{ fontSize: 21 }}
                                         subtitleStyle={{
                                             fontSize: 14,
-                                            color: APP_THEME[theme].gray,
+                                            color: "#777",
                                         }}
                                         title={formatNumberWithComma(item.title)}
                                         subtitle={item.subtitle}
@@ -124,7 +128,7 @@ export default function HomeScreen() {
                     </AUIThemedView>
 
                     <ChartComponent
-                        title="Earnings"
+                        title={t(GLOBAL_TEXT.my_earnings)}
                         labels={MySchoolDetails?.graphData?.labels || []}
                         pendingData={MySchoolDetails?.graphData?.pendingData || []}
                         doneData={MySchoolDetails?.graphData?.doneData || []}

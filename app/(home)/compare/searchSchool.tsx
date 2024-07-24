@@ -7,6 +7,7 @@ import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector
 import { setResponse, setSelectedSchool2 } from "@/redux/apiSlice";
 import { RootState } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";
+import { RouteProp, useRoute } from "@react-navigation/native";
 import { Asset } from "expo-asset";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -19,11 +20,20 @@ interface School {
     address: string;
 }
 
+type RootStackParamList = {
+    TabThreeScreen: undefined;
+    SearchSchool: { compareSlot: "compareSchool1" | "compareSchool2" };
+};
+
+type SearchSchoolRouteProp = RouteProp<RootStackParamList, "SearchSchool">;
+
 const setSelectedSchool1 = (school: School) =>
     setResponse({ storeName: "compareSchool1", data: school });
 
 const SearchSchool: React.FC = () => {
     const dispatch = useDispatch();
+    const route = useRoute<SearchSchoolRouteProp>();
+    const { compareSlot } = route.params;
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [recentSearches, setRecentSearches] = useState<School[]>([
         {
@@ -61,9 +71,9 @@ const SearchSchool: React.FC = () => {
 
     const handleSelectSchool = (school: School) => {
         setSearchQuery(school.name);
-        if (!compareSchool1) {
+        if (compareSlot === "compareSchool1") {
             dispatch(setSelectedSchool1(school));
-        } else if (!compareSchool2) {
+        } else if (compareSlot === "compareSchool2") {
             dispatch(setSelectedSchool2(school));
         }
         router.push("(home)/compare/compareSchools");
@@ -107,7 +117,12 @@ const SearchSchool: React.FC = () => {
             <AUIThemedView style={styles.container}>
                 <AUIThemedText style={styles.searchschoolText}>Search school</AUIThemedText>
                 <AUIThemedView style={styles.searchContainer}>
-                    <Ionicons name="search" size={26} color="#5BD894" style={styles.searchIcon} />
+                    <Ionicons
+                        name="search"
+                        size={26}
+                        color={APP_THEME.light.primary.first}
+                        style={styles.searchIcon}
+                    />
                     <AUIInputField
                         placeholder="Which school are you looking?"
                         value={searchQuery}
@@ -143,7 +158,7 @@ const SearchSchool: React.FC = () => {
                         name="heart-outline"
                         style={styles.favoriteIcon}
                         size={24}
-                        color="#9DA1AC"
+                        color={APP_THEME.light.lightGray}
                     />
                     <AUIThemedText style={styles.favoriteText}>
                         Choose from your favorite...
@@ -186,7 +201,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
-        // backgroundColor: "#ffffff",
     },
     searchschoolText: {
         fontWeight: "500",
@@ -196,24 +210,19 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         borderWidth: 1,
-        borderColor: "#9DA1AC",
+        borderColor: APP_THEME.light.lightGray,
         borderRadius: 8,
         paddingHorizontal: 8,
-        // backgroundColor: "#F5F5F5",
     },
-    searchIcon: {
-        // marginRight: 8,
-    },
+    searchIcon: {},
     searchInput: {
         flex: 1,
     },
     inputField: {
         height: 40,
         borderWidth: 0,
-        // backgroundColor: "#F5F5F5",
     },
     dropdown: {
-        // backgroundColor: "#fff",
         borderWidth: 1,
         borderColor: "#ccc",
         borderRadius: 4,
@@ -225,7 +234,6 @@ const styles = StyleSheet.create({
         maxHeight: 220,
     },
     dropdown1: {
-        // backgroundColor: "#fff",
         borderWidth: 1,
         borderColor: "#ccc",
         borderRadius: 4,
@@ -245,30 +253,26 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         marginVertical: 16,
-        // backgroundColor: APP_THEME.background,
     },
     line: {
         flex: 1,
         height: 1,
-        backgroundColor: "#5BD894",
+        backgroundColor: APP_THEME.light.primary.first,
     },
     orText: {
         marginHorizontal: 8,
-        // color: "#0A152F",
     },
     favoriteContainer: {
         flexDirection: "row",
         alignItems: "center",
         borderWidth: 1,
-        borderColor: "#9DA1AC",
+        borderColor: APP_THEME.light.lightGray,
         borderRadius: 8,
         padding: 8,
-        // backgroundColor: "#F5F5F5",
     },
     favoriteText: {
         flex: 1,
         paddingLeft: 8,
-        // color: "grey",
     },
     favoriteIcon: {
         marginRight: 5,
@@ -281,10 +285,8 @@ const styles = StyleSheet.create({
     },
     recentItem: {
         flexDirection: "row",
-        // alignItems: "center",
         marginVertical: 8,
         marginTop: 15,
-        // backgroundColor: APP_THEME.background,
     },
     schoolImage: {
         width: 25,
@@ -293,13 +295,10 @@ const styles = StyleSheet.create({
     },
     recentItemText: {
         marginLeft: 8,
-        // backgroundColor: APP_THEME.background,
     },
     recentItemName: {
         fontSize: 16,
         fontWeight: "bold",
     },
-    recentItemAddress: {
-        // color: "#000000",
-    },
+    recentItemAddress: {},
 });

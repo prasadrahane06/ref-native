@@ -27,7 +27,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useDispatch, useSelector } from "react-redux";
 
-export default function CityDetails() {
+export default function cityDetails() {
     const effect = useIsomorphicLayoutEffect();
     const { id } = useLocalSearchParams<{ id: any }>();
 
@@ -93,6 +93,7 @@ export default function CityDetails() {
 
     const wordsLimit = 50;
     const truncatedText = aboutText.split(" ").slice(0, wordsLimit).join(" ");
+    const isTruncated = aboutText.split(" ").length > wordsLimit;
 
     const isCountryFavorited = (id: string) => {
         return favorite.courses.some((favCourse: any) => favCourse._id === id);
@@ -101,7 +102,7 @@ export default function CityDetails() {
     const handleFavoriteClick = (id: string, type: string) => {
         if (isCountryFavorited(id)) {
             // Remove from favorites
-            del(API_URL.favorite, { id: id, type: type })
+            del(API_URL.favorite, {  id,  type })
                 .then((res: any) => {
                     dispatch(removeFromFavorite({ id, type: "countries" }));
                     ApiSuccessToast(res.message);
@@ -112,7 +113,7 @@ export default function CityDetails() {
                 });
         } else {
             // Add to favorites
-            post(API_URL.favorite, { id: id, type: type })
+            post(API_URL.favorite, {  id,  type })
                 .then((res: any) => {
                     dispatch(addToFavorite({ countries: [country], courses: [], clients: [] }));
                     ApiSuccessToast(res.message);
@@ -162,7 +163,7 @@ export default function CityDetails() {
                 />
             ),
             headerRight: () => (
-                <TouchableOpacity onPress={() => handleFavoriteClick(country._id, "country")}>
+                <TouchableOpacity onPress={() => handleFavoriteClick(id, "country")}>
                     <AUIThemedView
                         style={{
                             backgroundColor: "rgba(91, 216, 148, 0.3)",
@@ -175,14 +176,14 @@ export default function CityDetails() {
                         <Ionicons
                             name={isCountryFavorited(id) ? "heart" : "heart-outline"}
                             size={24}
-                            color={APP_THEME[theme].secondary.first}
+                            color={isCountryFavorited(id) ? "red" : APP_THEME[theme].secondary.first }
                         />
                     </AUIThemedView>
                 </TouchableOpacity>
             ),
             headerTitle: () => (
                 <Animated.Text style={[headerTitleAnimatedStyle, styles.screenTitle]}>
-                    {isRTL ? country?.name?.en : country?.name?.ar}
+                    {country?.name}
                 </Animated.Text>
             ),
         });
@@ -203,6 +204,7 @@ export default function CityDetails() {
             </AUIThemedView>
         );
     }
+    
 
     return (
         <AUIThemedView>
@@ -227,7 +229,7 @@ export default function CityDetails() {
                         ]}
                     >
                         <AUIThemedText style={styles.name}>
-                            Why study in {isRTL ? country?.name?.en : country?.name?.ar}
+                            Why study in {country?.name}
                         </AUIThemedText>
                         <AUIThemedView
                             style={[
@@ -317,13 +319,15 @@ export default function CityDetails() {
                                 About {isRTL ? country?.name?.en : country?.name?.ar}
                             </AUIThemedText>
                             <AUIThemedText style={styles.aboutDescription}>
-                                {readMore ? truncatedText : aboutText}
-                                <AUIThemedText
-                                    onPress={() => setReadMore(!readMore)}
-                                    style={styles.readMoreText}
-                                >
-                                    {readMore ? "Read Less" : "Read More"}
-                                </AUIThemedText>
+                            {readMore ? aboutText : truncatedText}
+        {isTruncated && (
+            <AUIThemedText
+                onPress={() => setReadMore(!readMore)}
+                style={styles.readMoreText}
+            >
+                {readMore ? "Read Less" : "Read More"}
+            </AUIThemedText>
+        )}
                             </AUIThemedText>
                         </AUIThemedView>
                     </AUIThemedView>
@@ -348,7 +352,9 @@ export default function CityDetails() {
                             { backgroundColor: APP_THEME[theme].background },
                         ]}
                     >
-                        <SectionTitle viewAll="#">{GLOBAL_TEXT.popular_schools}</SectionTitle>
+                        <SectionTitle viewAll="(home)/school/AllSchoolsScreen">
+                            {GLOBAL_TEXT.popular_schools}
+                        </SectionTitle>
                         <SchoolList data={schoolsResponse?.docs} />
                     </AUIThemedView>
                 </AUIThemedView>

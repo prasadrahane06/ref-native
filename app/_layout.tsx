@@ -367,15 +367,6 @@ const InitialLayout = () => {
                 name="(home)/cityDetails/[id]"
                 options={{
                     headerTitle: "",
-                    headerLeft: () => (
-                        <TouchableOpacity onPress={router.back}>
-                            <Ionicons
-                                name="arrow-back"
-                                size={34}
-                                color={TEXT_THEME[theme].primary}
-                            />
-                        </TouchableOpacity>
-                    ),
                 }}
             />
             <Stack.Screen
@@ -407,12 +398,14 @@ const InitialLayout = () => {
                     headerTitle: "School Profile",
                     headerTitleStyle: { color: TEXT_THEME[theme].primary },
                     headerStyle: { backgroundColor: BACKGROUND_THEME[theme].background },
+                    headerBackVisible: false,
                     headerLeft: () => (
                         <TouchableOpacity onPress={router.back}>
                             <Ionicons
                                 name="arrow-back"
-                                size={34}
+                                size={25}
                                 color={TEXT_THEME[theme].primary}
+                                style={{ marginRight: 20 }}
                             />
                         </TouchableOpacity>
                     ),
@@ -439,6 +432,21 @@ const InitialLayout = () => {
                     headerShown: true,
                     title: "",
                     headerTitle: "Student Information",
+                    headerTitleStyle: { color: TEXT_THEME[theme].primary },
+                    headerStyle: {
+                        backgroundColor: BACKGROUND_THEME[theme].background,
+                    },
+                    headerBackVisible: false,
+                    headerLeft: () => (
+                        <TouchableOpacity onPress={router.back}>
+                            <Ionicons
+                                name="arrow-back"
+                                size={25}
+                                color={TEXT_THEME[theme].primary}
+                                style={{ marginRight: 20 }}
+                            />
+                        </TouchableOpacity>
+                    ),
                 }}
             />
             <Stack.Screen

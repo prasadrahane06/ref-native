@@ -1,7 +1,16 @@
-import { APP_THEME } from "@/constants/Colors";
+import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { Entypo, Feather } from "@expo/vector-icons";
 import React from "react";
-import { Keyboard, StyleSheet, TextInput, View, FlatList, TouchableOpacity , Text } from "react-native";
+import {
+    Keyboard,
+    StyleSheet,
+    TextInput,
+    View,
+    FlatList,
+    TouchableOpacity,
+    Text,
+    ViewStyle,
+} from "react-native";
 import { AUIThemedText } from "./AUIThemedText";
 import { AUIThemedView } from "./AUIThemedView";
 import { RootState } from "@/redux/store";
@@ -18,6 +27,8 @@ interface SearchBarProps {
         course?: any[];
         school?: any[];
     };
+    containerStyle?: ViewStyle;
+    iconSize?: number;
 }
 
 const AUISearchBar: React.FC<SearchBarProps> = ({
@@ -26,10 +37,12 @@ const AUISearchBar: React.FC<SearchBarProps> = ({
     setSearchPhrase,
     setClicked,
     results,
+    containerStyle,
+    iconSize,
 }) => {
     const theme = useSelector((state: RootState) => state.global.theme);
 
-    const handleNavigation =  (type : string, item : any) => {
+    const handleNavigation = (type: string, item: any) => {
         switch (type) {
             case "country":
                 router.push({
@@ -47,31 +60,30 @@ const AUISearchBar: React.FC<SearchBarProps> = ({
                 });
                 break;
         }
-        setSearchPhrase(""); 
-        setClicked(false); 
-    }
-
-
+        setSearchPhrase("");
+        setClicked(false);
+    };
 
     const renderResultItem = (type: string, item: any) => (
-        <TouchableOpacity
-            style={styles.resultItem}
-            onPress={() => handleNavigation(type, item)}
-        >
-           
+        <TouchableOpacity style={styles.resultItem} onPress={() => handleNavigation(type, item)}>
             <Text>{type === "course" ? item.courseName : item.name}</Text>
         </TouchableOpacity>
     );
-    
 
     return (
-        <View>
-            <AUIThemedView style={[styles.container, { borderColor: APP_THEME[theme].primary.first }]}>
+        <AUIThemedView style={{ marginRight: 20 }}>
+            <AUIThemedView
+                style={[
+                    styles.container,
+                    containerStyle,
+                    { borderColor: APP_THEME[theme].primary.first },
+                ]}
+            >
                 <AUIThemedView
                     style={clicked ? styles.searchBar__clicked : styles.searchBar__unclicked}
                 >
                     <TextInput
-                        style={styles.input}
+                        style={[styles.input, { color: TEXT_THEME[theme].primary }]}
                         value={searchPhrase}
                         onChangeText={setSearchPhrase}
                         onFocus={() => {
@@ -79,13 +91,17 @@ const AUISearchBar: React.FC<SearchBarProps> = ({
                         }}
                     />
                     {!clicked && (
-                        <Feather name="search" size={25} color={APP_THEME[theme].primary.first} />
+                        <Feather
+                            name="search"
+                            size={iconSize ?? 25}
+                            color={APP_THEME[theme].primary.first}
+                        />
                     )}
                     {clicked && (
                         <Entypo
                             name="cross"
                             size={20}
-                            color="black"
+                            color={TEXT_THEME[theme].primary}
                             style={{ padding: 1 }}
                             onPress={() => {
                                 setSearchPhrase("");
@@ -108,46 +124,44 @@ const AUISearchBar: React.FC<SearchBarProps> = ({
                     </AUIThemedView>
                 )}
             </AUIThemedView>
-            {
-                (results && searchPhrase.length > 0) && (
-                    <View style={styles.resultsContainer}>
-                        {results?.country && (
-                            <View>
-                                <AUIThemedText style={styles.sectionTitle}>Countries</AUIThemedText>
-                                <FlatList
-                                    scrollEnabled={false}
-                                    data={results.country}
-                                    keyExtractor={(item) => item._id}
-                                    renderItem={({ item }) => renderResultItem('country', item)}
-                                />
-                            </View>
-                        )}
-                        {results.course && (
-                            <View>
-                                <AUIThemedText style={styles.sectionTitle}>Courses</AUIThemedText>
-                                <FlatList
-                                    scrollEnabled={false}
-                                    data={results.course}
-                                    keyExtractor={(item) => item._id}
-                                    renderItem={({ item }) => renderResultItem('course', item)}
-                                />
-                            </View>
-                        )}
-                        {results.school && (
-                            <View>
-                                <AUIThemedText style={styles.sectionTitle}>Schools</AUIThemedText>
-                                <FlatList
-                                    scrollEnabled={false}
-                                    data={results.school}
-                                    keyExtractor={(item) => item._id}
-                                    renderItem={({ item }) => renderResultItem('school', item)}
-                                />
-                            </View>
-                        )}
-                    </View>
-                )
-            }
-        </View>
+            {results && searchPhrase.length > 0 && (
+                <AUIThemedView style={styles.resultsContainer}>
+                    {results?.country && (
+                        <AUIThemedView>
+                            <AUIThemedText style={styles.sectionTitle}>Countries</AUIThemedText>
+                            <FlatList
+                                scrollEnabled={false}
+                                data={results.country}
+                                keyExtractor={(item) => item._id}
+                                renderItem={({ item }) => renderResultItem("country", item)}
+                            />
+                        </AUIThemedView>
+                    )}
+                    {results.course && (
+                        <AUIThemedView>
+                            <AUIThemedText style={styles.sectionTitle}>Courses</AUIThemedText>
+                            <FlatList
+                                scrollEnabled={false}
+                                data={results.course}
+                                keyExtractor={(item) => item._id}
+                                renderItem={({ item }) => renderResultItem("course", item)}
+                            />
+                        </AUIThemedView>
+                    )}
+                    {results.school && (
+                        <AUIThemedView>
+                            <AUIThemedText style={styles.sectionTitle}>Schools</AUIThemedText>
+                            <FlatList
+                                scrollEnabled={false}
+                                data={results.school}
+                                keyExtractor={(item) => item._id}
+                                renderItem={({ item }) => renderResultItem("school", item)}
+                            />
+                        </AUIThemedView>
+                    )}
+                </AUIThemedView>
+            )}
+        </AUIThemedView>
     );
 };
 
@@ -195,13 +209,12 @@ const styles = StyleSheet.create({
     },
     resultsContainer: {
         marginTop: 5,
-        backgroundColor: "#fff",
+        // backgroundColor: "#fff",
         borderRadius: 5,
         elevation: 5,
         position: "absolute",
         top: 70,
         width: "85%",
-        zIndex: 1,
         padding: 10,
     },
     resultItem: {

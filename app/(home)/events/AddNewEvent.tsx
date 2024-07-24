@@ -7,137 +7,151 @@ import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { API_URL } from "@/constants/urlProperties";
-import useApiRequest from "@/customHooks/useApiRequest";
-import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
 import { MaterialIcons } from "@expo/vector-icons";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { Image } from "expo-image";
 import * as ImageManipulator from "expo-image-manipulator";
 import * as ImagePicker from "expo-image-picker";
-import React, { useEffect, useState } from "react";
+import { default as React, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Image, StyleSheet, TouchableOpacity } from "react-native";
-import { FlatList } from "react-native-gesture-handler";
+import { Dimensions, Platform, Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import { useSelector } from "react-redux";
 
-interface AddFacilities {
+interface AddEvent {
     visible: boolean;
     onClose: () => void;
-    facility?: Facility;
-    refreshFacilities: () => void;
+    event: event | undefined;
+    refreshEvents: () => void;
 }
-interface Facility {
+interface event {
     _id: string;
-    description: string | { [key: string]: string };
-    image: string;
-    name: string | { [key: string]: string };
-    status: number;
+    eventName: {
+        en: string;
+        ar: string;
+    };
+    description: string;
+    date: string;
+    location: string;
+    eventImage: string;
 }
 
-const AddNewFacilities: React.FC<AddFacilities> = ({
-    visible,
-    onClose,
-    facility,
-    refreshFacilities,
-}) => {
+const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvents }) => {
+    const [image, setImage] = useState<string | null>(null);
     const user = useSelector((state: RootState) => state.global.user);
     const { post, patch, del } = useAxios();
-    const { control, handleSubmit, reset, setValue, getValues } = useForm();
-    const [image, setImage] = useState<string | null>(facility?.image || null);
-    const [initialValues, setInitialValues] = useState<any>({});
+    const { control, handleSubmit, reset, setValue, getValues } = useForm({
+        defaultValues: {
+            eventName: "",
+            description: "",
+            eventDate: "",
+            location: "",
+            eventImage: null,
+        },
+    });
+    const [datePickerVisible, setDatePickerVisible] = useState(false);
+    const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
     const [showConfirmation, setShowConfirmation] = useState(false);
 
     useEffect(() => {
-        if (facility) {
-            const initialFacilityValues = {
-                facilityName: facility.name,
-                description: facility.description,
-                image: facility.image,
-            };
-            setInitialValues(initialFacilityValues);
-            setValue("facilityName", facility.name);
-            setValue("description", facility.description);
-            setImage(facility.image);
+        if (event) {
+            setValue("eventName", event.eventName);
+            setValue("description", event.description);
+            setValue("eventDate", event.date);
+            setValue("location", event.location);
+            setImage(event.eventImage);
+            setSelectedDate(new Date(event.date));
         } else {
-            resetFields();
+            reset({
+                eventName: "",
+                description: "",
+                eventDate: "",
+                location: "",
+                eventImage: null,
+            });
+            setImage(null);
+            setSelectedDate(undefined);
         }
-    }, [facility, setValue]);
-
-    useEffect(() => {
-        if (!facility && visible) {
-            resetFields();
-        }
-    }, [visible]);
-
-    const resetFields = () => {
-        reset({
-            facilityName: "",
-            description: "",
-        });
-        setImage(null);
-    };
+    }, [event, visible, reset, setValue]);
 
     const handleSave = () => {
         const values = getValues();
         const payload = {
             client: user?.client,
-            name: values.facilityName,
+            eventName: values.eventName,
             description: values.description,
-            image: image,
+            date: selectedDate?.toISOString(),
+            location: values.location,
+            eventImage: image,
         };
-        post(API_URL.facility, payload)
+        post(API_URL.event, payload)
             .then((res) => {
-                ApiSuccessToast("New Facility Added Successfully.");
-                refreshFacilities();
+                ApiSuccessToast("New Event added successfully.");
                 reset();
+                onClose();
+                refreshEvents();
             })
             .catch((e) => {
-                ApiErrorToast("Failed to add facility");
                 console.log(e);
             });
     };
 
     const handleEdit = () => {
         const values = getValues();
-        const payload: any = { id: facility?._id };
+        const payload: any = { id: event?._id };
 
-        if (values.facilityName !== initialValues.facilityName) {
-            payload.name = values.facilityName;
-        }
-        if (values.description !== initialValues.description) {
-            payload.description = values.description;
-        }
-        if (image !== initialValues.image) {
-            payload.image = image;
-        }
+        if (values.eventName !== event?.eventName) payload.eventName = values.eventName;
+        if (values.description !== event?.description) payload.description = values.description;
+        if (selectedDate?.toISOString() !== event?.date) payload.date = selectedDate?.toISOString();
+        if (values.location !== event?.location) payload.location = values.location;
+        if (image !== event?.eventImage) payload.eventImage = image;
 
-        patch(API_URL.facility, payload)
+        patch(API_URL.event, payload)
             .then((res) => {
-                ApiSuccessToast("Facility updated successfully.");
-                refreshFacilities();
+                ApiSuccessToast("Event updated successfully.");
                 reset();
+                onClose();
+                refreshEvents();
             })
             .catch((e) => {
-                ApiErrorToast("Failed to update facility");
+                ApiErrorToast("Failed to update Event");
                 console.log(e);
             });
     };
 
     const handleDelete = () => {
-        if (!facility?._id) return;
-        del(`${API_URL.facility}?id=${facility._id}`)
-            .then((res) => {
-                setShowConfirmation(false);
-                ApiSuccessToast(`Facility deleted`);
-                refreshFacilities();
-            })
-            .catch((e) => {
-                ApiErrorToast("Failed to delete facility");
-                console.log(e);
-            });
+        if (event?._id) {
+            del(`${API_URL.event}`, { id: event._id })
+                .then((res) => {
+                    ApiSuccessToast("Event deleted successfully.");
+                    onClose();
+                    setShowConfirmation(false);
+                    refreshEvents();
+                })
+                .catch((e) => {
+                    ApiErrorToast("Failed to delete event.");
+                    console.log(e);
+                });
+        }
     };
 
     const clearFields = () => {
+        reset({
+            eventName: "",
+            description: "",
+            eventDate: "",
+            location: "",
+            eventImage: null,
+        });
         setImage(null);
+        setSelectedDate(undefined);
+    };
+
+    const handleDateChange = (event: any, date?: Date) => {
+        setDatePickerVisible(Platform.OS === "ios");
+        if (date) {
+            setSelectedDate(date);
+        }
     };
 
     const pickImage = async () => {
@@ -189,16 +203,16 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
             <AUIModal
                 visible={visible}
                 onClose={onClose}
-                title={facility ? "Edit Facility" : "Add your Facilities"}
+                title={event ? "Edit Event" : "Add your Events"}
             >
                 <Controller
                     control={control}
-                    name="facilityName"
+                    name="eventName"
                     defaultValue=""
                     render={({ field: { onChange, value } }) => (
                         <AUIInputField
-                            label="Enter Facility name"
-                            placeholder="Facility Name"
+                            label="Enter Event name"
+                            placeholder="Event Name"
                             value={value}
                             onChangeText={onChange}
                             style={styles.input}
@@ -211,8 +225,48 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
                     defaultValue=""
                     render={({ field: { onChange, value } }) => (
                         <AUIInputField
-                            label="Enter Description"
+                            label="Enter Event Description"
                             placeholder="Description"
+                            value={value}
+                            onChangeText={onChange}
+                            style={styles.input}
+                        />
+                    )}
+                />
+                <AUIThemedView>
+                    <Controller
+                        control={control}
+                        name="eventDate"
+                        defaultValue=""
+                        render={({ field: { onChange, value } }) => (
+                            <Pressable onPress={() => setDatePickerVisible(true)}>
+                                <AUIInputField
+                                    label="Event Date"
+                                    placeholder="Select Date"
+                                    value={selectedDate ? selectedDate.toDateString() : ""}
+                                    style={styles.input}
+                                    editable={false}
+                                />
+                            </Pressable>
+                        )}
+                    />
+                    {datePickerVisible && (
+                        <DateTimePicker
+                            value={selectedDate || new Date()}
+                            mode="date"
+                            display="default"
+                            onChange={handleDateChange}
+                        />
+                    )}
+                </AUIThemedView>
+                <Controller
+                    control={control}
+                    name="location"
+                    defaultValue=""
+                    render={({ field: { onChange, value } }) => (
+                        <AUIInputField
+                            label="Enter Event Location"
+                            placeholder="Event Location"
                             value={value}
                             onChangeText={onChange}
                             style={styles.input}
@@ -231,7 +285,7 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
                 </AUIThemedView>
                 {image && <Image source={{ uri: image }} style={styles.image} />}
                 <AUIThemedView style={styles.buttonContainer}>
-                    {facility ? (
+                    {event ? (
                         <AUIThemedView style={styles.buttonMainContainer}>
                             <AUIThemedView style={styles.buttonContainer}>
                                 <AUIButton
@@ -303,117 +357,10 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
         </>
     );
 };
+export default AddNewEvent;
 
-export default function TabFourScreen() {
-    const school = useLangTransformSelector((state: RootState) => state.api.myFacilitys || {});
-    const { requestFn } = useApiRequest();
-    const isRTL = useSelector((state: RootState) => state.global.isRTL || {});
-    const [isAddFacilityVisible, setAddFacilityVisible] = useState(false);
-    const [selectedFacility, setSelectedFacility] = useState<Facility | undefined>(undefined);
-    const [facilities, setFacilities] = useState<Facility[]>([]);
-
-    const refreshFacilities = () => {
-        requestFn(API_URL.facility, "myFacilitys", { client: true });
-        setAddFacilityVisible(false);
-    };
-
-    useEffect(() => {
-        refreshFacilities();
-    }, []);
-
-    useEffect(() => {
-        if (school?.docs?.length > 0 || !isAddFacilityVisible) {
-            setFacilities(school?.docs);
-        }
-    }, [school?.docs?.length, isAddFacilityVisible]);
-
-    const handleAddNewFacility = () => {
-        setSelectedFacility(undefined);
-        setAddFacilityVisible(true);
-    };
-
-    const handleEditFacility = (facility: Facility) => {
-        setSelectedFacility(facility);
-        setAddFacilityVisible(true);
-    };
-
-    const renderItem = ({ item }: { item: Facility }) => (
-        <TouchableOpacity onPress={() => handleEditFacility(item)}>
-            <AUIThemedView style={styles.facility}>
-                <Image source={{ uri: item.image }} style={styles.image} />
-                <AUIThemedText style={styles.name}>
-                    {typeof item.name === "string"
-                        ? item.name
-                        : isRTL
-                        ? item.name.ar
-                        : item.name.en}
-                </AUIThemedText>
-            </AUIThemedView>
-        </TouchableOpacity>
-    );
-
-    return (
-        <AUIThemedView style={styles.root}>
-            <AUIThemedText style={styles.title}>Facilities</AUIThemedText>
-            <AUIButton
-                title="Add New Facilities"
-                selected
-                style={styles.button}
-                onPress={handleAddNewFacility}
-            />
-            <FlatList
-                data={facilities}
-                renderItem={renderItem}
-                keyExtractor={(item) => item._id}
-                numColumns={3}
-                columnWrapperStyle={styles.row}
-                contentContainerStyle={styles.container}
-            />
-            <AddNewFacilities
-                visible={isAddFacilityVisible}
-                onClose={() => setAddFacilityVisible(false)}
-                refreshFacilities={refreshFacilities}
-                facility={selectedFacility}
-            />
-        </AUIThemedView>
-    );
-}
-
+const windowHeight = Dimensions.get("window").height;
 const styles = StyleSheet.create({
-    root: {
-        flex: 1,
-        padding: 20,
-    },
-    title: {
-        fontSize: 17,
-        letterSpacing: 2,
-    },
-    button: {
-        marginTop: 20,
-    },
-    container: {
-        marginTop: 20,
-    },
-    row: {
-        flex: 1,
-        justifyContent: "space-between",
-        marginBottom: 20,
-    },
-    facility: {
-        flex: 1,
-        alignItems: "center",
-        marginHorizontal: 5,
-        height: 100,
-        width: 80,
-    },
-
-    name: {
-        fontSize: 16,
-    },
-    noData: {
-        fontSize: 16,
-        color: TEXT_THEME.light.danger,
-    },
     input: { marginBottom: 10 },
     buttonMainContainer: { gap: 5 },
     buttonContainer: {
@@ -445,5 +392,21 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
         marginTop: 10,
+    },
+    facility: {
+        flex: 1,
+        alignItems: "center",
+        marginHorizontal: 5,
+    },
+    name: {
+        fontSize: 16,
+    },
+    row: {
+        flex: 1,
+        justifyContent: "space-between",
+        marginBottom: 20,
+    },
+    container: {
+        marginTop: 20,
     },
 });

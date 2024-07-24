@@ -25,31 +25,40 @@ export default function TabTwoScreen() {
     console.log("schoolPurchaseCourse", JSON.stringify(schoolPurchaseCourse));
 
     useEffect(() => {
-        requestFn(API_URL.purchaseCourse, "schoolPurchaseCourse", { client: true, page: `${page}` });
+        requestFn(API_URL.purchaseCourse, "schoolPurchaseCourse", {
+            client: true,
+            page: `${page}`,
+        });
     }, [page]);
 
     useEffect(() => {
         if (debouncedSearchPhrase) {
-            requestFn(API_URL.schoolStudentSearch, "schoolPurchaseCourse", { client: true, student: debouncedSearchPhrase });
+            requestFn(API_URL.schoolStudentSearch, "schoolPurchaseCourse", {
+                client: true,
+                student: debouncedSearchPhrase,
+            });
         } else {
-            requestFn(API_URL.purchaseCourse, "schoolPurchaseCourse", { client: true, page: '1' });
-            setPage(1); 
+            requestFn(API_URL.purchaseCourse, "schoolPurchaseCourse", { client: true, page: "1" });
+            setPage(1);
         }
     }, [debouncedSearchPhrase]);
 
     return (
         <AUIThemedView style={styles.root}>
-  <View style={styles.centeredContainer}>
+            <AUIThemedView style={{ paddingBottom: 20 }}>
                 <AUISearchBar
                     clicked={clicked}
                     searchPhrase={searchPhrase}
                     setSearchPhrase={setSearchPhrase}
                     setClicked={setClicked}
+                    containerStyle={{ width: "100%", marginVertical: 0 }}
                 />
-            </View>
+            </AUIThemedView>
             <ScrollView>
                 <AUIThemedView>
-                    <AUIThemedText style={styles.title}>Students Admitted through App</AUIThemedText>
+                    <AUIThemedText style={styles.title}>
+                        Students Admitted through App
+                    </AUIThemedText>
                     <AUIThemedView>
                         {schoolPurchaseCourse.docs && Array.isArray(schoolPurchaseCourse.docs) ? (
                             schoolPurchaseCourse.docs.map((item: any) => (
@@ -58,7 +67,7 @@ export default function TabTwoScreen() {
                                     style={styles.layout}
                                     onPress={() =>
                                         router.push({
-                                            pathname: `(home)/studentInfo/${item.user._id}`,
+                                            pathname: `(home)/studentInfo/${item._id}`,
                                             params: { student: JSON.stringify(item) },
                                         })
                                     }
@@ -69,7 +78,11 @@ export default function TabTwoScreen() {
                                     <AUIThemedText style={styles.id}>
                                         ID: {item.user?._id || "No ID available"}
                                     </AUIThemedText>
-                                    <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
+                                    <MaterialIcons
+                                        name="keyboard-arrow-right"
+                                        size={24}
+                                        color="black"
+                                    />
                                 </TouchableOpacity>
                             ))
                         ) : (
@@ -84,7 +97,9 @@ export default function TabTwoScreen() {
                         }}
                     >
                         <AUIThemedText>
-                            {page === schoolPurchaseCourse.totalPages ? "You are Cought Up" : "Load More"}
+                            {page === schoolPurchaseCourse.totalPages
+                                ? "You are Cought Up"
+                                : "Load More"}
                         </AUIThemedText>
                     </TouchableOpacity>
                 </AUIThemedView>
@@ -96,7 +111,7 @@ export default function TabTwoScreen() {
 const styles = StyleSheet.create({
     root: {
         flex: 1,
-        padding: 20,
+        paddingHorizontal: 20,
     },
     title: {
         fontSize: 17,
@@ -127,10 +142,9 @@ const styles = StyleSheet.create({
         color: TEXT_THEME.light.danger,
     },
     centeredContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
         marginVertical: 10,
     },
-    
 });

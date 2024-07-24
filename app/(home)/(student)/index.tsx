@@ -21,7 +21,7 @@ import { setselectedLanguage } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Dimensions, ScrollView  , StyleSheet} from "react-native";
+import { Dimensions, ScrollView, StyleSheet } from "react-native";
 import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
 import { useDispatch } from "react-redux";
 
@@ -47,7 +47,7 @@ export default function HomeScreen() {
     let lastChanceResponse = response?.lastDateToApply;
 
     const fetchCourses = useCallback(() => {
-        dispatch(setselectedLanguage(selectedLanguage))
+        dispatch(setselectedLanguage(selectedLanguage));
         requestFn(API_URL.course, "selectedLanguagecourse", { similar: selectedLanguage });
     }, [selectedLanguage]);
 
@@ -61,7 +61,7 @@ export default function HomeScreen() {
         requestFn(API_URL.favorite, "favorite", { user: true });
         requestFn(API_URL.cart, "cart");
         requestFn(API_URL.user, "userProfileData", { id: _id });
-        requestFn(API_URL.course, "lastDateToApply" , { lastChance : true });
+        requestFn(API_URL.course, "lastDateToApply", { lastChance: true });
     }, []);
 
     const favorite = useLangTransformSelector((state: RootState) => state.api.favorite);
@@ -93,39 +93,38 @@ export default function HomeScreen() {
     //     });
     // };
 
-    //search state 
-    const [searchPhrase, setSearchPhrase] = useState("");
-    const [clicked, setClicked] = useState(false);
+    //search state
+    // const [searchPhrase, setSearchPhrase] = useState("");
+    // const [clicked, setClicked] = useState(false);
 
-    const searchResults = useLangTransformSelector((state: RootState) => state.api.searchResults || {});
+    // const searchResults = useLangTransformSelector(
+    //     (state: RootState) => state.api.searchResults || {}
+    // );
 
-    console.log("searchResults", JSON.stringify(searchResults));
+    // console.log("searchResults", JSON.stringify(searchResults));
 
-    
-    const debouncedSearchPhrase = useDebounce(searchPhrase, 500);
+    // // const debouncedSearchPhrase = useDebounce(searchPhrase, 500);
 
-    useEffect(() => {
-        if (debouncedSearchPhrase) {
-            requestFn(API_URL.search , "searchResults" , { all : true , search : debouncedSearchPhrase });
-        }
-
-    }, [debouncedSearchPhrase]);
+    // useEffect(() => {
+    //     if (searchPhrase) {
+    //         requestFn(API_URL.search, "searchResults", {
+    //             all: true,
+    //             search: searchPhrase,
+    //         });
+    //     }
+    // }, [searchPhrase]);
 
     return (
         <ScrollView>
-            <AUIThemedView
-            style={styles.centeredContainer}
-            >
-
-            <AUISearchBar
-            clicked={clicked}
-            searchPhrase={searchPhrase}
-            setSearchPhrase={setSearchPhrase}
-            setClicked={setClicked}
-            results={searchResults}
-            
-            />
-            </AUIThemedView>
+            {/* <AUIThemedView style={styles.centeredContainer}>
+                <AUISearchBar
+                    clicked={clicked}
+                    searchPhrase={searchPhrase}
+                    setSearchPhrase={setSearchPhrase}
+                    setClicked={setClicked}
+                    results={searchResults}
+                />
+            </AUIThemedView> */}
             <AUIThemedView>
                 <Carousel
                     ref={ref}
@@ -204,12 +203,11 @@ const styles = StyleSheet.create({
     },
     dot: { backgroundColor: "#fff", borderRadius: 100, width: 20, height: 3 },
     centeredContainer: {
-        // flexDirection: 'row',
-        // justifyContent: 'center',
-        // alignItems: 'center',
-        // width: '100%',
+        // flexDirection: "row",
+        // justifyContent: "center",
+        // alignItems: "center",
+        // width: "100%",
         // paddingHorizontal: 20,
         // marginVertical: 10,
     },
 });
-

@@ -1,10 +1,12 @@
 import Course from "@/components/Course";
 import Destination from "@/components/Destination";
 import School from "@/components/School";
+import AUIImage from "@/components/common/AUIImage";
+import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import CarouselSlide from "@/components/home/common/CarouselSlide";
 import SectionTitle from "@/components/home/common/SectionTitle";
-import { APP_THEME } from "@/constants/Colors";
+import { APP_THEME, BACKGROUND_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
 import { carouselData } from "@/constants/dummy data/carouselData";
 import { API_URL } from "@/constants/urlProperties";
@@ -13,6 +15,7 @@ import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector
 import { addToFavorite } from "@/redux/favoriteSlice";
 import { RootState } from "@/redux/store";
 import { useFocusEffect } from "@react-navigation/native";
+import { Asset } from "expo-asset";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Dimensions, FlatList, ListRenderItem, ScrollView, StyleSheet } from "react-native";
@@ -78,6 +81,24 @@ const TabTwoScreen: React.FC = () => {
     }, [favorite, dispatch]);
 
     const fav = useSelector((state: RootState) => state.favorite.items);
+
+    if (fav.clients.length === 0 && fav.courses.length === 0 && fav.countries.length === 0) {
+        return (
+            <AUIThemedView
+                style={[styles.container, { backgroundColor: BACKGROUND_THEME[theme].background }]}
+            >
+                <AUIThemedText style={styles.title}>
+                    {t(GLOBAL_TEXT.your_favourite_is_empty)}
+                </AUIThemedText>
+
+                <AUIThemedView style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+                    <AUIImage
+                        path={Asset.fromModule(require("@/assets/images/common/fav_image.png")).uri}
+                    />
+                </AUIThemedView>
+            </AUIThemedView>
+        );
+    }
 
     const handleViewAllCoursesClick = () => {
         setShowAllCourses(true);

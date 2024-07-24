@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import AUIOTPInput from "../common/AUIOtpInput";
 import { AUIThemedText } from "../common/AUIThemedText";
 import { AUIThemedView } from "../common/AUIThemedView";
+import { router } from "expo-router";
 
 const OTPScreen = ({
     length,
@@ -48,7 +49,7 @@ const OTPScreen = ({
                     { color: theme === "light" ? "#007aff" : "#66CCFF" },
                     disabled && { opacity: 0.5 },
                 ]}
-                onPress={disabled ? () => null : onBackToInput}
+                onPress={router.back}
             >
                 {`Change ${changeLabel || ""}`}
             </AUIThemedText>

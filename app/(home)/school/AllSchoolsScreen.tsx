@@ -34,7 +34,7 @@ const AllSchoolsScreen: React.FC<SchoolListProps> = ({ data }) => {
             end={{ x: 0, y: 1 }}
             style={styles.container}
         >
-            <ScrollView contentContainerStyle={styles.wrapper}>
+            <ScrollView style={styles.wrapper}>
                 <AllSchoolsList
                     data={schoolsResponse?.docs?.map((school: any) => ({
                         id: school._id,

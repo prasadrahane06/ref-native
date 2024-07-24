@@ -1,16 +1,17 @@
-import useAxios from "@/app/services/axiosClient";
 import AUIAccordion from "@/components/common/AUIAccordion";
 import AUIImage from "@/components/common/AUIImage";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { API_URL } from "@/constants/urlProperties";
+import { APP_THEME } from "@/constants/Colors";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
+import { setSelectedSchool1, setSelectedSchool2 } from "@/redux/apiSlice";
 import { RootState } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
 import { router } from "expo-router";
-import { useEffect, useState } from "react";
-import { Platform, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import { useDispatch } from "react-redux";
+
 const CompareSchools: React.FC = () => {
     // const [date1, setDate1] = useState<Date>(new Date());
     // const [show1, setShow1] = useState<boolean>(false);
@@ -18,32 +19,16 @@ const CompareSchools: React.FC = () => {
     // const [show2, setShow2] = useState<boolean>(false);
     const compareSchool1 = useLangTransformSelector((state: RootState) => state.api.compareSchool1);
     const compareSchool2 = useLangTransformSelector((state: RootState) => state.api.compareSchool2);
-    const [school1, setSchool1] = useState<any>();
-    const [school2, setSchool2] = useState<any>();
-    const { post } = useAxios();
-    useEffect(() => {
-        // Check if both compareSchool1 and compareSchool2 have IDs before making the API call
-        if (compareSchool1 && compareSchool1.id && compareSchool2 && compareSchool2.id) {
-            post(API_URL.schoolComparison, {
-                schoolId1: compareSchool1.id,
-                schoolId2: compareSchool2.id,
-            })
-                .then((response) => {
-                    // Handle response
-                    setSchool1(response.docs[0]);
-                    setSchool2(response.docs[1]);
-                    // Update state or perform other actions based on response
-                })
-                .catch((error) => {
-                    // Handle error
-                    console.error("Comparison API error:", error);
-                    // Handle error state or show error message
-                });
-        } else {
-            console.log("Missing school ID(s), cannot compare.");
-            // Handle case where one or both school IDs are missing
-        }
-    }, [compareSchool1, compareSchool2]); // useEffect will trigger whenever compareSchool1 or compareSchool2 changes
+    const dispatch = useDispatch();
+
+    const handleResetcompareSchool1 = () => {
+        dispatch(setSelectedSchool1(null));
+    };
+
+    const handleResetcompareSchool2 = () => {
+        dispatch(setSelectedSchool2(null));
+    };
+
     // const onChange1 = (event: any, selectedDate: Date | undefined) => {
     //     const currentDate = selectedDate || date1;
     //     setShow1(Platform.OS === "ios");
@@ -59,62 +44,111 @@ const CompareSchools: React.FC = () => {
             <ScrollView>
                 <AUIThemedView style={styles.container}>
                     <AUIThemedView style={styles.cardContainer}>
-                        <TouchableOpacity style={styles.customCard}>
-                            <View style={styles.imageContainer}>
-                                <AUIImage
-                                    style={styles.image}
-                                    path={
-                                        school1?.banner ||
-                                        Asset.fromModule(
-                                            require("@/assets/images/compareScreen/compareSchoolsPage/rectangle_155.png")
-                                        ).uri
-                                    }
-                                    resizeMode="cover"
-                                />
-                            </View>
-                            <View style={styles.textContainer}>
-                                <AUIThemedText style={styles.cardTitle}>
-                                    {school1?.name}
-                                </AUIThemedText>
-                            </View>
-                            {/* <View style={styles.customShape}>
-              <Ionicons name="close" size={20} color="#5BD894" />
-            </View> */}
-                        </TouchableOpacity>
-                        {compareSchool2 ? (
-                            <TouchableOpacity style={styles.customCard}>
-                                <View style={styles.imageContainer}>
-                                    <AUIImage
-                                        style={styles.image}
-                                        path={
-                                            school2?.banner ||
-                                            Asset.fromModule(
-                                                require("@/assets/images/compareScreen/compareSchoolsPage/rectangle_155.png")
-                                            ).uri
-                                        }
-                                        resizeMode="cover"
+                        {compareSchool1 ? (
+                            <>
+                                <AUIThemedView style={styles.customCard}>
+                                    <AUIThemedView style={styles.imageContainer}>
+                                        <AUIImage
+                                            style={styles.image}
+                                            path={compareSchool1?.banner}
+                                            resizeMode="cover"
+                                        />
+                                    </AUIThemedView>
+                                    <AUIThemedView style={styles.textContainer}>
+                                        <AUIThemedText style={styles.cardTitle} numberOfLines={1}>
+                                            {compareSchool1?.name}
+                                        </AUIThemedText>
+                                        <AUIThemedText
+                                            style={styles.cardSubtitle}
+                                            numberOfLines={3}
+                                        >
+                                            {compareSchool1?.location?.about}
+                                        </AUIThemedText>
+                                    </AUIThemedView>
+                                </AUIThemedView>
+                                <TouchableOpacity
+                                    style={styles.customShape}
+                                    onPress={handleResetcompareSchool1}
+                                >
+                                    <Ionicons
+                                        name="close"
+                                        size={20}
+                                        color={APP_THEME.light.primary.first}
                                     />
-                                </View>
-                                <View style={styles.textContainer}>
-                                    <AUIThemedText style={styles.cardTitle}>
-                                        {school2?.name}
-                                    </AUIThemedText>
-                                </View>
-                            </TouchableOpacity>
+                                </TouchableOpacity>
+                            </>
                         ) : (
                             <TouchableOpacity
                                 style={styles.card}
                                 onPress={() =>
                                     router.push({
                                         pathname: "(home)/compare/searchSchool",
+                                        params: { compareSlot: "compareSchool1" },
                                     })
                                 }
                             >
-                                <Ionicons name="add-circle-outline" size={50} color="#5BD894" />
+                                <Ionicons
+                                    name="add-circle-outline"
+                                    size={50}
+                                    color={APP_THEME.light.primary.first}
+                                />
+                                <AUIThemedText style={styles.cardText}>Add School</AUIThemedText>
+                            </TouchableOpacity>
+                        )}
+
+                        {compareSchool2 ? (
+                            <>
+                                <AUIThemedView style={styles.customCard}>
+                                    <AUIThemedView style={styles.imageContainer}>
+                                        <AUIImage
+                                            style={styles.image}
+                                            path={compareSchool2?.banner}
+                                            resizeMode="cover"
+                                        />
+                                    </AUIThemedView>
+                                    <AUIThemedView style={styles.textContainer}>
+                                        <AUIThemedText style={styles.cardTitle} numberOfLines={1}>
+                                            {compareSchool2?.name}
+                                        </AUIThemedText>
+                                        <AUIThemedText
+                                            style={styles.cardSubtitle}
+                                            numberOfLines={3}
+                                        >
+                                            {compareSchool2?.location?.about}
+                                        </AUIThemedText>
+                                    </AUIThemedView>
+                                </AUIThemedView>
+                                <TouchableOpacity
+                                    style={styles.customShape1}
+                                    onPress={handleResetcompareSchool2}
+                                >
+                                    <Ionicons
+                                        name="close"
+                                        size={20}
+                                        color={APP_THEME.light.primary.first}
+                                    />
+                                </TouchableOpacity>
+                            </>
+                        ) : (
+                            <TouchableOpacity
+                                style={styles.card}
+                                onPress={() =>
+                                    router.push({
+                                        pathname: "(home)/compare/searchSchool",
+                                        params: { compareSlot: "compareSchool2" },
+                                    })
+                                }
+                            >
+                                <Ionicons
+                                    name="add-circle-outline"
+                                    size={50}
+                                    color={APP_THEME.light.primary.first}
+                                />
                                 <AUIThemedText style={styles.cardText}>Add School</AUIThemedText>
                             </TouchableOpacity>
                         )}
                     </AUIThemedView>
+
                     <AUIThemedView style={styles.accordionSection}>
                         <AUIAccordion
                             title="School Infomtion"
@@ -130,10 +164,10 @@ const CompareSchools: React.FC = () => {
                                     <AUIThemedText style={styles.value}>information</AUIThemedText>
                                     <AUIThemedView style={styles.rowContainer}>
                                         <AUIThemedText style={styles.label}>
-                                            {school1?.description || "--"}
+                                            {compareSchool1?.description || "--"}
                                         </AUIThemedText>
                                         <AUIThemedText style={styles.label2}>
-                                            {school2?.description || "--"}
+                                            {compareSchool2?.description || "--"}
                                         </AUIThemedText>
                                     </AUIThemedView>
                                 </AUIThemedView>
@@ -143,12 +177,12 @@ const CompareSchools: React.FC = () => {
                                     </AUIThemedText>
                                     <AUIThemedView style={styles.rowContainer}>
                                         <AUIThemedText style={styles.label}>
-                                            {school1?.mailSupport === true
+                                            {compareSchool1?.mailSupport === true
                                                 ? "true"
                                                 : "false" || "--"}
                                         </AUIThemedText>
                                         <AUIThemedText style={styles.label2}>
-                                            {school2?.mailSupport === true
+                                            {compareSchool2?.mailSupport === true
                                                 ? "true"
                                                 : "false" || "--"}
                                         </AUIThemedText>
@@ -158,12 +192,12 @@ const CompareSchools: React.FC = () => {
                                     <AUIThemedText style={styles.value}>callSupport</AUIThemedText>
                                     <AUIThemedView style={styles.rowContainer}>
                                         <AUIThemedText style={styles.label}>
-                                            {school1?.callSupport === true
+                                            {compareSchool1?.callSupport === true
                                                 ? "true"
                                                 : "false" || "--"}
                                         </AUIThemedText>
                                         <AUIThemedText style={styles.label2}>
-                                            {school2?.callSupport === true
+                                            {compareSchool2?.callSupport === true
                                                 ? "true"
                                                 : "false" || "--"}
                                         </AUIThemedText>
@@ -173,6 +207,7 @@ const CompareSchools: React.FC = () => {
                         </AUIAccordion>
                         <AUIAccordion
                             title="Academics"
+                            style={styles.AUIAccordion}
                             icon={
                                 Asset.fromModule(
                                     require("@/assets/images/compareScreen/compareSchoolsPage/group_2.png")
@@ -186,10 +221,10 @@ const CompareSchools: React.FC = () => {
                                     </AUIThemedText>
                                     <AUIThemedView style={styles.rowContainer}>
                                         <AUIThemedText style={styles.label}>
-                                            {school1?.languages?.join(", ") || "--"}
+                                            {compareSchool1?.location?.language || "--"}
                                         </AUIThemedText>
                                         <AUIThemedText style={styles.label2}>
-                                            {school2?.languages?.join(", ") || "--"}
+                                            {compareSchool2?.location?.language || "--"}
                                         </AUIThemedText>
                                     </AUIThemedView>
                                 </AUIThemedView>
@@ -211,6 +246,7 @@ const CompareSchools: React.FC = () => {
                         </AUIAccordion>
                         <AUIAccordion
                             title="Location"
+                            style={styles.AUIAccordion}
                             icon={
                                 Asset.fromModule(
                                     require("@/assets/images/compareScreen/compareSchoolsPage/layer_2.png")
@@ -221,16 +257,17 @@ const CompareSchools: React.FC = () => {
                                 <AUIThemedText style={styles.value}>School Location</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
                                     <AUIThemedText style={styles.label}>
-                                        {school1?.locationDetails[0]?.name?.en || "--"}
+                                        {compareSchool1?.location?.capital || "--"}
                                     </AUIThemedText>
                                     <AUIThemedText style={styles.label2}>
-                                        {school2?.locationDetails[0]?.name?.en || "--"}
+                                        {compareSchool2?.location?.capital || "--"}
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
                         </AUIAccordion>
                         <AUIAccordion
                             title="Fee Structure"
+                            style={styles.AUIAccordion}
                             icon={
                                 Asset.fromModule(
                                     require("@/assets/images/compareScreen/compareSchoolsPage/fi_6926264.png")
@@ -242,10 +279,10 @@ const CompareSchools: React.FC = () => {
                                     <AUIThemedText style={styles.value}>Minimum Fee</AUIThemedText>
                                     <AUIThemedView style={styles.rowContainer}>
                                         <AUIThemedText style={styles.label}>
-                                            {school1?.minPrice || "--"}
+                                            {compareSchool1?.minPrice || "--"}
                                         </AUIThemedText>
                                         <AUIThemedText style={styles.label2}>
-                                            {school2?.minPrice || "--"}
+                                            {compareSchool2?.minPrice || "--"}
                                         </AUIThemedText>
                                     </AUIThemedView>
                                 </AUIThemedView>
@@ -254,10 +291,10 @@ const CompareSchools: React.FC = () => {
                                     <AUIThemedText style={styles.value}>Maximum Fee</AUIThemedText>
                                     <AUIThemedView style={styles.rowContainer}>
                                         <AUIThemedText style={styles.label}>
-                                            {school1?.maxPrice || "--"}
+                                            {compareSchool1?.maxPrice || "--"}
                                         </AUIThemedText>
                                         <AUIThemedText style={styles.label2}>
-                                            {school2?.maxPrice || "--"}
+                                            {compareSchool2?.maxPrice || "--"}
                                         </AUIThemedText>
                                     </AUIThemedView>
                                 </AUIThemedView>
@@ -265,6 +302,7 @@ const CompareSchools: React.FC = () => {
                         </AUIAccordion>
                         <AUIAccordion
                             title="Campus and Facility"
+                            style={styles.AUIAccordion}
                             icon={
                                 Asset.fromModule(
                                     require("@/assets/images/compareScreen/compareSchoolsPage/fi_8716577.png")
@@ -289,10 +327,10 @@ const CompareSchools: React.FC = () => {
                                     </AUIThemedText>
                                     <AUIThemedView style={styles.rowContainer}>
                                         <AUIThemedText style={styles.label}>
-                                            {school1?.facilitiesDetails.length || "--"}
+                                            {compareSchool1?.facilitiesDetails || "--"}
                                         </AUIThemedText>
                                         <AUIThemedText style={styles.label2}>
-                                            {school2?.facilitiesDetails.length || "--"}
+                                            {compareSchool2?.facilitiesDetails || "--"}
                                         </AUIThemedText>
                                     </AUIThemedView>
                                 </AUIThemedView>
@@ -313,10 +351,10 @@ const CompareSchools: React.FC = () => {
                                     </AUIThemedText>
                                     <AUIThemedView style={styles.rowContainer}>
                                         <AUIThemedText style={styles.label}>
-                                            {school1?.totalNumberOfSeats || "--"}
+                                            {compareSchool1?.NumberOfSeats || "--"}
                                         </AUIThemedText>
                                         <AUIThemedText style={styles.label2}>
-                                            {school2?.totalNumberOfSeats || "--"}
+                                            {compareSchool2?.NumberOfSeats || "--"}
                                         </AUIThemedText>
                                     </AUIThemedView>
                                 </AUIThemedView>
@@ -434,13 +472,10 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start",
         alignItems: "center",
         padding: 15,
-        // backgroundColor: APP_THEME.background,
-        // height: windowHeight,
     },
 
     outerContainer: {
         flex: 1,
-        // backgroundColor: APP_THEME.background,
     },
 
     cardContainer: {
@@ -448,7 +483,6 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         width: "100%",
         marginBottom: 20,
-        // backgroundColor: APP_THEME.background,
     },
     customCard: {
         width: "48%",
@@ -456,10 +490,10 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start",
         alignItems: "center",
         borderWidth: 1,
-        borderColor: "#ddd",
+        borderColor: APP_THEME.light.lightGray,
         borderRadius: 15,
         overflow: "hidden",
-        // backgroundColor: "#fff",
+        position: "relative",
     },
     imageContainer: {
         width: "100%",
@@ -473,7 +507,6 @@ const styles = StyleSheet.create({
     },
     textContainer: {
         width: "100%",
-        // padding: 4,
         paddingVertical: 5,
         alignItems: "center",
     },
@@ -491,13 +524,28 @@ const styles = StyleSheet.create({
     },
     customShape: {
         position: "absolute",
-        bottom: -10,
+        bottom: -14,
+        left: "18%",
         zIndex: 2,
         width: 30,
         height: 30,
-        // backgroundColor: "#fff",
+        fontWeight: "700",
         borderWidth: 1,
-        borderColor: "#5BD894",
+        borderColor: APP_THEME.light.primary.first,
+        borderRadius: 15,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    customShape1: {
+        position: "absolute",
+        bottom: -14,
+        right: "20%",
+        zIndex: 2,
+        width: 30,
+        height: 30,
+        fontWeight: "700",
+        borderWidth: 1,
+        borderColor: APP_THEME.light.primary.first,
         borderRadius: 15,
         justifyContent: "center",
         alignItems: "center",
@@ -508,7 +556,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         borderWidth: 1,
-        borderColor: "#ddd",
+        borderColor: APP_THEME.light.lightGray,
         borderRadius: 10,
         padding: 10,
     },
@@ -520,7 +568,7 @@ const styles = StyleSheet.create({
     accordionSection: {
         width: "100%",
     },
-    AUIAccordion: { borderColor: "#5BD894" },
+    AUIAccordion: { borderColor: APP_THEME.light.primary.first },
     rowContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
@@ -563,23 +611,21 @@ const styles = StyleSheet.create({
         flex: 1,
         textAlign: "center",
         fontWeight: "500",
-        color: "#5BD894",
+        color: APP_THEME.light.primary.first,
         fontSize: 14,
-        // marginRight: 50,
         paddingVertical: 3,
     },
     feeLabelLabelText2: {
         flex: 1,
         textAlign: "center",
         fontWeight: "500",
-        color: "#5BD894",
+        color: APP_THEME.light.primary.first,
         fontSize: 14,
-        // marginRight: 50,
         paddingVertical: 3,
     },
     value: {
         textAlign: "center",
-        color: "#9DA1AC",
+        color: APP_THEME.light.lightGray,
         fontWeight: "400",
         fontSize: 14,
     },
@@ -589,7 +635,6 @@ const styles = StyleSheet.create({
     },
     descriptionText: {
         fontSize: 14,
-        // color: "#000",
         marginBottom: 20,
         textAlign: "center",
     },
@@ -599,19 +644,19 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 20,
         borderWidth: 1,
-        borderColor: "#5BD894",
+        borderColor: APP_THEME.light.primary.first,
         borderRadius: 8,
     },
     locationButtonText: {
         marginLeft: 10,
         fontSize: 16,
-        color: "#5BD894",
+        color: APP_THEME.light.primary.first,
     },
     admissionRow1: {
         flexDirection: "column",
         justifyContent: "space-between",
         borderBottomWidth: 2,
-        borderBottomColor: "#ddd",
+        borderBottomColor: APP_THEME.light.lightGray,
         padding: 5,
         paddingHorizontal: 10,
     },
@@ -619,7 +664,7 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         justifyContent: "space-between",
         borderBottomWidth: 2,
-        borderBottomColor: "#ddd",
+        borderBottomColor: APP_THEME.light.lightGray,
         padding: 5,
     },
     row2: {
@@ -628,7 +673,7 @@ const styles = StyleSheet.create({
     },
     acadamicSessionText: {
         textAlign: "center",
-        color: "#9DA1AC",
+        color: APP_THEME.light.lightGray,
         fontWeight: "400",
         fontSize: 14,
     },
@@ -641,19 +686,19 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-between",
         borderWidth: 1,
-        borderColor: "#9DA1AC",
+        borderColor: APP_THEME.light.lightGray,
         borderRadius: 3,
         paddingHorizontal: 7,
         paddingVertical: 1,
         marginTop: 10,
     },
     dateText: {
-        color: "#9DA1AC",
+        color: APP_THEME.light.lightGray,
         fontWeight: "400",
         fontSize: 14,
         paddingHorizontal: 6,
     },
-    calenderIcon: { fontSize: 14, color: "#5BD894" },
+    calenderIcon: { fontSize: 14, color: APP_THEME.light.primary.first },
     feeRow2: {
         flexDirection: "column",
         justifyContent: "space-between",
