@@ -16,6 +16,7 @@ import { useRouter } from "expo-router";
 import { useEffect } from "react";
 import { Platform, Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import { firebase } from "../firebase";
 
 const InitialPage = () => {
     const router = useRouter();

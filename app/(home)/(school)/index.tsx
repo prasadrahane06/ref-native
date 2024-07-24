@@ -14,16 +14,15 @@ import "react-native-gesture-handler";
 import React, { useEffect, useState } from "react";
 import { FlatList, ScrollView, StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
-import { post as botPost } from "@/app/services/botAxiosClient";
 import useAxios from "@/app/services/axiosClient";
 import { ApiSuccessToast } from "@/components/common/AUIToast";
 
-import { ChatBot } from "at-chatbot-native";
-// import ChatBot from "@/components/chatbot/ChatBot";
+import { ChatBot,useAxiosClient } from "at-chatbot-native";
 
 export default function HomeScreen() {
     const { requestFn } = useApiRequest();
     const { patch } = useAxios();
+    const { botPost } = useAxiosClient();
     const user = useLangTransformSelector((state: RootState) => state.global.user);
     const school = useLangTransformSelector((state: RootState) => state.api.individualSchool || {});
     const theme = useSelector((state: RootState) => state.global.theme);
