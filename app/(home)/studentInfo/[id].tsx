@@ -35,15 +35,26 @@ const StudentInfoScreen = () => {
                     </AUIThemedView> */}
 
                     <AUIThemedView style={styles.contactContainer}>
-                        <AUIThemedText style={styles.contactText}>{studentData?.user?.name}</AUIThemedText>
                         <AUIThemedText style={styles.contactText}>
-                            Student ID: <AUIThemedText style={styles.value}>{studentData?.user?._id}</AUIThemedText>
+                            {studentData?.user?.name}
                         </AUIThemedText>
                         <AUIThemedText style={styles.contactText}>
-                            Contact No: <AUIThemedText style={styles.value}>{studentData?.user?.phone}</AUIThemedText>
+                            Student ID:
+                            <AUIThemedText style={styles.value}>
+                                {studentData?.user?._id}
+                            </AUIThemedText>
                         </AUIThemedText>
                         <AUIThemedText style={styles.contactText}>
-                            Mail ID: <AUIThemedText style={styles.value}>{studentData?.user?.email}</AUIThemedText>
+                            Contact No:
+                            <AUIThemedText style={styles.value}>
+                                {studentData?.user?.phone}
+                            </AUIThemedText>
+                        </AUIThemedText>
+                        <AUIThemedText style={styles.contactText}>
+                            Mail ID:
+                            <AUIThemedText style={styles.value}>
+                                {studentData?.user?.email}
+                            </AUIThemedText>
                         </AUIThemedText>
                     </AUIThemedView>
                 </AUIThemedView>
@@ -52,60 +63,95 @@ const StudentInfoScreen = () => {
                     <AUIThemedText>Personal Details</AUIThemedText>
                     <AUIThemedView style={styles.personalDetailContainer}>
                         <AUIThemedText style={styles.detailText}>
-                            Date of Birth: <AUIThemedText style={styles.value}>{new Date(studentData?.user?.dob).toLocaleDateString()}</AUIThemedText>
+                            Date of Birth:
+                            <AUIThemedText style={styles.value}>
+                                {new Date(studentData?.user?.dob).toLocaleDateString()}
+                            </AUIThemedText>
                         </AUIThemedText>
                         <AUIThemedText style={styles.detailText}>
-                            Academic Session: <AUIThemedText style={styles.value}>{studentData?.user?.academicSession}</AUIThemedText>
+                            Academic Session:
+                            <AUIThemedText style={styles.value}>
+                                {studentData?.user?.academicSession}
+                            </AUIThemedText>
                         </AUIThemedText>
                         <AUIThemedText style={styles.detailText}>
-                            Qualification: <AUIThemedText style={styles.value}>{studentData?.user?.qualification}</AUIThemedText>
-                        </AUIThemedText>
-                    </AUIThemedView>
-                </AUIThemedView>
-
-                <AUIThemedView style={styles.section}>
-                    <AUIThemedText >Preferences</AUIThemedText>
-                    <AUIThemedView style={styles.personalDetailContainer}>
-                        <AUIThemedText style={styles.detailText}>
-                            Language: <AUIThemedText style={styles.value}>{studentData?.user?.language}</AUIThemedText>
-                        </AUIThemedText>
-                        <AUIThemedText style={styles.detailText}>
-                            State: <AUIThemedText style={styles.value}>{studentData?.user?.state}</AUIThemedText>
-                        </AUIThemedText>
-                        <AUIThemedText style={styles.detailText}>
-                            Country: <AUIThemedText style={styles.value}>{studentData?.user?.country}</AUIThemedText>
-                        </AUIThemedText>
-                        <AUIThemedText style={styles.detailText}>
-                            City: <AUIThemedText style={styles.value}>{studentData?.user?.city}</AUIThemedText>
-                        </AUIThemedText>
-                    </AUIThemedView>
-                </AUIThemedView>
-                <AUIThemedView style={styles.section}>
-                    <AUIThemedText >Course Information </AUIThemedText>
-                    <AUIThemedView style={styles.personalDetailContainer}>
-                        <AUIThemedText style={styles.detailText}>
-                            course Name : <AUIThemedText style={styles.value}>{studentData?.course?.courseName}</AUIThemedText>
-                        </AUIThemedText>
-                        <AUIThemedText style={styles.detailText}>
-                            Language : <AUIThemedText style={styles.value}>{studentData?.course?.language}</AUIThemedText>
-                        </AUIThemedText>
-                        <AUIThemedText style={styles.detailText}>
-                            StartDate: <AUIThemedText style={styles.value}>{studentData?.course?.startDate}</AUIThemedText>
-                        </AUIThemedText>
-                        <AUIThemedText style={styles.detailText}>
-                            EndDate: <AUIThemedText style={styles.value}>{studentData?.course?.endDate}</AUIThemedText>
+                            Qualification:
+                            <AUIThemedText style={styles.value}>
+                                {studentData?.user?.qualification}
+                            </AUIThemedText>
                         </AUIThemedText>
                     </AUIThemedView>
                 </AUIThemedView>
 
                 <AUIThemedView style={styles.section}>
-                    <AUIThemedText >Payment Details</AUIThemedText>
+                    <AUIThemedText>Preferences</AUIThemedText>
                     <AUIThemedView style={styles.personalDetailContainer}>
                         <AUIThemedText style={styles.detailText}>
-                            Payment Method: <AUIThemedText style={styles.value}>Hyperpay</AUIThemedText>
+                            Language:
+                            <AUIThemedText style={styles.value}>
+                                {studentData?.user?.language}
+                            </AUIThemedText>
                         </AUIThemedText>
                         <AUIThemedText style={styles.detailText}>
-                            Transition ID: <AUIThemedText style={styles.value}>Not Available</AUIThemedText>
+                            State:
+                            <AUIThemedText style={styles.value}>
+                                {studentData?.user?.state}
+                            </AUIThemedText>
+                        </AUIThemedText>
+                        <AUIThemedText style={styles.detailText}>
+                            Country:
+                            <AUIThemedText style={styles.value}>
+                                {studentData?.user?.country}
+                            </AUIThemedText>
+                        </AUIThemedText>
+                        <AUIThemedText style={styles.detailText}>
+                            City:
+                            <AUIThemedText style={styles.value}>
+                                {studentData?.user?.city}
+                            </AUIThemedText>
+                        </AUIThemedText>
+                    </AUIThemedView>
+                </AUIThemedView>
+                <AUIThemedView style={styles.section}>
+                    <AUIThemedText>Course Information </AUIThemedText>
+                    <AUIThemedView style={styles.personalDetailContainer}>
+                        <AUIThemedText style={styles.detailText}>
+                            course Name :
+                            <AUIThemedText style={styles.value}>
+                                {studentData?.course?.courseName}
+                            </AUIThemedText>
+                        </AUIThemedText>
+                        <AUIThemedText style={styles.detailText}>
+                            Language :
+                            <AUIThemedText style={styles.value}>
+                                {studentData?.course?.language}
+                            </AUIThemedText>
+                        </AUIThemedText>
+                        <AUIThemedText style={styles.detailText}>
+                            StartDate:
+                            <AUIThemedText style={styles.value}>
+                                {studentData?.course?.startDate}
+                            </AUIThemedText>
+                        </AUIThemedText>
+                        <AUIThemedText style={styles.detailText}>
+                            EndDate:
+                            <AUIThemedText style={styles.value}>
+                                {studentData?.course?.endDate}
+                            </AUIThemedText>
+                        </AUIThemedText>
+                    </AUIThemedView>
+                </AUIThemedView>
+
+                <AUIThemedView style={styles.section}>
+                    <AUIThemedText>Payment Details</AUIThemedText>
+                    <AUIThemedView style={styles.personalDetailContainer}>
+                        <AUIThemedText style={styles.detailText}>
+                            Payment Method:
+                            <AUIThemedText style={styles.value}>Hyperpay</AUIThemedText>
+                        </AUIThemedText>
+                        <AUIThemedText style={styles.detailText}>
+                            Transition ID:
+                            <AUIThemedText style={styles.value}>Not Available</AUIThemedText>
                         </AUIThemedText>
                     </AUIThemedView>
                     <AUIThemedView style={styles.paymentContainer}>
@@ -118,16 +164,17 @@ const StudentInfoScreen = () => {
                         <AUIThemedView style={styles.paymentColumn}>
                             <AUIThemedText style={styles.paymentLabel}>Paid</AUIThemedText>
                             <AUIThemedText style={styles.paymentValue}>
-                                {studentData?.plan?.type === "buy" ? studentData?.plan?.price : studentData?.plan?.bookYourSeat}
+                                {studentData?.plan?.type === "buy"
+                                    ? studentData?.plan?.price
+                                    : studentData?.plan?.bookYourSeat}
                             </AUIThemedText>
                         </AUIThemedView>
                         <AUIThemedView style={styles.paymentColumn}>
                             <AUIThemedText style={styles.paymentLabel}>Pending</AUIThemedText>
                             <AUIThemedText style={styles.paymentValue}>
-                                {
-                                    studentData && studentData?.plan?.type === "buy" ?  studentData?.plan?.bookYourSeat :  studentData?.plan?.price - studentData?.plan?.bookYourSeat
-
-                                }
+                                {studentData && studentData?.plan?.type === "buy"
+                                    ? studentData?.plan?.bookYourSeat
+                                    : studentData?.plan?.price - studentData?.plan?.bookYourSeat}
                             </AUIThemedText>
                         </AUIThemedView>
                         <AUIThemedView style={styles.paymentColumn}>
@@ -149,13 +196,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 10,
-        backgroundColor: APP_THEME.light.background,
     },
     userImage: {
         width: 100,
         height: 100,
         borderRadius: 50,
-        backgroundColor: APP_THEME.light.primary.third,
     },
     contactContainerHeader: {
         flexDirection: "row",
@@ -168,7 +213,7 @@ const styles = StyleSheet.create({
     header: {
         fontSize: 28,
         fontWeight: "bold",
-        marginTop : 10,
+        marginTop: 10,
         marginBottom: 15,
         textAlign: "left",
         color: APP_THEME.light.ternary.first,
@@ -231,6 +276,7 @@ const styles = StyleSheet.create({
     value: {
         fontWeight: "bold",
         backgroundColor: APP_THEME.light.secondary.first,
+        color: APP_THEME.light.ternary.first,
     },
 });
 

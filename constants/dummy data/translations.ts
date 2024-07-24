@@ -52,6 +52,7 @@ export const en = {
     compare_description:
         "Select and compare schools on various parameters to choose the best for you",
     events: "Events",
+    my_earnings: "Earnings",
 };
 
 export const ar = {
@@ -103,6 +104,7 @@ export const ar = {
     account: "حساب",
     your_cart_is_empty: "عربة التسوق فارغة",
     your_favourite_is_empty: "عربة المفضلة فارغة",
+    my_earnings: "الارباح",
     compare_schools: "قارن المدارس",
     add_school: "أضف مدرسة",
     compare_description: "حدد المدارس وقارن بينها وفقًا لمعايير مختلفة لاختيار الأفضل بالنسبة لك",

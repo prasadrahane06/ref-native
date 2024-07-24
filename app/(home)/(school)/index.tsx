@@ -19,6 +19,7 @@ import useAxios from "@/app/services/axiosClient";
 import { ApiSuccessToast } from "@/components/common/AUIToast";
 
 import { useAxiosClient as useBotAxios } from "at-chatbot-native";
+import { useTranslation } from "react-i18next";
 // import { post as botPost } from "@/app/services/botAxiosClient";
 // import ChatBot from "@/components/chatbot/ChatBot";
 
@@ -26,6 +27,7 @@ export default function HomeScreen() {
     const { requestFn } = useApiRequest();
     const { patch } = useAxios();
     const { botPost } = useBotAxios();
+    const { t } = useTranslation();
 
     const user = useLangTransformSelector((state: RootState) => state.global.user);
     const school = useLangTransformSelector((state: RootState) => state.api.individualSchool || {});
@@ -35,37 +37,36 @@ export default function HomeScreen() {
     );
     const myCourse = useLangTransformSelector((state: RootState) => state.api.myCourse);
 
-
     useEffect(() => {
         requestFn(API_URL.schoolAnalytics, "MySchoolDetails", { client: true });
         requestFn(API_URL.course, "myCourse", { client: true });
     }, []);
 
-    // useEffect(() => {
-    //     // create bot
-    //     botPost("/bot", {
-    //         name: user.name,
-    //         consumer: user.client,
-    //         config: {
-    //             color: "green",
-    //             language: "English",
-    //         },
-    //     })
-    //         .then((res) => {
-    //             patch(API_URL.school, {
-    //                 botId: res.data._id,
-    //             })
-    //                 .then((res) => {
-    //                     ApiSuccessToast(res.message);
-    //                 })
-    //                 .catch((e) => {
-    //                     console.log("Error in update school =>", e);
-    //                 });
-    //         })
-    //         .catch((e) => {
-    //             console.log("Error in create bot =>", e);
-    //         });
-    // }, []);
+    useEffect(() => {
+        // create bot
+        botPost("/bot", {
+            name: user.name,
+            consumer: user.client,
+            config: {
+                color: "green",
+                language: "English",
+            },
+        })
+            .then((res) => {
+                patch(API_URL.school, {
+                    botId: res.data._id,
+                })
+                    .then((res) => {
+                        ApiSuccessToast(res.message);
+                    })
+                    .catch((e) => {
+                        console.log("Error in update school =>", e);
+                    });
+            })
+            .catch((e) => {
+                console.log("Error in create bot =>", e);
+            });
+    }, []);
 
     // chatbot code below
     const [config, setConfig] = useState({});
@@ -115,7 +116,7 @@ export default function HomeScreen() {
                                         titleStyle={{ fontSize: 21 }}
                                         subtitleStyle={{
                                             fontSize: 14,
-                                            color: APP_THEME[theme].gray,
+                                            color: "#777",
                                         }}
                                         title={formatNumberWithComma(item.title)}
                                         subtitle={item.subtitle}
@@ -127,7 +128,7 @@ export default function HomeScreen() {
                     </AUIThemedView>
 
                     <ChartComponent
-                        title="Earnings"
+                        title={t(GLOBAL_TEXT.my_earnings)}
                         labels={MySchoolDetails?.graphData?.labels || []}
                         pendingData={MySchoolDetails?.graphData?.pendingData || []}
                         doneData={MySchoolDetails?.graphData?.doneData || []}
