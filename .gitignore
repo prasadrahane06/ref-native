@@ -10,6 +10,8 @@ dist/
 .expo
 .expo/*
 .vscode
+android/
+ios/
 # Compiled Java class files
 *.class
 
