@@ -1,13 +1,7 @@
-import { APP_THEME } from "@/constants/Colors";
+import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
-import {
-    Feather,
-    FontAwesome6,
-    Fontisto,
-    Ionicons,
-    MaterialIcons
-} from "@expo/vector-icons";
+import { Feather, FontAwesome6, Fontisto, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
 import { router, useNavigation } from "expo-router";
 import React from "react";
@@ -16,29 +10,34 @@ import { useSelector } from "react-redux";
 import AUIImage from "../common/AUIImage";
 import { AUIThemedText } from "../common/AUIThemedText";
 import { AUIThemedView } from "../common/AUIThemedView";
+import { useTranslation } from "react-i18next";
 
 const array = [
     {
         id: 1,
         icon: <FontAwesome6 name="user-circle" size={24} color={APP_THEME.light.primary.first} />,
-        label: "Profile",
+        label: "profile",
         pathname: "/profile",
     },
     {
         id: 2,
         icon: <Feather name="help-circle" size={24} color={APP_THEME.light.primary.first} />,
-        label: "Help",
+        label: "help",
         pathname: "/help",
     },
     {
         id: 3,
         icon: <Fontisto name="wallet" size={24} color={APP_THEME.light.primary.first} />,
-        label: "Transaction history",
+        label: "transaction_history",
         pathname: "/transactions",
     },
 ];
 function Profile() {
-    const userProfileData = useLangTransformSelector((state: RootState) => state.api.userProfileData);
+    const { t } = useTranslation();
+
+    const userProfileData = useLangTransformSelector(
+        (state: RootState) => state.api.userProfileData
+    );
     const theme = useSelector((state: RootState) => state.global.theme);
     const navigation = useNavigation();
 
@@ -60,7 +59,7 @@ function Profile() {
                         }}
                     >
                         <Ionicons
-                            name="arrow-back-circle-outline"
+                            name="arrow-back"
                             size={30}
                             color={APP_THEME[theme].ternary.first}
                         />
@@ -69,10 +68,8 @@ function Profile() {
                 <View style={styles.avatarContainer}>
                     <AUIImage
                         path={
-                            Asset.fromModule(
-                                require("@/assets/images/user.png")
-                                // "https://linguest-assets-dev.s3.ap-south-1.amazonaws.com/1718884990288-6296.jpeg"
-                            ).uri
+                            userProfileData?.photo ||
+                            Asset.fromModule(require("@/assets/images/user.png")).uri
                         }
                         style={styles.avatar}
                     />
@@ -90,40 +87,16 @@ function Profile() {
                     >
                         <View style={styles.labelContainer}>
                             {item.icon}
-                            <AUIThemedText>{item.label}</AUIThemedText>
+
+                            <AUIThemedText>{t(item.label)}</AUIThemedText>
                         </View>
-                        <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
+                        <MaterialIcons
+                            name="keyboard-arrow-right"
+                            size={24}
+                            color={TEXT_THEME[theme].primary}
+                        />
                     </TouchableOpacity>
                 ))}
-
-                {/* Delete Account */}
-                {/* <TouchableOpacity
-                    style={styles.deleteLayout}
-                    onPress={() => {
-                        Alert.alert(
-                            "Delete Account",
-                            "Are you sure you want to delete your account? This action cannot be undone.",
-                            [
-                                { text: "Cancel" },
-                                {
-                                    text: "Confirm",
-                                    onPress: () => {
-                                        ApiSuccessToast("Account deleted successfully");
-                                        router.push({ pathname: "/login" });
-                                    },
-                                    style: "destructive",
-                                },
-                            ],
-                            { cancelable: false }
-                        );
-                    }}
-                >
-                    <View style={styles.deleteContainer}>
-                        <MaterialIcons name="delete" size={24} color="white" />
-                        <AUIThemedText style={{ color: "white" }}>Delete Account</AUIThemedText>
-                    </View>
-                    <MaterialIcons name="keyboard-arrow-right" size={24} color="white" />
-                </TouchableOpacity> */}
             </AUIThemedView>
         </AUIThemedView>
     );

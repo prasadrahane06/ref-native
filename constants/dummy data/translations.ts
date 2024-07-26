@@ -53,6 +53,12 @@ export const en = {
         "Select and compare schools on various parameters to choose the best for you",
     events: "Events",
     my_earnings: "Earnings",
+    help: "Help",
+    transaction_history: "Transaction History",
+    purchased_courses: "Purchased Courses",
+    seat_booking: "Seat Booking",
+    completed_courses: "Completed Courses",
+    privacy_policy: "Privacy Policy",
 };
 
 export const ar = {
@@ -109,4 +115,10 @@ export const ar = {
     add_school: "أضف مدرسة",
     compare_description: "حدد المدارس وقارن بينها وفقًا لمعايير مختلفة لاختيار الأفضل بالنسبة لك",
     events: "الفعاليات",
+    help: "مساعدة",
+    transaction_history: "سجل المعاملات",
+    purchased_courses: "الدورات المشتراة",
+    seat_booking: "حجز مقعد",
+    completed_courses: "الدورات المكتملة",
+    privacy_policy: "سياسة الخصوصية",
 };

@@ -274,8 +274,9 @@ const InitialLayout = () => {
                         <TouchableOpacity onPress={router.back}>
                             <Ionicons
                                 name="arrow-back"
-                                size={34}
+                                size={27}
                                 color={TEXT_THEME[theme].primary}
+                                style={{ marginRight: 20 }}
                             />
                         </TouchableOpacity>
                     ),
@@ -293,8 +294,9 @@ const InitialLayout = () => {
                         <TouchableOpacity onPress={router.back}>
                             <Ionicons
                                 name="arrow-back"
-                                size={34}
+                                size={27}
                                 color={TEXT_THEME[theme].primary}
+                                style={{ marginRight: 20 }}
                             />
                         </TouchableOpacity>
                     ),
@@ -312,8 +314,9 @@ const InitialLayout = () => {
                         <TouchableOpacity onPress={router.back}>
                             <Ionicons
                                 name="arrow-back"
-                                size={34}
-                                color={TEXT_THEME[theme].primary}
+                                size={27}
+                                color="#fff"
+                                style={{ marginRight: 20 }}
                             />
                         </TouchableOpacity>
                     ),
@@ -332,8 +335,9 @@ const InitialLayout = () => {
                         <TouchableOpacity onPress={router.back}>
                             <Ionicons
                                 name="arrow-back"
-                                size={34}
-                                color={TEXT_THEME[theme].primary}
+                                size={27}
+                                color="#fff"
+                                style={{ marginRight: 20 }}
                             />
                         </TouchableOpacity>
                     ),
@@ -385,8 +389,9 @@ const InitialLayout = () => {
                         <TouchableOpacity onPress={router.back}>
                             <Ionicons
                                 name="arrow-back"
-                                size={34}
+                                size={27}
                                 color={TEXT_THEME[theme].primary}
+                                style={{ marginRight: 20 }}
                             />
                         </TouchableOpacity>
                     ),

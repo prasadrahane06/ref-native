@@ -8,23 +8,32 @@ import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { countriesData } from "@/constants/dummy data/countriesData";
 import { GLOBAL_TEXT } from "@/constants/Properties";
+import { storeUserData } from "@/constants/RNAsyncStore";
 import { API_URL } from "@/constants/urlProperties";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
+import { setResponse } from "@/redux/apiSlice";
+import { setLoader, setUser } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import { Asset } from "expo-asset";
+import * as ImagePicker from "expo-image-picker";
+import { router, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Platform, Pressable, ScrollView, StyleSheet, TextInput } from "react-native";
+import {
+    Platform,
+    Pressable,
+    ScrollView,
+    StyleSheet,
+    TextInput,
+    TouchableOpacity,
+} from "react-native";
 import "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import useAxios from "./services/axiosClient";
-import { router, useLocalSearchParams, useRouter } from "expo-router";
-import { setLoader } from "@/redux/globalSlice";
-import { t } from "i18next";
 
 const genderData = [
     {
@@ -133,6 +142,10 @@ const Profile: React.FC = () => {
         (userProfileData?.dob && new Date(userProfileData?.dob)) || ""
     );
     const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
+    const [profileImage, setProfileImage] = useState<string>(
+        userProfileData?.photo || Asset.fromModule(require("@/assets/images/user.png")).uri
+    );
+    const [profileBase64, setProfileBase64] = useState<any>(null);
 
     const { patch } = useAxios();
     const dispatch = useDispatch();
@@ -146,7 +159,7 @@ const Profile: React.FC = () => {
             email: userProfileData?.email,
             language: userProfileData?.language,
             dateOfBirth: dateOfBirth && dateOfBirth?.toISOString(),
-            gender: "",
+            gender: userProfileData?.gender || "",
             qualification: userProfileData?.qualification,
             academicSession: userProfileData?.academicSession,
             country: userProfileData?.country,
@@ -171,10 +184,24 @@ const Profile: React.FC = () => {
         return `${day}/${month}/${year}`;
     };
 
+    const pickImageAsync = async (value: any) => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            base64: true,
+            allowsEditing: true,
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            setProfileBase64(result.assets[0].base64);
+            setProfileImage(result.assets[0].uri);
+        } else {
+            alert("You did not select any image.");
+        }
+    };
     const onSave = (data: any) => {
         dispatch(setLoader(true));
 
-        const payload = {
+        const payload: any = {
             id: userProfileData?._id,
             name: data.name,
             phone: data.phoneNumber,
@@ -188,10 +215,19 @@ const Profile: React.FC = () => {
             state: data.state,
         };
 
+        if (profileBase64) {
+            payload["photo"] = `data:image/png;base64,${profileBase64}`;
+        }
+
         patch(API_URL.user, payload)
             .then((res: any) => {
-                dispatch(setLoader(false));
+                storeUserData("@user-data", {
+                    ...res?.data,
+                });
+                dispatch(setUser(res?.data));
+                dispatch(setResponse({ storeName: "userProfileData", data: res?.data }));
                 ApiSuccessToast(res.message);
+                dispatch(setLoader(false));
 
                 if (from === "buyButton") {
                     router.push({
@@ -223,11 +259,15 @@ const Profile: React.FC = () => {
         <ScrollView>
             <AUIThemedView style={styles.container}>
                 <AUIThemedView style={styles.profileImageContainer}>
-                    <AUIImage
-                        icon
-                        path={Asset.fromModule(require("@/assets/images/user.png")).uri}
-                        style={styles?.profileImage}
-                    />
+                    <AUIImage icon path={profileImage} style={[styles.profileImage]} />
+                    <TouchableOpacity style={styles.editIconContainer} onPress={pickImageAsync}>
+                        <Ionicons
+                            name="create-outline"
+                            size={24}
+                            color="white"
+                            style={styles.editIcon}
+                        />
+                    </TouchableOpacity>
                 </AUIThemedView>
 
                 <Controller
@@ -575,6 +615,21 @@ const Profile: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
+    editIcon: {
+        position: "absolute",
+        right: 0,
+        marginRight: 10,
+    },
+    editIconContainer: {
+        position: "absolute",
+        bottom: 0,
+        padding: 10,
+        width: 100,
+        height: 50,
+        borderBottomLeftRadius: 100,
+        borderBottomRightRadius: 100,
+        backgroundColor: "rgba(91, 216, 148, 0.3)",
+    },
     buttonContainer: {
         marginTop: 10,
         flexDirection: "row",
@@ -606,9 +661,6 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: "bold",
     },
-    editIcon: {
-        top: 8,
-    },
     profileImageContainer: {
         alignItems: "flex-start",
         marginBottom: 20,
@@ -616,7 +668,7 @@ const styles = StyleSheet.create({
     profileImage: {
         height: 100,
         width: 100,
-        borderRadius: 50,
+        borderRadius: 100,
     },
     label: {
         marginTop: 10,

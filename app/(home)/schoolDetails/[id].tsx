@@ -28,6 +28,7 @@ import { StarRatingDisplay } from "react-native-star-rating-widget";
 import { useDispatch, useSelector } from "react-redux";
 
 import { ChatBot } from "at-chatbot-native";
+import { setResponse } from "@/redux/apiSlice";
 // import ChatBot from "@/components/chatbot/ChatBot";
 
 interface TabProps {
@@ -258,7 +259,12 @@ export default function SchoolDetails() {
                 />
             ),
             headerLeft: () => (
-                <Pressable onPress={() => navigation.goBack()}>
+                <Pressable
+                    onPress={() => {
+                        dispatch(setResponse({ storeName: "individualSchool", data: null }));
+                        navigation.goBack();
+                    }}
+                >
                     <Ionicons
                         name="arrow-back"
                         size={30}
@@ -360,7 +366,7 @@ export default function SchoolDetails() {
                                 ? { uri: schoolsResponse.banner }
                                 : {
                                       uri: Asset.fromModule(
-                                          require("@/assets/images/schoolDetailsPage/school.png")
+                                          require("@/assets/images/common/no_image.png")
                                       ).uri,
                                   }
                         }

@@ -12,9 +12,11 @@ import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import useIsomorphicLayoutEffect from "@/customHooks/useIsomorphicLayoutEffect";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
+import { setResponse } from "@/redux/apiSlice";
 import { addToFavorite, removeFromFavorite } from "@/redux/favoriteSlice";
 import { RootState } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";
+import { Asset } from "expo-asset";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -159,7 +161,11 @@ export default function cityDetails() {
                         alignItems: "center",
                         justifyContent: "center",
                     }}
-                    onPress={() => navigation.goBack()}
+                    onPress={() => {
+                        dispatch(setResponse({ storeName: "individualCountry", data: null }));
+                        dispatch(setResponse({ storeName: "countrySchool", data: null }));
+                        navigation.goBack();
+                    }}
                 />
             ),
             headerRight: () => (
@@ -216,7 +222,10 @@ export default function cityDetails() {
                     <AUIThemedView>
                         <Animated.Image
                             source={{
-                                uri: country?.images?.[0],
+                                uri:
+                                    country?.images?.[0] ||
+                                    Asset.fromModule(require("@/assets/images/common/no_image.png"))
+                                        .uri,
                             }}
                             style={[styles.image, imageAnimatedStyle]}
                             resizeMode="cover"

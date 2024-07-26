@@ -10,6 +10,7 @@ import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import useIsomorphicLayoutEffect from "@/customHooks/useIsomorphicLayoutEffect";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
+import { setResponse } from "@/redux/apiSlice";
 import { addItemToCart, removeItemFromCart } from "@/redux/cartSlice";
 import { addToFavorite, removeFromFavorite } from "@/redux/favoriteSlice";
 import { RootState } from "@/redux/store";
@@ -239,7 +240,10 @@ export default function CourseDetails() {
                         alignItems: "center",
                         justifyContent: "center",
                     }}
-                    onPress={() => navigation.goBack()}
+                    onPress={() => {
+                        dispatch(setResponse({ storeName: "individualCourse", data: null }));
+                        navigation.goBack();
+                    }}
                 />
             ),
             headerRight: () => (

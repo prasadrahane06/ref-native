@@ -9,13 +9,17 @@ import { Dimensions } from "react-native";
 import { useSelector } from "react-redux";
 import PurchaseCoursesList from "../home/courseDetails/PurchaseCourses";
 import { useFocusEffect } from "expo-router";
+import { useTranslation } from "react-i18next";
 
 const Tab = createMaterialTopTabNavigator();
 
 export default function MyCourses() {
+    const { t } = useTranslation();
     const { requestFn } = useApiRequest();
+
     const MyCourse = useLangTransformSelector((state: RootState) => state.api.myCourse);
     const theme = useSelector((state: RootState) => state.global.theme);
+
     const docs = MyCourse?.docs;
     const bookMySeatData = docs ? docs.filter((item: any) => item.type === "bookYourSeat") : [];
     const buyData = docs ? docs.filter((item: any) => item.type === "buy") : [];
@@ -53,15 +57,15 @@ export default function MyCourses() {
             }}
         >
             <Tab.Screen
-                name="Purchased Courses"
+                name={t("purchased_courses")}
                 component={() => <PurchaseCoursesList data={buyData} />}
             />
             <Tab.Screen
-                name="Seat Booking"
+                name={t("seat_booking")}
                 component={() => <PurchaseCoursesList data={bookMySeatData} seatBooking />}
             />
             <Tab.Screen
-                name="Completed Courses"
+                name={t("completed_courses")}
                 component={() => <PurchaseCoursesList data={[]} completedCourse />}
             />
         </Tab.Navigator>

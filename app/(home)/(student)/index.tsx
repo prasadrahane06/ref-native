@@ -1,4 +1,3 @@
-import AUISearchBar from "@/components/common/AUISearchBar";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import CarouselSlide from "@/components/home/common/CarouselSlide";
 import CourseList from "@/components/home/common/CourseList";
@@ -9,11 +8,8 @@ import SchoolList from "@/components/home/common/SchoolList";
 import SectionTitle from "@/components/home/common/SectionTitle";
 import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { carouselData } from "@/constants/dummy data/carouselData";
-import { increaseChancesData } from "@/constants/dummy data/increaseChancesData";
-import { languagesData } from "@/constants/dummy data/languagesData";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
-import useDebounce from "@/customHooks/useDebounce";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { addItemToCart } from "@/redux/cartSlice";
 import { addToFavorite } from "@/redux/favoriteSlice";
@@ -29,15 +25,12 @@ export default function HomeScreen() {
     const dispatch = useDispatch();
     const { requestFn } = useApiRequest();
     const width = Dimensions.get("window").width;
-    // const progress = useSharedValue<number>(0);
+
+    const [selectedLanguage, setSelectedLanguage] = useState("English");
     const ref = useRef<ICarouselInstance>(null);
 
-    // const [destinationData, setDestinationData] = useState([]);
     const { t } = useTranslation();
-    // const navigation = useNavigation();
-    const [selectedLanguage, setSelectedLanguage] = useState("English");
-    // const displayedCourses = coursesData.slice(0, 4);
-    // const theme = useSelector((state: RootState) => state.global.theme);
+
     const response = useLangTransformSelector((state: RootState) => state.api);
     const user = useLangTransformSelector((state: RootState) => state.global.user);
     const _id = user?._id;
