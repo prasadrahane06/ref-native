@@ -1,7 +1,7 @@
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
 import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
-import { removeUserData, storeUserData } from "@/constants/RNAsyncStore";
+import { clearAllData, storeUserData } from "@/constants/RNAsyncStore";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { setTheme } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
@@ -54,11 +54,11 @@ const AUIDrawerContent = (props: any) => {
         const newDarkModeState = !isDarkMode;
         const newTheme = newDarkModeState ? "dark" : "light";
         dispatch(setTheme(newTheme));
-        await storeUserData({ darkMode: newDarkModeState });
+        await storeUserData("@theme", { darkMode: newDarkModeState });
     };
 
     const onLogout = () => {
-        removeUserData();
+        clearAllData();
         router.push({ pathname: "/" });
     };
     return (

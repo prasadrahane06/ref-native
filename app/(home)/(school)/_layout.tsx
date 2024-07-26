@@ -199,7 +199,6 @@ export default function AUIDrawer() {
                 <Drawer.Screen
                     name="Profile"
                     component={schoolProfile}
-
                     options={{
                         headerShown: false,
                         title: t(GLOBAL_TRANSLATION_LABEL.account),

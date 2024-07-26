@@ -94,6 +94,7 @@ const TabTwoScreen: React.FC = () => {
                 <AUIThemedView style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
                     <AUIImage
                         path={Asset.fromModule(require("@/assets/images/common/fav_image.png")).uri}
+                        style={{ width: 200, height: 200 }}
                     />
                 </AUIThemedView>
             </AUIThemedView>

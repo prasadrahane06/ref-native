@@ -22,8 +22,6 @@ export default function TabTwoScreen() {
         (state: RootState) => state.api.schoolPurchaseCourse || {}
     );
 
-    console.log("schoolPurchaseCourse", JSON.stringify(schoolPurchaseCourse));
-
     useEffect(() => {
         requestFn(API_URL.purchaseCourse, "schoolPurchaseCourse", {
             client: true,

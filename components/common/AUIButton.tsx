@@ -1,4 +1,10 @@
-import { APP_THEME, BUTTON_THEME, ThemeType } from "@/constants/Colors";
+import {
+    APP_THEME,
+    BACKGROUND_THEME,
+    BUTTON_THEME,
+    TEXT_THEME,
+    ThemeType,
+} from "@/constants/Colors";
 import { buttonStyle } from "@/constants/Styles";
 import { AntDesign } from "@expo/vector-icons";
 import React from "react";
@@ -121,12 +127,10 @@ const DefaultBtn = ({ disabled, title, icon, borderColor, theme }: DefaultBtnPro
         colors={
             disabled
                 ? [BUTTON_THEME[theme].disabled.background, BUTTON_THEME[theme].disabled.background]
-                : [BUTTON_THEME[theme].primary.color, BUTTON_THEME[theme].primary.color]
+                : [BACKGROUND_THEME[theme].background, BACKGROUND_THEME[theme].background]
         }
     >
-        <Text
-            style={[buttonStyle.buttonText, !disabled && { color: APP_THEME[theme].ternary.first }]}
-        >
+        <Text style={[buttonStyle.buttonText, !disabled && { color: TEXT_THEME[theme].primary }]}>
             {title}
         </Text>
         {icon && <AntDesign name={icon} size={24} color="#ffffff" />}

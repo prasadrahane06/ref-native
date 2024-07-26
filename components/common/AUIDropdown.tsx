@@ -167,9 +167,7 @@ const RenderItemWithIcon = ({
             }}
             path={item[iconField]}
         />
-        <AUIThemedText style={[itemLabelStyle, { color: TEXT_THEME[theme].secondary }]}>
-            {item[labelField]}
-        </AUIThemedText>
+        <AUIThemedText style={[itemLabelStyle]}>{item[labelField]}</AUIThemedText>
     </AUIThemedView>
 );
 
@@ -209,5 +207,10 @@ const styles = StyleSheet.create({
         height: 40,
         fontSize: 16,
     },
-    renderDefaultItem:{paddingVertical:12,paddingHorizontal:5, borderBottomWidth:1,borderBottomColor:"#ccc"}
+    renderDefaultItem: {
+        paddingVertical: 12,
+        paddingHorizontal: 5,
+        borderBottomWidth: 1,
+        borderBottomColor: "#ccc",
+    },
 });

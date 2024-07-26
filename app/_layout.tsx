@@ -125,7 +125,7 @@ const InitialLayout = () => {
 
     useEffect(() => {
         storeUserDeviceData();
-        getUserData().then((data) => {
+        getUserData("@theme").then((data) => {
             //setting theme
             if (data && Object.keys(data).length > 0) {
                 if (data?.darkMode === true) {

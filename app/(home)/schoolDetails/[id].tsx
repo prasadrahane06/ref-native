@@ -17,7 +17,7 @@ import { Asset } from "expo-asset";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Pressable, StyleSheet, TouchableOpacity } from "react-native";
+import { Dimensions, Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import Animated, {
     interpolate,
     useAnimatedRef,
@@ -36,6 +36,7 @@ interface TabProps {
 }
 
 const IMG_HEIGHT = 250;
+const width = Dimensions.get("window").width;
 
 function StudentDetailsTabs({ courseId, clientId }: TabProps) {
     const schoolsResponse = useLangTransformSelector(
@@ -234,6 +235,13 @@ export default function SchoolDetails() {
     //     Linking.openURL(`mailto:${emailAddress}`);
     // };
 
+    const estimatedCharWidth = 18;
+    const maxChars = Math.floor(width / estimatedCharWidth);
+    const displayedText =
+        schoolsResponse?.name.length > maxChars
+            ? `${schoolsResponse?.name.slice(0, maxChars)}...`
+            : schoolsResponse?.name;
+
     effect(() => {
         navigation.setOptions({
             headerTransparent: true,
@@ -286,7 +294,7 @@ export default function SchoolDetails() {
             ),
             headerTitle: () => (
                 <Animated.Text style={[headerTitleAnimatedStyle, styles.screenTitle]}>
-                    {schoolsResponse?.name}
+                    {displayedText}
                 </Animated.Text>
             ),
         });

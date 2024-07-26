@@ -1,13 +1,13 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Device from "expo-device";
 
-export const storeUserData = async (value: object) => {
+export const storeUserData = async (key: string, value: object) => {
     try {
-        const existingData = await getUserData();
+        const existingData = await getUserData(key);
         const updatedData = { ...existingData, ...value };
 
         const jsonValue = JSON.stringify(updatedData);
-        await AsyncStorage.setItem("@user-data", jsonValue);
+        await AsyncStorage.setItem(key, jsonValue);
     } catch (e) {
         console.log("Error in storeUserData:", e);
     }
@@ -31,9 +31,9 @@ export const storeUserDeviceData = async (value: object = {}) => {
     }
 };
 
-export const getUserData = async () => {
+export const getUserData = async (key: string) => {
     try {
-        const jsonValue = await AsyncStorage.getItem("@user-data");
+        const jsonValue = await AsyncStorage.getItem(key);
         return jsonValue != null ? JSON.parse(jsonValue) : null;
     } catch (e) {
         console.log("Error in getUserData:", e);
@@ -49,10 +49,10 @@ export const getUserDeviceData = async () => {
     }
 };
 
-export const removeUserData = async () => {
+export const clearAllData = async () => {
     try {
-        await AsyncStorage.removeItem("@user-data");
+        await AsyncStorage.clear();
     } catch (e) {
-        console.log("Error in removeUserData:", e);
+        console.log("Error in clearAllData:", e);
     }
 };

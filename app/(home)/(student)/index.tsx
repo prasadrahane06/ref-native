@@ -38,8 +38,9 @@ export default function HomeScreen() {
     const [selectedLanguage, setSelectedLanguage] = useState("English");
     // const displayedCourses = coursesData.slice(0, 4);
     // const theme = useSelector((state: RootState) => state.global.theme);
-    const response = useLangTransformSelector((state: RootState) => state.api || {});
-    const { _id } = useLangTransformSelector((state: RootState) => state.global.user);
+    const response = useLangTransformSelector((state: RootState) => state.api);
+    const user = useLangTransformSelector((state: RootState) => state.global.user);
+    const _id = user?._id;
 
     let schoolsResponse = response?.school;
     const courseResponse = response?.selectedLanguagecourse;
@@ -86,45 +87,8 @@ export default function HomeScreen() {
         }
     }, [cart]);
 
-    // const onPressPagination = (index: number) => {
-    //     ref.current?.scrollTo({
-    //         count: index - progress.value,
-    //         animated: true,
-    //     });
-    // };
-
-    //search state
-    // const [searchPhrase, setSearchPhrase] = useState("");
-    // const [clicked, setClicked] = useState(false);
-
-    // const searchResults = useLangTransformSelector(
-    //     (state: RootState) => state.api.searchResults || {}
-    // );
-
-    // console.log("searchResults", JSON.stringify(searchResults));
-
-    // // const debouncedSearchPhrase = useDebounce(searchPhrase, 500);
-
-    // useEffect(() => {
-    //     if (searchPhrase) {
-    //         requestFn(API_URL.search, "searchResults", {
-    //             all: true,
-    //             search: searchPhrase,
-    //         });
-    //     }
-    // }, [searchPhrase]);
-
     return (
         <ScrollView>
-            {/* <AUIThemedView style={styles.centeredContainer}>
-                <AUISearchBar
-                    clicked={clicked}
-                    searchPhrase={searchPhrase}
-                    setSearchPhrase={setSearchPhrase}
-                    setClicked={setClicked}
-                    results={searchResults}
-                />
-            </AUIThemedView> */}
             <AUIThemedView>
                 <Carousel
                     ref={ref}

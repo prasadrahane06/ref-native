@@ -3,13 +3,7 @@ import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { APP_THEME } from "@/constants/Colors";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
-import {
-    FlatList,
-    ListRenderItem,
-    StyleSheet,
-    TouchableOpacity,
-    View
-} from "react-native";
+import { FlatList, ListRenderItem, StyleSheet, TouchableOpacity, View } from "react-native";
 
 interface NotificationItem {
     id: string;
@@ -153,15 +147,17 @@ const styles = StyleSheet.create({
     description: {
         fontSize: 13,
         marginVertical: 4,
-        color:"#9DA1AC"
+        color: "#9DA1AC",
     },
     time: {
         fontSize: 12,
-        color:"#9DA1AC",
+        color: "#9DA1AC",
         alignSelf: "flex-end",
         marginRight: 15,
     },
 });
+
+// keep this code
 
 // import { useState, useEffect, useRef } from "react";
 // import { Text, View, Button, Platform } from "react-native";
@@ -253,4 +249,3 @@ const styles = StyleSheet.create({
 //         trigger: { seconds: 2 },
 //     });
 // }
-

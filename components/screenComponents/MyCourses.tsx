@@ -4,24 +4,27 @@ import useApiRequest from "@/customHooks/useApiRequest";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { Dimensions } from "react-native";
 import { useSelector } from "react-redux";
 import PurchaseCoursesList from "../home/courseDetails/PurchaseCourses";
+import { useFocusEffect } from "expo-router";
 
 const Tab = createMaterialTopTabNavigator();
 
 export default function MyCourses() {
     const { requestFn } = useApiRequest();
-    const MyCourse = useLangTransformSelector((state: RootState) => state.api.myCourse || {});
+    const MyCourse = useLangTransformSelector((state: RootState) => state.api.myCourse);
     const theme = useSelector((state: RootState) => state.global.theme);
     const docs = MyCourse?.docs;
     const bookMySeatData = docs ? docs.filter((item: any) => item.type === "bookYourSeat") : [];
     const buyData = docs ? docs.filter((item: any) => item.type === "buy") : [];
 
-    useEffect(() => {
-        requestFn(API_URL.purchaseCourse, "myCourse");
-    }, []);
+    useFocusEffect(
+        useCallback(() => {
+            requestFn(API_URL.purchaseCourse, "myCourse", { user: true });
+        }, [])
+    );
 
     return (
         <Tab.Navigator

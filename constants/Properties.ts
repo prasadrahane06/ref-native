@@ -52,6 +52,7 @@ export const GLOBAL_TEXT = {
     your_cart_is_empty: "your_cart_is_empty",
     your_favourite_is_empty: "your_favourite_is_empty",
     my_earnings: "my_earnings",
+    search: "Search",
 };
 export const GLOBAL_TRANSLATION_LABEL = {
     find_your_destination: "find_your_destination",
@@ -162,7 +163,7 @@ export const DETAILS_FIELDS = {
         type: "DROPDOWN",
         placeholder: "Select qualification",
     },
-    academic: {
+    academicSession: {
         label: "Academic Session",
         type: "DROPDOWN",
         placeholder: "Select academic",

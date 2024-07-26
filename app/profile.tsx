@@ -17,17 +17,14 @@ import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/dat
 import { Asset } from "expo-asset";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import {
-    Platform,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    TextInput
-} from "react-native";
+import { Platform, Pressable, ScrollView, StyleSheet, TextInput } from "react-native";
 import "react-native-gesture-handler";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import useAxios from "./services/axiosClient";
+import { router, useLocalSearchParams, useRouter } from "expo-router";
+import { setLoader } from "@/redux/globalSlice";
+import { t } from "i18next";
 
 const genderData = [
     {
@@ -120,11 +117,25 @@ const Profile: React.FC = () => {
         (state: RootState) => state.api.userProfileData
     );
 
+    const { from, type, planId, courseId } = useLocalSearchParams<{
+        from: string;
+        type: string;
+        planId: string;
+        courseId: string;
+    }>();
+
+    if (from === "buyButton" || from === "bookYourSeatButton") {
+        ApiSuccessToast("❗Check you profile before making payment");
+    }
+
     const theme = useSelector((state: RootState) => state.global.theme);
-    const [dateOfBirth, setDateOfBirth] = useState(userProfileData?.dob && new Date(userProfileData?.dob) || '');
+    const [dateOfBirth, setDateOfBirth] = useState(
+        (userProfileData?.dob && new Date(userProfileData?.dob)) || ""
+    );
     const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
 
     const { patch } = useAxios();
+    const dispatch = useDispatch();
 
     const { reset, setValue, control, handleSubmit, formState } = useForm({
         resolver: yupResolver(schema),
@@ -161,6 +172,8 @@ const Profile: React.FC = () => {
     };
 
     const onSave = (data: any) => {
+        dispatch(setLoader(true));
+
         const payload = {
             id: userProfileData?._id,
             name: data.name,
@@ -177,9 +190,31 @@ const Profile: React.FC = () => {
 
         patch(API_URL.user, payload)
             .then((res: any) => {
+                dispatch(setLoader(false));
                 ApiSuccessToast(res.message);
+
+                if (from === "buyButton") {
+                    router.push({
+                        pathname: `(home)/courseDetails/purchase/${JSON.stringify({
+                            type: type,
+                            planId: planId,
+                            courseId: courseId,
+                        })}`,
+                    });
+                }
+
+                if (from === "bookYourSeatButton") {
+                    router.push({
+                        pathname: `(home)/courseDetails/purchase/${JSON.stringify({
+                            type: type,
+                            planId: planId,
+                            courseId: courseId,
+                        })}`,
+                    });
+                }
             })
             .catch((error: any) => {
+                dispatch(setLoader(false));
                 ApiErrorToast(error.message);
             });
     };
