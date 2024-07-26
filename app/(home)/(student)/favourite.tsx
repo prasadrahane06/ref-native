@@ -85,9 +85,12 @@ const TabTwoScreen: React.FC = () => {
     if (fav.clients.length === 0 && fav.courses.length === 0 && fav.countries.length === 0) {
         return (
             <AUIThemedView
-                style={[styles.container, { backgroundColor: BACKGROUND_THEME[theme].background }]}
+                style={[
+                    styles.emptyContainer,
+                    { backgroundColor: BACKGROUND_THEME[theme].background },
+                ]}
             >
-                <AUIThemedText style={styles.title}>
+                <AUIThemedText style={styles.emptyText}>
                     {t(GLOBAL_TEXT.your_favourite_is_empty)}
                 </AUIThemedText>
 
@@ -280,8 +283,20 @@ const TabTwoScreen: React.FC = () => {
     );
 };
 
+const height = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
+
 const styles = StyleSheet.create({
+    emptyText: {
+        fontSize: 20,
+        fontWeight: "bold",
+        marginBottom: 15,
+    },
+    emptyContainer: {
+        padding: 20,
+        flex: 1,
+        height: height,
+    },
     container: {
         // paddingHorizontal: 12,
         // backgroundColor: APP_THEME.background,

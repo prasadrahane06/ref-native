@@ -58,11 +58,7 @@ function Profile() {
                             navigation.goBack();
                         }}
                     >
-                        <Ionicons
-                            name="arrow-back"
-                            size={30}
-                            color={APP_THEME[theme].ternary.first}
-                        />
+                        <Ionicons name="arrow-back" size={30} color="#fff" />
                     </Pressable>
                 </View>
                 <View style={styles.avatarContainer}>

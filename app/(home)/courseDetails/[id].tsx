@@ -217,6 +217,8 @@ export default function CourseDetails() {
     effect(() => {
         navigation.setOptions({
             headerTransparent: true,
+            headerBackVisible: false,
+
             headerBackground: () => (
                 <Animated.View
                     style={[
@@ -227,23 +229,6 @@ export default function CourseDetails() {
                             borderColor: APP_THEME[theme].gray,
                         },
                     ]}
-                />
-            ),
-            headerLeft: () => (
-                <Ionicons
-                    name="arrow-back"
-                    size={30}
-                    color={"#fff"}
-                    style={{
-                        position: "absolute",
-                        left: -57,
-                        alignItems: "center",
-                        justifyContent: "center",
-                    }}
-                    onPress={() => {
-                        dispatch(setResponse({ storeName: "individualCourse", data: null }));
-                        navigation.goBack();
-                    }}
                 />
             ),
             headerRight: () => (

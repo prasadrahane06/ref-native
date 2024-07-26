@@ -139,7 +139,7 @@ const Profile: React.FC = () => {
 
     const theme = useSelector((state: RootState) => state.global.theme);
     const [dateOfBirth, setDateOfBirth] = useState(
-        (userProfileData?.dob && new Date(userProfileData?.dob)) || ""
+        userProfileData?.dob ? new Date(userProfileData?.dob) : new Date()
     );
     const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
     const [profileImage, setProfileImage] = useState<string>(
@@ -258,17 +258,15 @@ const Profile: React.FC = () => {
     return (
         <ScrollView>
             <AUIThemedView style={styles.container}>
-                <AUIThemedView style={styles.profileImageContainer}>
+                <TouchableOpacity style={styles.profileImageContainer} onPress={pickImageAsync}>
                     <AUIImage icon path={profileImage} style={[styles.profileImage]} />
-                    <TouchableOpacity style={styles.editIconContainer} onPress={pickImageAsync}>
-                        <Ionicons
-                            name="create-outline"
-                            size={24}
-                            color="white"
-                            style={styles.editIcon}
-                        />
-                    </TouchableOpacity>
-                </AUIThemedView>
+                    <Ionicons
+                        name="create-outline"
+                        size={24}
+                        color={APP_THEME.light.primary.first}
+                        style={styles.editIcon}
+                    />
+                </TouchableOpacity>
 
                 <Controller
                     name="name"
@@ -617,8 +615,7 @@ const Profile: React.FC = () => {
 const styles = StyleSheet.create({
     editIcon: {
         position: "absolute",
-        right: 0,
-        marginRight: 10,
+        left: 70,
     },
     editIconContainer: {
         position: "absolute",
@@ -662,6 +659,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
     profileImageContainer: {
+        position: "relative",
         alignItems: "flex-start",
         marginBottom: 20,
     },

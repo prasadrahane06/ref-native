@@ -246,6 +246,8 @@ export default function SchoolDetails() {
     effect(() => {
         navigation.setOptions({
             headerTransparent: true,
+            headerBackVisible: false,
+
             headerBackground: () => (
                 <Animated.View
                     style={[
@@ -257,27 +259,6 @@ export default function SchoolDetails() {
                         },
                     ]}
                 />
-            ),
-            headerLeft: () => (
-                <Pressable
-                    onPress={() => {
-                        dispatch(setResponse({ storeName: "individualSchool", data: null }));
-                        navigation.goBack();
-                    }}
-                >
-                    <Ionicons
-                        name="arrow-back"
-                        size={30}
-                        color={"#fff"}
-                        style={{
-                            position: "absolute",
-                            left: -57,
-                            top: -15,
-                            alignItems: "center",
-                            justifyContent: "center",
-                        }}
-                    />
-                </Pressable>
             ),
             headerRight: () => (
                 <TouchableOpacity onPress={() => handleFavoriteClick(id, "client")}>

@@ -138,6 +138,8 @@ export default function cityDetails() {
     effect(() => {
         navigation.setOptions({
             headerTransparent: true,
+            headerBackVisible: false,
+
             headerBackground: () => (
                 <Animated.View
                     style={[
@@ -148,24 +150,6 @@ export default function cityDetails() {
                             borderColor: APP_THEME[theme].gray,
                         },
                     ]}
-                />
-            ),
-            headerLeft: () => (
-                <Ionicons
-                    name="arrow-back"
-                    size={30}
-                    color={APP_THEME.light.background}
-                    style={{
-                        position: "absolute",
-                        left: -57,
-                        alignItems: "center",
-                        justifyContent: "center",
-                    }}
-                    onPress={() => {
-                        dispatch(setResponse({ storeName: "individualCountry", data: null }));
-                        dispatch(setResponse({ storeName: "countrySchool", data: null }));
-                        navigation.goBack();
-                    }}
                 />
             ),
             headerRight: () => (
