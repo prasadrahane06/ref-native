@@ -28,7 +28,7 @@ interface CourseProps {
     style?: ViewStyle;
     numberOfLines?: number;
     ellipsizeMode?: "head" | "middle" | "tail" | "clip";
-    onEdit: (courseId: string) => void;
+    onEdit?: (courseId: string) => void;
 }
 
 const Course: React.FC<CourseProps> = ({
@@ -145,7 +145,7 @@ const Course: React.FC<CourseProps> = ({
                         <MaterialCommunityIcons name="delete-forever-outline" size={24} color="red" />
                     </TouchableOpacity>
                 )}
-                {edit && (
+                {edit  && onEdit && (
                     <TouchableOpacity
                         style={styles.editiConContainer}
                         onPress={() => onEdit(courseId)}

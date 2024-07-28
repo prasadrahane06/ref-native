@@ -140,7 +140,12 @@ export default function HomeScreen() {
                         <SectionTitle style={{ paddingBottom: 10 }}>
                             {GLOBAL_TEXT.ongoing_courses}
                         </SectionTitle>
-                        <CourseList data={myCourse?.docs?.slice(0, 4) || []} />
+                        <CourseList
+                            data={myCourse?.docs?.slice(0, 4) || []}
+                            onEdit={() => {
+                                console.log("edit called");
+                            }}
+                        />
                     </AUIThemedView>
                 </AUIThemedView>
             </ScrollView>

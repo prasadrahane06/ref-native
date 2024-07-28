@@ -447,6 +447,7 @@ const InitialLayout = () => {
                     headerTitle: "School Profile",
                     headerTitleStyle: { color: TEXT_THEME[theme].primary },
                     headerStyle: { backgroundColor: BACKGROUND_THEME[theme].background },
+                    headerBackVisible: false,
                     headerLeft: () => (
                         <TouchableOpacity onPress={router.back}>
                             <Ionicons
@@ -484,6 +485,7 @@ const InitialLayout = () => {
                     headerStyle: {
                         backgroundColor: BACKGROUND_THEME[theme].background,
                     },
+                    headerBackVisible: false,
                     headerLeft: () => (
                         <TouchableOpacity onPress={router.back}>
                             <Ionicons

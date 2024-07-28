@@ -231,20 +231,6 @@ export default function CourseDetails() {
                     ]}
                 />
             ),
-            headerLeft: () => (
-                <Ionicons
-                    name="arrow-back"
-                    size={30}
-                    color={TEXT_THEME[theme].primary}
-                    style={{
-                        position: "absolute",
-                        left: -57,
-                        alignItems: "center",
-                        justifyContent: "center",
-                    }}
-                    onPress={() => navigation.goBack()}
-                />
-            ),
             headerRight: () => (
                 <TouchableOpacity onPress={() => handleFavoriteClick(id, "course")}>
                     <AUIThemedView
