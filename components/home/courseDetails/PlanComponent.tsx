@@ -659,11 +659,13 @@ export default function PlanComponent({
                     }
                     onPress={() =>
                         router.push({
-                            pathname: `(home)/courseDetails/purchase/${JSON.stringify({
+                            pathname: "/profile",
+                            params: {
+                                from: "bookYourSeatButton",
                                 type: "bookYourSeat",
                                 planId: planId,
                                 courseId: courseId,
-                            })}`,
+                            },
                         })
                     }
                 >
@@ -691,11 +693,13 @@ export default function PlanComponent({
                     }
                     onPress={() =>
                         router.push({
-                            pathname: `(home)/courseDetails/purchase/${JSON.stringify({
+                            pathname: "/profile",
+                            params: {
+                                from: "buyButton",
                                 type: "buy",
                                 planId: planId,
                                 courseId: courseId,
-                            })}`,
+                            },
                         })
                     }
                 >

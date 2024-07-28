@@ -25,23 +25,22 @@ const InitialPage = () => {
     const theme = useSelector((state: RootState) => state.global.theme);
 
     useEffect(() => {
-        getUserData().then((data) => {
+        getUserData("@user-data").then((data) => {
             if (data && Object.keys(data).length > 0) {
-                if (data?.profile === "student") {
+                if (data?.type === "student") {
                     // saving token in redux
-                    dispatch(setToken(data?.data?.accessToken));
+                    dispatch(setToken(data?.accessToken));
 
                     // saving user in redux
-                    dispatch(setUser(data?.data?.user));
+                    dispatch(setUser(data));
 
                     router.replace("/(home)/(student)");
                 }
                 if (data?.profile === "school") {
-                    
-                    dispatch(setToken(data?.data?.accessToken));
+                    dispatch(setToken(data?.accessToken));
 
                     // saving user in redux
-                    dispatch(setUser(data?.data?.user));
+                    dispatch(setUser(data));
 
                     router.replace("/(home)/(school)");
                 }

@@ -17,7 +17,7 @@ import { Asset } from "expo-asset";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Pressable, StyleSheet, TouchableOpacity } from "react-native";
+import { Dimensions, Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import Animated, {
     interpolate,
     useAnimatedRef,
@@ -28,6 +28,7 @@ import { StarRatingDisplay } from "react-native-star-rating-widget";
 import { useDispatch, useSelector } from "react-redux";
 
 import { ChatBot } from "at-chatbot-native";
+import { setResponse } from "@/redux/apiSlice";
 // import ChatBot from "@/components/chatbot/ChatBot";
 
 interface TabProps {
@@ -36,6 +37,7 @@ interface TabProps {
 }
 
 const IMG_HEIGHT = 250;
+const width = Dimensions.get("window").width;
 
 function StudentDetailsTabs({ courseId, clientId }: TabProps) {
     const schoolsResponse = useLangTransformSelector(
@@ -194,9 +196,8 @@ export default function SchoolDetails() {
         };
     });
 
-    const isCourseFavorited = (id: string) => {
-        return favorite.courses.some((favCourse: any) => favCourse._id === id);
-    };
+    const isCourseFavorited = (id: string) =>
+        favorite.clients.some((favClient: any) => favClient._id === id);
 
     const handleFavoriteClick = (id: string, type: string) => {
         if (isCourseFavorited(id)) {
@@ -234,9 +235,18 @@ export default function SchoolDetails() {
     //     Linking.openURL(`mailto:${emailAddress}`);
     // };
 
+    const estimatedCharWidth = 18;
+    const maxChars = Math.floor(width / estimatedCharWidth);
+    const displayedText =
+        schoolsResponse?.name.length > maxChars
+            ? `${schoolsResponse?.name.slice(0, maxChars)}...`
+            : schoolsResponse?.name;
+
     effect(() => {
         navigation.setOptions({
             headerTransparent: true,
+            headerBackVisible: false,
+
             headerBackground: () => (
                 <Animated.View
                     style={[
@@ -248,22 +258,6 @@ export default function SchoolDetails() {
                         },
                     ]}
                 />
-            ),
-            headerLeft: () => (
-                <Pressable onPress={() => navigation.goBack()}>
-                    <Ionicons
-                        name="arrow-back"
-                        size={30}
-                        color={"#fff"}
-                        style={{
-                            position: "absolute",
-                            left: -57,
-                            top: -15,
-                            alignItems: "center",
-                            justifyContent: "center",
-                        }}
-                    />
-                </Pressable>
             ),
             headerRight: () => (
                 <TouchableOpacity onPress={() => handleFavoriteClick(id, "client")}>
@@ -279,14 +273,14 @@ export default function SchoolDetails() {
                         <Ionicons
                             name={isCourseFavorited(id) ? "heart" : "heart-outline"}
                             size={24}
-                            color={APP_THEME[theme].secondary.first}
+                            color={isCourseFavorited(id) ? "red" : APP_THEME[theme].secondary.first}
                         />
                     </AUIThemedView>
                 </TouchableOpacity>
             ),
             headerTitle: () => (
                 <Animated.Text style={[headerTitleAnimatedStyle, styles.screenTitle]}>
-                    {schoolsResponse?.name}
+                    {displayedText}
                 </Animated.Text>
             ),
         });
@@ -352,7 +346,7 @@ export default function SchoolDetails() {
                                 ? { uri: schoolsResponse.banner }
                                 : {
                                       uri: Asset.fromModule(
-                                          require("@/assets/images/schoolDetailsPage/school.png")
+                                          require("@/assets/images/common/no_image.png")
                                       ).uri,
                                   }
                         }

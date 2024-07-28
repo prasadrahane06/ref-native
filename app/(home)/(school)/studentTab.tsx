@@ -22,8 +22,6 @@ export default function TabTwoScreen() {
         (state: RootState) => state.api.schoolPurchaseCourse || {}
     );
 
-    console.log("schoolPurchaseCourse", JSON.stringify(schoolPurchaseCourse));
-
     useEffect(() => {
         requestFn(API_URL.purchaseCourse, "schoolPurchaseCourse", {
             client: true,
@@ -63,11 +61,11 @@ export default function TabTwoScreen() {
                         {schoolPurchaseCourse.docs && Array.isArray(schoolPurchaseCourse.docs) ? (
                             schoolPurchaseCourse.docs.map((item: any) => (
                                 <TouchableOpacity
-                                    key={item._id}
+                                    key={item?._id}
                                     style={styles.layout}
                                     onPress={() =>
                                         router.push({
-                                            pathname: `(home)/studentInfo/${item._id}`,
+                                            pathname: `(home)/studentInfo/${item?._id}`,
                                             params: { student: JSON.stringify(item) },
                                         })
                                     }

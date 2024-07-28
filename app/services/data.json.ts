@@ -19,18 +19,18 @@ export default {
             value: "post graduation",
         },
     ],
-    academic: [
+    academicSession: [
         {
             label: "2020-2021",
-            value: "degree",
+            value: "2020-2021",
         },
         {
             label: "2021-2022",
-            value: "degree",
+            value: "2020-2021",
         },
         {
             label: "2022-2023",
-            value: "degree",
+            value: "2020-2021",
         },
     ],
     language: [

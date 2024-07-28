@@ -85,15 +85,19 @@ const TabTwoScreen: React.FC = () => {
     if (fav.clients.length === 0 && fav.courses.length === 0 && fav.countries.length === 0) {
         return (
             <AUIThemedView
-                style={[styles.container, { backgroundColor: BACKGROUND_THEME[theme].background }]}
+                style={[
+                    styles.emptyContainer,
+                    { backgroundColor: BACKGROUND_THEME[theme].background },
+                ]}
             >
-                <AUIThemedText style={styles.title}>
+                <AUIThemedText style={styles.emptyText}>
                     {t(GLOBAL_TEXT.your_favourite_is_empty)}
                 </AUIThemedText>
 
                 <AUIThemedView style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
                     <AUIImage
                         path={Asset.fromModule(require("@/assets/images/common/fav_image.png")).uri}
+                        style={{ width: 200, height: 200 }}
                     />
                 </AUIThemedView>
             </AUIThemedView>
@@ -125,8 +129,9 @@ const TabTwoScreen: React.FC = () => {
                 title={item?.courseName}
                 image={item?.image}
                 favorite={true}
-                startingDate={item?.startDate}
-            />
+                startingDate={item?.startDate} onEdit={function (courseId: string): void {
+                    throw new Error("Function not implemented.");
+                } }            />
         </AUIThemedView>
     );
 
@@ -150,7 +155,7 @@ const TabTwoScreen: React.FC = () => {
             <Destination
                 title={isRTL ? item.name?.en : item.name?.ar}
                 image={item.images[0]}
-                id={item._id}
+                id={item?._id}
                 favorite={true}
                 countryWidth={160}
                 countryHeight={145}
@@ -241,7 +246,7 @@ const TabTwoScreen: React.FC = () => {
                         <FlatList
                             data={showAllSchools ? fav?.clients : fav?.clients?.slice(0, 6)}
                             renderItem={renderSchoolItem}
-                            keyExtractor={(item: any) => item._id}
+                            keyExtractor={(item: any) => item?._id}
                             numColumns={2}
                             columnWrapperStyle={[
                                 styles.schoolColumnWrapper,
@@ -279,8 +284,20 @@ const TabTwoScreen: React.FC = () => {
     );
 };
 
+const height = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
+
 const styles = StyleSheet.create({
+    emptyText: {
+        fontSize: 20,
+        fontWeight: "bold",
+        marginBottom: 15,
+    },
+    emptyContainer: {
+        padding: 20,
+        flex: 1,
+        height: height,
+    },
     container: {
         // paddingHorizontal: 12,
         // backgroundColor: APP_THEME.background,

@@ -1,4 +1,3 @@
-import AUISearchBar from "@/components/common/AUISearchBar";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import CarouselSlide from "@/components/home/common/CarouselSlide";
 import CourseList from "@/components/home/common/CourseList";
@@ -9,11 +8,8 @@ import SchoolList from "@/components/home/common/SchoolList";
 import SectionTitle from "@/components/home/common/SectionTitle";
 import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { carouselData } from "@/constants/dummy data/carouselData";
-import { increaseChancesData } from "@/constants/dummy data/increaseChancesData";
-import { languagesData } from "@/constants/dummy data/languagesData";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
-import useDebounce from "@/customHooks/useDebounce";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { addItemToCart } from "@/redux/cartSlice";
 import { addToFavorite } from "@/redux/favoriteSlice";
@@ -29,17 +25,15 @@ export default function HomeScreen() {
     const dispatch = useDispatch();
     const { requestFn } = useApiRequest();
     const width = Dimensions.get("window").width;
-    // const progress = useSharedValue<number>(0);
+
+    const [selectedLanguage, setSelectedLanguage] = useState("English");
     const ref = useRef<ICarouselInstance>(null);
 
-    // const [destinationData, setDestinationData] = useState([]);
     const { t } = useTranslation();
-    // const navigation = useNavigation();
-    const [selectedLanguage, setSelectedLanguage] = useState("English");
-    // const displayedCourses = coursesData.slice(0, 4);
-    // const theme = useSelector((state: RootState) => state.global.theme);
-    const response = useLangTransformSelector((state: RootState) => state.api || {});
-    const { _id } = useLangTransformSelector((state: RootState) => state.global.user);
+
+    const response = useLangTransformSelector((state: RootState) => state.api);
+    const user = useLangTransformSelector((state: RootState) => state.global.user);
+    const _id = user?._id;
 
     let schoolsResponse = response?.school;
     const courseResponse = response?.selectedLanguagecourse;
@@ -86,45 +80,8 @@ export default function HomeScreen() {
         }
     }, [cart]);
 
-    // const onPressPagination = (index: number) => {
-    //     ref.current?.scrollTo({
-    //         count: index - progress.value,
-    //         animated: true,
-    //     });
-    // };
-
-    //search state
-    // const [searchPhrase, setSearchPhrase] = useState("");
-    // const [clicked, setClicked] = useState(false);
-
-    // const searchResults = useLangTransformSelector(
-    //     (state: RootState) => state.api.searchResults || {}
-    // );
-
-    // console.log("searchResults", JSON.stringify(searchResults));
-
-    // // const debouncedSearchPhrase = useDebounce(searchPhrase, 500);
-
-    // useEffect(() => {
-    //     if (searchPhrase) {
-    //         requestFn(API_URL.search, "searchResults", {
-    //             all: true,
-    //             search: searchPhrase,
-    //         });
-    //     }
-    // }, [searchPhrase]);
-
     return (
         <ScrollView>
-            {/* <AUIThemedView style={styles.centeredContainer}>
-                <AUISearchBar
-                    clicked={clicked}
-                    searchPhrase={searchPhrase}
-                    setSearchPhrase={setSearchPhrase}
-                    setClicked={setClicked}
-                    results={searchResults}
-                />
-            </AUIThemedView> */}
             <AUIThemedView>
                 <Carousel
                     ref={ref}
@@ -184,7 +141,9 @@ export default function HomeScreen() {
                 <SectionTitle viewAll="(home)/course/AllCoursesScreen">
                     {t(GLOBAL_TRANSLATION_LABEL.popular_courses)}
                 </SectionTitle>
-                <CourseList data={courseResponse?.docs.slice(0, 4)} />
+                <CourseList data={courseResponse?.docs.slice(0, 4)} onEdit={function (courseId: string): void {
+                    throw new Error("Function not implemented.");
+                } } />
             </AUIThemedView>
 
             <AUIThemedView>

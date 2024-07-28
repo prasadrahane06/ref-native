@@ -7,7 +7,7 @@ import { ApiErrorToast } from "@/components/common/AUIToast";
 import OTPScreen from "@/components/screenComponents/OTPScreen";
 import { APP_THEME, BACKGROUND_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT, SIGNUP_FIELDS } from "@/constants/Properties";
-import { storeUserData } from "@/constants/RNAsyncStore";
+import { getUserData, storeUserData } from "@/constants/RNAsyncStore";
 import { loginPageStyles, secondaryButtonStyle } from "@/constants/Styles";
 import { countriesData } from "@/constants/dummy data/countriesData";
 import { API_URL } from "@/constants/urlProperties";
@@ -141,60 +141,82 @@ const LoginPage = () => {
             }
         }
     };
+
+    const verifyOtp = async (payload: any) => {
+        try {
+            dispatch(setLoader(true));
+            const res = await post(API_URL.verifyOTP, payload);
+            if (payload.verificationType) {
+                if (res?.statusCode === 200) {
+                    const userData = res?.data?.user;
+                    const accessToken = res?.data?.accessToken;
+
+                    storeUserData("@user-data", {
+                        profile,
+                        accessToken,
+                        ...userData,
+                    });
+
+                    dispatch(setToken(res?.data?.accessToken));
+                    dispatch(setUser(res?.data?.user));
+
+                    if (profile === "student") {
+                        router.push({ pathname: "/details" });
+                    } else {
+                        router.push({ pathname: "/schooldetails" });
+                    }
+                }
+            }
+
+            if (!payload.verificationType) {
+                if (res.statusCode === 400) {
+                    return ApiErrorToast(res.message);
+                }
+                
+                if (res?.data?.accessToken) {
+                    const userData = res?.data?.user;
+                    const accessToken = res?.data?.accessToken;
+
+                    storeUserData("@user-data", {
+                        profile,
+                        accessToken,
+                        ...userData,
+                    });
+
+                    dispatch(setToken(res?.data?.accessToken));
+                    dispatch(setUser(res?.data?.user));
+
+                    router.push({
+                        pathname: `(home)/(${profile})`,
+                    });
+                }
+            }
+        } catch (error) {
+            console.log("error in verifyOtp", error);
+            dispatch(setLoader(false));
+        } finally {
+            dispatch(setLoader(false));
+        }
+    };
+
     const handleSubmitEmailOtp = (newOtp: any) => {
         let payload = {
             email: signupDetails?.email,
             otp: newOtp,
             verificationType: "register",
         };
-        post(API_URL.verifyOTP, payload)
-            .then((res) => {
-                setOtpVerified({
-                    ...otpVerified,
-                    signUpEmail: res?.data?.emailVerified,
-                });
-                if (res?.data?.accessToken) {
-                    storeUserData({ profile, ...res });
-                    dispatch(setToken(res?.data?.accessToken));
-
-                    if (profile === "student") {
-                        router.push({ pathname: "/details" });
-                    } else {
-                        router.push({ pathname: "/schooldetails" });
-                    }
-                }
-            })
-            .catch((e: any) => {
-                console.log("e", e.response.data);
-            });
+        verifyOtp(payload);
     };
+
     const handleSubmitPhoneOtp = (newOtp: any) => {
         let payload = {
             phone: signupDetails?.phone,
             otp: newOtp,
             verificationType: "register",
         };
-        post(API_URL.verifyOTP, payload)
-            .then((res) => {
-                setOtpVerified({
-                    ...otpVerified,
-                    signUpPhone: res?.data?.phoneVerified,
-                });
-                if (res?.data?.accessToken) {
-                    storeUserData({ profile, ...res });
-                    dispatch(setToken(res?.data?.accessToken));
-
-                    if (profile === "student") {
-                        router.push({ pathname: "/details" });
-                    } else {
-                        router.push({ pathname: "/schooldetails" });
-                    }
-                }
-            })
-            .catch((e: any) => {
-                console.log("e", e);
-            });
+        verifyOtp(payload);
     };
+
     const handleSubmitLoginOtp = (newOtp: any) => {
         let code = phoneCode?.split("+")[1];
         let payload = {};
@@ -212,34 +234,9 @@ const LoginPage = () => {
             };
         }
 
-        dispatch(setLoader(true));
-        post(API_URL.verifyOTP, payload)
-            .then((res) => {
-                if (res.statusCode === 400) {
-                    return ApiErrorToast(res.message);
-                }
-
-                dispatch(setLoader(false));
-                setOtpVerified({
-                    ...otpVerified,
-                    login: res?.data?.accessToken,
-                });
-                if (res?.data?.accessToken) {
-                    storeUserData({ profile, ...res });
-                    dispatch(setToken(res?.data?.accessToken));
-                    dispatch(setUser(res?.data?.user));
-                    router.replace({
-                        pathname: `(home)/(${profile})`,
-                    });
-                }
-            })
-            .catch((e: any) => {
-                dispatch(setLoader(false));
-                console.log("e", e.response.data);
-                if (e?.response?.data?.statusCode === 500) {
-                }
-            });
+        verifyOtp(payload);
     };
+
     const handleBackToInput = () => {
         setOtpSent(false);
         reset({ input: inputValue, selectedButton });
@@ -437,7 +434,7 @@ const ContactNumberField = ({ label, control }: any) => {
                     render={({ field: { onChange, value } }) => {
                         return (
                             <DropdownComponent
-                                style={{ flex: 0.8 }}
+                                style={{ flex: 1.1 }}
                                 // @ts-ignore
                                 list={countriesData}
                                 // @ts-ignore

@@ -6,39 +6,43 @@ import { removeItemFromCart } from "@/redux/cartSlice";
 import { removeFromFavorite } from "@/redux/favoriteSlice";
 import { setLoader } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
-import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { StyleSheet, Text, TouchableOpacity, ViewStyle } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, ViewStyle } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import AUIImage from "./common/AUIImage";
 import { AUIThemedText } from "./common/AUIThemedText";
 import { AUIThemedView } from "./common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "./common/AUIToast";
+import { MaterialCommunityIcons,MaterialIcons, FontAwesome } from '@expo/vector-icons';
 
 interface CourseProps {
     title: string;
     image: any;
     favorite?: boolean;
+    edit?: boolean;
     startingDate?: string;
     cart?: boolean;
     courseId: any;
     style?: ViewStyle;
     numberOfLines?: number;
     ellipsizeMode?: "head" | "middle" | "tail" | "clip";
+    onEdit: (courseId: string) => void;
 }
 
 const Course: React.FC<CourseProps> = ({
     title,
     image,
     favorite,
+    edit,
     startingDate,
     cart,
     courseId,
     style,
     numberOfLines,
     ellipsizeMode,
+    onEdit,
 }) => {
     const { del } = useAxios();
     const dispatch = useDispatch();
@@ -68,16 +72,35 @@ const Course: React.FC<CourseProps> = ({
     });
 
     const handleRemoveFav = (id: string, type: string) => {
-        del(API_URL.favorite, { id: id, type: type })
-            .then((res: any) => {
-                ApiSuccessToast(res.message);
-                dispatch(removeFromFavorite({ id, type: "courses" }));
-                dispatch(setLoader(false));
-            })
-            .catch((e: any) => {
-                ApiErrorToast(e.response?.data?.message);
-                console.log(e);
-            });
+        Alert.alert(
+            'Remove Favorite',
+            `Are you sure you want to remove ${title} from your favorites?`,
+            [
+                {
+                    text: 'Cancel',
+                    onPress: () => console.log('Remove cancelled'),
+                    style: 'cancel',
+                },
+                {
+                    text: 'Remove',
+                    onPress: () => {
+                        dispatch(setLoader(true));
+                        del(API_URL.favorite, { id, type })
+                            .then((res: any) => {
+                                ApiSuccessToast(res.message);
+                                dispatch(removeFromFavorite({ id, type: "courses" }));
+                            })
+                            .catch((e: any) => {
+                                ApiErrorToast(e.response?.data?.message);
+                                console.log(e);
+                            })
+                            .finally(() => dispatch(setLoader(false)));
+                    },
+                    style: 'destructive',
+                },
+            ],
+            { cancelable: false }
+        );
     };
 
     return (
@@ -119,7 +142,15 @@ const Course: React.FC<CourseProps> = ({
                         onPress={() => handleRemoveFav(courseId, "course")}
                         style={styles.iconContainer}
                     >
-                        <MaterialIcons name="favorite" size={18} color="red" style={styles.icon} />
+                        <MaterialCommunityIcons name="delete-forever-outline" size={24} color="red" />
+                    </TouchableOpacity>
+                )}
+                {edit && (
+                    <TouchableOpacity
+                        style={styles.editiConContainer}
+                        onPress={() => onEdit(courseId)}
+                    >
+                        <FontAwesome name="edit" size={23} color={APP_THEME.light.primary.first} />
                     </TouchableOpacity>
                 )}
                 {cart && (
@@ -180,9 +211,17 @@ const styles = StyleSheet.create({
         position: "absolute",
         top: 10,
         right: 10,
-        backgroundColor: "rgba(255, 0, 0, 0.2)",
+        // backgroundColor: "rgba(255, 0, 0, 0.2)",
         borderRadius: 20,
         padding: 5,
+    },
+    editiConContainer: {
+        position: "absolute",
+        top: 10,
+        right: 10,
+        backgroundColor: "rgba(149, 207, 156, 0.4)",
+        borderRadius: 20,
+        padding: 3,
     },
     cartIconContainer: {
         position: "absolute",

@@ -15,6 +15,7 @@ import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector
 import { addToFavorite, removeFromFavorite } from "@/redux/favoriteSlice";
 import { RootState } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";
+import { Asset } from "expo-asset";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -96,13 +97,13 @@ export default function cityDetails() {
     const isTruncated = aboutText.split(" ").length > wordsLimit;
 
     const isCountryFavorited = (id: string) => {
-        return favorite.courses.some((favCourse: any) => favCourse._id === id);
+        return favorite.countries.some((favCountry: any) => favCountry._id === id);
     };
 
     const handleFavoriteClick = (id: string, type: string) => {
         if (isCountryFavorited(id)) {
             // Remove from favorites
-            del(API_URL.favorite, {  id,  type })
+            del(API_URL.favorite, { id, type })
                 .then((res: any) => {
                     dispatch(removeFromFavorite({ id, type: "countries" }));
                     ApiSuccessToast(res.message);
@@ -113,7 +114,7 @@ export default function cityDetails() {
                 });
         } else {
             // Add to favorites
-            post(API_URL.favorite, {  id,  type })
+            post(API_URL.favorite, { id, type })
                 .then((res: any) => {
                     dispatch(addToFavorite({ countries: [country], courses: [], clients: [] }));
                     ApiSuccessToast(res.message);
@@ -136,6 +137,8 @@ export default function cityDetails() {
     effect(() => {
         navigation.setOptions({
             headerTransparent: true,
+            headerBackVisible: false,
+
             headerBackground: () => (
                 <Animated.View
                     style={[
@@ -146,20 +149,6 @@ export default function cityDetails() {
                             borderColor: APP_THEME[theme].gray,
                         },
                     ]}
-                />
-            ),
-            headerLeft: () => (
-                <Ionicons
-                    name="arrow-back"
-                    size={30}
-                    color={"#fff"}
-                    style={{
-                        position: "absolute",
-                        left: -57,
-                        alignItems: "center",
-                        justifyContent: "center",
-                    }}
-                    onPress={() => navigation.goBack()}
                 />
             ),
             headerRight: () => (
@@ -176,7 +165,9 @@ export default function cityDetails() {
                         <Ionicons
                             name={isCountryFavorited(id) ? "heart" : "heart-outline"}
                             size={24}
-                            color={isCountryFavorited(id) ? "red" : APP_THEME[theme].secondary.first }
+                            color={
+                                isCountryFavorited(id) ? "red" : APP_THEME[theme].secondary.first
+                            }
                         />
                     </AUIThemedView>
                 </TouchableOpacity>
@@ -204,7 +195,6 @@ export default function cityDetails() {
             </AUIThemedView>
         );
     }
-    
 
     return (
         <AUIThemedView>
@@ -215,7 +205,10 @@ export default function cityDetails() {
                     <AUIThemedView>
                         <Animated.Image
                             source={{
-                                uri: country?.images?.[0],
+                                uri:
+                                    country?.images?.[0] ||
+                                    Asset.fromModule(require("@/assets/images/common/no_image.png"))
+                                        .uri,
                             }}
                             style={[styles.image, imageAnimatedStyle]}
                             resizeMode="cover"
@@ -273,7 +266,7 @@ export default function cityDetails() {
                                 />
                                 <AUIThemedView style={styles.iconTextContainer}>
                                     <AUIThemedText style={styles.iconText}>Capital</AUIThemedText>
-                                    <AUIThemedText style={styles.iconSubText}>
+                                    <AUIThemedText style={styles.iconSubText} numberOfLines={1}>
                                         {country?.capital}
                                     </AUIThemedText>
                                 </AUIThemedView>
@@ -319,15 +312,15 @@ export default function cityDetails() {
                                 About {isRTL ? country?.name?.en : country?.name?.ar}
                             </AUIThemedText>
                             <AUIThemedText style={styles.aboutDescription}>
-                            {readMore ? aboutText : truncatedText}
-        {isTruncated && (
-            <AUIThemedText
-                onPress={() => setReadMore(!readMore)}
-                style={styles.readMoreText}
-            >
-                {readMore ? "Read Less" : "Read More"}
-            </AUIThemedText>
-        )}
+                                {readMore ? aboutText : truncatedText}
+                                {isTruncated && (
+                                    <AUIThemedText
+                                        onPress={() => setReadMore(!readMore)}
+                                        style={styles.readMoreText}
+                                    >
+                                        {readMore ? "Read Less" : "Read More"}
+                                    </AUIThemedText>
+                                )}
                             </AUIThemedText>
                         </AUIThemedView>
                     </AUIThemedView>
@@ -367,15 +360,13 @@ const IMG_HEIGHT = 200;
 const styles = StyleSheet.create({
     container: { flex: 1 },
     screenHeader: {
-        // backgroundColor: APP_THEME.primary.first,
         height: 100,
         borderBottomWidth: StyleSheet.hairlineWidth,
-        // borderColor: APP_THEME.gray,
     },
     screenTitle: {
         fontSize: 18,
         fontWeight: "bold",
-        color: "#fff",
+        color: APP_THEME.light.background,
     },
     image: {
         height: IMG_HEIGHT,
@@ -395,7 +386,6 @@ const styles = StyleSheet.create({
     infoContainer: {
         paddingVertical: 10,
         paddingHorizontal: 15,
-        // backgroundColor: APP_THEME.background,
     },
     name: {
         fontSize: 17,
@@ -405,7 +395,6 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "row",
         marginVertical: 10,
-        // backgroundColor: APP_THEME.background,
     },
     headingImage: {
         height: 55,
@@ -418,19 +407,18 @@ const styles = StyleSheet.create({
     nestedContainer: {
         marginVertical: 5,
         marginLeft: 15,
-        // backgroundColor: APP_THEME.background,
     },
     iconContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
         marginTop: 20,
-        // backgroundColor: APP_THEME.background,
     },
     iconWrapper: {
         alignItems: "center",
-        backgroundColor: "#D3FFE7",
+        backgroundColor: APP_THEME.light.primary.third,
         paddingHorizontal: 25,
         borderRadius: 10,
+        width: 100,
     },
     iconImage: {
         width: 50,
@@ -440,24 +428,21 @@ const styles = StyleSheet.create({
     },
     iconTextContainer: {
         marginBottom: 5,
-        // width: 80,
-        backgroundColor: "#D3FFE7",
+        width: 90,
+        backgroundColor: APP_THEME.light.primary.third,
     },
     iconText: {
         marginTop: 5,
         textAlign: "center",
         fontSize: 12,
-        color: "#000",
     },
     iconSubText: {
         textAlign: "center",
         fontSize: 16,
         fontWeight: "bold",
-        color: "#000",
     },
     aboutContainer: {
         marginTop: 15,
-        // backgroundColor: APP_THEME.background,
     },
     aboutTitle: {
         fontSize: 18,
@@ -477,7 +462,6 @@ const styles = StyleSheet.create({
     },
     photoGalleryheader: {
         marginBottom: 10,
-        // backgroundColor: APP_THEME.background,
     },
     photoGalleryText: {
         paddingLeft: 14,
@@ -486,7 +470,6 @@ const styles = StyleSheet.create({
         paddingVertical: 5,
     },
     popularSchoolsContainer: {
-        // backgroundColor: APP_THEME.background,
         marginBottom: 15,
     },
 });

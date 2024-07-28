@@ -1,6 +1,6 @@
 import AUILoader from "@/components/common/AUILoader";
 import "@/components/i18n/i18n.config";
-import { BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
+import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
 import { getUserData, storeUserDeviceData } from "@/constants/RNAsyncStore";
 import { setDeviceToken, setTheme } from "@/redux/globalSlice";
 import { RootState, store } from "@/redux/store";
@@ -18,6 +18,7 @@ import Toast from "react-native-toast-message";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import useAxios from "./services/axiosClient";
 import { API_URL } from "@/constants/urlProperties";
+import { setResponse } from "@/redux/apiSlice";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -125,7 +126,7 @@ const InitialLayout = () => {
 
     useEffect(() => {
         storeUserDeviceData();
-        getUserData().then((data) => {
+        getUserData("@theme").then((data) => {
             //setting theme
             if (data && Object.keys(data).length > 0) {
                 if (data?.darkMode === true) {
@@ -274,8 +275,9 @@ const InitialLayout = () => {
                         <TouchableOpacity onPress={router.back}>
                             <Ionicons
                                 name="arrow-back"
-                                size={34}
+                                size={27}
                                 color={TEXT_THEME[theme].primary}
+                                style={{ marginRight: 20 }}
                             />
                         </TouchableOpacity>
                     ),
@@ -293,8 +295,9 @@ const InitialLayout = () => {
                         <TouchableOpacity onPress={router.back}>
                             <Ionicons
                                 name="arrow-back"
-                                size={34}
+                                size={27}
                                 color={TEXT_THEME[theme].primary}
+                                style={{ marginRight: 20 }}
                             />
                         </TouchableOpacity>
                     ),
@@ -312,8 +315,9 @@ const InitialLayout = () => {
                         <TouchableOpacity onPress={router.back}>
                             <Ionicons
                                 name="arrow-back"
-                                size={34}
-                                color={TEXT_THEME[theme].primary}
+                                size={27}
+                                color="#fff"
+                                style={{ marginRight: 20 }}
                             />
                         </TouchableOpacity>
                     ),
@@ -332,8 +336,9 @@ const InitialLayout = () => {
                         <TouchableOpacity onPress={router.back}>
                             <Ionicons
                                 name="arrow-back"
-                                size={34}
-                                color={TEXT_THEME[theme].primary}
+                                size={27}
+                                color="#fff"
+                                style={{ marginRight: 20 }}
                             />
                         </TouchableOpacity>
                     ),
@@ -361,18 +366,61 @@ const InitialLayout = () => {
                 name="(home)/schoolDetails/[id]"
                 options={{
                     headerTitle: "",
+                    headerLeft: () => (
+                        <Ionicons
+                            name="arrow-back"
+                            size={27}
+                            color={"#fff"}
+                            style={{ marginRight: 10 }}
+                            onPress={() => {
+                                dispatch(
+                                    setResponse({ storeName: "individualSchool", data: null })
+                                );
+                                router.back();
+                            }}
+                        />
+                    ),
                 }}
             />
             <Stack.Screen
                 name="(home)/cityDetails/[id]"
                 options={{
                     headerTitle: "",
+                    headerLeft: () => (
+                        <Ionicons
+                            name="arrow-back"
+                            size={27}
+                            color={"#fff"}
+                            style={{ marginRight: 10 }}
+                            onPress={() => {
+                                dispatch(
+                                    setResponse({ storeName: "individualCountry", data: null })
+                                );
+                                dispatch(setResponse({ storeName: "countrySchool", data: null }));
+                                router.back();
+                            }}
+                        />
+                    ),
                 }}
             />
             <Stack.Screen
                 name="(home)/courseDetails/[id]"
                 options={{
                     headerTitle: "",
+                    headerLeft: () => (
+                        <Ionicons
+                            name="arrow-back"
+                            size={27}
+                            color={"#fff"}
+                            style={{ marginRight: 10 }}
+                            onPress={() => {
+                                dispatch(
+                                    setResponse({ storeName: "individualCourse", data: null })
+                                );
+                                router.back();
+                            }}
+                        />
+                    ),
                 }}
             />
             <Stack.Screen
@@ -385,8 +433,9 @@ const InitialLayout = () => {
                         <TouchableOpacity onPress={router.back}>
                             <Ionicons
                                 name="arrow-back"
-                                size={34}
+                                size={27}
                                 color={TEXT_THEME[theme].primary}
+                                style={{ marginRight: 20 }}
                             />
                         </TouchableOpacity>
                     ),
@@ -398,7 +447,6 @@ const InitialLayout = () => {
                     headerTitle: "School Profile",
                     headerTitleStyle: { color: TEXT_THEME[theme].primary },
                     headerStyle: { backgroundColor: BACKGROUND_THEME[theme].background },
-                    headerBackVisible: false,
                     headerLeft: () => (
                         <TouchableOpacity onPress={router.back}>
                             <Ionicons
@@ -436,7 +484,6 @@ const InitialLayout = () => {
                     headerStyle: {
                         backgroundColor: BACKGROUND_THEME[theme].background,
                     },
-                    headerBackVisible: false,
                     headerLeft: () => (
                         <TouchableOpacity onPress={router.back}>
                             <Ionicons
@@ -453,8 +500,16 @@ const InitialLayout = () => {
                 name="(home)/AddNewCourse/AddCourse"
                 options={{
                     headerShown: true,
-                    title: "Add New Course",
-                    headerTitle: "Add New Course",
+                    headerLeft: () => (
+                        <TouchableOpacity onPress={router.back}>
+                            <Ionicons
+                                name="arrow-back"
+                                size={25}
+                                color={TEXT_THEME[theme].primary}
+                                style={{ marginRight: 20 }}
+                            />
+                        </TouchableOpacity>
+                    ),
                 }}
             />
         </Stack>

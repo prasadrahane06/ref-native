@@ -46,17 +46,17 @@ const AUISearchBar: React.FC<SearchBarProps> = ({
         switch (type) {
             case "country":
                 router.push({
-                    pathname: `(home)/cityDetails/${item._id}`,
+                    pathname: `(home)/cityDetails/${item?._id}`,
                 });
                 break;
             case "course":
                 router.push({
-                    pathname: `(home)/courseDetails/${item._id}`,
+                    pathname: `(home)/courseDetails/${item?._id}`,
                 });
                 break;
             case "school":
                 router.push({
-                    pathname: `(home)/schoolDetails/${item._id}`,
+                    pathname: `(home)/schoolDetails/${item?._id}`,
                 });
                 break;
         }
@@ -71,7 +71,7 @@ const AUISearchBar: React.FC<SearchBarProps> = ({
     );
 
     return (
-        <AUIThemedView style={{ marginRight: 20 }}>
+        <AUIThemedView style={{ justifyContent: "center", alignItems: "center" }}>
             <AUIThemedView
                 style={[
                     styles.container,
@@ -100,29 +100,17 @@ const AUISearchBar: React.FC<SearchBarProps> = ({
                     {clicked && (
                         <Entypo
                             name="cross"
-                            size={20}
+                            size={25}
                             color={TEXT_THEME[theme].primary}
-                            style={{ padding: 1 }}
                             onPress={() => {
                                 setSearchPhrase("");
-                                setClicked(false); // Also close the search results
+                                setClicked(false);
+                                Keyboard.dismiss();
+                                setClicked(false);
                             }}
                         />
                     )}
                 </AUIThemedView>
-                {clicked && (
-                    <AUIThemedView style={styles.cancelButton}>
-                        <AUIThemedText
-                            style={styles.cancelText}
-                            onPress={() => {
-                                Keyboard.dismiss();
-                                setClicked(false);
-                            }}
-                        >
-                            Cancel
-                        </AUIThemedText>
-                    </AUIThemedView>
-                )}
             </AUIThemedView>
             {results && searchPhrase.length > 0 && (
                 <AUIThemedView style={styles.resultsContainer}>
@@ -132,7 +120,7 @@ const AUISearchBar: React.FC<SearchBarProps> = ({
                             <FlatList
                                 scrollEnabled={false}
                                 data={results.country}
-                                keyExtractor={(item) => item._id}
+                                keyExtractor={(item) => item?._id}
                                 renderItem={({ item }) => renderResultItem("country", item)}
                             />
                         </AUIThemedView>
@@ -143,7 +131,7 @@ const AUISearchBar: React.FC<SearchBarProps> = ({
                             <FlatList
                                 scrollEnabled={false}
                                 data={results.course}
-                                keyExtractor={(item) => item._id}
+                                keyExtractor={(item) => item?._id}
                                 renderItem={({ item }) => renderResultItem("course", item)}
                             />
                         </AUIThemedView>
@@ -154,7 +142,7 @@ const AUISearchBar: React.FC<SearchBarProps> = ({
                             <FlatList
                                 scrollEnabled={false}
                                 data={results.school}
-                                keyExtractor={(item) => item._id}
+                                keyExtractor={(item) => item?._id}
                                 renderItem={({ item }) => renderResultItem("school", item)}
                             />
                         </AUIThemedView>
@@ -188,7 +176,7 @@ const styles = StyleSheet.create({
     searchBar__clicked: {
         paddingVertical: 10,
         flexDirection: "row",
-        width: "75%",
+        width: "90%",
         borderRadius: 15,
         alignItems: "center",
         justifyContent: "space-evenly",
@@ -209,7 +197,6 @@ const styles = StyleSheet.create({
     },
     resultsContainer: {
         marginTop: 5,
-        // backgroundColor: "#fff",
         borderRadius: 5,
         elevation: 5,
         position: "absolute",

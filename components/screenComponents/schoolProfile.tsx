@@ -62,7 +62,7 @@ function schoolProfile() {
                         }}
                     >
                         <Ionicons
-                            name="arrow-back-circle-outline"
+                            name="arrow-back"
                             size={30}
                             color={APP_THEME[theme].ternary.first}
                         />
