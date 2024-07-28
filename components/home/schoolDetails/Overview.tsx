@@ -593,16 +593,6 @@ export default function OverviewTab({ schoolOverView, courseId, clientId }: Over
     const { t } = useTranslation();
     const userId = userData._id;
 
-    // let userId: string = "";
-
-    // getUserData().then((data) => {
-    //     if (data && Object.keys(data).length > 0) {
-    //         userId = data.data.user._id;
-    //     } else {
-    //         console.log("no data found in user-data");
-    //     }
-    // });
-
     const [overallReviews, setReviews] = useState([]);
     const reviewOfTheSchool = useLangTransformSelector(
         (state: RootState) => state.api.ratingsOfTheSchool || {}
@@ -658,7 +648,7 @@ export default function OverviewTab({ schoolOverView, courseId, clientId }: Over
                             }}
                         />
                     )}
-                    keyExtractor={(item) => item._id}
+                    keyExtractor={(item) => item?._id}
                 />
             </AUIThemedView>
 

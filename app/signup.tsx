@@ -21,13 +21,14 @@ import {
     TouchableWithoutFeedback,
     View,
 } from "react-native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useAxios from "./services/axiosClient";
 const SignupPage = () => {
     const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
     const router = useRouter();
     const dispatch = useDispatch();
     const profile = useLangTransformSelector((state: RootState) => state.global.profile);
+    const deviceToken = useSelector((state: RootState) => state.global.deviceToken);
     const { post } = useAxios();
     const [errors, setErrors] = useState<any>({});
     const [signupValues, setSignupValues] = useState<any>({
@@ -44,6 +45,7 @@ const SignupPage = () => {
             Object.values(signupValues).every((x) => x) && Object.keys(errors).length === 0;
         setIsButtonEnabled(isValid);
     }, [signupValues, errors]);
+
     const handleOnSave = () => {
         const { name, email, phone, phoneCode } = signupValues;
         // @ts-ignore
@@ -56,13 +58,18 @@ const SignupPage = () => {
             return;
         }
         // @ts-ignore
-        if (!/^[0-9]{11}$/.test(signupValues.phone)) {
-            setErrors({
-                ...errors,
-                phone: GLOBAL_TEXT.validate_mobile,
-            });
-            FormValidateToast().phone;
-            return;
+        if (phone && phoneCode) {
+            const onlyPhoneCode = phoneCode.split("+")[1];
+            const totalLength =
+                (phone ? phone.length : 0) + (onlyPhoneCode ? onlyPhoneCode.length : 0);
+            if (totalLength !== 12) {
+                setErrors({
+                    ...errors,
+                    phone: GLOBAL_TEXT.validate_mobile,
+                });
+                FormValidateToast().phone;
+                return;
+            }
         }
         setErrors({});
         let code = phoneCode.split("+")[1];
@@ -71,6 +78,7 @@ const SignupPage = () => {
             email,
             phone: `${code}${phone}`,
             registerType: profile,
+            deviceToken: deviceToken,
         };
         dispatch(setSignupDetails(payload));
         dispatch(setLoader(true));
@@ -107,13 +115,28 @@ const SignupPage = () => {
             return;
         }
         // @ts-ignore
-        if (item === "phone" && !/^[0-9]{10}$/.test(val)) {
-            setErrors({
-                ...errors,
-                phone: GLOBAL_TEXT.validate_mobile,
-            });
-            return;
+        // if (item === "phone" && !/^[0-9]{10}$/.test(val)) {
+        //     setErrors({
+        //         ...errors,
+        //         phone: GLOBAL_TEXT.validate_mobile,
+        //     });
+        //     return;
+        // }
+        const { phone, phoneCode } = val;
+        if (item === "phone" && phone && phoneCode) {
+            const onlyPhoneCode = phoneCode.split("+")[1];
+            const totalLength =
+                (phone ? phone.length : 0) + (onlyPhoneCode ? onlyPhoneCode.length : 0);
+            if (totalLength !== 12) {
+                setErrors({
+                    ...errors,
+                    phone: GLOBAL_TEXT.validate_mobile,
+                });
+                FormValidateToast().phone;
+                return;
+            }
         }
+
         setErrors({});
     };
     const handleDropdownChange = (val: any) => {
@@ -129,7 +152,7 @@ const SignupPage = () => {
     const handleTouchOutside = () => {
         Keyboard.dismiss();
         validateField(signupValues.email, "email");
-        validateField(signupValues.phone, "phone");
+        validateField(signupValues, "phone");
     };
     return (
         <TouchableWithoutFeedback onPress={handleTouchOutside}>
@@ -235,7 +258,6 @@ const ContactNumberField = ({
     placeholder,
     onBlur,
 }: any) => {
-
     return (
         <AUIThemedView>
             <AUIThemedText

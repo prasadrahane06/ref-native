@@ -3,10 +3,12 @@ import AUIButton from "@/components/common/AUIButton";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
 import React from "react";
-import { Dimensions, FlatList, StyleSheet, View } from "react-native";
+import { Dimensions, FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
 
 interface PurchaseCoursesProps {
+    courseId: string;
     title: string;
     subtitle: string;
     image: any;
@@ -19,9 +21,23 @@ interface PurchaseCoursesListProps {
     completedCourse?: boolean;
 }
 
-function PurchaseCourses({ title, subtitle, image, schoolName, type }: PurchaseCoursesProps) {
+function PurchaseCourses({
+    title,
+    subtitle,
+    image,
+    schoolName,
+    type,
+    courseId,
+}: PurchaseCoursesProps) {
     return (
-        <AUIThemedView style={purchaseCoursesStyle.item}>
+        <TouchableOpacity
+            style={purchaseCoursesStyle.item}
+            onPress={() =>
+                router.push({
+                    pathname: `(home)/courseDetails/${courseId}`,
+                })
+            }
+        >
             <AUIBackgroundImage path={image} style={purchaseCoursesStyle.image}>
                 <LinearGradient
                     colors={[
@@ -54,7 +70,7 @@ function PurchaseCourses({ title, subtitle, image, schoolName, type }: PurchaseC
                     />
                 </View>
             </AUIBackgroundImage>
-        </AUIThemedView>
+        </TouchableOpacity>
     );
 }
 
@@ -70,6 +86,7 @@ export default function PurchaseCoursesList({
                 data={data}
                 renderItem={({ item }) => (
                     <PurchaseCourses
+                        courseId={item?.course?._id}
                         image={item?.course?.image}
                         title={item?.course?.courseName}
                         subtitle={item?.course?.description}
@@ -77,7 +94,7 @@ export default function PurchaseCoursesList({
                         type={type}
                     />
                 )}
-                keyExtractor={(item) => item._id}
+                keyExtractor={(item) => item?._id}
             />
         </AUIThemedView>
     );

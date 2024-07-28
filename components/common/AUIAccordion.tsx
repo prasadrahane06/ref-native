@@ -1,7 +1,7 @@
 import AUIImage from "@/components/common/AUIImage";
-import { TEXT_THEME } from "@/constants/Colors";
+import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { RootState } from "@/redux/store";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { ReactNode, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { useSelector } from "react-redux";
@@ -14,9 +14,19 @@ interface AccordionProps {
     icon?: string;
     style?: any;
     innerStyle?: any;
+    showEditIcon?: boolean;
+    onEditClick?: () => void;
 }
 
-const AUIAccordion: React.FC<AccordionProps> = ({ title, children, icon, style, innerStyle }) => {
+const AUIAccordion: React.FC<AccordionProps> = ({
+    title,
+    children,
+    icon,
+    style,
+    innerStyle,
+    showEditIcon,
+    onEditClick,
+}) => {
     const theme = useSelector((state: RootState) => state.global.theme);
     const [expanded, setExpanded] = useState(false);
 
@@ -35,11 +45,22 @@ const AUIAccordion: React.FC<AccordionProps> = ({ title, children, icon, style, 
                     <AUIThemedText style={styles.accordionTitleText}>{title}</AUIThemedText>
                 </AUIThemedView>
 
-                <Ionicons
-                    name={expanded ? "chevron-up-outline" : "chevron-down-outline"}
-                    size={24}
-                    color={TEXT_THEME[theme].primary}
-                />
+                <AUIThemedView style={styles.iconContainer}>
+                    {showEditIcon && (
+                        <TouchableOpacity onPress={onEditClick}>
+                            <FontAwesome
+                                name="edit"
+                                size={23}
+                                color={APP_THEME.light.primary.third}
+                            />
+                        </TouchableOpacity>
+                    )}
+                    <Ionicons
+                        name={expanded ? "chevron-up-outline" : "chevron-down-outline"}
+                        size={24}
+                        color={TEXT_THEME[theme].primary}
+                    />
+                </AUIThemedView>
             </TouchableOpacity>
             {expanded && <AUIThemedView style={styles.accordionContent}>{children}</AUIThemedView>}
         </AUIThemedView>
@@ -79,6 +100,7 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
         // backgroundColor: "#f9f9f9",
     },
+    iconContainer: { flexDirection: "row", gap: 20 },
     icon: {
         width: 24,
         height: 24,

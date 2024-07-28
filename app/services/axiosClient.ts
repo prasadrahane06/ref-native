@@ -3,7 +3,7 @@ import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector
 import { RootState } from "@/redux/store";
 import axios from "axios";
 
-const baseURL = "https://zmgr2gg0-4000.inc1.devtunnels.ms/dev/";
+const baseURL = "https://vi6pxwh9w7.execute-api.ap-south-1.amazonaws.com/dev/";
 
 const useAxios = () => {
     const token = useLangTransformSelector((state: RootState) => state.global.token);
@@ -41,11 +41,6 @@ const useAxios = () => {
     const post = async (url: string, payload: any) => {
         try {
             const response = await axiosClient.post(url, payload);
-            // if (response.data?.message.toLowerCase().includes("invalid")) {
-            //     ApiErrorToast(response.data?.message);
-            // } else {
-            //     ApiSuccessToast(response.data?.message);
-            // }
             return response.data;
         } catch (error: any) {
             ApiErrorToast(error.response?.data?.message);

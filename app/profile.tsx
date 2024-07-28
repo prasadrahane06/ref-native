@@ -8,13 +8,18 @@ import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { countriesData } from "@/constants/dummy data/countriesData";
 import { GLOBAL_TEXT } from "@/constants/Properties";
+import { storeUserData } from "@/constants/RNAsyncStore";
 import { API_URL } from "@/constants/urlProperties";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
+import { setResponse } from "@/redux/apiSlice";
+import { setLoader, setUser } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import { Asset } from "expo-asset";
+import * as ImagePicker from "expo-image-picker";
+import { router, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
@@ -22,10 +27,11 @@ import {
     Pressable,
     ScrollView,
     StyleSheet,
-    TextInput
+    TextInput,
+    TouchableOpacity,
 } from "react-native";
 import "react-native-gesture-handler";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import useAxios from "./services/axiosClient";
 
@@ -120,11 +126,29 @@ const Profile: React.FC = () => {
         (state: RootState) => state.api.userProfileData
     );
 
+    const { from, type, planId, courseId } = useLocalSearchParams<{
+        from: string;
+        type: string;
+        planId: string;
+        courseId: string;
+    }>();
+
+    if (from === "buyButton" || from === "bookYourSeatButton") {
+        ApiSuccessToast("❗Check you profile before making payment");
+    }
+
     const theme = useSelector((state: RootState) => state.global.theme);
-    const [dateOfBirth, setDateOfBirth] = useState(userProfileData?.dob && new Date(userProfileData?.dob) || '');
+    const [dateOfBirth, setDateOfBirth] = useState(
+        userProfileData?.dob ? new Date(userProfileData?.dob) : new Date()
+    );
     const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
+    const [profileImage, setProfileImage] = useState<string>(
+        userProfileData?.photo || Asset.fromModule(require("@/assets/images/user.png")).uri
+    );
+    const [profileBase64, setProfileBase64] = useState<any>(null);
 
     const { patch } = useAxios();
+    const dispatch = useDispatch();
 
     const { reset, setValue, control, handleSubmit, formState } = useForm({
         resolver: yupResolver(schema),
@@ -135,7 +159,7 @@ const Profile: React.FC = () => {
             email: userProfileData?.email,
             language: userProfileData?.language,
             dateOfBirth: dateOfBirth && dateOfBirth?.toISOString(),
-            gender: "",
+            gender: userProfileData?.gender || "",
             qualification: userProfileData?.qualification,
             academicSession: userProfileData?.academicSession,
             country: userProfileData?.country,
@@ -160,8 +184,24 @@ const Profile: React.FC = () => {
         return `${day}/${month}/${year}`;
     };
 
+    const pickImageAsync = async (value: any) => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            base64: true,
+            allowsEditing: true,
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            setProfileBase64(result.assets[0].base64);
+            setProfileImage(result.assets[0].uri);
+        } else {
+            alert("You did not select any image.");
+        }
+    };
     const onSave = (data: any) => {
-        const payload = {
+        dispatch(setLoader(true));
+
+        const payload: any = {
             id: userProfileData?._id,
             name: data.name,
             phone: data.phoneNumber,
@@ -175,11 +215,42 @@ const Profile: React.FC = () => {
             state: data.state,
         };
 
+        if (profileBase64) {
+            payload["photo"] = `data:image/png;base64,${profileBase64}`;
+        }
+
         patch(API_URL.user, payload)
             .then((res: any) => {
+                storeUserData("@user-data", {
+                    ...res?.data,
+                });
+                dispatch(setUser(res?.data));
+                dispatch(setResponse({ storeName: "userProfileData", data: res?.data }));
                 ApiSuccessToast(res.message);
+                dispatch(setLoader(false));
+
+                if (from === "buyButton") {
+                    router.push({
+                        pathname: `(home)/courseDetails/purchase/${JSON.stringify({
+                            type: type,
+                            planId: planId,
+                            courseId: courseId,
+                        })}`,
+                    });
+                }
+
+                if (from === "bookYourSeatButton") {
+                    router.push({
+                        pathname: `(home)/courseDetails/purchase/${JSON.stringify({
+                            type: type,
+                            planId: planId,
+                            courseId: courseId,
+                        })}`,
+                    });
+                }
             })
             .catch((error: any) => {
+                dispatch(setLoader(false));
                 ApiErrorToast(error.message);
             });
     };
@@ -187,13 +258,15 @@ const Profile: React.FC = () => {
     return (
         <ScrollView>
             <AUIThemedView style={styles.container}>
-                <AUIThemedView style={styles.profileImageContainer}>
-                    <AUIImage
-                        icon
-                        path={Asset.fromModule(require("@/assets/images/user.png")).uri}
-                        style={styles?.profileImage}
+                <TouchableOpacity style={styles.profileImageContainer} onPress={pickImageAsync}>
+                    <AUIImage icon path={profileImage} style={[styles.profileImage]} />
+                    <Ionicons
+                        name="create-outline"
+                        size={24}
+                        color={APP_THEME.light.primary.first}
+                        style={styles.editIcon}
                     />
-                </AUIThemedView>
+                </TouchableOpacity>
 
                 <Controller
                     name="name"
@@ -540,6 +613,20 @@ const Profile: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
+    editIcon: {
+        position: "absolute",
+        left: 70,
+    },
+    editIconContainer: {
+        position: "absolute",
+        bottom: 0,
+        padding: 10,
+        width: 100,
+        height: 50,
+        borderBottomLeftRadius: 100,
+        borderBottomRightRadius: 100,
+        backgroundColor: "rgba(91, 216, 148, 0.3)",
+    },
     buttonContainer: {
         marginTop: 10,
         flexDirection: "row",
@@ -571,17 +658,15 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: "bold",
     },
-    editIcon: {
-        top: 8,
-    },
     profileImageContainer: {
+        position: "relative",
         alignItems: "flex-start",
         marginBottom: 20,
     },
     profileImage: {
         height: 100,
         width: 100,
-        borderRadius: 50,
+        borderRadius: 100,
     },
     label: {
         marginTop: 10,

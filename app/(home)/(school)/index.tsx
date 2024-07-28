@@ -30,8 +30,6 @@ export default function HomeScreen() {
     const { t } = useTranslation();
 
     const user = useLangTransformSelector((state: RootState) => state.global.user);
-    const school = useLangTransformSelector((state: RootState) => state.api.individualSchool || {});
-    const theme = useSelector((state: RootState) => state.global.theme);
     const MySchoolDetails = useLangTransformSelector(
         (state: RootState) => state.api.MySchoolDetails
     );
@@ -53,10 +51,12 @@ export default function HomeScreen() {
             },
         })
             .then((res) => {
+                console.log("school bot created =>", res.data);
                 patch(API_URL.school, {
-                    botId: res.data._id,
+                    botId: res.data?._id,
                 })
                     .then((res) => {
+                        console.log("school bot updated =>", res);
                         ApiSuccessToast(res.message);
                     })
                     .catch((e) => {
@@ -104,7 +104,7 @@ export default function HomeScreen() {
         <AUIThemedView>
             <ScrollView>
                 <AUIThemedView style={styles.section}>
-                    <SectionTitle>{MySchoolDetails?.name || "School Name"}</SectionTitle>
+                    <SectionTitle>{MySchoolDetails?.name}</SectionTitle>
                     <AUIThemedView style={{ alignItems: "center", marginTop: 15 }}>
                         {MySchoolDetails?.schoolInfoData && (
                             <FlatList
@@ -140,7 +140,12 @@ export default function HomeScreen() {
                         <SectionTitle style={{ paddingBottom: 10 }}>
                             {GLOBAL_TEXT.ongoing_courses}
                         </SectionTitle>
-                        <CourseList data={myCourse?.docs?.slice(0, 4) || []} />
+                        <CourseList
+                            data={myCourse?.docs?.slice(0, 4) || []}
+                            onEdit={() => {
+                                console.log("edit called");
+                            }}
+                        />
                     </AUIThemedView>
                 </AUIThemedView>
             </ScrollView>

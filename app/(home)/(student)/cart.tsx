@@ -55,6 +55,7 @@ export default function TabFourScreen() {
                         path={
                             Asset.fromModule(require("@/assets/images/common/cart_image.png")).uri
                         }
+                        style={{ width: 200, height: 200 }}
                     />
                 </AUIThemedView>
             </AUIThemedView>
@@ -81,10 +82,13 @@ export default function TabFourScreen() {
                                     ellipsizeMode="tail"
                                     numberOfLines={1}
                                     cart
+                                    onEdit={function (courseId: string): void {
+                                        throw new Error("Function not implemented.");
+                                    }}
                                 />
                             </AUIThemedView>
                         )}
-                        keyExtractor={(item) => item._id}
+                        keyExtractor={(item) => item?._id}
                         numColumns={2}
                         columnWrapperStyle={styles.courseColumnWrapper}
                         scrollEnabled={false}

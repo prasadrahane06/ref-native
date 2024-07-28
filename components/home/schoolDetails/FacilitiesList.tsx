@@ -15,7 +15,7 @@ export const FacilitiesList: React.FC<FacilitiesListProps> = ({ data }) => {
                 data={data}
                 numColumns={3}
                 renderItem={({ item }) => <Facilities title={item.name} image={item.image} />}
-                keyExtractor={(item) => item._id}
+                keyExtractor={(item) => item?._id}
             />
         </AUIThemedView>
     );

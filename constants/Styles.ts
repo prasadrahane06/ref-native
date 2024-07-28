@@ -232,26 +232,22 @@ export const signupPageStyles = StyleSheet.create({
         flex: 1,
         paddingHorizontal: 20,
         position: "relative",
-        backgroundColor: "#ffffff",
     },
     heading: {
         fontSize: 30,
         // marginTop: 40,
         paddingTop: 20,
         fontWeight: "bold",
-        color: APP_THEME.light.gray,
     },
     formLayout: {
         gap: 10,
         marginTop: 20,
         flex: 1,
-        backgroundColor: "#ffffff",
 
         // justifyContent: "space-between",
     },
     fieldContainer: {
         gap: 15,
-        backgroundColor: "#ffffff",
     },
     buttonContainer: {
         width: "100%",
@@ -267,7 +263,6 @@ export const signupPageStyles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         gap: 10,
-        backgroundColor: "#ffffff",
     },
     link: {
         color: "blue",

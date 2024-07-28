@@ -4,12 +4,13 @@ import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import PlanComponent from "@/components/home/courseDetails/PlanComponent";
-import { APP_THEME } from "@/constants/Colors";
+import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import useIsomorphicLayoutEffect from "@/customHooks/useIsomorphicLayoutEffect";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
+import { setResponse } from "@/redux/apiSlice";
 import { addItemToCart, removeItemFromCart } from "@/redux/cartSlice";
 import { addToFavorite, removeFromFavorite } from "@/redux/favoriteSlice";
 import { RootState } from "@/redux/store";
@@ -59,7 +60,7 @@ function CoursePlanTabs({ courseId, clientId }: CoursePlanTabsProps) {
             <AUIThemedView style={planTabsStyles.tabsContainer}>
                 {plans.map((plan: any, index: number) => (
                     <Pressable
-                        key={plan._id}
+                        key={plan?._id}
                         onPress={() => handlePlanClick(plan.name)}
                         style={
                             selectedPlan === plan.name
@@ -87,8 +88,8 @@ function CoursePlanTabs({ courseId, clientId }: CoursePlanTabsProps) {
                         selectedPlan === plan.name && (
                             <PlanComponent
                                 clientId={clientId}
-                                key={plan._id}
-                                planId={plan._id}
+                                key={plan?._id}
+                                planId={plan?._id}
                                 courseId={courseId}
                                 plan={plan}
                                 scheduleDescription={plan.schedule}
@@ -216,6 +217,8 @@ export default function CourseDetails() {
     effect(() => {
         navigation.setOptions({
             headerTransparent: true,
+            headerBackVisible: false,
+
             headerBackground: () => (
                 <Animated.View
                     style={[
@@ -226,20 +229,6 @@ export default function CourseDetails() {
                             borderColor: APP_THEME[theme].gray,
                         },
                     ]}
-                />
-            ),
-            headerLeft: () => (
-                <Ionicons
-                    name="arrow-back"
-                    size={30}
-                    color={"#fff"}
-                    style={{
-                        position: "absolute",
-                        left: -57,
-                        alignItems: "center",
-                        justifyContent: "center",
-                    }}
-                    onPress={() => navigation.goBack()}
                 />
             ),
             headerRight: () => (

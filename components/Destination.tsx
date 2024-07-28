@@ -1,7 +1,7 @@
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { Alert, StyleSheet, TouchableOpacity } from "react-native";
 import AUIBackgroundImage from "./common/AUIBackgroundImage";
 import { AUIThemedText } from "./common/AUIThemedText";
 import { AUIThemedView } from "./common/AUIThemedView";
@@ -20,16 +20,35 @@ const Destination = ({ title, image, countryWidth, countryHeight, favorite, id }
     const { del } = useAxios();
 
     const handleRemoveFav = (id: string, type: string) => {
-        del(API_URL.favorite, { id: id, type: type })
-            .then((res: any) => {
-                ApiSuccessToast(res.message);
-                dispatch(removeFromFavorite({ id, type: "countries" }));
-                dispatch(setLoader(false));
-            })
-            .catch((e: any) => {
-                ApiErrorToast(e.response?.data?.message);
-                console.log(e);
-            });
+        Alert.alert(
+            'Remove Favorite',
+            `Are you sure you want to remove ${title} from your favorites?`,
+            [
+                {
+                    text: 'Cancel',
+                    onPress: () => console.log('Remove cancelled'),
+                    style: 'cancel',
+                },
+                {
+                    text: 'Remove',
+                    onPress: () => {
+                        dispatch(setLoader(true));
+                        del(API_URL.favorite, { id, type })
+                            .then((res: any) => {
+                                ApiSuccessToast(res.message);
+                                dispatch(removeFromFavorite({ id, type: "countries" }));
+                            })
+                            .catch((e: any) => {
+                                ApiErrorToast(e.response?.data?.message);
+                                console.log(e);
+                            })
+                            .finally(() => dispatch(setLoader(false)));
+                    },
+                    style: 'destructive',
+                },
+            ],
+            { cancelable: false }
+        );
     };
 
     return (
@@ -70,12 +89,7 @@ const Destination = ({ title, image, countryWidth, countryHeight, favorite, id }
                                 onPress={() => handleRemoveFav(id, "country")}
                                 style={styles.iconContainer}
                             >
-                                <MaterialIcons
-                                    name="favorite"
-                                    size={18}
-                                    color="red"
-                                    style={styles.icon}
-                                />
+                                <MaterialCommunityIcons name="delete-forever-outline" size={24} color="red" />
                             </TouchableOpacity>
                         )}
                     </AUIBackgroundImage>

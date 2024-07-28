@@ -174,10 +174,10 @@ const SearchSchool: React.FC = () => {
                     <AUIThemedView style={styles.dropdown1}>
                         <FlatList
                             data={fav.clients}
-                            keyExtractor={(item) => item._id}
+                            keyExtractor={(item) => item?._id}
                             renderItem={({ item }) =>
                                 renderDropdownItem({
-                                    item: { id: item._id, name: item.name, address: item.address },
+                                    item: { id: item?._id, name: item.name, address: item.address },
                                 })
                             }
                         />

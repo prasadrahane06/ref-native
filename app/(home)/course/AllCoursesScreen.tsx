@@ -47,13 +47,13 @@ const AllCoursesScreen = () => {
                             title={item.courseName}
                             image={item.image}
                             style={styles.course}
-                            courseId={item._id}
+                            courseId={item?._id}
                             startingDate={item?.startDate}
                             numberOfLines={1}
                             ellipsizeMode="tail"
                         />
                     )}
-                    keyExtractor={(item) => item._id}
+                    keyExtractor={(item) => item?._id}
                     numColumns={2}
                     columnWrapperStyle={styles.column}
                 />

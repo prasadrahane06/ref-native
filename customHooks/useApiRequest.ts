@@ -20,10 +20,8 @@ const useApiRequest = () => {
             .then((res) => {
                 dispatch(setLoader(false));
                 if (query.page && query.page > 1) {
-                    console.log("updated response");
                     dispatch(setUpdatedResponse({ storeName, data: res.data }));
                 } else {
-                    console.log("first response");
                     dispatch(setResponse({ storeName, data: res.data }));
                 }
             })

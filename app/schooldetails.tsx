@@ -20,6 +20,9 @@ import { Controller, useForm } from "react-hook-form";
 import { ScrollView, StyleSheet } from "react-native";
 import * as Yup from "yup";
 import useAxios from "./services/axiosClient";
+import { useDispatch } from "react-redux";
+import { setLoader, setUser } from "@/redux/globalSlice";
+import { storeUserData } from "@/constants/RNAsyncStore";
 
 const schema = Yup.object().shape({
     remark: Yup.string().required("Remark is required"),
@@ -33,8 +36,11 @@ const schema = Yup.object().shape({
 export default function SchoolDetails() {
     const { requestFn } = useApiRequest();
     const { patch } = useAxios();
+    const dispatch = useDispatch();
 
     // const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
+    const userData = useLangTransformSelector((state: RootState) => state.global.user);
+
     const router = useRouter();
     const [locationData, setLocationData] = useState([]);
     const [selectedLogo, setSelectedLogo] = useState("");
@@ -64,7 +70,7 @@ export default function SchoolDetails() {
     useEffect(() => {
         if (countryDataForSchool && countryDataForSchool.docs) {
             const locationData = countryDataForSchool?.docs?.map((doc: any) => ({
-                _id: doc._id,
+                _id: doc?._id,
                 location: doc.name,
             }));
 
@@ -73,6 +79,7 @@ export default function SchoolDetails() {
     }, [countryDataForSchool]);
 
     const onSave = async (data: any) => {
+        dispatch(setLoader(true));
         const logoBase64 = `data:image/png;base64,${data.logo}`;
         const bannerBase64 = `data:image/png;base64,${data.banner}`;
 
@@ -87,13 +94,23 @@ export default function SchoolDetails() {
 
         patch(API_URL.school, payload)
             .then((res: any) => {
-                ApiSuccessToast(res.message);
-                router.push({
-                    pathname: `(home)/(school)`,
-                });
+                dispatch(setLoader(false));
+
+                if (res.statusCode === 200) {
+                    storeUserData("@user-data", {
+                        ...res?.data,
+                    }).then(() => {
+                        dispatch(setUser({ ...userData, ...res?.data }));
+                        ApiSuccessToast(res.message);
+                        router.replace({
+                            pathname: `(home)/(school)`,
+                        });
+                    });
+                }
             })
             .catch((error: any) => {
-                ApiErrorToast(error);
+                dispatch(setLoader(false));
+                ApiErrorToast(error.response?.data?.message);
                 console.log("error in schooldetails onSave =>", error);
             });
     };

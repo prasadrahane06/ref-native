@@ -66,7 +66,7 @@ export default function SimilarCoursesList({ data }: SimilarCoursesListProps) {
                     <TouchableOpacity
                     onPress={()=>{
                         router.push({
-                            pathname: `(home)/courseDetails/${item._id}`,
+                            pathname: `(home)/courseDetails/${item?._id}`,
                         })
                         
                     }}
@@ -81,7 +81,7 @@ export default function SimilarCoursesList({ data }: SimilarCoursesListProps) {
                         />
                     </TouchableOpacity>
                 )}
-                keyExtractor={(item) => item._id}
+                keyExtractor={(item) => item?._id}
             />
         </AUIThemedView>
     );
