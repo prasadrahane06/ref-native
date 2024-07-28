@@ -500,8 +500,16 @@ const InitialLayout = () => {
                 name="(home)/AddNewCourse/AddCourse"
                 options={{
                     headerShown: true,
-                    title: "Add New Course",
-                    headerTitle: "Add New Course",
+                    headerLeft: () => (
+                        <TouchableOpacity onPress={router.back}>
+                            <Ionicons
+                                name="arrow-back"
+                                size={25}
+                                color={TEXT_THEME[theme].primary}
+                                style={{ marginRight: 20 }}
+                            />
+                        </TouchableOpacity>
+                    ),
                 }}
             />
         </Stack>

@@ -3,44 +3,134 @@ import AUIAccordion from "@/components/common/AUIAccordion";
 import AUIButton from "@/components/common/AUIButton";
 import DropdownComponent from "@/components/common/AUIDropdown";
 import AUIInputField from "@/components/common/AUIInputField";
+import AUIModal from "@/components/common/AUIModal";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
-import { BACKGROUND_THEME } from "@/constants/Colors";
+import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
+import useIsomorphicLayoutEffect from "@/customHooks/useIsomorphicLayoutEffect";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
 import { MaterialIcons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useNavigation } from "@react-navigation/native";
 import Checkbox from "expo-checkbox";
-import React, { useEffect, useState } from "react";
+import { Image } from "expo-image";
+import * as ImageManipulator from "expo-image-manipulator";
+import * as ImagePicker from "expo-image-picker";
+import { useLocalSearchParams } from "expo-router";
+import React, { useEffect, useRef, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { Modal, Platform, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import { Platform, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { useSelector } from "react-redux";
+import AddPlan from "./AddPlan";
 
 interface Plan {
     _id: string;
+    name: any | { en: string; ar?: string };
     duration: any | { en: string; ar?: string };
     price: any | { en: string; ar?: string };
     bookYourSeat: any | { en: string; ar?: string };
     rating: any | { en: string; ar?: string };
+    lessonsHour: any | { en: string; ar?: string };
+    schedule: any | { en: string; ar?: string };
+    facilities: string[];
+    courseDetails: any;
 }
-interface AddPlanProps {
-    visible: boolean;
-    onClose: () => void;
+interface FormValues {
+    courseName: any;
+    description: any;
+    language: any;
+    totalSeats: any;
+    scheduleFrom: Date;
+    scheduleTo: Date;
+    currentType: any;
+    category: any;
+    image: any;
+    plans: any;
+    numberOfSeats: any;
+    startDate: any;
+    endDate: any;
+    currencyType: any;
 }
 
 const AUIAddNewCourse = () => {
     const user = useSelector((state: RootState) => state.global.user);
     const theme = useSelector((state: RootState) => state.global.theme);
-    const { control, handleSubmit, reset, setValue } = useForm();
+    const plans = useLangTransformSelector((state: RootState) => state.api.coursePlans)?.docs || [];
     const [showFromDatePicker, setShowFromDatePicker] = useState(false);
     const [showToDatePicker, setShowToDatePicker] = useState(false);
     const [isAddPlanVisible, setAddPlanVisible] = useState(false);
-    const { post } = useAxios();
+    const [selectedPlan, setSelectedPlan] = useState<string[]>([]);
+    const [renderSelectedPlan, setRenderSelectedPlan] = useState<Plan[]>([]);
+    const [currentPlan, setCurrentPlan] = useState<Plan | undefined>(undefined);
+    const [isImageEdited, setIsImageEdited] = useState(false);
+    const [image, setImage] = useState<string | null>(null);
+    const [showConfirmation, setShowConfirmation] = useState(false);
+    const { post, patch, del } = useAxios();
+    const { requestFn } = useApiRequest();
     const navigation = useNavigation();
+    const effect = useIsomorphicLayoutEffect();
+    const params = useLocalSearchParams();
+    const course = params.course
+        ? JSON.parse(Array.isArray(params.course) ? params.course[0] : params.course)
+        : null;
+    const edit = params.edit;
+    const hasMounted = useRef(false);
+    const { control, handleSubmit, reset, setValue } = useForm<FormValues>({
+        mode: "onChange",
+        defaultValues: course
+            ? {
+                  courseName: course.courseName,
+                  description: course.description,
+                  language: course.language,
+                  totalSeats: course.numberOfSeats,
+                  scheduleFrom: new Date(course.startDate),
+                  scheduleTo: new Date(course.endDate),
+                  currentType: course.currencyType,
+                  category: course.category,
+                  image: course.image,
+                  plans: plans.reduce(
+                      (acc: any, plan: { _id: any }) => ({ ...acc, [plan._id]: false }),
+                      {}
+                  ),
+              }
+            : {
+                  courseName: "",
+                  description: "",
+                  language: "",
+                  totalSeats: "",
+                  scheduleFrom: new Date(),
+                  scheduleTo: new Date(),
+                  currentType: "",
+                  category: "",
+                  image: "",
+                  plans: plans.reduce(
+                      (acc: any, plan: { _id: any }) => ({ ...acc, [plan._id]: false }),
+                      {}
+                  ),
+              },
+    });
+    useEffect(() => {
+        if (course && !hasMounted.current) {
+            setImage(course.image);
+            hasMounted.current = true;
+        }
+    }, [course]);
+
+    effect(() => {
+        navigation.setOptions({
+            headerTransparent: false,
+            headerBackVisible: false,
+            headerTitle: () => (
+                <AUIThemedText style={styles.screenTitle}>
+                    {edit === "true" ? "Edit Course" : "Add New Course"}
+                </AUIThemedText>
+            ),
+        });
+    }, [edit, navigation]);
 
     const languageList = [
         { label: "English (Default)", value: "english" },
@@ -53,6 +143,21 @@ const AUIAddNewCourse = () => {
         { label: "Commerce", value: "commerce" },
     ];
 
+    const refreshPlans = async () => {
+        await requestFn(API_URL.plan, "coursePlans", { client: true });
+    };
+    useEffect(() => {
+        refreshPlans();
+    }, []);
+
+    useEffect(() => {
+        setRenderSelectedPlan((prevRenderSelectedPlan) => {
+            return prevRenderSelectedPlan.filter((plan) =>
+                plans.some((p: { _id: string }) => p._id === plan._id)
+            );
+        });
+    }, [plans]);
+
     const { fields, append } = useFieldArray({
         control,
         name: "courses",
@@ -62,11 +167,7 @@ const AUIAddNewCourse = () => {
         if (fields.length === 0) {
             append({ title: "", subtitle: "" });
         }
-    }, []);
-
-    const addFields = () => {
-        append({ title: "", subtitle: "" });
-    };
+    }, [fields.length, append]);
 
     const onChangeFrom = (event: any, selectedDate?: Date) => {
         setShowFromDatePicker(Platform.OS === "ios");
@@ -91,298 +192,123 @@ const AUIAddNewCourse = () => {
                 currencyType: data.currentType,
                 category: data.category.value,
                 courses: data.courses,
+                image: image,
                 status: 1,
+                plan: selectedPlan,
             };
             post(API_URL.course, payload);
             ApiSuccessToast("New Course added successfully.");
-            reset();
             navigation.goBack();
+            reset();
         } catch (error) {
             console.log("error in add new course", error);
             ApiErrorToast("Failed to Add New Course");
         }
     };
 
-    const { requestFn } = useApiRequest();
-    const plans = useLangTransformSelector((state: RootState) => state.api.coursePlans)?.docs || [];
+    const handleEdit = (data: any) => {
+        const payload: any = {
+            ...data,
+            id: course?._id,
+            plan: selectedPlan,
+        };
+        if (isImageEdited) {
+            payload.image = image;
+        } else {
+            delete payload.image;
+        }
+        patch(API_URL.course, payload)
+            .then((res) => {
+                ApiSuccessToast("Plan updated successfully.");
+                navigation.goBack();
+                reset();
+            })
+            .catch((e) => {
+                ApiErrorToast("Failed to update plan");
+                console.log(e);
+            });
+    };
+    const handleDelete = () => {
+        if (!course?._id) return;
+        del(`${API_URL.course}?id=${course._id}`)
+            .then((res) => {
+                ApiSuccessToast("course deleted successfully.");
+                navigation.goBack();
+                setShowConfirmation(false);
+                refreshPlans();
+            })
+            .catch((e) => {
+                ApiErrorToast("Failed to delete course.");
+                console.log(e);
+            });
+    };
 
-    useEffect(() => {
-        requestFn(API_URL.plan, "coursePlans", { client: true });
-    }, []);
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
 
-    interface Facility {
-        _id: string;
-        description: string | { [key: string]: string };
-        image: string;
-        name: string;
-        status: number;
-    }
-    const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose }) => {
-        const { control, handleSubmit, reset } = useForm();
-        const { post } = useAxios();
-        const [selectedFacilities, setSelectedFacilities] = useState<string[]>([]);
-        const facility = useLangTransformSelector(
-            (state: RootState) => state.api.myFacilitys || {}
-        );
-
-        const [facilities, setFacilities] = useState<Facility[]>([]);
-
-        useEffect(() => {
-            requestFn(API_URL.facility, "myFacilitys", { client: true });
-        }, []);
-
-        useEffect(() => {
-            if (facility?.docs?.length > 0) {
-                setFacilities(facility?.docs);
-            }
-        }, [facility?.docs?.length]);
-
-        const handleCheckboxChange = (facilityId: string, isChecked: boolean) => {
-            setSelectedFacilities((prev) =>
-                isChecked ? [...prev, facilityId] : prev.filter((item) => item !== facilityId)
+        if (!result.canceled) {
+            const assetUri = result.assets[0].uri;
+            const manipResult = await ImageManipulator.manipulateAsync(
+                assetUri,
+                [{ resize: { width: 500 } }],
+                { compress: 0.2, format: ImageManipulator.SaveFormat.JPEG }
             );
-        };
-
-        const onSave = (data: any) => {
-            const payload = {
-                client: user?.client,
-                lessonsHour: data.lessonsHour,
-                duration: data.duration,
-                bookYourSeat: data.bookingAmount,
-                schedule: data.schedule,
-                price: data.price,
-                name: data.name,
-                facilities: selectedFacilities,
-                courseDetails: data.courses,
+            const base64Image = await convertImageToBase64(manipResult.uri);
+            setImage(base64Image);
+            setIsImageEdited(true);
+            setValue("image", base64Image);
+        }
+    };
+    const convertImageToBase64 = (uri: string) => {
+        return new Promise<string>((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.onload = function () {
+                const reader = new FileReader();
+                reader.onloadend = function () {
+                    resolve(reader.result as string);
+                };
+                reader.readAsDataURL(xhr.response);
             };
-            post(API_URL.plan, payload)
-                .then((res) => {
-                    ApiSuccessToast("New Plan added successfully.");
-                    reset();
-                    setAddPlanVisible(false);
-                })
-                .catch((e) => {
-                    console.log(e);
-                });
-        };
+            xhr.onerror = function () {
+                reject(new Error("Failed to convert image to Base64"));
+            };
+            xhr.open("GET", uri);
+            xhr.responseType = "blob";
+            xhr.send();
+        });
+    };
+    const truncateFileName = (fileName: string, maxLength: number) => {
+        if (fileName.length <= maxLength) return fileName;
+        return fileName.substring(0, maxLength - 3) + "...";
+    };
 
-        return (
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={visible}
-                onRequestClose={onClose}
-            >
-                <ScrollView>
-                    <AUIThemedView style={styles.modalContainer}>
-                        <AUIThemedView style={styles.modalContent}>
-                            <AUIThemedView style={styles.headerRow}>
-                                <AUIThemedText style={styles.header}>Add your plan</AUIThemedText>
-                                <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-                                    <MaterialIcons name="close" size={28} color="#000" />
-                                </TouchableOpacity>
-                            </AUIThemedView>
-
-                            <Controller
-                                control={control}
-                                name="name"
-                                defaultValue=""
-                                render={({ field: { onChange, value } }) => (
-                                    <AUIInputField
-                                        label="Enter Plan Name"
-                                        placeholder="Name"
-                                        value={value}
-                                        onChangeText={onChange}
-                                        style={styles.input}
-                                    />
-                                )}
-                            />
-
-                            <Controller
-                                control={control}
-                                name="lessonsHour"
-                                defaultValue=""
-                                render={({ field: { onChange, value } }) => (
-                                    <AUIInputField
-                                        label="Enter Lessons Hour"
-                                        placeholder="Lessons Hour"
-                                        value={value}
-                                        onChangeText={onChange}
-                                        style={styles.input}
-                                    />
-                                )}
-                            />
-
-                            <Controller
-                                control={control}
-                                name="duration"
-                                defaultValue=""
-                                render={({ field: { onChange, value } }) => (
-                                    <AUIInputField
-                                        label="Enter Total Duration"
-                                        placeholder="Duration"
-                                        value={value}
-                                        onChangeText={onChange}
-                                        style={styles.input}
-                                    />
-                                )}
-                            />
-
-                            <Controller
-                                control={control}
-                                name="schedule"
-                                defaultValue=""
-                                render={({ field: { onChange, value } }) => (
-                                    <AUIInputField
-                                        label="Enter Total schedule"
-                                        placeholder="schedule"
-                                        value={value}
-                                        onChangeText={onChange}
-                                        style={styles.input}
-                                    />
-                                )}
-                            />
-
-                            <Controller
-                                control={control}
-                                name="price"
-                                defaultValue=""
-                                render={({ field: { onChange, value } }) => (
-                                    <AUIInputField
-                                        label="Enter Total Fee"
-                                        placeholder="totalFee"
-                                        value={value}
-                                        onChangeText={onChange}
-                                        style={styles.input}
-                                    />
-                                )}
-                            />
-
-                            <Controller
-                                control={control}
-                                name="bookingAmount"
-                                defaultValue=""
-                                render={({ field: { onChange, value } }) => (
-                                    <AUIInputField
-                                        label="Seat Booking Amount"
-                                        placeholder="£"
-                                        value={value}
-                                        onChangeText={onChange}
-                                        style={styles.input}
-                                    />
-                                )}
-                            />
-
-                            <AUIThemedView style={styles.courseDetailsContainer}>
-                                <AUIThemedText>Course Details</AUIThemedText>
-                                {fields.map((item, index) => (
-                                    <AUIThemedView key={item.id}>
-                                        <Controller
-                                            control={control}
-                                            name={`courses[${index}].title`}
-                                            defaultValue=""
-                                            render={({ field: { onChange, value } }) => (
-                                                <AUIInputField
-                                                    label="Title"
-                                                    placeholder="Title"
-                                                    value={value}
-                                                    onChangeText={onChange}
-                                                    style={styles.input}
-                                                />
-                                            )}
-                                        />
-                                        <Controller
-                                            control={control}
-                                            name={`courses[${index}].subtitle`}
-                                            defaultValue=""
-                                            render={({ field: { onChange, value } }) => (
-                                                <AUIInputField
-                                                    label="SubTitle"
-                                                    placeholder="SubTitle"
-                                                    value={value}
-                                                    onChangeText={onChange}
-                                                    style={styles.input}
-                                                />
-                                            )}
-                                        />
-                                    </AUIThemedView>
-                                ))}
-                                {fields.length < 5 && (
-                                    <AUIButton
-                                        title="Add more course detailss"
-                                        selected
-                                        onPress={addFields}
-                                    />
-                                )}
-                            </AUIThemedView>
-
-                            <AUIThemedView style={styles.planContainer}>
-                                <AUIThemedText style={styles.createYourPlanTitle}>
-                                    Select Facilities
-                                </AUIThemedText>
-                                <AUIAccordion
-                                    style={styles.AUIAccordion}
-                                    innerStyle={styles.AUIAccordionInnerStyle}
-                                    title="Select Facilities"
-                                >
-                                    {facilities?.map((facility: Facility) => (
-                                        <AUIThemedView
-                                            key={facility?._id}
-                                            style={styles.facilitiesRow}
-                                        >
-                                            <AUIThemedView style={styles.CheckboxContainer}>
-                                                <Controller
-                                                    control={control}
-                                                    name={`facility_${facility._id}`}
-                                                    defaultValue={false}
-                                                    render={({ field: { onChange, value } }) => (
-                                                        <>
-                                                            <Checkbox
-                                                                style={styles.checkbox}
-                                                                value={value}
-                                                                onValueChange={(checked) => {
-                                                                    onChange(checked);
-                                                                    handleCheckboxChange(
-                                                                        facility._id,
-                                                                        checked
-                                                                    );
-                                                                }}
-                                                                color={
-                                                                    value ? "#5BD894" : undefined
-                                                                }
-                                                            />
-                                                            <AUIThemedText
-                                                                style={styles.facilitiesLabel}
-                                                            >
-                                                                {facility.name}
-                                                            </AUIThemedText>
-                                                        </>
-                                                    )}
-                                                />
-                                            </AUIThemedView>
-                                        </AUIThemedView>
-                                    ))}
-                                </AUIAccordion>
-                            </AUIThemedView>
-
-                            <AUIThemedView style={styles.buttonContainer}>
-                                <AUIButton
-                                    title="Clear"
-                                    onPress={() => reset()}
-                                    style={{ width: "48%" }}
-                                />
-                                <AUIButton
-                                    title="Save"
-                                    selected
-                                    onPress={handleSubmit(onSave)}
-                                    style={{ width: "48%" }}
-                                />
-                            </AUIThemedView>
-                        </AUIThemedView>
-                    </AUIThemedView>
-                </ScrollView>
-            </Modal>
-        );
+    const handleCheckboxChange = (planId: string, isChecked: boolean, plan: Plan) => {
+        setSelectedPlan((prev) => {
+            const updatedSelectedPlan = isChecked
+                ? [...prev, planId]
+                : prev.filter((item) => item !== planId);
+            setRenderSelectedPlan((prevRenderSelectedPlan) => {
+                return isChecked
+                    ? [...prevRenderSelectedPlan, plan]
+                    : prevRenderSelectedPlan.filter((item) => item._id !== planId);
+            });
+            return updatedSelectedPlan;
+        });
+    };
+    const handleEditPlan = (plan: Plan) => {
+        setSelectedPlan([plan._id]);
+        setAddPlanVisible(true);
+        setCurrentPlan(plan);
+    };
+    const handleAddPlanClick = () => {
+        setSelectedPlan([]);
+        setAddPlanVisible(true);
+        setCurrentPlan(undefined);
     };
 
     return (
@@ -392,12 +318,9 @@ const AUIAddNewCourse = () => {
                 { backgroundColor: BACKGROUND_THEME[theme].background },
             ]}
         >
-            <AUIThemedText style={styles.title}>Add new course</AUIThemedText>
-
             <Controller
                 control={control}
                 name="courseName"
-                defaultValue=""
                 render={({ field: { onChange, value } }) => (
                     <AUIInputField
                         label="Enter your Course Name"
@@ -408,11 +331,9 @@ const AUIAddNewCourse = () => {
                     />
                 )}
             />
-
             <Controller
                 control={control}
                 name="description"
-                defaultValue=""
                 render={({ field: { onChange, value } }) => (
                     <AUIInputField
                         label="Enter Course Description"
@@ -423,11 +344,9 @@ const AUIAddNewCourse = () => {
                     />
                 )}
             />
-
             <Controller
                 control={control}
                 name="totalSeats"
-                defaultValue=""
                 render={({ field: { onChange, value } }) => (
                     <AUIInputField
                         label="Total Number of Seats"
@@ -439,7 +358,6 @@ const AUIAddNewCourse = () => {
                     />
                 )}
             />
-
             <Controller
                 control={control}
                 name="language"
@@ -455,7 +373,6 @@ const AUIAddNewCourse = () => {
                     />
                 )}
             />
-
             <Controller
                 control={control}
                 name="category"
@@ -471,22 +388,20 @@ const AUIAddNewCourse = () => {
                     />
                 )}
             />
-
             <Controller
                 control={control}
                 name="currentType"
                 defaultValue=""
                 render={({ field: { onChange, value } }) => (
                     <AUIInputField
-                        label="Enter Current Type"
-                        placeholder="Current Type"
+                        label="Enter Currency Type"
+                        placeholder="Currency Type"
                         value={value}
                         onChangeText={onChange}
                         style={styles.input}
                     />
                 )}
             />
-
             <AUIThemedView style={styles.dateContainer}>
                 <Controller
                     control={control}
@@ -515,7 +430,6 @@ const AUIAddNewCourse = () => {
                         </>
                     )}
                 />
-
                 <Controller
                     control={control}
                     name="scheduleTo"
@@ -544,77 +458,197 @@ const AUIAddNewCourse = () => {
                     )}
                 />
             </AUIThemedView>
-
-            <AUIThemedView style={styles.planContainer}>
+            <AUIThemedText style={styles.selectBannerLabel}>Select banner</AUIThemedText>
+            <AUIThemedView style={styles.imagePickerContainer}>
+                <TouchableOpacity onPress={pickImage} style={styles.uploadButton}>
+                    <MaterialIcons name="cloud-upload" size={24} color="#5BD894" />
+                    <AUIThemedText style={styles.uploadButtonText}>Upload File</AUIThemedText>
+                </TouchableOpacity>
+                <AUIThemedText style={styles.fileName}>
+                    {image ? truncateFileName(image.split("/").pop()!, 18) : "No file chosen"}
+                </AUIThemedText>
+            </AUIThemedView>
+            {image && <Image source={{ uri: image }} style={styles.image} />}
+            <AUIThemedView>
+                <AUIThemedView style={styles.planContainer}>
+                    <AUIThemedText style={styles.createYourPlanTitle}>Select Plan</AUIThemedText>
+                    <AUIAccordion
+                        style={styles.AUIAccordion}
+                        innerStyle={styles.AUIAccordionInnerStyle}
+                        title="Select Plans"
+                    >
+                        {plans?.map((plan: Plan, index: number) => (
+                            <AUIThemedView
+                                key={plan?._id}
+                                style={[
+                                    styles.facilitiesRow,
+                                    index === plans.length - 1 && styles.lastFacilitiesRow,
+                                ]}
+                            >
+                                <AUIThemedView style={styles.CheckboxContainer}>
+                                    <Controller
+                                        control={control}
+                                        name={`plans.${plan._id}`}
+                                        defaultValue={false}
+                                        render={({ field: { onChange, value } }) => (
+                                            <>
+                                                <Checkbox
+                                                    style={styles.checkbox}
+                                                    value={value}
+                                                    onValueChange={(checked) => {
+                                                        onChange(checked);
+                                                        handleCheckboxChange(
+                                                            plan._id,
+                                                            checked,
+                                                            plan
+                                                        );
+                                                    }}
+                                                    color={value ? "#5BD894" : undefined}
+                                                />
+                                                <AUIThemedText style={styles.facilitiesLabel}>
+                                                    {plan.name}
+                                                </AUIThemedText>
+                                            </>
+                                        )}
+                                    />
+                                </AUIThemedView>
+                            </AUIThemedView>
+                        ))}
+                    </AUIAccordion>
+                    {renderSelectedPlan?.map((plan: Plan, index: number) => {
+                        return (
+                            <AUIAccordion
+                                key={plan._id}
+                                style={styles.AUIAccordion}
+                                innerStyle={styles.AUIAccordionInnerStyle}
+                                title={`Plan ${plan.name}`}
+                                showEditIcon={true}
+                                onEditClick={() => handleEditPlan(plan)}
+                            >
+                                <AUIThemedView style={styles.row}>
+                                    <AUIThemedView style={styles.rowContainer}>
+                                        <AUIThemedText style={styles.label}>
+                                            Total Duration
+                                        </AUIThemedText>
+                                        <AUIThemedText style={styles.label2}>
+                                            {plan.duration}
+                                        </AUIThemedText>
+                                    </AUIThemedView>
+                                </AUIThemedView>
+                                <AUIThemedView style={styles.row}>
+                                    <AUIThemedView style={styles.rowContainer}>
+                                        <AUIThemedText style={styles.label}>
+                                            Total fee
+                                        </AUIThemedText>
+                                        <AUIThemedText style={styles.label2}>
+                                            {plan.price}
+                                        </AUIThemedText>
+                                    </AUIThemedView>
+                                </AUIThemedView>
+                                <AUIThemedView style={styles.row2}>
+                                    <AUIThemedView style={styles.rowContainer}>
+                                        <AUIThemedText style={styles.label}>
+                                            Book your seat
+                                        </AUIThemedText>
+                                        <AUIThemedText style={styles.label2}>
+                                            {plan.bookYourSeat}
+                                        </AUIThemedText>
+                                    </AUIThemedView>
+                                </AUIThemedView>
+                            </AUIAccordion>
+                        );
+                    })}
+                </AUIThemedView>
                 <AUIThemedText style={styles.createYourPlanTitle}>
                     Create your plan for fees
                 </AUIThemedText>
-                {plans.map((plan: Plan, index: number) => {
-                    return (
-                        <AUIAccordion
-                            key={plan._id}
-                            style={styles.AUIAccordion}
-                            innerStyle={styles.AUIAccordionInnerStyle}
-                            title={`Plan ${index + 1}`}
-                        >
-                            <AUIThemedView style={styles.row}>
-                                <AUIThemedView style={styles.rowContainer}>
-                                    <AUIThemedText style={styles.label}>
-                                        Total Duration
-                                    </AUIThemedText>
-                                    <AUIThemedText style={styles.label2}>
-                                        {plan.duration}
-                                    </AUIThemedText>
-                                </AUIThemedView>
-                            </AUIThemedView>
-                            <AUIThemedView style={styles.row}>
-                                <AUIThemedView style={styles.rowContainer}>
-                                    <AUIThemedText style={styles.label}>Total fee</AUIThemedText>
-                                    <AUIThemedText style={styles.label2}>
-                                        {plan.price}
-                                    </AUIThemedText>
-                                </AUIThemedView>
-                            </AUIThemedView>
-                            <AUIThemedView style={styles.row2}>
-                                <AUIThemedView style={styles.rowContainer}>
-                                    <AUIThemedText style={styles.label}>
-                                        Book your seat
-                                    </AUIThemedText>
-                                    <AUIThemedText style={styles.label2}>
-                                        {plan.bookYourSeat}
-                                    </AUIThemedText>
-                                </AUIThemedView>
-                            </AUIThemedView>
-                        </AUIAccordion>
-                    );
-                })}
             </AUIThemedView>
-
             <AUIThemedView style={styles.buttonContainer}>
                 <AUIButton
                     title={"Add Plan"}
                     selected
-                    onPress={() => setAddPlanVisible(true)}
+                    onPress={handleAddPlanClick}
                     style={{ width: "100%" }}
                     disabled={plans.length > 2}
                 />
             </AUIThemedView>
-
             <AUIThemedView style={styles.buttonContainer}>
-                <AUIButton title="Clear form" onPress={() => reset()} style={{ width: "48%" }} />
-                <AUIButton
-                    title="Add Course"
-                    selected
-                    onPress={handleSubmit(onSave)}
-                    style={{ width: "48%" }}
-                />
+                {course ? (
+                    <AUIThemedView style={styles.buttonMainContainer}>
+                        <AUIThemedView style={styles.buttonContainer}>
+                            <AUIButton
+                                title="Clear"
+                                onPress={() => {
+                                    reset();
+                                }}
+                                style={{ width: "48%" }}
+                            />
+                            <AUIButton
+                                title="Update"
+                                selected
+                                style={{ width: "48%" }}
+                                onPress={handleSubmit(handleEdit)}
+                            />
+                        </AUIThemedView>
+                        <AUIButton
+                            title="Delete"
+                            selected
+                            background={TEXT_THEME.light.danger}
+                            style={{ width: "100%" }}
+                            onPress={() => {
+                                setShowConfirmation(true);
+                            }}
+                        />
+                    </AUIThemedView>
+                ) : (
+                    <AUIThemedView style={styles.buttonContainer}>
+                        <AUIButton
+                            title="Clear"
+                            onPress={() => {
+                                reset();
+                            }}
+                            style={{ width: "48%" }}
+                        />
+                        <AUIButton
+                            title="Save"
+                            selected
+                            style={{ width: "48%" }}
+                            onPress={handleSubmit(onSave)}
+                        />
+                    </AUIThemedView>
+                )}
             </AUIThemedView>
-
-            <AddPlan visible={isAddPlanVisible} onClose={() => setAddPlanVisible(false)} />
+            <AUIModal
+                visible={showConfirmation}
+                onClose={() => setShowConfirmation(false)}
+                title="Confirm Delete"
+            >
+                <AUIThemedText>Are you sure you want to delete this course?</AUIThemedText>
+                <AUIThemedView style={styles.buttonContainer}>
+                    <AUIButton
+                        title="Cancel"
+                        onPress={() => setShowConfirmation(false)}
+                        style={{ width: "48%" }}
+                    />
+                    <AUIButton
+                        title="Delete"
+                        selected
+                        background={TEXT_THEME.light.danger}
+                        style={{ width: "48%" }}
+                        onPress={handleDelete}
+                    />
+                </AUIThemedView>
+            </AUIModal>
+            <AddPlan
+                visible={isAddPlanVisible}
+                onClose={() => setAddPlanVisible(false)}
+                plan={currentPlan}
+                isEditMode={currentPlan !== undefined}
+                refreshPlans={refreshPlans}
+            />
         </ScrollView>
     );
 };
-
 export default AUIAddNewCourse;
 
 const styles = StyleSheet.create({
@@ -635,6 +669,7 @@ const styles = StyleSheet.create({
         flex: 1,
         marginHorizontal: 5,
     },
+    buttonMainContainer: { gap: 5 },
     buttonContainer: {
         marginTop: 10,
         flexDirection: "row",
@@ -648,6 +683,9 @@ const styles = StyleSheet.create({
         borderBottomWidth: 2,
         borderBottomColor: "#ddd",
         padding: 10,
+    },
+    lastFacilitiesRow: {
+        borderBottomWidth: 0,
     },
     facilitiesRow2: {
         flexDirection: "column",
@@ -718,7 +756,7 @@ const styles = StyleSheet.create({
     dateInput: { width: 160 },
     courseDetailsContainer: { marginTop: 12 },
     planContainer: {},
-    createYourPlanTitle: { marginTop: 20, marginBottom: 5 },
+    createYourPlanTitle: { marginTop: 10, marginBottom: 5 },
     AUIAccordion: {
         borderWidth: 1,
         borderColor: "#ddd",
@@ -750,6 +788,35 @@ const styles = StyleSheet.create({
     closeButton: {},
     header: {
         fontSize: 20,
+        fontWeight: "bold",
+    },
+    selectBannerLabel: { marginTop: 8 },
+    imagePickerContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginVertical: 5,
+        borderWidth: 2,
+        borderColor: APP_THEME.light.lightGray,
+        borderRadius: 5,
+        padding: 10,
+    },
+    uploadButton: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginRight: 10,
+    },
+    uploadButtonText: {
+        marginLeft: 5,
+        color: APP_THEME.light.primary.first,
+    },
+    fileName: {},
+    image: {
+        width: 60,
+        height: 60,
+        marginTop: 10,
+    },
+    screenTitle: {
+        fontSize: 18,
         fontWeight: "bold",
     },
 });

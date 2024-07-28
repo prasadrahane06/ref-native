@@ -9,13 +9,14 @@ interface CustomModalProps {
     onClose: () => void;
     title: string;
     children: React.ReactNode;
+    style?: any;
 }
 
-const AUIModal: React.FC<CustomModalProps> = ({ visible, onClose, title, children }) => {
+const AUIModal: React.FC<CustomModalProps> = ({ visible, onClose, title, children, style }) => {
     return (
         <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
             <AUIThemedView style={styles.modalContainer}>
-                <AUIThemedView style={styles.modalContent}>
+                <AUIThemedView style={[styles.modalContent, style]}>
                     <AUIThemedView style={styles.headerRow}>
                         <AUIThemedText style={styles.header}>{title}</AUIThemedText>
                         <TouchableOpacity onPress={onClose}>

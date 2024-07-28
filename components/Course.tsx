@@ -6,7 +6,7 @@ import { removeItemFromCart } from "@/redux/cartSlice";
 import { removeFromFavorite } from "@/redux/favoriteSlice";
 import { setLoader } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
-import { MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -21,24 +21,28 @@ interface CourseProps {
     title: string;
     image: any;
     favorite?: boolean;
+    edit?: boolean;
     startingDate?: string;
     cart?: boolean;
     courseId: any;
     style?: ViewStyle;
     numberOfLines?: number;
     ellipsizeMode?: "head" | "middle" | "tail" | "clip";
+    onEdit: (courseId: string) => void;
 }
 
 const Course: React.FC<CourseProps> = ({
     title,
     image,
     favorite,
+    edit,
     startingDate,
     cart,
     courseId,
     style,
     numberOfLines,
     ellipsizeMode,
+    onEdit,
 }) => {
     const { del } = useAxios();
     const dispatch = useDispatch();
@@ -122,6 +126,14 @@ const Course: React.FC<CourseProps> = ({
                         <MaterialIcons name="favorite" size={18} color="red" style={styles.icon} />
                     </TouchableOpacity>
                 )}
+                {edit && (
+                    <TouchableOpacity
+                        style={styles.editiConContainer}
+                        onPress={() => onEdit(courseId)}
+                    >
+                        <FontAwesome name="edit" size={23} color={APP_THEME.light.primary.first} />
+                    </TouchableOpacity>
+                )}
                 {cart && (
                     <TouchableOpacity
                         onPress={() => handleRemoveFromCart(courseId)}
@@ -183,6 +195,14 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(255, 0, 0, 0.2)",
         borderRadius: 20,
         padding: 5,
+    },
+    editiConContainer: {
+        position: "absolute",
+        top: 10,
+        right: 10,
+        backgroundColor: "rgba(149, 207, 156, 0.4)",
+        borderRadius: 20,
+        padding: 3,
     },
     cartIconContainer: {
         position: "absolute",
