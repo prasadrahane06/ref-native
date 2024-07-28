@@ -98,7 +98,7 @@ export default function cityDetails() {
     const isTruncated = aboutText.split(" ").length > wordsLimit;
 
     const isCountryFavorited = (id: string) => {
-        return favorite.courses.some((favCourse: any) => favCourse._id === id);
+        return favorite.countries.some((favCountry: any) => favCountry._id === id);
     };
 
     const handleFavoriteClick = (id: string, type: string) => {

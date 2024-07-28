@@ -1,9 +1,17 @@
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { APP_THEME } from "@/constants/Colors";
+import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
+import { RootState } from "@/redux/store";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
-import { FlatList, ListRenderItem, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+    FlatList,
+    ListRenderItem,
+    StyleSheet,
+    TouchableOpacity,
+    View
+} from "react-native";
+import { useSelector } from "react-redux";
 
 interface NotificationItem {
     id: string;
@@ -47,6 +55,7 @@ const notifications: NotificationItem[] = [
 ];
 
 const NotificationDrawer: React.FC<NotificationDrawerProps> = ({ onClose }) => {
+    const theme = useSelector((state: RootState) => state.global.theme);
     const renderItem: ListRenderItem<NotificationItem> = ({ item }) => (
         <AUIThemedView
             style={[styles.notificationItem, !item.read && styles.unreadNotificationItem]}
@@ -70,7 +79,7 @@ const NotificationDrawer: React.FC<NotificationDrawerProps> = ({ onClose }) => {
             <AUIThemedView style={styles.headerRow}>
                 <AUIThemedText style={styles.header}>Notification</AUIThemedText>
                 <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-                    <MaterialIcons name="close" size={28} color="#000" />
+                    <MaterialIcons name="close" size={28} color={TEXT_THEME[theme].primary} />
                 </TouchableOpacity>
             </AUIThemedView>
             <FlatList

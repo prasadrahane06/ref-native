@@ -4,7 +4,7 @@ import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import PlanComponent from "@/components/home/courseDetails/PlanComponent";
-import { APP_THEME } from "@/constants/Colors";
+import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
@@ -229,6 +229,20 @@ export default function CourseDetails() {
                             borderColor: APP_THEME[theme].gray,
                         },
                     ]}
+                />
+            ),
+            headerLeft: () => (
+                <Ionicons
+                    name="arrow-back"
+                    size={30}
+                    color={TEXT_THEME[theme].primary}
+                    style={{
+                        position: "absolute",
+                        left: -57,
+                        alignItems: "center",
+                        justifyContent: "center",
+                    }}
+                    onPress={() => navigation.goBack()}
                 />
             ),
             headerRight: () => (

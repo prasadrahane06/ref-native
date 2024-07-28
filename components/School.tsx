@@ -2,11 +2,11 @@ import useAxios from "@/app/services/axiosClient";
 import { API_URL } from "@/constants/urlProperties";
 import { removeFromFavorite } from "@/redux/favoriteSlice";
 import { setLoader } from "@/redux/globalSlice";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React from "react";
-import { StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
+import { Alert, StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
 import "react-native-gesture-handler";
 import { useDispatch } from "react-redux";
 import AUIBackgroundImage from "./common/AUIBackgroundImage";
@@ -29,16 +29,35 @@ const School: React.FC<SchoolProps> = ({ id, title, image, caption, favorite, st
     const { del } = useAxios();
 
     const handleRemoveFav = (id: string, type: string) => {
-        del(API_URL.favorite, { id: id, type: type })
-            .then((res: any) => {
-                ApiSuccessToast(res.message);
-                dispatch(removeFromFavorite({ id, type: "clients" }));
-                dispatch(setLoader(false));
-            })
-            .catch((e: any) => {
-                ApiErrorToast(e.response?.data?.message);
-                console.log(e);
-            });
+        Alert.alert(
+            'Remove Favorite',
+            `Are you sure you want to remove School from your favorites?`,
+            [
+                {
+                    text: 'Cancel',
+                    onPress: () => console.log('Remove cancelled'),
+                    style: 'cancel',
+                },
+                {
+                    text: 'Remove',
+                    onPress: () => {
+                        dispatch(setLoader(true));
+                        del(API_URL.favorite, { id: id, type: type })
+                            .then((res: any) => {
+                                ApiSuccessToast(res.message);
+                                dispatch(removeFromFavorite({ id, type: "clients" }));
+                            })
+                            .catch((e: any) => {
+                                ApiErrorToast(e.response?.data?.message);
+                                console.log(e);
+                            })
+                            .finally(() => dispatch(setLoader(false)));
+                    },
+                    style: 'destructive',
+                },
+            ],
+            { cancelable: false }
+        );
     };
 
     return (
@@ -72,12 +91,7 @@ const School: React.FC<SchoolProps> = ({ id, title, image, caption, favorite, st
                                 onPress={() => handleRemoveFav(id, "client")}
                                 style={styles.iconContainer}
                             >
-                                <MaterialIcons
-                                    name="favorite"
-                                    size={18}
-                                    color="red"
-                                    style={styles.icon}
-                                />
+                              <MaterialCommunityIcons name="delete-forever-outline" size={24} color="red" />
                             </TouchableOpacity>
                         )}
                     </AUIBackgroundImage>

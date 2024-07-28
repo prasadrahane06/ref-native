@@ -196,9 +196,8 @@ export default function SchoolDetails() {
         };
     });
 
-    const isCourseFavorited = (id: string) => {
-        return favorite.courses.some((favCourse: any) => favCourse._id === id);
-    };
+    const isCourseFavorited = (id: string) =>
+        favorite.clients.some((favClient: any) => favClient._id === id);
 
     const handleFavoriteClick = (id: string, type: string) => {
         if (isCourseFavorited(id)) {
@@ -274,7 +273,7 @@ export default function SchoolDetails() {
                         <Ionicons
                             name={isCourseFavorited(id) ? "heart" : "heart-outline"}
                             size={24}
-                            color={APP_THEME[theme].secondary.first}
+                            color={isCourseFavorited(id) ? "red" : APP_THEME[theme].secondary.first}
                         />
                     </AUIThemedView>
                 </TouchableOpacity>

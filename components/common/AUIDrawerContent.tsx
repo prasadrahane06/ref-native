@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import AUIImage from "./AUIImage";
 import AUILangToggle from "./AUILangToggle";
 import { AUIThemedView } from "./AUIThemedView";
+import schoolProfile from "../screenComponents/schoolProfile";
 
 //interface
 export interface DrawerItem {
@@ -56,6 +57,7 @@ const AUIDrawerContent = (props: any) => {
         dispatch(setTheme(newTheme));
         await storeUserData("@theme", { darkMode: newDarkModeState });
     };
+
 
     const onLogout = () => {
         clearAllData();
