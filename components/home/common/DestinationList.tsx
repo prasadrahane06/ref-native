@@ -22,7 +22,7 @@ const DestinationList: React.FC<DestinationListProps> = ({ data }) => {
                     id={item?._id}
                 />
             )}
-            keyExtractor={(item) => item._id}
+            keyExtractor={(item) => item?._id}
             contentContainerStyle={styles.container}
         />
     );

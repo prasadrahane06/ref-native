@@ -53,7 +53,7 @@ export default function HomeScreen() {
             .then((res) => {
                 console.log("school bot created =>", res.data);
                 patch(API_URL.school, {
-                    botId: res.data._id,
+                    botId: res.data?._id,
                 })
                     .then((res) => {
                         console.log("school bot updated =>", res);

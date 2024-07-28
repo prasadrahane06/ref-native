@@ -93,7 +93,7 @@ const AUIAddNewCourse = () => {
                   category: course.category,
                   image: course.image,
                   plans: plans.reduce(
-                      (acc: any, plan: { _id: any }) => ({ ...acc, [plan._id]: false }),
+                      (acc: any, plan: { _id: any }) => ({ ...acc, [plan?._id]: false }),
                       {}
                   ),
               }
@@ -108,7 +108,7 @@ const AUIAddNewCourse = () => {
                   category: "",
                   image: "",
                   plans: plans.reduce(
-                      (acc: any, plan: { _id: any }) => ({ ...acc, [plan._id]: false }),
+                      (acc: any, plan: { _id: any }) => ({ ...acc, [plan?._id]: false }),
                       {}
                   ),
               },
@@ -153,7 +153,7 @@ const AUIAddNewCourse = () => {
     useEffect(() => {
         setRenderSelectedPlan((prevRenderSelectedPlan) => {
             return prevRenderSelectedPlan.filter((plan) =>
-                plans.some((p: { _id: string }) => p._id === plan._id)
+                plans.some((p: { _id: string }) => p?._id === plan?._id)
             );
         });
     }, [plans]);
@@ -230,7 +230,7 @@ const AUIAddNewCourse = () => {
     };
     const handleDelete = () => {
         if (!course?._id) return;
-        del(`${API_URL.course}?id=${course._id}`)
+        del(`${API_URL.course}?id=${course?._id}`)
             .then((res) => {
                 ApiSuccessToast("course deleted successfully.");
                 navigation.goBack();
@@ -295,13 +295,13 @@ const AUIAddNewCourse = () => {
             setRenderSelectedPlan((prevRenderSelectedPlan) => {
                 return isChecked
                     ? [...prevRenderSelectedPlan, plan]
-                    : prevRenderSelectedPlan.filter((item) => item._id !== planId);
+                    : prevRenderSelectedPlan.filter((item) => item?._id !== planId);
             });
             return updatedSelectedPlan;
         });
     };
     const handleEditPlan = (plan: Plan) => {
-        setSelectedPlan([plan._id]);
+        setSelectedPlan([plan?._id]);
         setAddPlanVisible(true);
         setCurrentPlan(plan);
     };
@@ -488,7 +488,7 @@ const AUIAddNewCourse = () => {
                                 <AUIThemedView style={styles.CheckboxContainer}>
                                     <Controller
                                         control={control}
-                                        name={`plans.${plan._id}`}
+                                        name={`plans.${plan?._id}`}
                                         defaultValue={false}
                                         render={({ field: { onChange, value } }) => (
                                             <>
@@ -498,7 +498,7 @@ const AUIAddNewCourse = () => {
                                                     onValueChange={(checked) => {
                                                         onChange(checked);
                                                         handleCheckboxChange(
-                                                            plan._id,
+                                                            plan?._id,
                                                             checked,
                                                             plan
                                                         );
@@ -518,7 +518,7 @@ const AUIAddNewCourse = () => {
                     {renderSelectedPlan?.map((plan: Plan, index: number) => {
                         return (
                             <AUIAccordion
-                                key={plan._id}
+                                key={plan?._id}
                                 style={styles.AUIAccordion}
                                 innerStyle={styles.AUIAccordionInnerStyle}
                                 title={`Plan ${plan.name}`}

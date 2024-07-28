@@ -129,8 +129,9 @@ const TabTwoScreen: React.FC = () => {
                 title={item?.courseName}
                 image={item?.image}
                 favorite={true}
-                startingDate={item?.startDate}
-            />
+                startingDate={item?.startDate} onEdit={function (courseId: string): void {
+                    throw new Error("Function not implemented.");
+                } }            />
         </AUIThemedView>
     );
 
@@ -154,7 +155,7 @@ const TabTwoScreen: React.FC = () => {
             <Destination
                 title={isRTL ? item.name?.en : item.name?.ar}
                 image={item.images[0]}
-                id={item._id}
+                id={item?._id}
                 favorite={true}
                 countryWidth={160}
                 countryHeight={145}
@@ -245,7 +246,7 @@ const TabTwoScreen: React.FC = () => {
                         <FlatList
                             data={showAllSchools ? fav?.clients : fav?.clients?.slice(0, 6)}
                             renderItem={renderSchoolItem}
-                            keyExtractor={(item: any) => item._id}
+                            keyExtractor={(item: any) => item?._id}
                             numColumns={2}
                             columnWrapperStyle={[
                                 styles.schoolColumnWrapper,

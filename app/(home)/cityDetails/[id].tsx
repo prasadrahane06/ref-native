@@ -12,7 +12,6 @@ import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import useIsomorphicLayoutEffect from "@/customHooks/useIsomorphicLayoutEffect";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
-import { setResponse } from "@/redux/apiSlice";
 import { addToFavorite, removeFromFavorite } from "@/redux/favoriteSlice";
 import { RootState } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";

@@ -70,7 +70,7 @@ export default function SchoolDetails() {
     useEffect(() => {
         if (countryDataForSchool && countryDataForSchool.docs) {
             const locationData = countryDataForSchool?.docs?.map((doc: any) => ({
-                _id: doc._id,
+                _id: doc?._id,
                 location: doc.name,
             }));
 

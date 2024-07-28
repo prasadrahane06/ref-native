@@ -56,17 +56,17 @@ function SearchModal({ isVisible, onClose }: any) {
         switch (type) {
             case "country":
                 router.push({
-                    pathname: `(home)/cityDetails/${item._id}`,
+                    pathname: `(home)/cityDetails/${item?._id}`,
                 });
                 break;
             case "course":
                 router.push({
-                    pathname: `(home)/courseDetails/${item._id}`,
+                    pathname: `(home)/courseDetails/${item?._id}`,
                 });
                 break;
             case "school":
                 router.push({
-                    pathname: `(home)/schoolDetails/${item._id}`,
+                    pathname: `(home)/schoolDetails/${item?._id}`,
                 });
                 break;
         }
@@ -135,7 +135,7 @@ function SearchModal({ isVisible, onClose }: any) {
                                         <FlatList
                                             scrollEnabled={false}
                                             data={results.country}
-                                            keyExtractor={(item) => item._id}
+                                            keyExtractor={(item) => item?._id}
                                             renderItem={({ item }) =>
                                                 renderResultItem("country", item)
                                             }
@@ -156,7 +156,7 @@ function SearchModal({ isVisible, onClose }: any) {
                                         <FlatList
                                             scrollEnabled={false}
                                             data={results.course}
-                                            keyExtractor={(item) => item._id}
+                                            keyExtractor={(item) => item?._id}
                                             renderItem={({ item }) =>
                                                 renderResultItem("course", item)
                                             }
@@ -177,7 +177,7 @@ function SearchModal({ isVisible, onClose }: any) {
                                         <FlatList
                                             scrollEnabled={false}
                                             data={results.school}
-                                            keyExtractor={(item) => item._id}
+                                            keyExtractor={(item) => item?._id}
                                             renderItem={({ item }) =>
                                                 renderResultItem("school", item)
                                             }

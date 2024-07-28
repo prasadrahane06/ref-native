@@ -648,7 +648,7 @@ export default function OverviewTab({ schoolOverView, courseId, clientId }: Over
                             }}
                         />
                     )}
-                    keyExtractor={(item) => item._id}
+                    keyExtractor={(item) => item?._id}
                 />
             </AUIThemedView>
 

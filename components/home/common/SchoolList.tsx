@@ -14,9 +14,9 @@ const SchoolList: React.FC<SchoolListProps> = ({ data }) => {
                 horizontal
                 data={data}
                 renderItem={({ item }) => (
-                    <AUIThemedView key={item._id}>
+                    <AUIThemedView key={item?._id}>
                         <School
-                            id={item._id}
+                            id={item?._id}
                             title={item.name}
                             image={
                                 item?.banner
@@ -34,7 +34,7 @@ const SchoolList: React.FC<SchoolListProps> = ({ data }) => {
                         />
                     </AUIThemedView>
                 )}
-                keyExtractor={(item) => item._id}
+                keyExtractor={(item) => item?._id}
             />
         </AUIThemedView>
     );

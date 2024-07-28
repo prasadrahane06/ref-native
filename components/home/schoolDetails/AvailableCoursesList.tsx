@@ -29,7 +29,7 @@ export const AvailableCoursesList: React.FC<AvailableCoursesProps> = ({ courses 
                 renderItem={({ item, index }) => (
                     <AvailableCourses
                         index={index}
-                        _id={item._id}
+                        _id={item?._id}
                         courseName={item.courseName}
                         courseDesciption={item.description}
                         image={item.image}

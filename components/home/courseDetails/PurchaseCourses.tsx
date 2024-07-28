@@ -94,7 +94,7 @@ export default function PurchaseCoursesList({
                         type={type}
                     />
                 )}
-                keyExtractor={(item) => item._id}
+                keyExtractor={(item) => item?._id}
             />
         </AUIThemedView>
     );

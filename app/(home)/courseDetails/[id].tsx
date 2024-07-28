@@ -60,7 +60,7 @@ function CoursePlanTabs({ courseId, clientId }: CoursePlanTabsProps) {
             <AUIThemedView style={planTabsStyles.tabsContainer}>
                 {plans.map((plan: any, index: number) => (
                     <Pressable
-                        key={plan._id}
+                        key={plan?._id}
                         onPress={() => handlePlanClick(plan.name)}
                         style={
                             selectedPlan === plan.name
@@ -88,8 +88,8 @@ function CoursePlanTabs({ courseId, clientId }: CoursePlanTabsProps) {
                         selectedPlan === plan.name && (
                             <PlanComponent
                                 clientId={clientId}
-                                key={plan._id}
-                                planId={plan._id}
+                                key={plan?._id}
+                                planId={plan?._id}
                                 courseId={courseId}
                                 plan={plan}
                                 scheduleDescription={plan.schedule}

@@ -156,7 +156,7 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
     const handleDelete = () => {
         if (!plan?._id) return;
         console.log(plan?._id);
-        del(`${API_URL.plan}?id=${plan._id}`)
+        del(`${API_URL.plan}?id=${plan?._id}`)
             .then((res) => {
                 ApiSuccessToast("Plan deleted successfully.");
                 onClose();
@@ -333,7 +333,7 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                                     <AUIThemedView style={styles.CheckboxContainer}>
                                         <Controller
                                             control={control}
-                                            name={`facility_${facility._id}`}
+                                            name={`facility_${facility?._id}`}
                                             defaultValue={false}
                                             render={({ field: { onChange, value } }) => (
                                                 <>
@@ -343,7 +343,7 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                                                         onValueChange={(checked) => {
                                                             onChange(checked);
                                                             handleCheckboxChange(
-                                                                facility._id,
+                                                                facility?._id,
                                                                 checked
                                                             );
                                                         }}

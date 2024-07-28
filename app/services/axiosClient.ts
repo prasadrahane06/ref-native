@@ -3,7 +3,7 @@ import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector
 import { RootState } from "@/redux/store";
 import axios from "axios";
 
-const baseURL = "https://r7n8bd67-4000.inc1.devtunnels.ms/dev/";
+const baseURL = "https://vi6pxwh9w7.execute-api.ap-south-1.amazonaws.com/dev/";
 
 const useAxios = () => {
     const token = useLangTransformSelector((state: RootState) => state.global.token);

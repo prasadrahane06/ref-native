@@ -141,7 +141,9 @@ export default function HomeScreen() {
                 <SectionTitle viewAll="(home)/course/AllCoursesScreen">
                     {t(GLOBAL_TRANSLATION_LABEL.popular_courses)}
                 </SectionTitle>
-                <CourseList data={courseResponse?.docs.slice(0, 4)} />
+                <CourseList data={courseResponse?.docs.slice(0, 4)} onEdit={function (courseId: string): void {
+                    throw new Error("Function not implemented.");
+                } } />
             </AUIThemedView>
 
             <AUIThemedView>

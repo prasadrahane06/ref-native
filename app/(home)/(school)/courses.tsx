@@ -50,7 +50,7 @@ export default function TabThreeScreen() {
     }, [myCourse?.docs?.length, myCourse?.totalPages]);
 
     const handleEditCourse = (courseId: string) => {
-        const selectedCourse = courses.find((course: { _id: string }) => course._id === courseId);
+        const selectedCourse = courses.find((course: { _id: string }) => course?._id === courseId);
         router.push({
             pathname: "(home)/AddNewCourse/AddCourse",
             params: { course: JSON.stringify(selectedCourse), edit: "true" },

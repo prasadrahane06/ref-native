@@ -100,7 +100,7 @@ const EventsScreen = () => {
             <FlatList
                 data={event}
                 renderItem={renderItem}
-                keyExtractor={(item) => item._id}
+                keyExtractor={(item) => item?._id}
                 numColumns={3}
                 columnWrapperStyle={styles.row}
                 contentContainerStyle={styles.container}

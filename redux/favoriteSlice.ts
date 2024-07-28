@@ -28,7 +28,7 @@ export const favoriteSlice = createSlice({
             action: PayloadAction<{ id: string; type: keyof Favorite["items"] }>
         ) => {
             const { id, type } = action.payload;
-            state.items[type] = state.items[type].filter((item) => item._id !== id);
+            state.items[type] = state.items[type].filter((item) => item?._id !== id);
         },
     },
 });
