@@ -3,7 +3,7 @@ import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { RootState } from "@/redux/store";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { ReactNode, useState } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
 import { useSelector } from "react-redux";
 import { AUIThemedText } from "./AUIThemedText";
 import { AUIThemedView } from "./AUIThemedView";
@@ -12,7 +12,7 @@ interface AccordionProps {
     title: string;
     children: ReactNode;
     icon?: string;
-    style?: any;
+    style?: ViewStyle;
     innerStyle?: any;
     showEditIcon?: boolean;
     onEditClick?: () => void;

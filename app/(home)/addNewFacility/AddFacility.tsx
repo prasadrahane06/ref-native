@@ -121,14 +121,14 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
 
     const handleDelete = () => {
         if (!facility?._id) return;
-        del(`${API_URL.facility}?id=${facility._id}`)
+        del(API_URL.facility ,{}, {id : facility?._id})
             .then((res) => {
                 setShowConfirmation(false);
-                ApiSuccessToast(`Facility deleted`);
+                ApiSuccessToast(res.message);
                 refreshFacilities();
             })
             .catch((e) => {
-                ApiErrorToast("Failed to delete facility");
+                // ApiErrorToast(error.message);
                 console.log(e);
             });
     };

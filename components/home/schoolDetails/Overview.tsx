@@ -91,7 +91,7 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
     const dispatch = useDispatch();
     const theme = useSelector((state: RootState) => state.global.theme);
 
-    const {  reset, setValue, control, handleSubmit, formState, trigger } = useForm({
+    const { reset, setValue, control, handleSubmit, formState, trigger } = useForm({
         resolver: yupResolver(schema),
         mode: "onBlur",
         defaultValues: {
@@ -181,7 +181,7 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
     };
 
     return (
-        <Modal animationType="slide" transparent={true} visible={isVisible}>
+        <Modal animationType="slide" transparent={true} visible={isVisible} onRequestClose={onClose}>
             <TouchableWithoutFeedback onPress={dismissKeyboard}>
                 <AUIThemedView
                     style={
@@ -791,7 +791,7 @@ const enquiryFormStyles = StyleSheet.create({
         alignItems: "center",
         gap: 20,
     },
-    phoneCode: { flex: 0.4 },
+    phoneCode: { flex: 0.5 },
     phoneNumber: { flex: 1 },
 });
 

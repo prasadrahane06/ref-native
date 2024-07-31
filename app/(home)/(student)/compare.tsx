@@ -10,6 +10,7 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 
 export default function TabThreeScreen(props: any) {
     const { t } = useTranslation();
+
     return (
         <AUIThemedView style={styles.container}>
             <AUIThemedText style={styles.title}>{t("compare_schools")}</AUIThemedText>

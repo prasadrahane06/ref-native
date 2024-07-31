@@ -1,7 +1,7 @@
 import AUIAccordion from "@/components/common/AUIAccordion";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { APP_THEME } from "@/constants/Colors";
+import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { RootState } from "@/redux/store";
 import React from "react";
 import { StyleSheet } from "react-native";
@@ -14,7 +14,11 @@ export default function CourseDetailsComponent({ plan }: any) {
         <AUIThemedView style={styles.container}>
             <AUIThemedView style={styles.accordionSection}>
                 {plan.courseDetails.map((courseDetail: any) => (
-                    <AUIAccordion key={courseDetail._id} title={courseDetail.title}>
+                    <AUIAccordion
+                        key={courseDetail._id}
+                        title={courseDetail.title}
+                        style={{ borderColor: TEXT_THEME[theme].primary }}
+                    >
                         <AUIThemedView>
                             <AUIThemedView style={styles.row}>
                                 <AUIThemedView style={styles.rowContainer}>

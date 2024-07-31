@@ -1,27 +1,22 @@
+import useAxios from "@/app/services/axiosClient";
 import AUIInfoCard from "@/components/AUIInfoCard";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
+import { ApiSuccessToast } from "@/components/common/AUIToast";
 import CourseList from "@/components/home/common/CourseList";
 import ChartComponent from "@/components/home/common/LinearChart";
 import SectionTitle from "@/components/home/common/SectionTitle";
-import { APP_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
 import formatNumberWithComma from "@/utils/numberFomatter";
-import "react-native-gesture-handler";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FlatList, ScrollView, StyleSheet } from "react-native";
-import { useSelector } from "react-redux";
-// import { post as botPost } from "@/app/services/botAxiosClient";
-import useAxios from "@/app/services/axiosClient";
-import { ApiSuccessToast } from "@/components/common/AUIToast";
+import "react-native-gesture-handler";
 
 import { useAxiosClient as useBotAxios } from "at-chatbot-native";
-import { useTranslation } from "react-i18next";
-// import { post as botPost } from "@/app/services/botAxiosClient";
-// import ChatBot from "@/components/chatbot/ChatBot";
 
 export default function HomeScreen() {
     const { requestFn } = useApiRequest();
@@ -140,7 +135,12 @@ export default function HomeScreen() {
                         <SectionTitle style={{ paddingBottom: 10 }}>
                             {GLOBAL_TEXT.ongoing_courses}
                         </SectionTitle>
-                        <CourseList data={myCourse?.docs?.slice(0, 4) || []} />
+                        <CourseList
+                            data={myCourse?.docs?.slice(0, 4) || []}
+                            onEdit={() => {
+                                console.log("edit called");
+                            }}
+                        />
                     </AUIThemedView>
                 </AUIThemedView>
             </ScrollView>

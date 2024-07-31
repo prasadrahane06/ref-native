@@ -26,10 +26,7 @@ interface AddEvent {
 }
 interface event {
     _id: string;
-    eventName: {
-        en: string;
-        ar: string;
-    };
+    eventName: string;
     description: string;
     date: string;
     location: string;
@@ -121,7 +118,7 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
 
     const handleDelete = () => {
         if (event?._id) {
-            del(`${API_URL.event}`, { id: event._id })
+            del(`${API_URL.event}`, { id: event?._id })
                 .then((res) => {
                     ApiSuccessToast("Event deleted successfully.");
                     onClose();

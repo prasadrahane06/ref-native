@@ -5,8 +5,8 @@ import AUIInputField from "@/components/common/AUIInputField";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
-import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
-import { countriesData } from "@/constants/dummy data/countriesData";
+import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
+import { languagesData } from "@/constants/dummy data/languagesData";
 import { GLOBAL_TEXT } from "@/constants/Properties";
 import { storeUserData } from "@/constants/RNAsyncStore";
 import { API_URL } from "@/constants/urlProperties";
@@ -17,12 +17,15 @@ import { RootState } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
+import { City, Country, State } from "country-state-city";
 import { Asset } from "expo-asset";
 import * as ImagePicker from "expo-image-picker";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import {
+    KeyboardAvoidingView,
     Platform,
     Pressable,
     ScrollView,
@@ -41,6 +44,9 @@ const genderData = [
     },
     {
         gender: "Female",
+    },
+    {
+        gender: "Other",
     },
 ];
 
@@ -61,6 +67,36 @@ const qualificationData = [
 
 const academicSessionData = [
     {
+        academicSession: "2010-2011",
+    },
+    {
+        academicSession: "2011-2012",
+    },
+    {
+        academicSession: "2012-2013",
+    },
+    {
+        academicSession: "2013-2014",
+    },
+    {
+        academicSession: "2014-2015",
+    },
+    {
+        academicSession: "2015-2016",
+    },
+    {
+        academicSession: "2016-2017",
+    },
+    {
+        academicSession: "2017-2018",
+    },
+    {
+        academicSession: "2018-2019",
+    },
+    {
+        academicSession: "2019-2020",
+    },
+    {
         academicSession: "2020-2021",
     },
     {
@@ -69,42 +105,12 @@ const academicSessionData = [
     {
         academicSession: "2022-2023",
     },
-];
-
-const stateData = [
-    { state: "California" },
-    { state: "Texas" },
-    { state: "Florida" },
-    { state: "New York" },
-    { state: "Illinois" },
-    { state: "Pennsylvania" },
-    { state: "Ohio" },
-    { state: "Georgia" },
-    { state: "North Carolina" },
-    { state: "Michigan" },
-    { state: "New Jersey" },
-    { state: "Virginia" },
-    { state: "Washington" },
-    { state: "Arizona" },
-    { state: "Massachusetts" },
-];
-
-const cityData = [
-    { city: "New York" },
-    { city: "Los Angeles" },
-    { city: "Chicago" },
-    { city: "Houston" },
-    { city: "Phoenix" },
-    { city: "Philadelphia" },
-    { city: "San Antonio" },
-    { city: "San Diego" },
-    { city: "Dallas" },
-    { city: "San Jose" },
-    { city: "Austin" },
-    { city: "Jacksonville" },
-    { city: "Fort Worth" },
-    { city: "Columbus" },
-    { city: "Charlotte" },
+    {
+        academicSession: "2023-2024",
+    },
+    {
+        academicSession: "2024-2025",
+    },
 ];
 
 const schema = Yup.object().shape({
@@ -122,6 +128,10 @@ const schema = Yup.object().shape({
 });
 
 const Profile: React.FC = () => {
+    const { patch } = useAxios();
+    const dispatch = useDispatch();
+    const { t } = useTranslation();
+
     const userProfileData = useLangTransformSelector(
         (state: RootState) => state.api.userProfileData
     );
@@ -146,9 +156,24 @@ const Profile: React.FC = () => {
         userProfileData?.photo || Asset.fromModule(require("@/assets/images/user.png")).uri
     );
     const [profileBase64, setProfileBase64] = useState<any>(null);
+    const [selectedCountry, setSelectedCountry] = useState<any>(null);
+    const [selectedState, setSelectedState] = useState<any>(null);
+    const [selectedCity, setSelectedCity] = useState<any>(null); // DONT REMOVE IT, IT IS USED IN COUNTRY AND STATE
 
-    const { patch } = useAxios();
-    const dispatch = useDispatch();
+    const country = userProfileData?.country;
+    const state = userProfileData?.state;
+
+    const countryCode = Country.getAllCountries().find((c) => c.name === country)?.isoCode || "SA";
+    const stateCode =
+        State.getStatesOfCountry(countryCode).find((s) => s.name === state)?.isoCode || "01";
+    const allStatesOfCountry = State.getStatesOfCountry(countryCode);
+    const allCitiesOfState = City.getCitiesOfState(countryCode, stateCode);
+
+    const allCountries = Country.getAllCountries();
+    const states = selectedCountry ? State.getStatesOfCountry(selectedCountry) : allStatesOfCountry;
+    const cities = selectedState
+        ? City.getCitiesOfState(selectedCountry, selectedState)
+        : allCitiesOfState;
 
     const { reset, setValue, control, handleSubmit, formState } = useForm({
         resolver: yupResolver(schema),
@@ -162,9 +187,9 @@ const Profile: React.FC = () => {
             gender: userProfileData?.gender || "",
             qualification: userProfileData?.qualification,
             academicSession: userProfileData?.academicSession,
-            country: userProfileData?.country,
+            country: countryCode,
+            state: stateCode,
             city: userProfileData?.city,
-            state: userProfileData?.state,
         },
     });
 
@@ -198,8 +223,15 @@ const Profile: React.FC = () => {
             alert("You did not select any image.");
         }
     };
+
     const onSave = (data: any) => {
         dispatch(setLoader(true));
+
+        const country = data.country;
+        const state = data.state;
+
+        const countryName = Country.getCountryByCode(country)?.name;
+        const stateName = State.getStateByCodeAndCountry(state, country)?.name;
 
         const payload: any = {
             id: userProfileData?._id,
@@ -208,11 +240,12 @@ const Profile: React.FC = () => {
             email: data.email,
             language: data.language,
             dob: data.dateOfBirth,
+            gender: data.gender,
             qualification: data.qualification,
             academicSession: data.academicSession,
-            country: data.country,
+            country: countryName,
+            state: stateName,
             city: data.city,
-            state: data.state,
         };
 
         if (profileBase64) {
@@ -255,134 +288,179 @@ const Profile: React.FC = () => {
             });
     };
 
+    const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
+
     return (
-        <ScrollView>
-            <AUIThemedView style={styles.container}>
-                <TouchableOpacity style={styles.profileImageContainer} onPress={pickImageAsync}>
-                    <AUIImage icon path={profileImage} style={[styles.profileImage]} />
-                    <Ionicons
-                        name="create-outline"
-                        size={24}
-                        color={APP_THEME.light.primary.first}
-                        style={styles.editIcon}
-                    />
-                </TouchableOpacity>
+        <KeyboardAvoidingView
+            style={{ flex: 1, backgroundColor: BACKGROUND_THEME[theme].background }}
+            behavior="padding"
+            keyboardVerticalOffset={keyboardVerticalOffset}
+        >
+            <ScrollView>
+                <AUIThemedView style={styles.container}>
+                    <TouchableOpacity style={styles.profileImageContainer} onPress={pickImageAsync}>
+                        <AUIImage icon path={profileImage} style={[styles.profileImage]} />
+                        <Ionicons
+                            name="create-outline"
+                            size={24}
+                            color={APP_THEME.light.primary.first}
+                            style={styles.editIcon}
+                        />
+                    </TouchableOpacity>
 
-                <Controller
-                    name="name"
-                    control={control}
-                    render={({ field: { onChange, value }, fieldState: { error } }) => (
-                        <AUIThemedView>
-                            <AUIThemedText style={styles.label}>Name</AUIThemedText>
-                            <AUIInputField
-                                value={value}
-                                onChangeText={onChange}
-                                placeholder={"Enter Your Name"}
-                            />
-                            <AUIThemedView>
-                                {error && (
-                                    <AUIThemedText style={styles.fieldError}>
-                                        {error.message}
-                                    </AUIThemedText>
-                                )}
-                            </AUIThemedView>
-                        </AUIThemedView>
-                    )}
-                />
-
-                <Controller
-                    name="phoneNumber"
-                    control={control}
-                    render={({ field: { onChange, value }, fieldState: { error } }) => (
-                        <AUIThemedView>
-                            <AUIThemedText style={styles.label}>Mobile Number</AUIThemedText>
-                            <AUIInputField
-                                value={value}
-                                onChangeText={onChange}
-                                placeholder={"Enter Your Mobile Number"}
-                            />
-                            <AUIThemedView>
-                                {error && (
-                                    <AUIThemedText style={styles.fieldError}>
-                                        {error.message}
-                                    </AUIThemedText>
-                                )}
-                            </AUIThemedView>
-                        </AUIThemedView>
-                    )}
-                />
-
-                <Controller
-                    name="email"
-                    control={control}
-                    render={({ field: { onChange, value }, fieldState: { error } }) => (
-                        <AUIThemedView>
-                            <AUIThemedText style={styles.label}>Email</AUIThemedText>
-                            <AUIInputField
-                                value={value}
-                                onChangeText={onChange}
-                                placeholder={"Enter Your Mail ID"}
-                            />
-                            <AUIThemedView>
-                                {error && (
-                                    <AUIThemedText style={styles.fieldError}>
-                                        {error.message}
-                                    </AUIThemedText>
-                                )}
-                            </AUIThemedView>
-                        </AUIThemedView>
-                    )}
-                />
-
-                <AUIThemedView>
-                    <AUIThemedText style={styles.label}>Date of Birth</AUIThemedText>
                     <Controller
-                        name="dateOfBirth"
+                        name="name"
                         control={control}
-                        render={({ field: { value, onChange }, fieldState: { error } }) => (
-                            <AUIThemedView
-                                style={{
-                                    flex: 1,
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    borderWidth: 2,
-                                    borderColor: "#ccc",
-                                    borderRadius: 6,
-                                }}
-                            >
-                                <Pressable
-                                    onPress={() => setShowDatePicker(true)}
+                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <AUIThemedView>
+                                <AUIThemedText style={styles.label}>{t("name")}</AUIThemedText>
+                                <AUIInputField
+                                    value={value}
+                                    onChangeText={onChange}
+                                    placeholder={"Enter Your Name"}
+                                />
+                                <AUIThemedView>
+                                    {error && (
+                                        <AUIThemedText style={styles.fieldError}>
+                                            {error.message}
+                                        </AUIThemedText>
+                                    )}
+                                </AUIThemedView>
+                            </AUIThemedView>
+                        )}
+                    />
+
+                    <Controller
+                        name="phoneNumber"
+                        control={control}
+                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <AUIThemedView>
+                                <AUIThemedText style={styles.label}>
+                                    {t("mobile_number")}
+                                </AUIThemedText>
+                                <AUIInputField
+                                    value={value}
+                                    onChangeText={onChange}
+                                    placeholder={"Enter Your Mobile Number"}
+                                />
+                                <AUIThemedView>
+                                    {error && (
+                                        <AUIThemedText style={styles.fieldError}>
+                                            {error.message}
+                                        </AUIThemedText>
+                                    )}
+                                </AUIThemedView>
+                            </AUIThemedView>
+                        )}
+                    />
+
+                    <Controller
+                        name="email"
+                        control={control}
+                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <AUIThemedView>
+                                <AUIThemedText style={styles.label}>{t("email")}</AUIThemedText>
+                                <AUIInputField
+                                    value={value}
+                                    onChangeText={onChange}
+                                    placeholder={"Enter Your Mail ID"}
+                                />
+                                <AUIThemedView>
+                                    {error && (
+                                        <AUIThemedText style={styles.fieldError}>
+                                            {error.message}
+                                        </AUIThemedText>
+                                    )}
+                                </AUIThemedView>
+                            </AUIThemedView>
+                        )}
+                    />
+
+                    <AUIThemedView>
+                        <AUIThemedText style={styles.label}>{t("date_of_birth")}</AUIThemedText>
+                        <Controller
+                            name="dateOfBirth"
+                            control={control}
+                            render={({ field: { value, onChange }, fieldState: { error } }) => (
+                                <AUIThemedView
                                     style={{
                                         flex: 1,
                                         flexDirection: "row",
                                         alignItems: "center",
-                                        paddingHorizontal: 10,
+                                        borderWidth: 2,
+                                        borderColor: "#ccc",
+                                        borderRadius: 6,
                                     }}
                                 >
-                                    {showDatePicker && (
-                                        <DateTimePicker
-                                            value={dateOfBirth}
-                                            mode="date"
-                                            display="default"
-                                            onChange={onDateChange}
-                                        />
-                                    )}
-                                    <TextInput
+                                    <Pressable
+                                        onPress={() => setShowDatePicker(true)}
                                         style={{
                                             flex: 1,
-                                            paddingVertical: 10,
-                                            color: TEXT_THEME[theme].primary,
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                            paddingHorizontal: 10,
                                         }}
-                                        value={formatDate(value)}
-                                        editable={false}
-                                        onChangeText={onChange}
-                                    />
-                                    <Ionicons
-                                        name="calendar-clear"
-                                        size={20}
-                                        color={APP_THEME.light.primary.first}
-                                    />
-                                </Pressable>
+                                    >
+                                        {showDatePicker && (
+                                            <DateTimePicker
+                                                value={dateOfBirth}
+                                                mode="date"
+                                                display="default"
+                                                onChange={onDateChange}
+                                            />
+                                        )}
+                                        <TextInput
+                                            style={{
+                                                flex: 1,
+                                                paddingVertical: 10,
+                                                color: TEXT_THEME[theme].primary,
+                                            }}
+                                            value={formatDate(value)}
+                                            editable={false}
+                                            onChangeText={onChange}
+                                        />
+                                        <Ionicons
+                                            name="calendar-clear"
+                                            size={20}
+                                            color={APP_THEME.light.primary.first}
+                                        />
+                                    </Pressable>
+                                    {error && (
+                                        <AUIThemedText style={styles.fieldError}>
+                                            {error.message}
+                                        </AUIThemedText>
+                                    )}
+                                </AUIThemedView>
+                            )}
+                        />
+                    </AUIThemedView>
+
+                    <Controller
+                        name="gender"
+                        control={control}
+                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <AUIThemedView>
+                                <AUIThemedText style={styles.label}>{t("gender")}</AUIThemedText>
+                                <DropdownComponent
+                                    //@ts-ignore
+                                    list={genderData}
+                                    value={value}
+                                    setValue={({ gender }: { gender: string }) => onChange(gender)}
+                                    labelField="gender"
+                                    // label="Select your gender"
+                                    labelStyles={{
+                                        marginTop: 10,
+                                        marginBottom: 5,
+                                        fontSize: 13,
+                                        fontWeight: "bold",
+                                        fontStyle: "normal",
+                                        color: "#333",
+                                    }}
+                                    valueField="gender"
+                                    placeholder={"Select your gender"}
+                                    listWithIcon
+                                    isSearchable={false}
+                                />
                                 {error && (
                                     <AUIThemedText style={styles.fieldError}>
                                         {error.message}
@@ -391,224 +469,217 @@ const Profile: React.FC = () => {
                             </AUIThemedView>
                         )}
                     />
-                </AUIThemedView>
 
-                <Controller
-                    name="gender"
-                    control={control}
-                    render={({ field: { onChange, value }, fieldState: { error } }) => (
-                        <AUIThemedView>
-                            <AUIThemedText style={styles.label}>Select your gender</AUIThemedText>
-                            <DropdownComponent
-                                //@ts-ignore
-                                list={genderData}
-                                value={value}
-                                setValue={({ gender }: { gender: string }) => onChange(gender)}
-                                labelField="gender"
-                                // label="Select your gender"
-                                labelStyles={{
-                                    marginTop: 10,
-                                    marginBottom: 5,
-                                    fontSize: 13,
-                                    fontWeight: "bold",
-                                    fontStyle: "normal",
-                                    color: "#333",
-                                }}
-                                valueField="gender"
-                                placeholder={"Select your gender"}
-                                listWithIcon
-                                itemLabelStyle={{ fontSize: 14, color: "#333" }}
-                            />
-                            {error && (
-                                <AUIThemedText style={styles.fieldError}>
-                                    {error.message}
+                    <Controller
+                        name="qualification"
+                        control={control}
+                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <AUIThemedView>
+                                <AUIThemedText style={styles.label}>
+                                    {t("qualification")}
                                 </AUIThemedText>
-                            )}
-                        </AUIThemedView>
-                    )}
-                />
+                                <DropdownComponent
+                                    //@ts-ignore
+                                    list={qualificationData}
+                                    value={value}
+                                    setValue={({ qualification }: { qualification: string }) =>
+                                        onChange(qualification)
+                                    }
+                                    // label="My Qualification"
+                                    labelField="qualification"
+                                    labelStyles={{
+                                        marginTop: 10,
+                                        marginBottom: 5,
+                                        fontSize: 13,
+                                        fontWeight: "bold",
+                                        fontStyle: "normal",
+                                        color: "#333",
+                                    }}
+                                    valueField="qualification"
+                                    placeholder={"Select your qualification"}
+                                    listWithIcon
+                                />
+                                {error && (
+                                    <AUIThemedText style={styles.fieldError}>
+                                        {error.message}
+                                    </AUIThemedText>
+                                )}
+                            </AUIThemedView>
+                        )}
+                    />
 
-                <Controller
-                    name="qualification"
-                    control={control}
-                    render={({ field: { onChange, value }, fieldState: { error } }) => (
-                        <AUIThemedView>
-                            <AUIThemedText style={styles.label}>My Qualification</AUIThemedText>
-                            <DropdownComponent
-                                //@ts-ignore
-                                list={qualificationData}
-                                value={value}
-                                setValue={({ qualification }: { qualification: string }) =>
-                                    onChange(qualification)
-                                }
-                                // label="My Qualification"
-                                labelField="qualification"
-                                labelStyles={{
-                                    marginTop: 10,
-                                    marginBottom: 5,
-                                    fontSize: 13,
-                                    fontWeight: "bold",
-                                    fontStyle: "normal",
-                                    color: "#333",
-                                }}
-                                valueField="qualification"
-                                placeholder={"Select your qualification"}
-                                listWithIcon
-                                itemLabelStyle={{ fontSize: 14, color: "#333" }}
-                            />
-                            {error && (
-                                <AUIThemedText style={styles.fieldError}>
-                                    {error.message}
+                    <Controller
+                        name="academicSession"
+                        control={control}
+                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <AUIThemedView>
+                                <AUIThemedText style={styles.label}>
+                                    {t("academic_session")}
                                 </AUIThemedText>
-                            )}
-                        </AUIThemedView>
-                    )}
-                />
+                                <DropdownComponent
+                                    //@ts-ignore
+                                    list={academicSessionData}
+                                    value={value}
+                                    setValue={({ academicSession }: { academicSession: string }) =>
+                                        onChange(academicSession)
+                                    }
+                                    // label="Academic Session"
+                                    labelField="academicSession"
+                                    labelStyles={{
+                                        marginTop: 10,
+                                        marginBottom: 5,
+                                        fontSize: 13,
+                                        fontWeight: "bold",
+                                        fontStyle: "normal",
+                                        color: "#333",
+                                    }}
+                                    valueField="academicSession"
+                                    placeholder={"Select your academic session"}
+                                    listWithIcon
+                                />
+                                {error && (
+                                    <AUIThemedText style={styles.fieldError}>
+                                        {error.message}
+                                    </AUIThemedText>
+                                )}
+                            </AUIThemedView>
+                        )}
+                    />
 
-                <Controller
-                    name="academicSession"
-                    control={control}
-                    render={({ field: { onChange, value }, fieldState: { error } }) => (
-                        <AUIThemedView>
-                            <AUIThemedText style={styles.label}>Academic Session</AUIThemedText>
-                            <DropdownComponent
-                                //@ts-ignore
-                                list={academicSessionData}
-                                value={value}
-                                setValue={({ academicSession }: { academicSession: string }) =>
-                                    onChange(academicSession)
-                                }
-                                // label="Academic Session"
-                                labelField="academicSession"
-                                labelStyles={{
-                                    marginTop: 10,
-                                    marginBottom: 5,
-                                    fontSize: 13,
-                                    fontWeight: "bold",
-                                    fontStyle: "normal",
-                                    color: "#333",
-                                }}
-                                valueField="academicSession"
-                                placeholder={"Select your academic session"}
-                                listWithIcon
-                                itemLabelStyle={{ fontSize: 14, color: "#333" }}
-                            />
-                            {error && (
-                                <AUIThemedText style={styles.fieldError}>
-                                    {error.message}
+                    <Controller
+                        name="language"
+                        control={control}
+                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <AUIThemedView>
+                                <AUIThemedText style={styles.label}>
+                                    {" "}
+                                    {t("my_language")}
                                 </AUIThemedText>
-                            )}
-                        </AUIThemedView>
-                    )}
-                />
+                                {/* @ts-ignore */}
+                                <DropdownComponent
+                                    list={languagesData.map((language) => ({
+                                        label: language.name,
+                                        value: language.name,
+                                    }))}
+                                    //@ts-ignore
+                                    value={value}
+                                    //@ts-ignore
+                                    setValue={({ value }) => onChange(value)}
+                                    labelField="label"
+                                    valueField="value"
+                                    listWithIcon
+                                    position="top"
+                                />
+                            </AUIThemedView>
+                        )}
+                    />
 
-                <Controller
-                    name="language"
-                    control={control}
-                    render={({ field: { onChange, value }, fieldState: { error } }) => (
-                        <AUIThemedView>
-                            <AUIThemedText style={styles.label}>My Language</AUIThemedText>
-                            {/* @ts-ignore */}
-                            <DropdownComponent
-                                list={countriesData.map((country) => ({
-                                    label: country.language.name,
-                                    value: country.language.name,
-                                }))}
-                                //@ts-ignore
-                                value={value}
-                                //@ts-ignore
-                                setValue={({ value }) => onChange(value)}
-                                labelField="label"
-                                valueField="value"
-                                listWithIcon
-                                position="top"
-                            />
-                        </AUIThemedView>
-                    )}
-                />
+                    <Controller
+                        name="country"
+                        control={control}
+                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <AUIThemedView>
+                                <AUIThemedText style={styles.label}>
+                                    {t("my_country")}
+                                </AUIThemedText>
+                                {/* @ts-ignore */}
+                                <DropdownComponent
+                                    list={allCountries.map((country) => ({
+                                        label: country.name,
+                                        value: country.isoCode,
+                                    }))}
+                                    //@ts-ignore
+                                    value={value}
+                                    //@ts-ignore
+                                    setValue={({ value }) => {
+                                        onChange(value);
+                                        setSelectedCountry(value);
+                                    }}
+                                    labelField="label"
+                                    valueField="value"
+                                    listWithIcon
+                                    position="top"
+                                />
+                            </AUIThemedView>
+                        )}
+                    />
 
-                <Controller
-                    name="country"
-                    control={control}
-                    render={({ field: { onChange, value }, fieldState: { error } }) => (
-                        <AUIThemedView>
-                            <AUIThemedText style={styles.label}>My Country</AUIThemedText>
-                            {/* @ts-ignore */}
-                            <DropdownComponent
-                                list={countriesData.map((country) => ({
-                                    label: country.name,
-                                    value: country.name,
-                                }))}
-                                //@ts-ignore
-                                value={value}
-                                //@ts-ignore
-                                setValue={({ value }) => onChange(value)}
-                                labelField="label"
-                                valueField="value"
-                                listWithIcon
-                                position="top"
-                            />
-                        </AUIThemedView>
-                    )}
-                />
-
-                <Controller
-                    name="state"
-                    control={control}
-                    render={({ field: { onChange, value }, fieldState: { error } }) => (
-                        <AUIThemedView>
-                            <AUIThemedText style={styles.label}>My State</AUIThemedText>
-                            <DropdownComponent
-                                // @ts-ignore
-                                list={stateData}
-                                //@ts-ignore
-                                value={value}
-                                //@ts-ignore
-                                setValue={({ state }) => onChange(state)}
-                                labelField="state"
-                                valueField="state"
-                                listWithIcon
-                                position="top"
-                            />
-                        </AUIThemedView>
-                    )}
-                />
-                <Controller
-                    name="city"
-                    control={control}
-                    render={({ field: { onChange, value }, fieldState: { error } }) => (
-                        <AUIThemedView>
-                            <AUIThemedText style={styles.label}>My City</AUIThemedText>
-                            <DropdownComponent
-                                // @ts-ignore
-                                list={cityData}
-                                //@ts-ignore
-                                value={value}
-                                //@ts-ignore
-                                setValue={({ city }) => onChange(city)}
-                                labelField="city"
-                                valueField="city"
-                                listWithIcon
-                                position="top"
-                            />
-                        </AUIThemedView>
-                    )}
-                />
-            </AUIThemedView>
-
-            <AUIThemedView style={styles.footerContainer}>
-                <AUIThemedView style={styles.buttonContainer}>
-                    <AUIButton title="Clear" onPress={() => reset()} style={{ width: "48%" }} />
-                    <AUIButton
-                        title={"Save"}
-                        selected
-                        onPress={handleSubmit(onSave)}
-                        disabled={!formState.isValid}
-                        style={{ width: "48%" }}
+                    <Controller
+                        name="state"
+                        control={control}
+                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <AUIThemedView>
+                                <AUIThemedText style={styles.label}> {t("my_state")}</AUIThemedText>
+                                {/* @ts-ignore */}
+                                <DropdownComponent
+                                    //@ts-ignore
+                                    list={states?.map((state) => ({
+                                        label: state.name,
+                                        value: state.isoCode,
+                                    }))}
+                                    value={value}
+                                    //@ts-ignore
+                                    setValue={({ value }) => {
+                                        onChange(value);
+                                        setSelectedState(value);
+                                    }}
+                                    labelField="label"
+                                    valueField="value"
+                                    listWithIcon
+                                    position="top"
+                                />
+                            </AUIThemedView>
+                        )}
+                    />
+                    <Controller
+                        name="city"
+                        control={control}
+                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <AUIThemedView>
+                                <AUIThemedText style={styles.label}> {t("my_city")}</AUIThemedText>
+                                {/* @ts-ignore */}
+                                <DropdownComponent
+                                    list={cities.map((city) => ({
+                                        label: city.name,
+                                        value: city.name,
+                                    }))}
+                                    value={value}
+                                    //@ts-ignore
+                                    setValue={({ value }) => {
+                                        onChange(value);
+                                        setSelectedCity(value);
+                                    }}
+                                    labelField="label"
+                                    valueField="value"
+                                    listWithIcon
+                                    position="top"
+                                />
+                            </AUIThemedView>
+                        )}
                     />
                 </AUIThemedView>
-            </AUIThemedView>
-        </ScrollView>
+
+                <AUIThemedView style={styles.footerContainer}>
+                    <AUIThemedView style={styles.buttonContainer}>
+                        <AUIButton
+                            title={t("reset_defaults")}
+                            onPress={() => {
+                                ApiSuccessToast("Resetting to default values...");
+                                reset();
+                            }}
+                            style={{ width: "48%" }}
+                        />
+                        <AUIButton
+                            title={t("save")}
+                            selected
+                            onPress={handleSubmit(onSave)}
+                            disabled={!formState.isValid}
+                            style={{ width: "48%" }}
+                        />
+                    </AUIThemedView>
+                </AUIThemedView>
+            </ScrollView>
+        </KeyboardAvoidingView>
     );
 };
 

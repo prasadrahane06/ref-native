@@ -4,8 +4,8 @@ import { removeFromFavorite } from "@/redux/favoriteSlice";
 import { setLoader } from "@/redux/globalSlice";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { useRouter } from "expo-router";
-import React from "react";
+import { router, useRouter } from "expo-router";
+import React, { useRef } from "react";
 import { Alert, StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
 import "react-native-gesture-handler";
 import { useDispatch } from "react-redux";
@@ -13,6 +13,8 @@ import AUIBackgroundImage from "./common/AUIBackgroundImage";
 import { AUIThemedText } from "./common/AUIThemedText";
 import { AUIThemedView } from "./common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "./common/AUIToast";
+import useDebouncedNavigate from "@/customHooks/useDebouncedNavigate";
+import { useTranslation } from "react-i18next";
 
 interface SchoolProps {
     id: string;
@@ -24,22 +26,24 @@ interface SchoolProps {
 }
 
 const School: React.FC<SchoolProps> = ({ id, title, image, caption, favorite, style }) => {
-    const router = useRouter();
+    const lastClickTime = useRef(0);
     const dispatch = useDispatch();
+    const { t } = useTranslation();
     const { del } = useAxios();
+    const handlePress = useDebouncedNavigate(2000); // 2000 ms = 2 seconds
 
     const handleRemoveFav = (id: string, type: string) => {
         Alert.alert(
-            'Remove Favorite',
-            `Are you sure you want to remove School from your favorites?`,
+            `${t("remove_favorite")}`,
+            `${t("remove_fav_description")}`,
             [
                 {
-                    text: 'Cancel',
-                    onPress: () => console.log('Remove cancelled'),
-                    style: 'cancel',
+                    text: `${t("cancel")}`,
+                    onPress: () => console.log("Remove cancelled"),
+                    style: "cancel",
                 },
                 {
-                    text: 'Remove',
+                    text: `${t("remove")}`,
                     onPress: () => {
                         dispatch(setLoader(true));
                         del(API_URL.favorite, { id: id, type: type })
@@ -53,7 +57,7 @@ const School: React.FC<SchoolProps> = ({ id, title, image, caption, favorite, st
                             })
                             .finally(() => dispatch(setLoader(false)));
                     },
-                    style: 'destructive',
+                    style: "destructive",
                 },
             ],
             { cancelable: false }
@@ -61,13 +65,7 @@ const School: React.FC<SchoolProps> = ({ id, title, image, caption, favorite, st
     };
 
     return (
-        <TouchableOpacity
-            onPress={() =>
-                router.push({
-                    pathname: `(home)/schoolDetails/${id}`,
-                })
-            }
-        >
+        <TouchableOpacity onPress={() => handlePress(`(home)/schoolDetails/${id}`)}>
             <AUIThemedView style={[styles.schoolContainer, style]}>
                 <AUIThemedView style={styles.schoolItem}>
                     <AUIBackgroundImage style={[styles.image]} path={image}>
@@ -91,7 +89,11 @@ const School: React.FC<SchoolProps> = ({ id, title, image, caption, favorite, st
                                 onPress={() => handleRemoveFav(id, "client")}
                                 style={styles.iconContainer}
                             >
-                              <MaterialCommunityIcons name="delete-forever-outline" size={24} color="red" />
+                                <MaterialCommunityIcons
+                                    name="delete-forever"
+                                    size={24}
+                                    color="red"
+                                />
                             </TouchableOpacity>
                         )}
                     </AUIBackgroundImage>

@@ -57,9 +57,10 @@ const useAxios = () => {
         }
     };
 
-    const del = async (url: string, payload?: any) => {
+    const del = async (url: string, payload?: any , query = {}) => {
         try {
-            const response = await axiosClient.delete(url, { data: payload });
+            const queryString = new URLSearchParams(query).toString();
+            const response = await axiosClient.delete(`${url}?${queryString}`, { data: payload });
             return response.data;
         } catch (error) {
             throw error;

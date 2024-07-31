@@ -9,48 +9,51 @@ import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import useDebounce from "@/customHooks/useDebounce";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
+import { setResponse } from "@/redux/apiSlice";
 import { RootState } from "@/redux/store";
 import { router, useFocusEffect } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function TabThreeScreen() {
+
+    const dispatch = useDispatch()
     const theme = useSelector((state: RootState) => state.global.theme);
     const myCourse = useLangTransformSelector((state: RootState) => state.api.myCourse || {});
-    const [courses, setCourses] = useState<any>([]);
+    const searchResult = useLangTransformSelector((state: RootState) => state.api.searchResult || {})
+
+
+
+
     const [searchPhrase, setSearchPhrase] = useState("");
     const [clicked, setClicked] = useState(false);
     const [page, setPage] = useState<number>(1);
-    const [totalPages, setTotalPages] = useState<number>(1);
     const debouncedSearchPhrase = useDebounce(searchPhrase, 500);
     const { requestFn } = useApiRequest();
 
-    const fetchCourses = () => {
+    const fetchCourses = async () => {
         if (debouncedSearchPhrase) {
-            requestFn(API_URL.schoolSearch, "myCourse", {
+            requestFn(API_URL.schoolSearch, "searchResult", {
                 client: true,
                 courseName: debouncedSearchPhrase,
                 page: `${page}`,
             });
         } else {
             requestFn(API_URL.course, "myCourse", { client: true, page: `${page}` });
+            dispatch(setResponse({ storeName : "searchResult", data: []}))
+        
         }
     };
 
     useFocusEffect(
-        React.useCallback(() => {
+        useCallback(() => {
             fetchCourses();
-        }, [])
+        }, [debouncedSearchPhrase])
     );
 
-    useEffect(() => {
-        setCourses(myCourse?.docs || []);
-        setTotalPages(myCourse?.totalPages || 1);
-    }, [myCourse?.docs?.length, myCourse?.totalPages]);
-
     const handleEditCourse = (courseId: string) => {
-        const selectedCourse = courses.find((course: { _id: string }) => course?._id === courseId);
+        const selectedCourse = myCourse?.docs.find((course: { _id: string }) => course?._id === courseId);
         router.push({
             pathname: "(home)/AddNewCourse/AddCourse",
             params: { course: JSON.stringify(selectedCourse), edit: "true" },
@@ -86,16 +89,16 @@ export default function TabThreeScreen() {
                             disabled={false}
                         />
                     </AUIThemedView>
-                    <CourseList data={courses} showEditIcons={true} onEdit={handleEditCourse} />
+                    <CourseList data={searchResult.length > 0 ? searchResult : myCourse?.docs} showEditIcons={true} onEdit={handleEditCourse} />
                     <TouchableOpacity
                         style={{ padding: 10, alignItems: "center" }}
-                        disabled={page === totalPages}
+                        disabled={page === myCourse.totalPages}
                         onPress={() => {
                             setPage((prevPage) => prevPage + 1);
                         }}
                     >
                         <AUIThemedText>
-                            {page === totalPages ? "You are Cought Up" : "Load More"}
+                            {page === myCourse.totalPages ? "You are Caught Up" : "Load More"}
                         </AUIThemedText>
                     </TouchableOpacity>
                 </AUIThemedView>

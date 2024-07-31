@@ -5,7 +5,7 @@ import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import HeaderIcons from "@/components/icons/HeaderIcon";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
-import SchoolProfile from "@/components/screenComponents/schoolProfile";
+import schoolProfile from "@/components/screenComponents/schoolProfile";
 import { APP_THEME, BACKGROUND_THEME, TEXT_THEME, ThemeType } from "@/constants/Colors";
 import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { API_URL } from "@/constants/urlProperties";
@@ -14,24 +14,21 @@ import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector
 import { RootState } from "@/redux/store";
 import { FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { ChatBot } from "at-chatbot-native";
 import { Asset } from "expo-asset";
 import { Image } from "expo-image";
-import { Tabs } from "expo-router";
-import { default as React, useEffect, useState } from "react";
+import { Tabs, useFocusEffect } from "expo-router";
+import { default as React, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Dimensions, FlatList, Modal, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
 import AddNewEvent from "../events/AddNewEvent";
 import NotificationDrawer from "../notification/notification";
-import schoolProfile from "@/components/screenComponents/schoolProfile";
+
+import { ChatBot } from "at-chatbot-native";
 
 interface event {
     _id: string;
-    eventName: {
-        en: string;
-        ar: string;
-    };
+    eventName: string;
     description: string;
     date: string;
     location: string;
@@ -45,21 +42,18 @@ const EventsScreen = () => {
     const eventData = useLangTransformSelector((state: RootState) => state.api.myEvent || {});
     const isRTL = useSelector((state: RootState) => state.global.isRTL || {});
     const [event, setEvent] = useState<event[]>([]);
+    const [page, setPage] = useState<number>(0);
     const { requestFn } = useApiRequest();
 
     const refreshEvents = () => {
-        requestFn(API_URL.event, "myEvent", { client: true });
+        requestFn(API_URL.event, "myEvent", { client: true, page: `${page}` });
     };
-
-    useEffect(() => {
-        refreshEvents();
-    }, []);
-
-    useEffect(() => {
-        if (eventData?.docs?.length > 0) {
-            setEvent(eventData?.docs);
-        }
-    }, [eventData?.docs?.length]);
+    console.log("eventdata" , JSON.stringify(eventData))
+    useFocusEffect(
+        useCallback(() => {
+            refreshEvents();
+        }, [page])
+    );
 
     const handleAddNewEvent = () => {
         setSelectedEvent(undefined);
@@ -79,11 +73,7 @@ const EventsScreen = () => {
             <AUIThemedView style={styles.event}>
                 <Image source={{ uri: item.eventImage }} style={styles.image} />
                 <AUIThemedText style={styles.name} numberOfLines={1}>
-                    {typeof item.eventName === "string"
-                        ? item?.eventName
-                        : isRTL
-                        ? item?.eventName?.ar
-                        : item?.eventName?.en}
+                    {item?.eventName}
                 </AUIThemedText>
             </AUIThemedView>
         </TouchableOpacity>
@@ -98,13 +88,28 @@ const EventsScreen = () => {
                 onPress={handleAddNewEvent}
             />
             <FlatList
-                data={event}
+
+                data={eventData?.docs || []}
                 renderItem={renderItem}
                 keyExtractor={(item) => item?._id}
                 numColumns={3}
                 columnWrapperStyle={styles.row}
                 contentContainerStyle={styles.container}
             />
+
+            <AUIThemedView>
+                <TouchableOpacity
+                    style={{  alignItems: "center" , padding : 10}}
+                    disabled={page === eventData.totalPages}
+                    onPress={() => {
+                        setPage((prevPage) => prevPage + 1);
+                    }}
+                >
+                    <AUIThemedText>
+                        {page === eventData.totalPages ? "You are Caught Up" : "Load More"}
+                    </AUIThemedText>
+                </TouchableOpacity>
+            </AUIThemedView>
             <AddNewEvent
                 visible={isModalVisible}
                 onClose={handleCloseModal}
@@ -356,7 +361,7 @@ const screenOptions = (navigation: any, isRTL: boolean, theme: ThemeType) => ({
 const windowHeight = Dimensions.get("window").height;
 const styles = StyleSheet.create({
     mainContainer: {
-        height: windowHeight,
+        flex : 1
     },
     modalContainer: {
         flex: 1,

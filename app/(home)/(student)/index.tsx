@@ -6,6 +6,7 @@ import IncreaseChanceList from "@/components/home/common/IncreaseChanceList";
 import LanguageList from "@/components/home/common/LanguageList";
 import SchoolList from "@/components/home/common/SchoolList";
 import SectionTitle from "@/components/home/common/SectionTitle";
+import { BACKGROUND_THEME } from "@/constants/Colors";
 import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { carouselData } from "@/constants/dummy data/carouselData";
 import { API_URL } from "@/constants/urlProperties";
@@ -19,7 +20,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Dimensions, ScrollView, StyleSheet } from "react-native";
 import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function HomeScreen() {
     const dispatch = useDispatch();
@@ -32,6 +33,7 @@ export default function HomeScreen() {
     const { t } = useTranslation();
 
     const response = useLangTransformSelector((state: RootState) => state.api);
+    const theme = useSelector((state: RootState) => state.global.theme);
     const user = useLangTransformSelector((state: RootState) => state.global.user);
     const _id = user?._id;
 
@@ -39,6 +41,7 @@ export default function HomeScreen() {
     const courseResponse = response?.selectedLanguagecourse;
     const countryResponse = response?.country;
     let lastChanceResponse = response?.lastDateToApply;
+    let languageData = response?.language;
 
     const fetchCourses = useCallback(() => {
         dispatch(setselectedLanguage(selectedLanguage));
@@ -53,6 +56,7 @@ export default function HomeScreen() {
         requestFn(API_URL.school, "school");
         requestFn(API_URL.country, "country");
         requestFn(API_URL.favorite, "favorite", { user: true });
+        requestFn(API_URL.language, "language");
         requestFn(API_URL.cart, "cart");
         requestFn(API_URL.user, "userProfileData", { id: _id });
         requestFn(API_URL.course, "lastDateToApply", { lastChance: true });
@@ -81,7 +85,7 @@ export default function HomeScreen() {
     }, [cart]);
 
     return (
-        <ScrollView>
+        <ScrollView style={{ backgroundColor: BACKGROUND_THEME[theme].background }}>
             <AUIThemedView>
                 <Carousel
                     ref={ref}
@@ -90,7 +94,6 @@ export default function HomeScreen() {
                     height={width / 2}
                     autoPlay={true}
                     autoPlayInterval={5000}
-                    // onProgressChange={progress}
                     scrollAnimationDuration={1000}
                     data={carouselData}
                     renderItem={({ item }) => (
@@ -101,14 +104,6 @@ export default function HomeScreen() {
                         />
                     )}
                 />
-                {/* <Pagination.Basic
-                    progress={progress}
-                    data={carouselData}
-                    containerStyle={styles.dotsContainer}
-                    dotStyle={styles.dot}
-                    activeDotStyle={{ backgroundColor: APP_THEME[theme].primary.first }}
-                    onPress={onPressPagination}
-                /> */}
             </AUIThemedView>
 
             <AUIThemedView>
@@ -131,7 +126,7 @@ export default function HomeScreen() {
                     {t(GLOBAL_TRANSLATION_LABEL.choose_your_language_to_learn)}
                 </SectionTitle>
                 <LanguageList
-                    data={countryResponse?.docs}
+                    data={languageData?.docs}
                     selectedLanguage={selectedLanguage}
                     setSelectedLanguage={setSelectedLanguage}
                 />
@@ -141,9 +136,7 @@ export default function HomeScreen() {
                 <SectionTitle viewAll="(home)/course/AllCoursesScreen">
                     {t(GLOBAL_TRANSLATION_LABEL.popular_courses)}
                 </SectionTitle>
-                <CourseList data={courseResponse?.docs.slice(0, 4)} onEdit={function (courseId: string): void {
-                    throw new Error("Function not implemented.");
-                } } />
+                <CourseList data={courseResponse?.docs.slice(0, 4)} />
             </AUIThemedView>
 
             <AUIThemedView>
@@ -153,20 +146,3 @@ export default function HomeScreen() {
         </ScrollView>
     );
 }
-
-const styles = StyleSheet.create({
-    dotsContainer: {
-        position: "absolute",
-        bottom: "5%",
-        gap: 10,
-    },
-    dot: { backgroundColor: "#fff", borderRadius: 100, width: 20, height: 3 },
-    centeredContainer: {
-        // flexDirection: "row",
-        // justifyContent: "center",
-        // alignItems: "center",
-        // width: "100%",
-        // paddingHorizontal: 20,
-        // marginVertical: 10,
-    },
-});

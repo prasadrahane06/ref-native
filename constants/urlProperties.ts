@@ -23,4 +23,5 @@ export const API_URL = {
     schoolStudentSearch: "/school/studentSearch",
     schoolAnalytics: "/school/schoolAnylytics",
     search: "search",
+    language : "language"
 };

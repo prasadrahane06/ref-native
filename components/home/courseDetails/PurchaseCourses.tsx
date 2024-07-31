@@ -5,6 +5,7 @@ import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Dimensions, FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
 
 interface PurchaseCoursesProps {
@@ -80,6 +81,19 @@ export default function PurchaseCoursesList({
     completedCourse = false,
 }: PurchaseCoursesListProps) {
     const type = seatBooking ? "BOOKED" : completedCourse ? "COMPLETED" : "ONGOING";
+
+    const { t } = useTranslation();
+
+    if (data.length === 0) {
+        return (
+            <AUIThemedView style={[purchaseCoursesStyle.container, { justifyContent: "center" }]}>
+                <AUIThemedText style={purchaseCoursesStyle.noCourseText}>
+                    {t("no_courses_found")}
+                </AUIThemedText>
+            </AUIThemedView>
+        );
+    }
+
     return (
         <AUIThemedView style={purchaseCoursesStyle.container}>
             <FlatList
@@ -103,6 +117,7 @@ export default function PurchaseCoursesList({
 const { height: windowHeight } = Dimensions.get("window");
 const purchaseCoursesStyle = StyleSheet.create({
     container: { flex: 1, padding: 20, height: windowHeight },
+    noCourseText: { textAlign: "center", fontSize: 20 },
     item: {
         // width: 270,
 

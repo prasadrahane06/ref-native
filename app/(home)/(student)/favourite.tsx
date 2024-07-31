@@ -54,7 +54,6 @@ const TabTwoScreen: React.FC = () => {
     const dispatch = useDispatch();
 
     const width = Dimensions.get("window").width;
-    // const progress = useSharedValue<number>(0);
     const ref = useRef<ICarouselInstance>(null);
 
     useFocusEffect(
@@ -105,21 +104,15 @@ const TabTwoScreen: React.FC = () => {
     }
 
     const handleViewAllCoursesClick = () => {
-        setShowAllCourses(true);
+        setShowAllCourses((prev) => !prev);
     };
     const handleViewAllSchoolsClick = () => {
-        setShowAllSchools(true);
+        setShowAllSchools((prev) => !prev);
     };
     const handleViewAllCountrySchoolsClick = () => {
-        setShowAllCountries(true);
+        setShowAllCountries((prev) => !prev);
     };
 
-    // const onPressPagination = (index: number) => {
-    //     ref.current?.scrollTo({
-    //         count: index - progress.value,
-    //         animated: true,
-    //     });
-    // };
     const renderCourseItem: ListRenderItem<CourseData> = ({ item }: any) => (
         <AUIThemedView
             style={[styles.courseItem, { backgroundColor: APP_THEME[theme].background }]}
@@ -129,9 +122,11 @@ const TabTwoScreen: React.FC = () => {
                 title={item?.courseName}
                 image={item?.image}
                 favorite={true}
-                startingDate={item?.startDate} onEdit={function (courseId: string): void {
+                startingDate={item?.startDate}
+                onEdit={function (courseId: string): void {
                     throw new Error("Function not implemented.");
-                } }            />
+                }}
+            />
         </AUIThemedView>
     );
 
@@ -173,7 +168,6 @@ const TabTwoScreen: React.FC = () => {
                     height={width / 2}
                     autoPlay={true}
                     autoPlayInterval={5000}
-                    // onProgressChange={progress}
                     scrollAnimationDuration={1000}
                     data={carouselData}
                     renderItem={({ item }) => (
@@ -184,14 +178,6 @@ const TabTwoScreen: React.FC = () => {
                         />
                     )}
                 />
-                {/* <Pagination.Basic
-                    progress={progress}
-                    data={carouselData}
-                    containerStyle={styles.dotsContainer}
-                    dotStyle={styles.dot}
-                    activeDotStyle={{ backgroundColor: APP_THEME[theme].primary.first }}
-                    onPress={onPressPagination}
-                /> */}
             </AUIThemedView>
 
             <AUIThemedView>
@@ -203,14 +189,11 @@ const TabTwoScreen: React.FC = () => {
                         ]}
                     >
                         <SectionTitle
-                            // @ts-ignore
-                            onViewAllClick={
-                                fav?.courses.length > 5 ? handleViewAllCoursesClick : false
-                            }
+                            onViewAllClick={handleViewAllCoursesClick}
                             style={{ paddingHorizontal: 5 }}
                             titleStyle={styles.title}
                         >
-                            {GLOBAL_TEXT.My_Favorite_Courses}
+                            {t("fav_courses")}
                         </SectionTitle>
                         <FlatList
                             data={showAllCourses ? fav?.courses : fav?.courses?.slice(0, 6)}
@@ -234,14 +217,11 @@ const TabTwoScreen: React.FC = () => {
                         ]}
                     >
                         <SectionTitle
-                            // @ts-ignore
-                            onViewAllClick={
-                                fav?.clients.length > 5 ? handleViewAllSchoolsClick : false
-                            }
+                            onViewAllClick={handleViewAllSchoolsClick}
                             style={{ paddingBottom: 10, paddingHorizontal: 5 }}
                             titleStyle={styles.title}
                         >
-                            {GLOBAL_TEXT.My_Favorite_Schools}
+                            {t("fav_schools")}
                         </SectionTitle>
                         <FlatList
                             data={showAllSchools ? fav?.clients : fav?.clients?.slice(0, 6)}
@@ -260,14 +240,11 @@ const TabTwoScreen: React.FC = () => {
                 {fav?.countries && fav?.countries.length > 0 && (
                     <AUIThemedView style={styles.destinationContainer}>
                         <SectionTitle
-                            // @ts-ignore
-                            onViewAllClick={
-                                fav?.countries.length > 5 ? handleViewAllCountrySchoolsClick : false
-                            }
+                            onViewAllClick={handleViewAllCountrySchoolsClick}
                             style={{ paddingHorizontal: 5 }}
                             titleStyle={styles.title}
                         >
-                            {GLOBAL_TEXT.My_Favorite_Cities}
+                            {t("fav_countries")}
                         </SectionTitle>
                         <FlatList
                             data={showAllCountries ? fav?.countries : fav?.countries?.slice(0, 6)}

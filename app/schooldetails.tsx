@@ -102,9 +102,9 @@ export default function SchoolDetails() {
                     }).then(() => {
                         dispatch(setUser({ ...userData, ...res?.data }));
                         ApiSuccessToast(res.message);
-                        router.replace({
-                            pathname: `(home)/(school)`,
-                        });
+
+                        router.dismissAll();
+                        router.replace("/(home)/(school)");
                     });
                 }
             })

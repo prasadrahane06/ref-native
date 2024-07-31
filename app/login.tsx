@@ -7,7 +7,7 @@ import { ApiErrorToast } from "@/components/common/AUIToast";
 import OTPScreen from "@/components/screenComponents/OTPScreen";
 import { APP_THEME, BACKGROUND_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT, SIGNUP_FIELDS } from "@/constants/Properties";
-import { getUserData, storeUserData } from "@/constants/RNAsyncStore";
+import { storeUserData } from "@/constants/RNAsyncStore";
 import { loginPageStyles, secondaryButtonStyle } from "@/constants/Styles";
 import { countriesData } from "@/constants/dummy data/countriesData";
 import { API_URL } from "@/constants/urlProperties";
@@ -16,7 +16,7 @@ import { setLoader, setToken, setUser } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
 import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
@@ -56,7 +56,6 @@ const schema = Yup.object().shape({
     selectedButton: Yup.string().required(),
 });
 const LoginPage = () => {
-    const router = useRouter();
     const dispatch = useDispatch();
 
     const globalState = useLangTransformSelector((state: RootState) => state.global);
@@ -161,9 +160,9 @@ const LoginPage = () => {
                     dispatch(setUser(res?.data?.user));
 
                     if (profile === "student") {
-                        router.push({ pathname: "/details" });
+                        router.replace("/details");
                     } else {
-                        router.push({ pathname: "/schooldetails" });
+                        router.replace("/schooldetails");
                     }
                 }
             }
@@ -172,7 +171,7 @@ const LoginPage = () => {
                 if (res.statusCode === 400) {
                     return ApiErrorToast(res.message);
                 }
-                
+
                 if (res?.data?.accessToken) {
                     const userData = res?.data?.user;
                     const accessToken = res?.data?.accessToken;
@@ -186,9 +185,8 @@ const LoginPage = () => {
                     dispatch(setToken(res?.data?.accessToken));
                     dispatch(setUser(res?.data?.user));
 
-                    router.push({
-                        pathname: `(home)/(${profile})`,
-                    });
+                    router.dismissAll();
+                    router.replace(`/(home)/(${profile})`);
                 }
             }
         } catch (error) {

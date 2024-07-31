@@ -47,7 +47,9 @@ const AUIDrawerContent = (props: any) => {
         (state: RootState) => state.global.theme === "dark"
     );
     const data = useLangTransformSelector((state: RootState) => state.global.user);
-    const name = data?.name || "";
+    const name = data?.name;
+    const gender = data?.gender;
+    const type = data?.type;
 
     const isRTL = globalState.isRTL;
 
@@ -58,10 +60,9 @@ const AUIDrawerContent = (props: any) => {
         await storeUserData("@theme", { darkMode: newDarkModeState });
     };
 
-
     const onLogout = () => {
         clearAllData();
-        router.push({ pathname: "/" });
+        router.replace({ pathname: "/" });
     };
     return (
         <AUIThemedView style={{ flex: 1 }}>
@@ -76,16 +77,27 @@ const AUIDrawerContent = (props: any) => {
                     <View
                         style={[styles.avatarContainer, isRTL && { flexDirection: "row-reverse" }]}
                     >
-                        <AUIImage
-                            path={
-                                Asset.fromModule(
-                                    require("@/assets/images/user.png")
+                        {type === "student" ? (
+                            gender === "Male" ? (
+                                <AUIImage
+                                    path={Asset.fromModule(require("@/assets/images/user.png")).uri}
+                                    style={styles.avatar}
+                                />
+                            ) : (
+                                <AUIImage
+                                    path={
+                                        Asset.fromModule(require("@/assets/images/female.png")).uri
+                                    }
+                                    style={styles.avatar}
+                                />
+                            )
+                        ) : (
+                            <AUIImage
+                                path={Asset.fromModule(require("@/assets/images/sclogo.png")).uri}
+                                style={styles.avatar}
+                            />
+                        )}
 
-                                    // "https://linguest-assets-dev.s3.ap-south-1.amazonaws.com/1718884990288-6296.jpeg"
-                                ).uri
-                            }
-                            style={styles.avatar}
-                        />
                         <View style={styles.nameContainer}>
                             <AUIThemedText
                                 style={[styles.name, { color: APP_THEME[theme].primary.first }]}
@@ -99,7 +111,6 @@ const AUIDrawerContent = (props: any) => {
                         </View>
                     </View>
                 </AUIThemedView>
-                {/* </AUIBackgroundImage> */}
                 <View
                     style={{
                         flex: 1,

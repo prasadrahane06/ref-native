@@ -1376,7 +1376,7 @@ export const countriesData = [
         uniqueId: "macao_724121",
     },
     {
-        name: "Macedonia (the former Yugoslav Republic of)",
+        name: "Macedonia",
         code: "MK",
         language: {
             code: "mk",

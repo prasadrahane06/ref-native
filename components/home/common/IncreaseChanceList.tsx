@@ -15,13 +15,14 @@ const IncreaseChanceList: React.FC<IncreaseChanceListProps> = ({ data }) => {
                 data={data}
                 renderItem={({ item }) => (
                     <IncreaseChance
+                        courseId={item?._id}
                         courseName={item?.courseName}
                         schoolName={item?.client?.name}
                         image={item?.image}
                         daysRemaining={item?.startDate}
                     />
                 )}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item) => item?._id}
             />
         </AUIThemedView>
     );

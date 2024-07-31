@@ -1,24 +1,23 @@
 import AUILoader from "@/components/common/AUILoader";
 import "@/components/i18n/i18n.config";
-import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
+import { BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
 import { getUserData, storeUserDeviceData } from "@/constants/RNAsyncStore";
-import { setDeviceToken, setTheme } from "@/redux/globalSlice";
+import { setResponse } from "@/redux/apiSlice";
+import { setTheme } from "@/redux/globalSlice";
 import { RootState, store } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import messaging from "@react-native-firebase/messaging";
 import { useFonts } from "expo-font";
-import { Link, Stack, useRouter } from "expo-router";
+import { Link, Stack, useNavigation, useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import { Alert, Pressable, TouchableOpacity } from "react-native";
+import { useTranslation } from "react-i18next";
+import { Pressable, TouchableOpacity } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import useAxios from "./services/axiosClient";
-import { API_URL } from "@/constants/urlProperties";
-import { setResponse } from "@/redux/apiSlice";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -34,7 +33,9 @@ const _XHR = global.originalXMLHttpRequest
 XMLHttpRequest = _XHR;
 
 const InitialLayout = () => {
+    const { t } = useTranslation();
     const { post } = useAxios();
+    const navigation = useNavigation();
     const dispatch = useDispatch();
 
     const theme = useSelector((state: RootState) => state.global.theme);
@@ -145,6 +146,24 @@ const InitialLayout = () => {
     return (
         <Stack>
             <Stack.Screen name="index" options={{ headerShown: false }} />
+
+            <Stack.Screen
+                name="(home)/(school)"
+                options={{
+                    headerShown: false,
+                    title: "Home",
+                    headerTitle: "Home",
+                }}
+            />
+            <Stack.Screen
+                name="(home)/(student)"
+                options={{
+                    headerShown: false,
+                    title: "Home",
+                    headerTitle: "Home",
+                }}
+            />
+
             <Stack.Screen
                 name="signup"
                 options={{
@@ -246,23 +265,44 @@ const InitialLayout = () => {
                 }}
             />
 
-            <Stack.Screen name="help" options={{ title: "Help", presentation: "modal" }} />
             <Stack.Screen
-                name="(home)/(school)"
+                name="help"
                 options={{
-                    headerShown: false,
-                    title: "Home",
-                    headerTitle: "Home",
+                    title: "Help",
+                    headerTitle: `${t("help")}`,
+                    headerTitleStyle: { color: TEXT_THEME[theme].primary },
+                    headerStyle: { backgroundColor: BACKGROUND_THEME[theme].background },
+                    headerLeft: () => (
+                        <Ionicons
+                            name="arrow-back"
+                            size={27}
+                            color={TEXT_THEME[theme].primary}
+                            style={{ marginRight: 20 }}
+                            onPress={() => router.back()}
+                        />
+                    ),
                 }}
             />
+
             <Stack.Screen
-                name="(home)/(student)"
+                name="transactions"
                 options={{
-                    headerShown: false,
-                    title: "Home",
-                    headerTitle: "Home",
+                    title: "Transactions",
+                    headerTitle: `${t("transactions")}`,
+                    headerTitleStyle: { color: TEXT_THEME[theme].primary },
+                    headerStyle: { backgroundColor: BACKGROUND_THEME[theme].background },
+                    headerLeft: () => (
+                        <Ionicons
+                            name="arrow-back"
+                            size={27}
+                            color={TEXT_THEME[theme].primary}
+                            style={{ marginRight: 20 }}
+                            onPress={() => router.back()}
+                        />
+                    ),
                 }}
             />
+
             <Stack.Screen
                 name="(home)/compare/searchSchool"
                 options={{
@@ -292,14 +332,18 @@ const InitialLayout = () => {
                     headerTitleStyle: { color: TEXT_THEME[theme].primary },
                     headerStyle: { backgroundColor: BACKGROUND_THEME[theme].background },
                     headerLeft: () => (
-                        <TouchableOpacity onPress={router.back}>
-                            <Ionicons
-                                name="arrow-back"
-                                size={27}
-                                color={TEXT_THEME[theme].primary}
-                                style={{ marginRight: 20 }}
-                            />
-                        </TouchableOpacity>
+                        <Ionicons
+                            name="arrow-back"
+                            size={27}
+                            color={TEXT_THEME[theme].primary}
+                            style={{ marginRight: 20 }}
+                            onPress={() => {
+                                dispatch(setResponse({ storeName: "compareSchool1", data: null }));
+                                dispatch(setResponse({ storeName: "compareSchool2", data: null }));
+                                //@ts-ignore
+                                navigation.navigate("compare");
+                            }}
+                        />
                     ),
                 }}
             />
@@ -426,7 +470,7 @@ const InitialLayout = () => {
             <Stack.Screen
                 name="profile"
                 options={{
-                    headerTitle: "My Profile",
+                    headerTitle: `${t("profile")}`,
                     headerTitleStyle: { color: TEXT_THEME[theme].primary },
                     headerStyle: { backgroundColor: BACKGROUND_THEME[theme].background },
                     headerLeft: () => (
@@ -447,6 +491,7 @@ const InitialLayout = () => {
                     headerTitle: "School Profile",
                     headerTitleStyle: { color: TEXT_THEME[theme].primary },
                     headerStyle: { backgroundColor: BACKGROUND_THEME[theme].background },
+                    headerBackVisible: false,
                     headerLeft: () => (
                         <TouchableOpacity onPress={router.back}>
                             <Ionicons
@@ -484,6 +529,7 @@ const InitialLayout = () => {
                     headerStyle: {
                         backgroundColor: BACKGROUND_THEME[theme].background,
                     },
+                    headerBackVisible: false,
                     headerLeft: () => (
                         <TouchableOpacity onPress={router.back}>
                             <Ionicons

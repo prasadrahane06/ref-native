@@ -27,6 +27,7 @@ const SectionTitle: React.FC<SectionTitleProps> = ({
     const { t } = useTranslation();
     const isRTL = useSelector((state: RootState) => state.global.isRTL);
     const theme = useSelector((state: RootState) => state.global.theme);
+    const [showViewAll, setShowViewAll] = React.useState(false);
 
     return (
         <AUIThemedView style={[styles.container, isRTL && { flexDirection: "row-reverse" }, style]}>
@@ -37,9 +38,14 @@ const SectionTitle: React.FC<SectionTitleProps> = ({
                 </Link>
             )}
             {onViewAllClick && (
-                <TouchableOpacity onPress={onViewAllClick}>
-                    <AUIThemedText style={[styles.viewAll, { color: TEXT_THEME[theme].primary }]}>
-                        {t(GLOBAL_TRANSLATION_LABEL.view_all)}
+                <TouchableOpacity
+                    onPress={() => {
+                        onViewAllClick();
+                        setShowViewAll((prev) => !prev);
+                    }}
+                >
+                    <AUIThemedText style={styles.viewAll}>
+                        {showViewAll ? t("view_less") : t("view_all")}
                     </AUIThemedText>
                 </TouchableOpacity>
             )}

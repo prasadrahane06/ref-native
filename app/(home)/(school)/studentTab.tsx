@@ -74,7 +74,7 @@ export default function TabTwoScreen() {
                                         {item.user?.name || "No name available"}
                                     </AUIThemedText>
                                     <AUIThemedText style={styles.id}>
-                                        ID: {item.user?._id || "No ID available"}
+                                        ID: {item.user?.studentId || "No ID available"}
                                     </AUIThemedText>
                                     <MaterialIcons
                                         name="keyboard-arrow-right"

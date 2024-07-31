@@ -45,6 +45,7 @@ import { FacilitiesList } from "../schoolDetails/FacilitiesList";
 interface PlanComponentProps {
     courseId: string;
     clientId: string;
+    clientDetails: any;
     planId: string;
     plan: any;
     scheduleDescription: string;
@@ -181,7 +182,7 @@ function EnquireNowModal({
     const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
 
     return (
-        <Modal animationType="slide" transparent={true} visible={isVisible}>
+        <Modal animationType="slide" transparent={true} visible={isVisible} onRequestClose={onClose}>
             <AUIThemedView
                 style={
                     Platform.OS === "ios"
@@ -569,6 +570,7 @@ export default function PlanComponent({
     scheduleDescription,
     lessonDescription,
     similarCourses,
+    clientDetails,
 }: PlanComponentProps) {
     const theme = useSelector((state: RootState) => state.global.theme);
     const userData = useSelector((state: RootState) => state.global.user);
@@ -576,8 +578,12 @@ export default function PlanComponent({
     const [isModalVisible, setIsModalVisible] = useState(false);
 
     const userId = userData?._id;
-    const { t } = useTranslation();
+    const userType = userData?.type;
+    const clientPhone = clientDetails?.phone;
+    const clientEmail = clientDetails?.email;
+    const clientWebsite = clientDetails?.website;
 
+    const { t } = useTranslation();
     const { requestFn } = useApiRequest();
     const isPurchased = useLangTransformSelector((state: RootState) => state.api.isPurchased);
 
@@ -585,20 +591,16 @@ export default function PlanComponent({
         requestFn(API_URL.purchaseCourse, "isPurchased", { user: true, course: courseId });
     }, []);
 
-    // const handleBookSeat = () => {
-    //     setIsSeatBooked(true);
-    // };
-
     const handlePhonePress = () => {
-        Linking.openURL("tel:+1234567890");
+        Linking.openURL(`tel:${clientPhone}`);
     };
 
     const handleEmailPress = () => {
-        Linking.openURL("mailto:example@example.com");
+        Linking.openURL(`mailto:${clientEmail}`);
     };
 
     const handleWebPress = () => {
-        Linking.openURL("https://example.com");
+        Linking.openURL(`https://${clientWebsite}`);
     };
 
     return (
@@ -636,92 +638,100 @@ export default function PlanComponent({
                 </AUIThemedView>
             </AUIThemedView>
 
-            <AUIThemedView style={styles.btnContainer}>
-                <Pressable
-                    style={[
-                        styles.bookContainer,
-                        {
-                            backgroundColor: BACKGROUND_THEME[theme].background,
-                            borderColor: TEXT_THEME[theme].primary,
-                            opacity:
-                                (isPurchased &&
-                                    isPurchased?.docs &&
-                                    isPurchased?.docs[0]?.type === "bookYourSeat") ||
-                                isPurchased?.docs[0]?.type === "buy"
-                                    ? 0.5
-                                    : 1,
-                        },
-                    ]}
-                    disabled={
-                        isPurchased &&
-                        (isPurchased?.docs[0]?.type === "bookYourSeat" ||
-                            isPurchased?.docs[0]?.type === "buy")
-                    }
-                    onPress={() =>
-                        router.push({
-                            pathname: "/profile",
-                            params: {
-                                from: "bookYourSeatButton",
-                                type: "bookYourSeat",
-                                planId: planId,
-                                courseId: courseId,
+            {userType !== "school" && (
+                <AUIThemedView style={styles.btnContainer}>
+                    <Pressable
+                        style={[
+                            styles.bookContainer,
+                            {
+                                backgroundColor: BACKGROUND_THEME[theme].background,
+                                borderColor: TEXT_THEME[theme].primary,
+                                opacity:
+                                    (isPurchased &&
+                                        isPurchased?.docs &&
+                                        isPurchased?.docs[0]?.type === "bookYourSeat") ||
+                                    isPurchased?.docs[0]?.type === "buy"
+                                        ? 0.5
+                                        : 1,
                             },
-                        })
-                    }
-                >
-                    <AntDesign name="calendar" size={24} color={TEXT_THEME[theme].primary} />
-                    <AUIThemedText style={styles.blackBoldText}>
-                        {t(GLOBAL_TRANSLATION_LABEL.bookYourSeat)}
-                    </AUIThemedText>
-                </Pressable>
-
-                <Pressable
-                    style={[
-                        styles.buyContainer,
-                        {
-                            backgroundColor: APP_THEME[theme].primary.first,
-                            opacity:
-                                isPurchased &&
-                                isPurchased?.docs &&
-                                isPurchased?.docs[0]?.type === "buy"
-                                    ? 0.5
-                                    : 1,
-                        },
-                    ]}
-                    disabled={
-                        isPurchased && isPurchased?.docs && isPurchased?.docs[0]?.type === "buy"
-                    }
-                    onPress={() =>
-                        router.push({
-                            pathname: "/profile",
-                            params: {
-                                from: "buyButton",
-                                type: "buy",
-                                planId: planId,
-                                courseId: courseId,
-                            },
-                        })
-                    }
-                >
-                    <Ionicons name="bag-handle-outline" size={24} color="black" />
-                    <AUIThemedText style={styles.whiteBoldText}>
-                        {GLOBAL_TEXT.buy_now}
-                    </AUIThemedText>
-                </Pressable>
-                {/* )} */}
-            </AUIThemedView>
-
-            <AUIThemedView>
-                <Pressable style={buttonStyle.container} onPress={() => setIsModalVisible(true)}>
-                    <AUIThemedView style={[buttonStyle.buttonInner]}>
-                        <AUIThemedText
-                            style={[buttonStyle.buttonText, { color: TEXT_THEME[theme].primary }]}
-                        >
-                            {t(GLOBAL_TRANSLATION_LABEL.enquireNow)}
+                        ]}
+                        disabled={
+                            isPurchased &&
+                            (isPurchased?.docs[0]?.type === "bookYourSeat" ||
+                                isPurchased?.docs[0]?.type === "buy")
+                        }
+                        onPress={() =>
+                            router.push({
+                                pathname: "/profile",
+                                params: {
+                                    from: "bookYourSeatButton",
+                                    type: "bookYourSeat",
+                                    planId: planId,
+                                    courseId: courseId,
+                                },
+                            })
+                        }
+                    >
+                        <AntDesign name="calendar" size={24} color={TEXT_THEME[theme].primary} />
+                        <AUIThemedText style={styles.blackBoldText}>
+                            {t(GLOBAL_TRANSLATION_LABEL.bookYourSeat)}
                         </AUIThemedText>
-                    </AUIThemedView>
-                </Pressable>
-            </AUIThemedView>
+                    </Pressable>
+
+                    <Pressable
+                        style={[
+                            styles.buyContainer,
+                            {
+                                backgroundColor: APP_THEME[theme].primary.first,
+                                opacity:
+                                    isPurchased &&
+                                    isPurchased?.docs &&
+                                    isPurchased?.docs[0]?.type === "buy"
+                                        ? 0.5
+                                        : 1,
+                            },
+                        ]}
+                        disabled={
+                            isPurchased && isPurchased?.docs && isPurchased?.docs[0]?.type === "buy"
+                        }
+                        onPress={() =>
+                            router.push({
+                                pathname: "/profile",
+                                params: {
+                                    from: "buyButton",
+                                    type: "buy",
+                                    planId: planId,
+                                    courseId: courseId,
+                                },
+                            })
+                        }
+                    >
+                        <Ionicons name="bag-handle-outline" size={24} color="black" />
+                        <AUIThemedText style={styles.whiteBoldText}>
+                            {GLOBAL_TEXT.buy_now}
+                        </AUIThemedText>
+                    </Pressable>
+                </AUIThemedView>
+            )}
+            {userType !== "school" && (
+                <AUIThemedView>
+                    <Pressable
+                        style={buttonStyle.container}
+                        onPress={() => setIsModalVisible(true)}
+                    >
+                        <AUIThemedView style={[buttonStyle.buttonInner]}>
+                            <AUIThemedText
+                                style={[
+                                    buttonStyle.buttonText,
+                                    { color: TEXT_THEME[theme].primary },
+                                ]}
+                            >
+                                {t(GLOBAL_TRANSLATION_LABEL.enquireNow)}
+                            </AUIThemedText>
+                        </AUIThemedView>
+                    </Pressable>
+                </AUIThemedView>
+            )}
 
             <AUIThemedView style={{ marginTop: 25 }}>
                 <AUIThemedView
@@ -729,16 +739,18 @@ export default function PlanComponent({
                 />
             </AUIThemedView>
 
-            <AUIThemedView style={styles.similarCourseContainer}>
-                <AUIThemedView>
-                    <AUIThemedText style={{ fontWeight: "bold" }}>
-                        {t(GLOBAL_TRANSLATION_LABEL.similarCourses)}
-                    </AUIThemedText>
+            {similarCourses?.length > 0 && (
+                <AUIThemedView style={styles.similarCourseContainer}>
+                    <AUIThemedView>
+                        <AUIThemedText style={{ fontWeight: "bold" }}>
+                            {t(GLOBAL_TRANSLATION_LABEL.similarCourses)}
+                        </AUIThemedText>
+                    </AUIThemedView>
+                    <AUIThemedView>
+                        <SimilarCoursesList data={similarCourses} />
+                    </AUIThemedView>
                 </AUIThemedView>
-                <AUIThemedView>
-                    <SimilarCoursesList data={similarCourses} />
-                </AUIThemedView>
-            </AUIThemedView>
+            )}
 
             <EnquireNowModal
                 isVisible={isModalVisible}
@@ -814,7 +826,7 @@ const enquiryFormStyles = StyleSheet.create({
         alignItems: "center",
         gap: 20,
     },
-    phoneCode: { flex: 0.4 },
+    phoneCode: { flex: 0.5 },
     phoneNumber: { flex: 1 },
 });
 

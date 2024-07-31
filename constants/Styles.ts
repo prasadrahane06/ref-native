@@ -251,7 +251,7 @@ export const signupPageStyles = StyleSheet.create({
     },
     buttonContainer: {
         width: "100%",
-        marginTop: 20,
+        marginVertical: 20,
         flexDirection: "row",
         justifyContent: "space-between",
         gap: 5,

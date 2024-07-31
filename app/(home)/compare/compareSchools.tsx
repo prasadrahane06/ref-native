@@ -58,30 +58,26 @@ const CompareSchools: React.FC = () => {
                                         <AUIThemedText style={styles.cardTitle} numberOfLines={1}>
                                             {compareSchool1?.name}
                                         </AUIThemedText>
-                                        <AUIThemedText
+                                        {/* <AUIThemedText
                                             style={styles.cardSubtitle}
                                             numberOfLines={3}
                                         >
                                             {compareSchool1?.location?.about}
-                                        </AUIThemedText>
+                                        </AUIThemedText> */}
                                     </AUIThemedView>
                                 </AUIThemedView>
                                 <TouchableOpacity
                                     style={styles.customShape}
                                     onPress={handleResetcompareSchool1}
                                 >
-                                    <Ionicons
-                                        name="close"
-                                        size={20}
-                                        color={APP_THEME.light.primary.first}
-                                    />
+                                    <Ionicons name="close" size={20} color="black" />
                                 </TouchableOpacity>
                             </>
                         ) : (
                             <TouchableOpacity
                                 style={styles.card}
                                 onPress={() =>
-                                    router.push({
+                                    router.replace({
                                         pathname: "(home)/compare/searchSchool",
                                         params: { compareSlot: "compareSchool1" },
                                     })
@@ -110,30 +106,26 @@ const CompareSchools: React.FC = () => {
                                         <AUIThemedText style={styles.cardTitle} numberOfLines={1}>
                                             {compareSchool2?.name}
                                         </AUIThemedText>
-                                        <AUIThemedText
+                                        {/* <AUIThemedText
                                             style={styles.cardSubtitle}
                                             numberOfLines={3}
                                         >
                                             {compareSchool2?.location?.about}
-                                        </AUIThemedText>
+                                        </AUIThemedText> */}
                                     </AUIThemedView>
                                 </AUIThemedView>
                                 <TouchableOpacity
                                     style={styles.customShape1}
                                     onPress={handleResetcompareSchool2}
                                 >
-                                    <Ionicons
-                                        name="close"
-                                        size={20}
-                                        color={APP_THEME.light.primary.first}
-                                    />
+                                    <Ionicons name="close" size={20} color="black" />
                                 </TouchableOpacity>
                             </>
                         ) : (
                             <TouchableOpacity
                                 style={styles.card}
                                 onPress={() =>
-                                    router.push({
+                                    router.replace({
                                         pathname: "(home)/compare/searchSchool",
                                         params: { compareSlot: "compareSchool2" },
                                     })
@@ -511,7 +503,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     cardTitle: {
-        fontSize: 12,
+        fontSize: 13,
         fontWeight: "bold",
         textAlign: "center",
     },
@@ -532,6 +524,7 @@ const styles = StyleSheet.create({
         fontWeight: "700",
         borderWidth: 1,
         borderColor: APP_THEME.light.primary.first,
+        backgroundColor: APP_THEME.light.primary.first,
         borderRadius: 15,
         justifyContent: "center",
         alignItems: "center",
@@ -546,6 +539,7 @@ const styles = StyleSheet.create({
         fontWeight: "700",
         borderWidth: 1,
         borderColor: APP_THEME.light.primary.first,
+        backgroundColor: APP_THEME.light.primary.first,
         borderRadius: 15,
         justifyContent: "center",
         alignItems: "center",

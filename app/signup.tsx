@@ -11,7 +11,6 @@ import { API_URL } from "@/constants/urlProperties";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { setLoader, setSignInType, setSignupDetails } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
-import { useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import {
     Keyboard,
@@ -23,9 +22,9 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import useAxios from "./services/axiosClient";
+import { router } from "expo-router";
 const SignupPage = () => {
     const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
-    const router = useRouter();
     const dispatch = useDispatch();
     const profile = useLangTransformSelector((state: RootState) => state.global.profile);
     const deviceToken = useSelector((state: RootState) => state.global.deviceToken);
@@ -91,7 +90,7 @@ const SignupPage = () => {
                     Object.keys(data).includes("emailSent") &&
                     Object.keys(data).includes("smsSent")
                 ) {
-                    router.navigate("/login");
+                    router.replace("/login");
                 }
             })
             .catch((e) => {
@@ -147,7 +146,7 @@ const SignupPage = () => {
     };
     const navigateToLogin = () => {
         dispatch(setSignInType("exist"));
-        router.navigate("/login");
+        router.replace("/login");
     };
     const handleTouchOutside = () => {
         Keyboard.dismiss();

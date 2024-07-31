@@ -15,7 +15,8 @@ import AUIImage from "./common/AUIImage";
 import { AUIThemedText } from "./common/AUIThemedText";
 import { AUIThemedView } from "./common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "./common/AUIToast";
-import { MaterialCommunityIcons,MaterialIcons, FontAwesome } from '@expo/vector-icons';
+import { MaterialCommunityIcons, MaterialIcons, FontAwesome } from "@expo/vector-icons";
+import useDebouncedNavigate from "@/customHooks/useDebouncedNavigate";
 
 interface CourseProps {
     title: string;
@@ -28,7 +29,7 @@ interface CourseProps {
     style?: ViewStyle;
     numberOfLines?: number;
     ellipsizeMode?: "head" | "middle" | "tail" | "clip";
-    onEdit: (courseId: string) => void;
+    onEdit?: (courseId: string) => void;
 }
 
 const Course: React.FC<CourseProps> = ({
@@ -48,6 +49,7 @@ const Course: React.FC<CourseProps> = ({
     const dispatch = useDispatch();
     const router = useRouter();
     const { t } = useTranslation();
+    const handlePress = useDebouncedNavigate(2000);
 
     const theme = useSelector((state: RootState) => state.global.theme);
 
@@ -73,16 +75,16 @@ const Course: React.FC<CourseProps> = ({
 
     const handleRemoveFav = (id: string, type: string) => {
         Alert.alert(
-            'Remove Favorite',
-            `Are you sure you want to remove ${title} from your favorites?`,
+            `${t("remove_favorite")}`,
+            `${t("remove_fav_description")}`,
             [
                 {
-                    text: 'Cancel',
-                    onPress: () => console.log('Remove cancelled'),
-                    style: 'cancel',
+                    text: `${t("cancel")}`,
+                    onPress: () => console.log("Remove cancelled"),
+                    style: "cancel",
                 },
                 {
-                    text: 'Remove',
+                    text: `${t("remove")}`,
                     onPress: () => {
                         dispatch(setLoader(true));
                         del(API_URL.favorite, { id, type })
@@ -96,7 +98,7 @@ const Course: React.FC<CourseProps> = ({
                             })
                             .finally(() => dispatch(setLoader(false)));
                     },
-                    style: 'destructive',
+                    style: "destructive",
                 },
             ],
             { cancelable: false }
@@ -106,11 +108,7 @@ const Course: React.FC<CourseProps> = ({
     return (
         <TouchableOpacity
             style={[styles.courseContainer, style]}
-            onPress={() =>
-                router.push({
-                    pathname: `(home)/courseDetails/${courseId}`,
-                })
-            }
+            onPress={() => handlePress(`(home)/courseDetails/${courseId}`)}
         >
             <AUIThemedView style={styles.layout}>
                 <AUIImage style={styles.courseImage} path={image} />
@@ -142,10 +140,10 @@ const Course: React.FC<CourseProps> = ({
                         onPress={() => handleRemoveFav(courseId, "course")}
                         style={styles.iconContainer}
                     >
-                        <MaterialCommunityIcons name="delete-forever-outline" size={24} color="red" />
+                        <MaterialCommunityIcons name="delete-forever" size={24} color="red" />
                     </TouchableOpacity>
                 )}
-                {edit && (
+                {edit && onEdit && (
                     <TouchableOpacity
                         style={styles.editiConContainer}
                         onPress={() => onEdit(courseId)}
@@ -211,7 +209,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         top: 10,
         right: 10,
-        // backgroundColor: "rgba(255, 0, 0, 0.2)",
+        backgroundColor: "rgba(255, 0, 0, 0.2)",
         borderRadius: 20,
         padding: 5,
     },

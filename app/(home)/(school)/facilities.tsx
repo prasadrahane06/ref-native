@@ -7,7 +7,7 @@ import useApiRequest from "@/customHooks/useApiRequest";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
 import React, { useCallback, useEffect, useState } from "react";
-import { Image, StyleSheet, TouchableOpacity } from "react-native";
+import { Image, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 import AddNewFacilities from "../addNewFacility/AddFacility";
@@ -15,36 +15,32 @@ import { useFocusEffect } from "expo-router";
 
 interface Facility {
     _id: string;
-    description: string | { [key: string]: string };
+    description: string ;
     image: string;
-    name: string | { [key: string]: string };
+    name: string ;
     status: number;
 }
 
 export default function TabFourScreen() {
-    const school = useLangTransformSelector((state: RootState) => state.api.myFacilitys || {});
+    const myFacilitys = useLangTransformSelector((state: RootState) => state.api.myFacilitys || {});
     const { requestFn } = useApiRequest();
     const isRTL = useSelector((state: RootState) => state.global.isRTL || {});
     const [isAddFacilityVisible, setAddFacilityVisible] = useState(false);
     const [selectedFacility, setSelectedFacility] = useState<Facility | undefined>(undefined);
-    const [facilities, setFacilities] = useState<Facility[]>([]);
+    const [page ,setPage] = useState<number>(1)
 
     const refreshFacilities = () => {
-        requestFn(API_URL.facility, "myFacilitys", { client: true });
+        requestFn(API_URL.facility, "myFacilitys", { client: true  , page : `${page}`});
         setAddFacilityVisible(false);
     };
 
     useFocusEffect(
         useCallback(() => {
             refreshFacilities();
-        }, [])
+        }, [page])
     );
 
-    useEffect(() => {
-        if (school?.docs?.length > 0 || !isAddFacilityVisible) {
-            setFacilities(school?.docs);
-        }
-    }, [school?.docs?.length, isAddFacilityVisible]);
+
 
     const handleAddNewFacility = () => {
         setSelectedFacility(undefined);
@@ -61,11 +57,7 @@ export default function TabFourScreen() {
             <AUIThemedView style={styles.facility}>
                 <Image source={{ uri: item.image }} style={styles.image} />
                 <AUIThemedText style={styles.name}>
-                    {typeof item.name === "string"
-                        ? item.name
-                        : isRTL
-                        ? item.name.ar
-                        : item.name.en}
+                    {item?.name}
                 </AUIThemedText>
             </AUIThemedView>
         </TouchableOpacity>
@@ -80,20 +72,36 @@ export default function TabFourScreen() {
                 style={styles.button}
                 onPress={handleAddNewFacility}
             />
-            <FlatList
-                data={facilities}
-                renderItem={renderItem}
-                keyExtractor={(item) => item?._id}
-                numColumns={3}
-                columnWrapperStyle={styles.row}
-                contentContainerStyle={styles.container}
-            />
+            <View style={styles.flatListContainer}>
+                <ScrollView>
+                    <FlatList
+                        data={myFacilitys?.docs}
+                        renderItem={renderItem}
+                        keyExtractor={(item) => item?._id}
+                        numColumns={3}
+                        scrollEnabled={false}
+                        columnWrapperStyle={styles.row}
+                        contentContainerStyle={styles.container}
+                    />
+                </ScrollView>
+            </View>
             <AddNewFacilities
                 visible={isAddFacilityVisible}
                 onClose={() => setAddFacilityVisible(false)}
                 refreshFacilities={refreshFacilities}
                 facility={selectedFacility}
             />
+             <TouchableOpacity
+                        style={{ padding: 10, alignItems: "center" }}
+                        disabled={page === myFacilitys.totalPages}
+                        onPress={() => {
+                            setPage((prevPage) => prevPage + 1);
+                        }}
+                    >
+                        <AUIThemedText>
+                            {page === myFacilitys.totalPages ? "You are Caught Up" : "Load More"}
+                        </AUIThemedText>
+                    </TouchableOpacity>
         </AUIThemedView>
     );
 }
@@ -110,8 +118,12 @@ const styles = StyleSheet.create({
     button: {
         marginTop: 20,
     },
-    container: {
+    flatListContainer: {
+        flex: 1,
         marginTop: 20,
+    },
+    container: {
+        flexGrow: 1,
     },
     row: {
         flex: 1,
@@ -121,11 +133,11 @@ const styles = StyleSheet.create({
     facility: {
         flex: 1,
         alignItems: "center",
+        justifyContent: "space-evenly",
         marginHorizontal: 5,
         height: 100,
         width: 80,
     },
-
     name: {
         fontSize: 16,
     },

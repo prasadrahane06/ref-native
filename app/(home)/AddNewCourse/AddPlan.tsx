@@ -67,7 +67,7 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
         if (facility?.docs?.length > 0) {
             setFacilities(facility?.docs);
         }
-    }, [facility?.docs?.length]);
+    }, [facility?.docs]);
 
     useEffect(() => {
         if (plan) {
@@ -113,23 +113,23 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
             facilities: selectedFacilities,
             courseDetails: data.courses,
         };
-        console.log("save plan payload---", payload);
         post(API_URL.plan, payload)
             .then((res) => {
                 ApiSuccessToast("New Plan added successfully.");
-                console.log(ApiSuccessToast("New Plan added successfully."));
+                ApiSuccessToast("New Plan added successfully.");
                 reset();
                 onClose();
             })
             .catch((e) => {
                 console.log(e);
             });
+
+        // requestFn()
     };
 
     const handleEdit = (data: any) => {
         const values = getValues();
         const payload: any = { id: plan?._id };
-        console.log("Edit payload---", payload);
         Object.keys(values).forEach((key) => {
             if (values[key] !== initialValues[key]) {
                 payload[key] = values[key];
@@ -138,10 +138,8 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
         if (selectedFacilities !== initialValues.facilities) {
             payload.facilities = selectedFacilities;
         }
-        console.log("Edit plan payload---", payload);
         patch(API_URL.plan, payload)
             .then((res) => {
-                console.log("Edit res---", res);
                 ApiSuccessToast("Plan updated successfully.");
                 onClose();
                 refreshPlans();
@@ -155,7 +153,6 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
 
     const handleDelete = () => {
         if (!plan?._id) return;
-        console.log(plan?._id);
         del(`${API_URL.plan}?id=${plan?._id}`)
             .then((res) => {
                 ApiSuccessToast("Plan deleted successfully.");

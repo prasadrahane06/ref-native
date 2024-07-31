@@ -27,36 +27,32 @@ type RootStackParamList = {
 
 type SearchSchoolRouteProp = RouteProp<RootStackParamList, "SearchSchool">;
 
-const setSelectedSchool1 = (school: School) =>
-    setResponse({ storeName: "compareSchool1", data: school });
-
 const SearchSchool: React.FC = () => {
     const dispatch = useDispatch();
     const route = useRoute<SearchSchoolRouteProp>();
     const { compareSlot } = route.params;
+
     const [searchQuery, setSearchQuery] = useState<string>("");
-    const [recentSearches, setRecentSearches] = useState<School[]>([
-        {
-            id: "1",
-            name: "The Manchester Schools",
-            address:
-                "East, Academy The East, 60 Grey Mare Ln, Greater, Beswick, Manchester M11 3DS, United Kingdom",
-        },
-        {
-            id: "2",
-            name: "Henley Business School",
-            address:
-                "East, Academy The East, 60 Grey Mare Ln, Greater, Beswick, Manchester M11 3DS, United Kingdom",
-        },
-    ]);
-    const [favoriteDropdownVisible, setFavoriteDropdownVisible] = useState<boolean>(false);
     const [filteredSchools, setFilteredSchools] = useState<School[]>([]);
+    const [favoriteDropdownVisible, setFavoriteDropdownVisible] = useState<boolean>(false);
+
     const schoolsResponse = useLangTransformSelector((state: RootState) => state.api.school || {});
     const compareSchool1 = useLangTransformSelector((state: RootState) => state.api.compareSchool1);
     const compareSchool2 = useLangTransformSelector((state: RootState) => state.api.compareSchool2);
+    const recentSearchedSchools =
+        useLangTransformSelector((state: RootState) => state.api.recentSearchedSchools) || [];
     const getfavorite = useLangTransformSelector((state: RootState) => state.api.favorite || {});
     const theme = useSelector((state: RootState) => state.global.theme);
     const fav = getfavorite?.docs?.[0] || { clients: [] };
+
+    const setSelectedSchool1 = (school: School) =>
+        setResponse({ storeName: "compareSchool1", data: school });
+
+    const setRecentSearches = (school: any) =>
+        setResponse({
+            storeName: "recentSearchedSchools",
+            data: [...recentSearchedSchools, school],
+        });
 
     useEffect(() => {
         if (searchQuery) {
@@ -72,8 +68,10 @@ const SearchSchool: React.FC = () => {
     const handleSelectSchool = (school: School) => {
         setSearchQuery(school.name);
         if (compareSlot === "compareSchool1") {
+            dispatch(setRecentSearches(school));
             dispatch(setSelectedSchool1(school));
         } else if (compareSlot === "compareSchool2") {
+            dispatch(setRecentSearches(school));
             dispatch(setSelectedSchool2(school));
         }
         router.push("(home)/compare/compareSchools");
@@ -88,29 +86,52 @@ const SearchSchool: React.FC = () => {
         setFavoriteDropdownVisible(false);
     };
 
-    const renderDropdownItem = ({ item }: { item: School }) => (
-        <TouchableOpacity onPress={() => handleSelectSchool(item)} style={styles.dropdownItem}>
-            <AUIThemedText>{item.name}</AUIThemedText>
-        </TouchableOpacity>
-    );
+    const renderDropdownItem = (item: any) => {
+        return (
+            <TouchableOpacity onPress={() => handleSelectSchool(item)} style={styles.dropdownItem}>
+                <AUIThemedText>{item.name}</AUIThemedText>
+            </TouchableOpacity>
+        );
+    };
+    const renderRecentItems = ({ item }: { item: any }) => {
+        return (
+            <TouchableOpacity
+                onPress={() => {
+                    if (compareSlot === "compareSchool1") {
+                        dispatch(setSelectedSchool1(item));
+                    } else if (compareSlot === "compareSchool2") {
+                        dispatch(setSelectedSchool2(item));
+                    }
 
-    const renderItem = ({ item }: { item: School }) => (
-        <AUIThemedView
-            style={[styles.recentItem, { backgroundColor: APP_THEME[theme].background }]}
-        >
-            <AUIImage
-                style={styles.schoolImage}
-                path={Asset.fromModule(require("@/assets/images/compareScreen/group_11.png")).uri}
-                resizeMode="contain"
-            />
-            <AUIThemedView
-                style={[styles.recentItemText, { backgroundColor: APP_THEME[theme].background }]}
+                    router.push("(home)/compare/compareSchools");
+                }}
+                style={[
+                    styles.recentItem,
+                    {
+                        backgroundColor: APP_THEME[theme].background,
+                    },
+                ]}
             >
-                <AUIThemedText style={styles.recentItemName}>{item.name}</AUIThemedText>
-                <AUIThemedText style={styles.recentItemAddress}>{item.address}</AUIThemedText>
-            </AUIThemedView>
-        </AUIThemedView>
-    );
+                <AUIImage
+                    style={styles.schoolImage}
+                    path={
+                        Asset.fromModule(require("@/assets/images/compareScreen/group_11.png")).uri
+                    }
+                    resizeMode="contain"
+                />
+                <AUIThemedView style={[styles.recentItemText]}>
+                    <AUIThemedText style={styles.recentItemName}>{item.name}</AUIThemedText>
+                    <AUIThemedText
+                        style={styles.recentItemdescription}
+                        numberOfLines={2}
+                        ellipsizeMode="tail"
+                    >
+                        {item.description}
+                    </AUIThemedText>
+                </AUIThemedView>
+            </TouchableOpacity>
+        );
+    };
 
     return (
         <TouchableWithoutFeedback onPress={closeFavoriteDropdown}>
@@ -140,7 +161,7 @@ const SearchSchool: React.FC = () => {
                         <FlatList
                             data={filteredSchools}
                             keyExtractor={(item) => item.id}
-                            renderItem={renderDropdownItem}
+                            renderItem={({ item }) => renderDropdownItem(item)}
                         />
                     </AUIThemedView>
                 )}
@@ -173,13 +194,9 @@ const SearchSchool: React.FC = () => {
                 {favoriteDropdownVisible && (
                     <AUIThemedView style={styles.dropdown1}>
                         <FlatList
-                            data={fav.clients}
+                            data={fav?.clients}
                             keyExtractor={(item) => item?._id}
-                            renderItem={({ item }) =>
-                                renderDropdownItem({
-                                    item: { id: item?._id, name: item.name, address: item.address },
-                                })
-                            }
+                            renderItem={({ item }) => renderDropdownItem(item)}
                         />
                     </AUIThemedView>
                 )}
@@ -187,9 +204,9 @@ const SearchSchool: React.FC = () => {
                 <AUIThemedText style={styles.recentText}>Recently searched schools</AUIThemedText>
 
                 <FlatList
-                    data={recentSearches}
+                    data={recentSearchedSchools}
                     keyExtractor={(item) => item.id}
-                    renderItem={renderItem}
+                    renderItem={renderRecentItems}
                 />
             </AUIThemedView>
         </TouchableWithoutFeedback>
@@ -285,20 +302,27 @@ const styles = StyleSheet.create({
     },
     recentItem: {
         flexDirection: "row",
+        alignItems: "center",
         marginVertical: 8,
         marginTop: 15,
+        borderRadius: 10,
+        padding: 10,
     },
     schoolImage: {
-        width: 25,
-        height: 25,
+        width: 40,
+        height: 40,
         marginRight: 5,
     },
     recentItemText: {
         marginLeft: 8,
     },
     recentItemName: {
-        fontSize: 16,
+        fontSize: 20,
         fontWeight: "bold",
     },
-    recentItemAddress: {},
+    recentItemdescription: {
+        marginTop: 5,
+        fontSize: 13,
+        fontWeight: "bold",
+    },
 });

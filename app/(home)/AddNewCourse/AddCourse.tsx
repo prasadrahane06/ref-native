@@ -20,8 +20,8 @@ import Checkbox from "expo-checkbox";
 import { Image } from "expo-image";
 import * as ImageManipulator from "expo-image-manipulator";
 import * as ImagePicker from "expo-image-picker";
-import { useLocalSearchParams } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
+import { useFocusEffect, useLocalSearchParams } from "expo-router";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { Platform, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { useSelector } from "react-redux";
@@ -146,18 +146,17 @@ const AUIAddNewCourse = () => {
     const refreshPlans = async () => {
         await requestFn(API_URL.plan, "coursePlans", { client: true });
     };
-    useEffect(() => {
-        refreshPlans();
-    }, []);
+    useFocusEffect(
+        useCallback(() => {
+            refreshPlans();
+        }, [isAddPlanVisible])
+    );
 
-    useEffect(() => {
-        setRenderSelectedPlan((prevRenderSelectedPlan) => {
-            return prevRenderSelectedPlan.filter((plan) =>
-                plans.some((p: { _id: string }) => p?._id === plan?._id)
-            );
-        });
-    }, [plans]);
-
+    const filteredPlans = useMemo(() => {
+        return renderSelectedPlan.filter((plan) =>
+            plans.some((p: { _id: string }) => p?._id === plan?._id)
+        );
+    }, [plans, renderSelectedPlan]);
     const { fields, append } = useFieldArray({
         control,
         name: "courses",
@@ -515,7 +514,7 @@ const AUIAddNewCourse = () => {
                             </AUIThemedView>
                         ))}
                     </AUIAccordion>
-                    {renderSelectedPlan?.map((plan: Plan, index: number) => {
+                    {filteredPlans?.map((plan: Plan, index: number) => {
                         return (
                             <AUIAccordion
                                 key={plan?._id}
@@ -569,7 +568,7 @@ const AUIAddNewCourse = () => {
                     selected
                     onPress={handleAddPlanClick}
                     style={{ width: "100%" }}
-                    disabled={plans.length > 2}
+                    // disabled={plans.length > 2}
                 />
             </AUIThemedView>
             <AUIThemedView style={styles.buttonContainer}>

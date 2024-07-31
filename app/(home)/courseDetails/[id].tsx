@@ -35,16 +35,20 @@ interface CoursePlanTabsProps {
 function CoursePlanTabs({ courseId, clientId }: CoursePlanTabsProps) {
     const [plans, setPlans] = useState<any[]>([]);
     const [selectedPlan, setSelectedPlan] = useState("");
+    const [clientDetails, setClientDetails] = useState({});
+    const similarCourse = useLangTransformSelector((state: RootState) => state.api.similarCourse);
 
     const individualCourse = useLangTransformSelector(
         (state: RootState) => state.api.individualCourse
     );
-    const similarCourse = useLangTransformSelector((state: RootState) => state.api.similarCourse);
+
 
     useEffect(() => {
         if (individualCourse && individualCourse.docs && individualCourse.docs.length > 0) {
             const plans = individualCourse.docs[0].plan;
+            const client = individualCourse.docs[0].client;
             setPlans(plans);
+            setClientDetails(client);
             if (plans?.length > 0) {
                 setSelectedPlan(plans[0]?.name);
             }
@@ -88,6 +92,7 @@ function CoursePlanTabs({ courseId, clientId }: CoursePlanTabsProps) {
                         selectedPlan === plan.name && (
                             <PlanComponent
                                 clientId={clientId}
+                                clientDetails={clientDetails}
                                 key={plan?._id}
                                 planId={plan?._id}
                                 courseId={courseId}
@@ -115,6 +120,11 @@ export default function CourseDetails() {
     const scrollRef = useAnimatedRef<Animated.ScrollView>();
     const navigation = useNavigation();
     const scrollOffset = useScrollViewOffset(scrollRef);
+    const userData = useSelector((state: RootState) => state.global.user);
+
+    const userType = userData?.type
+
+    console.log("userData" , userData.type)
 
     const individualCourse = useLangTransformSelector(
         (state: RootState) => state.api.individualCourse
@@ -130,17 +140,19 @@ export default function CourseDetails() {
     useEffect(() => {
         if (individualCourse && individualCourse.docs && individualCourse.docs.length > 0) {
             const course = individualCourse.docs[0];
-            const clientId = course.client._id;
+            const clientId = course?.client?._id;
             setCourse(course);
-            requestFn(API_URL.course, "similarCourse", { similar: course.language, limit: 4 });
+            if(userType !== "school"){
+                requestFn(API_URL.course, "similarCourse", { similar: course.language, limit: 4 });
+            }
             setClientId(clientId);
         }
     }, [individualCourse]);
 
     const isCourseFavorited = (id: string) =>
-        favorite.courses.some((favCourse: any) => favCourse._id === id);
+        favorite.courses.some((favCourse: any) => favCourse?._id === id);
     const isCourseInCart = (id: string) =>
-        cartItems.courses.some((cartItem: any) => cartItem.course._id === id);
+        cartItems.courses.some((cartItem: any) => cartItem?.course?._id === id);
 
     const handleFavoriteClick = (id: string, type: string) => {
         if (isCourseFavorited(id)) {
@@ -214,11 +226,14 @@ export default function CourseDetails() {
         ],
     }));
 
-    effect(() => {
+    useEffect(() => {
+        // Assuming `userType` is a prop or a value from context/state
+        const shouldShowFavorite = userType !== 'school';
+    
         navigation.setOptions({
             headerTransparent: true,
             headerBackVisible: false,
-
+    
             headerBackground: () => (
                 <Animated.View
                     style={[
@@ -231,21 +246,9 @@ export default function CourseDetails() {
                     ]}
                 />
             ),
-            headerLeft: () => (
-                <Ionicons
-                    name="arrow-back"
-                    size={30}
-                    color={TEXT_THEME[theme].primary}
-                    style={{
-                        position: "absolute",
-                        left: -57,
-                        alignItems: "center",
-                        justifyContent: "center",
-                    }}
-                    onPress={() => navigation.goBack()}
-                />
-            ),
-            headerRight: () => (
+            
+            // Conditionally render the headerRight component based on userType
+            headerRight: shouldShowFavorite ? () => (
                 <TouchableOpacity onPress={() => handleFavoriteClick(id, "course")}>
                     <AUIThemedView
                         style={{
@@ -263,7 +266,8 @@ export default function CourseDetails() {
                         />
                     </AUIThemedView>
                 </TouchableOpacity>
-            ),
+            ) : null,
+    
             headerTitle: () => (
                 <Animated.Text style={[headerTitleAnimatedStyle, styles.screenTitle]}>
                     {course.courseName}
@@ -278,7 +282,10 @@ export default function CourseDetails() {
         theme,
         headerBackgroundAnimatedStyle,
         headerTitleAnimatedStyle,
+        userType, 
     ]);
+    
+    
 
     const startingDate: string = new Date(course.startDate).toLocaleDateString("en-GB", {
         day: "2-digit",
@@ -337,7 +344,8 @@ export default function CourseDetails() {
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
-                            <TouchableOpacity onPress={handleAddToCart}>
+                            {userType !== "school" && (
+                                <TouchableOpacity onPress={handleAddToCart}>
                                 <AUIThemedView
                                     style={[
                                         styles.cartIconContainer,
@@ -351,6 +359,7 @@ export default function CourseDetails() {
                                     />
                                 </AUIThemedView>
                             </TouchableOpacity>
+                            )}
                         </AUIThemedView>
                     </AUIThemedView>
                     {/* <AUIThemedView style={{ paddingHorizontal: 15, marginBottom: 10 }}>

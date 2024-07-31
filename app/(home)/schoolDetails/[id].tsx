@@ -29,7 +29,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { ChatBot } from "at-chatbot-native";
 import { setResponse } from "@/redux/apiSlice";
-// import ChatBot from "@/components/chatbot/ChatBot";
 
 interface TabProps {
     courseId: string;
@@ -154,9 +153,10 @@ export default function SchoolDetails() {
     }, [ratingsOfTheSchool]);
 
     const schoolsResponse = school[0];
+    const rating = schoolsResponse?.averageRating
 
     useEffect(() => {
-        requestFn(API_URL.schoolOverview, "individualSchool", { id: id });
+        requestFn(API_URL.schoolOverview, "individualSchool", { client : id });
     }, []);
 
     useEffect(() => {
@@ -196,11 +196,11 @@ export default function SchoolDetails() {
         };
     });
 
-    const isCourseFavorited = (id: string) =>
+    const isSchoolFavorited = (id: string) =>
         favorite.clients.some((favClient: any) => favClient._id === id);
 
     const handleFavoriteClick = (id: string, type: string) => {
-        if (isCourseFavorited(id)) {
+        if (isSchoolFavorited(id)) {
             // Remove from favorites
             del(API_URL.favorite, { id, type })
                 .then((res: any) => {
@@ -271,9 +271,9 @@ export default function SchoolDetails() {
                         }}
                     >
                         <Ionicons
-                            name={isCourseFavorited(id) ? "heart" : "heart-outline"}
+                            name={isSchoolFavorited(id) ? "heart" : "heart-outline"}
                             size={24}
-                            color={isCourseFavorited(id) ? "red" : APP_THEME[theme].secondary.first}
+                            color={isSchoolFavorited(id) ? "red" : APP_THEME[theme].secondary.first}
                         />
                     </AUIThemedView>
                 </TouchableOpacity>
@@ -289,6 +289,7 @@ export default function SchoolDetails() {
         id,
         theme,
         navigation,
+        favorite,
         headerBackgroundAnimatedStyle,
         headerTitleAnimatedStyle,
     ]);
@@ -367,7 +368,7 @@ export default function SchoolDetails() {
                             <AUIThemedText style={styles.name}>
                                 {schoolsResponse?.name}
                             </AUIThemedText>
-                            <AUIThemedText style={styles.viewsText}>150 Views</AUIThemedText>
+                            <AUIThemedText style={styles.viewsText}>{school?.view} view</AUIThemedText>
                         </AUIThemedView>
 
                         <AUIThemedView
@@ -380,8 +381,9 @@ export default function SchoolDetails() {
                         >
                             <StarRatingDisplay
                                 color={APP_THEME.light.primary.first}
-                                rating={overallRatings}
+                                rating={rating}
                             />
+                            <AUIThemedText>{schoolsResponse?.totalRatings}</AUIThemedText>
                         </AUIThemedView>
 
                         <AUIThemedView style={styles.contactsContainer}>
