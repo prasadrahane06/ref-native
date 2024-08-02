@@ -19,7 +19,6 @@ import { Asset } from "expo-asset";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Dimensions, FlatList, ListRenderItem, ScrollView, StyleSheet } from "react-native";
-import { useSharedValue } from "react-native-reanimated";
 import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -95,7 +94,7 @@ const TabTwoScreen: React.FC = () => {
 
                 <AUIThemedView style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
                     <AUIImage
-                        path={Asset.fromModule(require("@/assets/images/common/fav_image.png")).uri}
+                        path={Asset.fromModule(require("@/assets/images/local/fav_image.png"))}
                         style={{ width: 200, height: 200 }}
                     />
                 </AUIThemedView>

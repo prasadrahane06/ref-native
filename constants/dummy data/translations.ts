@@ -82,6 +82,8 @@ export const en = {
     cancel: "Cancel",
     remove: "Remove",
     no_courses_found: "No courses found",
+    change_number: "Change Number",
+    change_email: "Change Email",
 };
 
 export const ar = {
@@ -167,4 +169,6 @@ export const ar = {
     cancel: "الغاء",
     remove: "حذف",
     no_courses_found: "لم يتم العثور على دورات",
+    change_number: "تغيير رقم الهاتف",
+    change_email: "تغيير البريد الالكتروني",
 };

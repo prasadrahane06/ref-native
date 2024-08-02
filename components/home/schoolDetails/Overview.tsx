@@ -17,7 +17,6 @@ import { inputFieldStyle } from "@/constants/Styles";
 import { accommodationData } from "@/constants/dummy data/accommodationData";
 import { countriesData } from "@/constants/dummy data/countriesData";
 import { nationalityData } from "@/constants/dummy data/nationalityData";
-import { reviewsData } from "@/constants/dummy data/reviewsData";
 import { API_URL } from "@/constants/urlProperties";
 import { setLoader } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
@@ -181,7 +180,12 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
     };
 
     return (
-        <Modal animationType="slide" transparent={true} visible={isVisible} onRequestClose={onClose}>
+        <Modal
+            animationType="slide"
+            transparent={true}
+            visible={isVisible}
+            onRequestClose={onClose}
+        >
             <TouchableWithoutFeedback onPress={dismissKeyboard}>
                 <AUIThemedView
                     style={
@@ -617,7 +621,7 @@ export default function OverviewTab({ schoolOverView, courseId, clientId }: Over
                     name: rtng?.user?.name,
                     image: rtng?.user?.photo
                         ? rtng?.user?.photo
-                        : Asset.fromModule(require("@/assets/images/user.png")).uri,
+                        : Asset.fromModule(require("@/assets/images/local/user.png")),
                     role: "Student",
                     comment: rtng?.comment,
                     rating: rtng?.rating,

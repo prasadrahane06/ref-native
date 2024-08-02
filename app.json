@@ -32,7 +32,7 @@
             [
                 "expo-asset",
                 {
-                    "assets": ["./assets/images/initialPage"]
+                    "assets": ["./assets/images/local"]
                 }
             ]
         ],
@@ -47,6 +47,12 @@
                 "projectId": "84904570-ea3c-477b-b0ad-7b61e21c747c"
             }
         },
-        "owner": "bilal.sheikh"
+        "owner": "bilal.sheikh",
+        "runtimeVersion": {
+            "policy": "appVersion"
+        },
+        "updates": {
+            "url": "https://u.expo.dev/84904570-ea3c-477b-b0ad-7b61e21c747c"
+        }
     }
 }

@@ -4,13 +4,12 @@ import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import PlanComponent from "@/components/home/courseDetails/PlanComponent";
-import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
+import { APP_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import useIsomorphicLayoutEffect from "@/customHooks/useIsomorphicLayoutEffect";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
-import { setResponse } from "@/redux/apiSlice";
 import { addItemToCart, removeItemFromCart } from "@/redux/cartSlice";
 import { addToFavorite, removeFromFavorite } from "@/redux/favoriteSlice";
 import { RootState } from "@/redux/store";
@@ -41,7 +40,6 @@ function CoursePlanTabs({ courseId, clientId }: CoursePlanTabsProps) {
     const individualCourse = useLangTransformSelector(
         (state: RootState) => state.api.individualCourse
     );
-
 
     useEffect(() => {
         if (individualCourse && individualCourse.docs && individualCourse.docs.length > 0) {
@@ -122,9 +120,9 @@ export default function CourseDetails() {
     const scrollOffset = useScrollViewOffset(scrollRef);
     const userData = useSelector((state: RootState) => state.global.user);
 
-    const userType = userData?.type
+    const userType = userData?.type;
 
-    console.log("userData" , userData.type)
+    console.log("userData", userData.type);
 
     const individualCourse = useLangTransformSelector(
         (state: RootState) => state.api.individualCourse
@@ -142,7 +140,7 @@ export default function CourseDetails() {
             const course = individualCourse.docs[0];
             const clientId = course?.client?._id;
             setCourse(course);
-            if(userType !== "school"){
+            if (userType !== "school") {
                 requestFn(API_URL.course, "similarCourse", { similar: course.language, limit: 4 });
             }
             setClientId(clientId);
@@ -228,12 +226,12 @@ export default function CourseDetails() {
 
     useEffect(() => {
         // Assuming `userType` is a prop or a value from context/state
-        const shouldShowFavorite = userType !== 'school';
-    
+        const shouldShowFavorite = userType !== "school";
+
         navigation.setOptions({
             headerTransparent: true,
             headerBackVisible: false,
-    
+
             headerBackground: () => (
                 <Animated.View
                     style={[
@@ -246,28 +244,34 @@ export default function CourseDetails() {
                     ]}
                 />
             ),
-            
+
             // Conditionally render the headerRight component based on userType
-            headerRight: shouldShowFavorite ? () => (
-                <TouchableOpacity onPress={() => handleFavoriteClick(id, "course")}>
-                    <AUIThemedView
-                        style={{
-                            backgroundColor: "rgba(91, 216, 148, 0.3)",
-                            borderRadius: 50,
-                            padding: 10,
-                            justifyContent: "center",
-                            alignItems: "center",
-                        }}
-                    >
-                        <Ionicons
-                            name={isCourseFavorited(id) ? "heart" : "heart-outline"}
-                            size={24}
-                            color={isCourseFavorited(id) ? "red" : APP_THEME[theme].secondary.first}
-                        />
-                    </AUIThemedView>
-                </TouchableOpacity>
-            ) : null,
-    
+            headerRight: shouldShowFavorite
+                ? () => (
+                      <TouchableOpacity onPress={() => handleFavoriteClick(id, "course")}>
+                          <AUIThemedView
+                              style={{
+                                  backgroundColor: "rgba(91, 216, 148, 0.3)",
+                                  borderRadius: 50,
+                                  padding: 10,
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                              }}
+                          >
+                              <Ionicons
+                                  name={isCourseFavorited(id) ? "heart" : "heart-outline"}
+                                  size={24}
+                                  color={
+                                      isCourseFavorited(id)
+                                          ? "red"
+                                          : APP_THEME[theme].secondary.first
+                                  }
+                              />
+                          </AUIThemedView>
+                      </TouchableOpacity>
+                  )
+                : null,
+
             headerTitle: () => (
                 <Animated.Text style={[headerTitleAnimatedStyle, styles.screenTitle]}>
                     {course.courseName}
@@ -282,10 +286,8 @@ export default function CourseDetails() {
         theme,
         headerBackgroundAnimatedStyle,
         headerTitleAnimatedStyle,
-        userType, 
+        userType,
     ]);
-    
-    
 
     const startingDate: string = new Date(course.startDate).toLocaleDateString("en-GB", {
         day: "2-digit",
@@ -307,7 +309,7 @@ export default function CourseDetails() {
                 <AUIThemedView style={styles.container}>
                     <Animated.Image
                         source={{
-                            uri: course.image,
+                            uri: course?.image,
                         }}
                         style={[styles.image, imageAnimatedStyle]}
                         resizeMode="cover"
@@ -327,9 +329,7 @@ export default function CourseDetails() {
                         >
                             <AUIThemedView style={styles.header}>
                                 <AUIImage
-                                    path={
-                                        Asset.fromModule(require("@/assets/icons/course.png")).uri
-                                    }
+                                    path={Asset.fromModule(require("@/assets/icons/course.png"))}
                                     icon
                                     style={{ width: 40 }}
                                 />
@@ -346,19 +346,19 @@ export default function CourseDetails() {
                             </AUIThemedView>
                             {userType !== "school" && (
                                 <TouchableOpacity onPress={handleAddToCart}>
-                                <AUIThemedView
-                                    style={[
-                                        styles.cartIconContainer,
-                                        { backgroundColor: APP_THEME[theme].primary.first },
-                                    ]}
-                                >
-                                    <Ionicons
-                                        name={isCourseInCart(id) ? "cart" : "cart-outline"}
-                                        size={24}
-                                        color="#fff"
-                                    />
-                                </AUIThemedView>
-                            </TouchableOpacity>
+                                    <AUIThemedView
+                                        style={[
+                                            styles.cartIconContainer,
+                                            { backgroundColor: APP_THEME[theme].primary.first },
+                                        ]}
+                                    >
+                                        <Ionicons
+                                            name={isCourseInCart(id) ? "cart" : "cart-outline"}
+                                            size={24}
+                                            color="#fff"
+                                        />
+                                    </AUIThemedView>
+                                </TouchableOpacity>
                             )}
                         </AUIThemedView>
                     </AUIThemedView>

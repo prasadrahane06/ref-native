@@ -6,31 +6,29 @@ import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
-import React, { useCallback, useEffect, useState } from "react";
+import { useFocusEffect } from "expo-router";
+import { default as React, useCallback, useState } from "react";
 import { Image, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-import { useSelector } from "react-redux";
 import AddNewFacilities from "../addNewFacility/AddFacility";
-import { useFocusEffect } from "expo-router";
 
 interface Facility {
     _id: string;
-    description: string ;
+    description: string;
     image: string;
-    name: string ;
+    name: string;
     status: number;
 }
 
 export default function TabFourScreen() {
     const myFacilitys = useLangTransformSelector((state: RootState) => state.api.myFacilitys || {});
     const { requestFn } = useApiRequest();
-    const isRTL = useSelector((state: RootState) => state.global.isRTL || {});
     const [isAddFacilityVisible, setAddFacilityVisible] = useState(false);
     const [selectedFacility, setSelectedFacility] = useState<Facility | undefined>(undefined);
-    const [page ,setPage] = useState<number>(1)
+    const [page, setPage] = useState<number>(1);
 
     const refreshFacilities = () => {
-        requestFn(API_URL.facility, "myFacilitys", { client: true  , page : `${page}`});
+        requestFn(API_URL.facility, "myFacilitys", { client: true, page: `${page}` });
         setAddFacilityVisible(false);
     };
 
@@ -39,8 +37,6 @@ export default function TabFourScreen() {
             refreshFacilities();
         }, [page])
     );
-
-
 
     const handleAddNewFacility = () => {
         setSelectedFacility(undefined);
@@ -55,10 +51,8 @@ export default function TabFourScreen() {
     const renderItem = ({ item }: { item: Facility }) => (
         <TouchableOpacity onPress={() => handleEditFacility(item)}>
             <AUIThemedView style={styles.facility}>
-                <Image source={{ uri: item.image }} style={styles.image} />
-                <AUIThemedText style={styles.name}>
-                    {item?.name}
-                </AUIThemedText>
+                <Image source={{ uri: item?.image }} style={styles.image} />
+                <AUIThemedText style={styles.name}>{item?.name}</AUIThemedText>
             </AUIThemedView>
         </TouchableOpacity>
     );
@@ -91,17 +85,17 @@ export default function TabFourScreen() {
                 refreshFacilities={refreshFacilities}
                 facility={selectedFacility}
             />
-             <TouchableOpacity
-                        style={{ padding: 10, alignItems: "center" }}
-                        disabled={page === myFacilitys.totalPages}
-                        onPress={() => {
-                            setPage((prevPage) => prevPage + 1);
-                        }}
-                    >
-                        <AUIThemedText>
-                            {page === myFacilitys.totalPages ? "You are Caught Up" : "Load More"}
-                        </AUIThemedText>
-                    </TouchableOpacity>
+            <TouchableOpacity
+                style={{ padding: 10, alignItems: "center" }}
+                disabled={page === myFacilitys.totalPages}
+                onPress={() => {
+                    setPage((prevPage) => prevPage + 1);
+                }}
+            >
+                <AUIThemedText>
+                    {page === myFacilitys.totalPages ? "You are Caught Up" : "Load More"}
+                </AUIThemedText>
+            </TouchableOpacity>
         </AUIThemedView>
     );
 }

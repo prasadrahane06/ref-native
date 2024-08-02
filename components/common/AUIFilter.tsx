@@ -12,7 +12,7 @@ export default function AUIFilter({ style }: AUIFilterProps) {
     return (
         <AUIThemedView style={[style, { paddingHorizontal: 10 }]}>
             <AUIImage
-                path={Asset.fromModule(require("@/assets/icons/filter.png")).uri}
+                path={Asset.fromModule(require("@/assets/icons/filter.png"))}
                 style={{
                     width: 25,
                     height: 25,

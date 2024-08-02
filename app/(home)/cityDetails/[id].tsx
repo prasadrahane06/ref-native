@@ -28,7 +28,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useDispatch, useSelector } from "react-redux";
 
-export default function cityDetails() {
+export default function CityDetails() {
     const effect = useIsomorphicLayoutEffect();
     const { id } = useLocalSearchParams<{ id: any }>();
 
@@ -207,8 +207,7 @@ export default function cityDetails() {
                             source={{
                                 uri:
                                     country?.images?.[0] ||
-                                    Asset.fromModule(require("@/assets/images/common/no_image.png"))
-                                        .uri,
+                                    Asset.fromModule(require("@/assets/images/local/no_image.png")),
                             }}
                             style={[styles.image, imageAnimatedStyle]}
                             resizeMode="cover"
@@ -234,7 +233,7 @@ export default function cityDetails() {
                                 <AUIImage
                                     path={country?.flag}
                                     style={styles.headingImage}
-                                    resizeMode="cover"
+                                    contentFit="cover"
                                 />
                             </AUIThemedView>
                             <AUIThemedView
@@ -262,7 +261,7 @@ export default function cityDetails() {
                                 <AUIImage
                                     path={photoGallary[0]}
                                     style={styles.iconImage}
-                                    resizeMode="cover"
+                                    contentFit="cover"
                                 />
                                 <AUIThemedView style={styles.iconTextContainer}>
                                     <AUIThemedText style={styles.iconText}>Capital</AUIThemedText>
@@ -276,7 +275,7 @@ export default function cityDetails() {
                                 <AUIImage
                                     path={photoGallary[0]}
                                     style={styles.iconImage}
-                                    resizeMode="cover"
+                                    contentFit="cover"
                                 />
                                 <AUIThemedView style={styles.iconTextContainer}>
                                     <AUIThemedText style={styles.iconText}>
@@ -291,7 +290,7 @@ export default function cityDetails() {
                                 <AUIImage
                                     path={photoGallary[0]}
                                     style={styles.iconImage}
-                                    resizeMode="cover"
+                                    contentFit="cover"
                                 />
                                 <AUIThemedView style={styles.iconTextContainer}>
                                     <AUIThemedText style={styles.iconText}>Language</AUIThemedText>

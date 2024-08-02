@@ -1,7 +1,6 @@
 import Course from "@/components/Course";
 import { AUILinearGradient } from "@/components/common/AUILinearGradient";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
-import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { APP_THEME, BACKGROUND_THEME } from "@/constants/Colors";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";

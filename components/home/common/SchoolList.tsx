@@ -18,13 +18,7 @@ const SchoolList: React.FC<SchoolListProps> = ({ data }) => {
                         <School
                             id={item?._id}
                             title={item.name}
-                            image={
-                                item?.banner
-                                    ? item?.banner
-                                    : Asset.fromModule(
-                                          require("@/assets/images/schoolDetailsPage/school.png")
-                                      ).uri
-                            }
+                            image={item?.banner}
                             caption={item?.description}
                             style={{
                                 width: 270,

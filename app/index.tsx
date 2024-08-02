@@ -104,11 +104,11 @@ const InitialPage = () => {
                                 path={
                                     profile === "student"
                                         ? Asset.fromModule(
-                                              require("@/assets/images/initialPage/fi_3135773.png")
-                                          ).uri
+                                              require("@/assets/images/local/fi_3135773.png")
+                                          )
                                         : Asset.fromModule(
-                                              require("@/assets/images/initialPage/student.png")
-                                          ).uri
+                                              require("@/assets/images/local/student.png")
+                                          )
                                 }
                             />
 
@@ -154,11 +154,11 @@ const InitialPage = () => {
                                 path={
                                     profile === "school"
                                         ? Asset.fromModule(
-                                              require("@/assets/images/initialPage/school_white.png")
-                                          ).uri
+                                              require("@/assets/images/local/school_white.png")
+                                          )
                                         : Asset.fromModule(
-                                              require("@/assets/images/initialPage/school.png")
-                                          ).uri
+                                              require("@/assets/images/local/school.png")
+                                          )
                                 }
                             />
 
@@ -207,19 +207,11 @@ const InitialPage = () => {
                 <AUIThemedView style={initialPageStyles.imageContainer}>
                     {theme === "dark" ? (
                         <AUIImage
-                            path={
-                                Asset.fromModule(
-                                    require("@/assets/images/initialPage/home_dark.png")
-                                ).uri
-                            }
+                            path={Asset.fromModule(require("@/assets/images/local/home_dark.png"))}
                         />
                     ) : (
                         <AUIImage
-                            path={
-                                Asset.fromModule(
-                                    require("@/assets/images/initialPage/home_light.png")
-                                ).uri
-                            }
+                            path={Asset.fromModule(require("@/assets/images/local/home_light.png"))}
                         />
                     )}
                 </AUIThemedView>

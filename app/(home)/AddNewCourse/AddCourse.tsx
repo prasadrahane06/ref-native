@@ -251,13 +251,13 @@ const AUIAddNewCourse = () => {
         });
 
         if (!result.canceled) {
-            const assetUri = result.assets[0].uri;
+            const assetUri = result.assets[0]?.uri;
             const manipResult = await ImageManipulator.manipulateAsync(
                 assetUri,
                 [{ resize: { width: 500 } }],
                 { compress: 0.2, format: ImageManipulator.SaveFormat.JPEG }
             );
-            const base64Image = await convertImageToBase64(manipResult.uri);
+            const base64Image = await convertImageToBase64(manipResult?.uri);
             setImage(base64Image);
             setIsImageEdited(true);
             setValue("image", base64Image);

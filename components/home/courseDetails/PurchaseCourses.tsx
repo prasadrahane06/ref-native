@@ -35,7 +35,7 @@ function PurchaseCourses({
             style={purchaseCoursesStyle.item}
             onPress={() =>
                 router.push({
-                    pathname: `(home)/courseDetails/${courseId}`,
+                    pathname: `/(home)/courseDetails/${courseId}`,
                 })
             }
         >

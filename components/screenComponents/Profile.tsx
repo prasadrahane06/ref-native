@@ -65,7 +65,7 @@ function Profile() {
                     <AUIImage
                         path={
                             userProfileData?.photo ||
-                            Asset.fromModule(require("@/assets/images/user.png")).uri
+                            Asset.fromModule(require("@/assets/images/local/user.png"))
                         }
                         style={styles.avatar}
                     />

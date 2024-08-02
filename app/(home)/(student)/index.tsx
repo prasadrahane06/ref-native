@@ -18,7 +18,7 @@ import { setselectedLanguage } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Dimensions, ScrollView, StyleSheet } from "react-native";
+import { Dimensions, ScrollView } from "react-native";
 import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
 import { useDispatch, useSelector } from "react-redux";
 

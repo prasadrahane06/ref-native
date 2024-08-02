@@ -1,17 +1,15 @@
 import { AUILinearGradient } from "@/components/common/AUILinearGradient";
-import { AUIThemedView } from "@/components/common/AUIThemedView";
+import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { APP_THEME, BACKGROUND_THEME } from "@/constants/Colors";
+import { API_URL } from "@/constants/urlProperties";
+import useApiRequest from "@/customHooks/useApiRequest";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 import AllSchoolsList from "../list/AllSchoolsList";
-import { AUIThemedText } from "@/components/common/AUIThemedText";
-import { ScrollView } from "react-native-gesture-handler";
-import useApiRequest from "@/customHooks/useApiRequest";
-import { API_URL } from "@/constants/urlProperties";
-
 
 interface SchoolListProps {
     data: any[];
@@ -19,7 +17,9 @@ interface SchoolListProps {
 
 const AllSchoolsScreen: React.FC<SchoolListProps> = ({ data }) => {
     const [page, setPage] = useState(1);
-    const schoolsResponse = useLangTransformSelector((state: RootState) => state.api.AllSchool || {});
+    const schoolsResponse = useLangTransformSelector(
+        (state: RootState) => state.api.AllSchool || {}
+    );
     const { requestFn } = useApiRequest();
     const theme = useSelector((state: RootState) => state.global.theme);
 
@@ -61,7 +61,6 @@ const AllSchoolsScreen: React.FC<SchoolListProps> = ({ data }) => {
 export default AllSchoolsScreen;
 
 const styles = StyleSheet.create({
-
     scrollContainer: {
         flexGrow: 1,
         justifyContent: "flex-start",

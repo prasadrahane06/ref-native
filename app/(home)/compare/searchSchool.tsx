@@ -37,8 +37,6 @@ const SearchSchool: React.FC = () => {
     const [favoriteDropdownVisible, setFavoriteDropdownVisible] = useState<boolean>(false);
 
     const schoolsResponse = useLangTransformSelector((state: RootState) => state.api.school || {});
-    const compareSchool1 = useLangTransformSelector((state: RootState) => state.api.compareSchool1);
-    const compareSchool2 = useLangTransformSelector((state: RootState) => state.api.compareSchool2);
     const recentSearchedSchools =
         useLangTransformSelector((state: RootState) => state.api.recentSearchedSchools) || [];
     const getfavorite = useLangTransformSelector((state: RootState) => state.api.favorite || {});
@@ -74,7 +72,7 @@ const SearchSchool: React.FC = () => {
             dispatch(setRecentSearches(school));
             dispatch(setSelectedSchool2(school));
         }
-        router.push("(home)/compare/compareSchools");
+        router.push("/(home)/compare/compareSchools");
         setSearchQuery("");
     };
 
@@ -103,7 +101,7 @@ const SearchSchool: React.FC = () => {
                         dispatch(setSelectedSchool2(item));
                     }
 
-                    router.push("(home)/compare/compareSchools");
+                    router.push("/(home)/compare/compareSchools");
                 }}
                 style={[
                     styles.recentItem,
@@ -114,10 +112,8 @@ const SearchSchool: React.FC = () => {
             >
                 <AUIImage
                     style={styles.schoolImage}
-                    path={
-                        Asset.fromModule(require("@/assets/images/compareScreen/group_11.png")).uri
-                    }
-                    resizeMode="contain"
+                    path={Asset.fromModule(require("@/assets/images/local/group_11.png"))}
+                    contentFit="contain"
                 />
                 <AUIThemedView style={[styles.recentItemText]}>
                     <AUIThemedText style={styles.recentItemName}>{item.name}</AUIThemedText>
@@ -160,7 +156,7 @@ const SearchSchool: React.FC = () => {
                     <AUIThemedView style={styles.dropdown}>
                         <FlatList
                             data={filteredSchools}
-                            keyExtractor={(item) => item.id}
+                            keyExtractor={(item) => item?.id}
                             renderItem={({ item }) => renderDropdownItem(item)}
                         />
                     </AUIThemedView>

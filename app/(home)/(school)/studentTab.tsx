@@ -1,16 +1,16 @@
+import AUISearchBar from "@/components/common/AUISearchBar";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
+import useDebounce from "@/customHooks/useDebounce";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
 import { MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { StyleSheet, TouchableOpacity, View, ScrollView } from "react-native";
 import { useEffect, useState } from "react";
-import useDebounce from "@/customHooks/useDebounce";
-import AUISearchBar from "@/components/common/AUISearchBar";
+import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 
 export default function TabTwoScreen() {
     const { requestFn } = useApiRequest();
@@ -65,7 +65,7 @@ export default function TabTwoScreen() {
                                     style={styles.layout}
                                     onPress={() =>
                                         router.push({
-                                            pathname: `(home)/studentInfo/${item?._id}`,
+                                            pathname: `/(home)/studentInfo/${item?._id}`,
                                             params: { student: JSON.stringify(item) },
                                         })
                                     }

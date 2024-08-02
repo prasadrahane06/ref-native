@@ -16,7 +16,6 @@ import { useDispatch, useSelector } from "react-redux";
 import AUIImage from "./AUIImage";
 import AUILangToggle from "./AUILangToggle";
 import { AUIThemedView } from "./AUIThemedView";
-import schoolProfile from "../screenComponents/schoolProfile";
 
 //interface
 export interface DrawerItem {
@@ -80,20 +79,22 @@ const AUIDrawerContent = (props: any) => {
                         {type === "student" ? (
                             gender === "Male" ? (
                                 <AUIImage
-                                    path={Asset.fromModule(require("@/assets/images/user.png")).uri}
+                                    path={Asset.fromModule(
+                                        require("@/assets/images/local/user.png")
+                                    )}
                                     style={styles.avatar}
                                 />
                             ) : (
                                 <AUIImage
-                                    path={
-                                        Asset.fromModule(require("@/assets/images/female.png")).uri
-                                    }
+                                    path={Asset.fromModule(
+                                        require("@/assets/images/local/female.png")
+                                    )}
                                     style={styles.avatar}
                                 />
                             )
                         ) : (
                             <AUIImage
-                                path={Asset.fromModule(require("@/assets/images/sclogo.png")).uri}
+                                path={Asset.fromModule(require("@/assets/images/local/sclogo.png"))}
                                 style={styles.avatar}
                             />
                         )}
@@ -154,9 +155,11 @@ const AUIDrawerContent = (props: any) => {
                     borderTopColor: "#ccc",
                 }}
             >
-                <AUIThemedView style={styles.switchTextContainer}>
-                    <AUILangToggle />
-                </AUIThemedView>
+                {type === "student" && (
+                    <AUIThemedView style={styles.switchTextContainer}>
+                        <AUILangToggle />
+                    </AUIThemedView>
+                )}
             </View>
             <View style={{ padding: 20, borderTopWidth: 1, borderTopColor: "#ccc" }}>
                 <TouchableOpacity

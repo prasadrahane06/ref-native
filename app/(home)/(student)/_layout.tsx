@@ -28,9 +28,6 @@ import NotificationDrawer from "../notification/notification";
 const ProfileScreen = () => <Profile />;
 const CoursesScreen = () => <MyCourses />;
 const TermsPolicyScreen = () => <TermsAndPolicy />;
-const NotificationsScreen = ({ onClose }: { onClose: () => void }) => (
-    <NotificationDrawer onClose={onClose} />
-);
 
 const Drawer = createDrawerNavigator();
 

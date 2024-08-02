@@ -3,7 +3,7 @@ import "@/components/i18n/i18n.config";
 import { BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
 import { getUserData, storeUserDeviceData } from "@/constants/RNAsyncStore";
 import { setResponse } from "@/redux/apiSlice";
-import { setTheme } from "@/redux/globalSlice";
+import { setDeviceToken, setTheme } from "@/redux/globalSlice";
 import { RootState, store } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -13,11 +13,12 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Pressable, TouchableOpacity } from "react-native";
+import { Alert, Pressable, TouchableOpacity } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import useAxios from "./services/axiosClient";
+import messaging from "@react-native-firebase/messaging";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -161,6 +162,25 @@ const InitialLayout = () => {
                     headerShown: false,
                     title: "Home",
                     headerTitle: "Home",
+                }}
+            />
+
+            <Stack.Screen
+                name="changeNumberEmail"
+                options={{
+                    headerTitle: "",
+                    headerTitleStyle: { color: TEXT_THEME[theme].primary },
+                    headerStyle: { backgroundColor: BACKGROUND_THEME[theme].background },
+                    headerLeft: () => (
+                        <TouchableOpacity onPress={router.back}>
+                            <Ionicons
+                                name="arrow-back"
+                                size={27}
+                                color={TEXT_THEME[theme].primary}
+                                style={{ marginRight: 20 }}
+                            />
+                        </TouchableOpacity>
+                    ),
                 }}
             />
 

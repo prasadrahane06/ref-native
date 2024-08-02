@@ -2,11 +2,12 @@ import useAxios from "@/app/services/axiosClient";
 import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { API_URL } from "@/constants/urlProperties";
+import useDebouncedNavigate from "@/customHooks/useDebouncedNavigate";
 import { removeItemFromCart } from "@/redux/cartSlice";
 import { removeFromFavorite } from "@/redux/favoriteSlice";
 import { setLoader } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
-import { useRouter } from "expo-router";
+import { FontAwesome, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Alert, StyleSheet, Text, TouchableOpacity, ViewStyle } from "react-native";
@@ -15,8 +16,6 @@ import AUIImage from "./common/AUIImage";
 import { AUIThemedText } from "./common/AUIThemedText";
 import { AUIThemedView } from "./common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "./common/AUIToast";
-import { MaterialCommunityIcons, MaterialIcons, FontAwesome } from "@expo/vector-icons";
-import useDebouncedNavigate from "@/customHooks/useDebouncedNavigate";
 
 interface CourseProps {
     title: string;
@@ -47,7 +46,6 @@ const Course: React.FC<CourseProps> = ({
 }) => {
     const { del } = useAxios();
     const dispatch = useDispatch();
-    const router = useRouter();
     const { t } = useTranslation();
     const handlePress = useDebouncedNavigate(2000);
 

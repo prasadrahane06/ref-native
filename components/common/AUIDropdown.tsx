@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import AUIImage from "./AUIImage";
 import { AUIThemedText } from "./AUIThemedText";
 import { AUIThemedView } from "./AUIThemedView";
+import { Image } from "expo-image";
 
 interface DropdownItem {
     label: string;
@@ -99,18 +100,19 @@ const DropdownComponent = ({
                 renderLeftIcon={
                     renderLeftIcon
                         ? () => (
-                              <AUIImage
-                                  icon
+                              <Image
                                   style={{
                                       borderRadius: 50,
                                       width: 30,
                                       height: 30,
                                       marginRight: 3,
                                   }}
-                                  path={
+                                  source={{
                                       // @ts-ignore
-                                      list.find((x: any) => x[valueField] === value)[iconField]
-                                  }
+                                      uri: list.find((x: any) => x[valueField] === value)[
+                                          iconField
+                                      ],
+                                  }}
                               />
                           )
                         : () => null
@@ -161,15 +163,14 @@ const RenderItemWithIcon = ({
             backgroundColor: BACKGROUND_THEME[theme].background,
         }}
     >
-        <AUIImage
-            icon
+        <Image
             style={{
                 borderRadius: 50,
                 width: 30,
                 height: 30,
                 marginRight: 3,
             }}
-            path={item[iconField]}
+            source={item[iconField]}
         />
         <AUIThemedText style={[itemLabelStyle]}>{item[labelField]}</AUIThemedText>
     </AUIThemedView>

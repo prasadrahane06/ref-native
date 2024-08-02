@@ -51,7 +51,7 @@ const CompareSchools: React.FC = () => {
                                         <AUIImage
                                             style={styles.image}
                                             path={compareSchool1?.banner}
-                                            resizeMode="cover"
+                                            contentFit="cover"
                                         />
                                     </AUIThemedView>
                                     <AUIThemedView style={styles.textContainer}>
@@ -78,7 +78,7 @@ const CompareSchools: React.FC = () => {
                                 style={styles.card}
                                 onPress={() =>
                                     router.replace({
-                                        pathname: "(home)/compare/searchSchool",
+                                        pathname: "/(home)/compare/searchSchool",
                                         params: { compareSlot: "compareSchool1" },
                                     })
                                 }
@@ -99,7 +99,7 @@ const CompareSchools: React.FC = () => {
                                         <AUIImage
                                             style={styles.image}
                                             path={compareSchool2?.banner}
-                                            resizeMode="cover"
+                                            contentFit="cover"
                                         />
                                     </AUIThemedView>
                                     <AUIThemedView style={styles.textContainer}>
@@ -126,7 +126,7 @@ const CompareSchools: React.FC = () => {
                                 style={styles.card}
                                 onPress={() =>
                                     router.replace({
-                                        pathname: "(home)/compare/searchSchool",
+                                        pathname: "/(home)/compare/searchSchool",
                                         params: { compareSlot: "compareSchool2" },
                                     })
                                 }
@@ -145,11 +145,9 @@ const CompareSchools: React.FC = () => {
                         <AUIAccordion
                             title="School Infomtion"
                             style={styles.AUIAccordion}
-                            icon={
-                                Asset.fromModule(
-                                    require("@/assets/images/compareScreen/compareSchoolsPage/group_36763.png")
-                                ).uri
-                            }
+                            icon={Asset.fromModule(
+                                require("@/assets/images/local/group_36763.png")
+                            )}
                         >
                             <AUIThemedView>
                                 <AUIThemedView style={styles.row}>
@@ -200,11 +198,7 @@ const CompareSchools: React.FC = () => {
                         <AUIAccordion
                             title="Academics"
                             style={styles.AUIAccordion}
-                            icon={
-                                Asset.fromModule(
-                                    require("@/assets/images/compareScreen/compareSchoolsPage/group_2.png")
-                                ).uri
-                            }
+                            icon={Asset.fromModule(require("@/assets/images/local/group_2.png"))}
                         >
                             <AUIThemedView>
                                 <AUIThemedView style={styles.row2}>
@@ -239,11 +233,7 @@ const CompareSchools: React.FC = () => {
                         <AUIAccordion
                             title="Location"
                             style={styles.AUIAccordion}
-                            icon={
-                                Asset.fromModule(
-                                    require("@/assets/images/compareScreen/compareSchoolsPage/layer_2.png")
-                                ).uri
-                            }
+                            icon={Asset.fromModule(require("@/assets/images/local/layer_2.png"))}
                         >
                             <AUIThemedView style={styles.row2}>
                                 <AUIThemedText style={styles.value}>School Location</AUIThemedText>
@@ -260,11 +250,7 @@ const CompareSchools: React.FC = () => {
                         <AUIAccordion
                             title="Fee Structure"
                             style={styles.AUIAccordion}
-                            icon={
-                                Asset.fromModule(
-                                    require("@/assets/images/compareScreen/compareSchoolsPage/fi_6926264.png")
-                                ).uri
-                            }
+                            icon={Asset.fromModule(require("@/assets/images/local/fi_6926264.png"))}
                         >
                             <AUIThemedView>
                                 <AUIThemedView style={styles.row}>
@@ -295,11 +281,7 @@ const CompareSchools: React.FC = () => {
                         <AUIAccordion
                             title="Campus and Facility"
                             style={styles.AUIAccordion}
-                            icon={
-                                Asset.fromModule(
-                                    require("@/assets/images/compareScreen/compareSchoolsPage/fi_8716577.png")
-                                ).uri
-                            }
+                            icon={Asset.fromModule(require("@/assets/images/local/fi_8716577.png"))}
                         >
                             <AUIThemedView>
                                 {/* <AUIThemedView style={styles.row}>
@@ -369,8 +351,8 @@ const CompareSchools: React.FC = () => {
                         title="Admission Criteria and Eligibility"
                         icon={
                             Asset.fromModule(
-                                require("@/assets/images/compareScreen/compareSchoolsPage/fi_6419828.png")
-                            ).uri
+                                require("@/assets/images/local/fi_6419828.png")
+                            )
                         }
                     >
                         <AUIThemedView>

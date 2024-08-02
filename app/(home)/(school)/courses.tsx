@@ -12,19 +12,17 @@ import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector
 import { setResponse } from "@/redux/apiSlice";
 import { RootState } from "@/redux/store";
 import { router, useFocusEffect } from "expo-router";
-import React, { useCallback, useEffect, useState } from "react";
+import { default as React, useCallback, useState } from "react";
 import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function TabThreeScreen() {
-
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     const theme = useSelector((state: RootState) => state.global.theme);
     const myCourse = useLangTransformSelector((state: RootState) => state.api.myCourse || {});
-    const searchResult = useLangTransformSelector((state: RootState) => state.api.searchResult || {})
-
-
-
+    const searchResult = useLangTransformSelector(
+        (state: RootState) => state.api.searchResult || {}
+    );
 
     const [searchPhrase, setSearchPhrase] = useState("");
     const [clicked, setClicked] = useState(false);
@@ -41,8 +39,7 @@ export default function TabThreeScreen() {
             });
         } else {
             requestFn(API_URL.course, "myCourse", { client: true, page: `${page}` });
-            dispatch(setResponse({ storeName : "searchResult", data: []}))
-        
+            dispatch(setResponse({ storeName: "searchResult", data: [] }));
         }
     };
 
@@ -53,9 +50,11 @@ export default function TabThreeScreen() {
     );
 
     const handleEditCourse = (courseId: string) => {
-        const selectedCourse = myCourse?.docs.find((course: { _id: string }) => course?._id === courseId);
+        const selectedCourse = myCourse?.docs.find(
+            (course: { _id: string }) => course?._id === courseId
+        );
         router.push({
-            pathname: "(home)/AddNewCourse/AddCourse",
+            pathname: "/(home)/AddNewCourse/AddCourse",
             params: { course: JSON.stringify(selectedCourse), edit: "true" },
         });
     };
@@ -83,13 +82,17 @@ export default function TabThreeScreen() {
                             selected
                             onPress={() =>
                                 router.push({
-                                    pathname: "(home)/AddNewCourse/AddCourse",
+                                    pathname: "/(home)/AddNewCourse/AddCourse",
                                 })
                             }
                             disabled={false}
                         />
                     </AUIThemedView>
-                    <CourseList data={searchResult.length > 0 ? searchResult : myCourse?.docs} showEditIcons={true} onEdit={handleEditCourse} />
+                    <CourseList
+                        data={searchResult.length > 0 ? searchResult : myCourse?.docs}
+                        showEditIcons={true}
+                        onEdit={handleEditCourse}
+                    />
                     <TouchableOpacity
                         style={{ padding: 10, alignItems: "center" }}
                         disabled={page === myCourse.totalPages}

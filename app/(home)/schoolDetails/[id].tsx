@@ -28,7 +28,6 @@ import { StarRatingDisplay } from "react-native-star-rating-widget";
 import { useDispatch, useSelector } from "react-redux";
 
 import { ChatBot } from "at-chatbot-native";
-import { setResponse } from "@/redux/apiSlice";
 
 interface TabProps {
     courseId: string;
@@ -153,15 +152,15 @@ export default function SchoolDetails() {
     }, [ratingsOfTheSchool]);
 
     const schoolsResponse = school[0];
-    const rating = schoolsResponse?.averageRating
+    const rating = schoolsResponse?.averageRating;
 
     useEffect(() => {
-        requestFn(API_URL.schoolOverview, "individualSchool", { client : id });
-    }, []);
+        requestFn(API_URL.schoolOverview, "individualSchool", { client: id });
+    }, [id]);
 
     useEffect(() => {
         requestFn(API_URL.rating, "ratingsOfTheSchool", { client: id ? id : {} });
-    }, []);
+    }, [id]);
 
     const scrollRef = useAnimatedRef<Animated.ScrollView>();
     const navigation = useNavigation();
@@ -342,15 +341,14 @@ export default function SchoolDetails() {
             <Animated.ScrollView ref={scrollRef} scrollEventThrottle={16}>
                 <AUIThemedView style={styles.container}>
                     <Animated.Image
-                        source={
-                            schoolsResponse?.banner
-                                ? { uri: schoolsResponse.banner }
-                                : {
-                                      uri: Asset.fromModule(
-                                          require("@/assets/images/common/no_image.png")
-                                      ).uri,
-                                  }
-                        }
+                        source={{
+                            uri:
+                                schoolsResponse?.banner ||
+                                Asset.fromModule(require("@/assets/images/local/no_image.png"))
+                                    ?.uri ||
+                                Asset.fromModule(require("@/assets/images/local/no_image.png"))
+                                    ?.localUri,
+                        }}
                         style={[styles.image, imageAnimatedStyle]}
                         resizeMode="cover"
                     />
@@ -368,7 +366,9 @@ export default function SchoolDetails() {
                             <AUIThemedText style={styles.name}>
                                 {schoolsResponse?.name}
                             </AUIThemedText>
-                            <AUIThemedText style={styles.viewsText}>{school?.view} view</AUIThemedText>
+                            <AUIThemedText style={styles.viewsText}>
+                                {school?.view} view
+                            </AUIThemedText>
                         </AUIThemedView>
 
                         <AUIThemedView

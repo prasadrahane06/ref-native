@@ -9,7 +9,7 @@ import { useLocalSearchParams } from "expo-router";
 import React, { useEffect } from "react";
 import { StyleSheet, ScrollView, Dimensions } from "react-native";
 
-const { width } = Dimensions.get("window");
+// const { width } = Dimensions.get("window");
 
 const StudentInfoScreen = () => {
     const { id } = useLocalSearchParams();

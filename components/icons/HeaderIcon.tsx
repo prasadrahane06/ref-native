@@ -52,17 +52,17 @@ function SearchModal({ isVisible, onClose }: any) {
         switch (type) {
             case "country":
                 router.push({
-                    pathname: `(home)/cityDetails/${item?._id}`,
+                    pathname: `/(home)/cityDetails/${item?._id}`,
                 });
                 break;
             case "course":
                 router.push({
-                    pathname: `(home)/courseDetails/${item?._id}`,
+                    pathname: `/(home)/courseDetails/${item?._id}`,
                 });
                 break;
             case "school":
                 router.push({
-                    pathname: `(home)/schoolDetails/${item?._id}`,
+                    pathname: `/(home)/schoolDetails/${item?._id}`,
                 });
                 break;
         }

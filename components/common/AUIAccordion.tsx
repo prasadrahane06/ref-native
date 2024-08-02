@@ -11,7 +11,7 @@ import { AUIThemedView } from "./AUIThemedView";
 interface AccordionProps {
     title: string;
     children: ReactNode;
-    icon?: string;
+    icon?: any;
     style?: ViewStyle;
     innerStyle?: any;
     showEditIcon?: boolean;
@@ -41,7 +41,7 @@ const AUIAccordion: React.FC<AccordionProps> = ({
                 onPress={() => setExpanded(!expanded)}
             >
                 <AUIThemedView style={styles.accordionTitle}>
-                    {icon && <AUIImage style={styles.icon} path={icon} resizeMode="cover" />}
+                    {icon && <AUIImage style={styles.icon} path={icon} contentFit="cover" />}
                     <AUIThemedText style={styles.accordionTitleText}>{title}</AUIThemedText>
                 </AUIThemedView>
 

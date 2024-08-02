@@ -115,8 +115,8 @@ const academicSessionData = [
 
 const schema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
-    phoneNumber: Yup.string().required(GLOBAL_TEXT.validate_mobile),
-    email: Yup.string().email(GLOBAL_TEXT.validate_email).required(GLOBAL_TEXT.validate_email),
+    // phoneNumber: Yup.string().required(GLOBAL_TEXT.validate_mobile),
+    // email: Yup.string().email(GLOBAL_TEXT.validate_email).required(GLOBAL_TEXT.validate_email),
     language: Yup.string().required("Language is required"),
     dateOfBirth: Yup.string().required("Date of birth is required"),
     gender: Yup.string().required("Gender is required"),
@@ -153,7 +153,7 @@ const Profile: React.FC = () => {
     );
     const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
     const [profileImage, setProfileImage] = useState<string>(
-        userProfileData?.photo || Asset.fromModule(require("@/assets/images/user.png")).uri
+        userProfileData?.photo || Asset.fromModule(require("@/assets/images/local/user.png"))
     );
     const [profileBase64, setProfileBase64] = useState<any>(null);
     const [selectedCountry, setSelectedCountry] = useState<any>(null);
@@ -180,8 +180,8 @@ const Profile: React.FC = () => {
         mode: "onChange",
         defaultValues: {
             name: userProfileData?.name,
-            phoneNumber: userProfileData?.phone,
-            email: userProfileData?.email,
+            // phoneNumber: userProfileData?.phone,
+            // email: userProfileData?.email,
             language: userProfileData?.language,
             dateOfBirth: dateOfBirth && dateOfBirth?.toISOString(),
             gender: userProfileData?.gender || "",
@@ -218,7 +218,7 @@ const Profile: React.FC = () => {
 
         if (!result.canceled) {
             setProfileBase64(result.assets[0].base64);
-            setProfileImage(result.assets[0].uri);
+            setProfileImage(result.assets[0]?.uri);
         } else {
             alert("You did not select any image.");
         }
@@ -236,8 +236,8 @@ const Profile: React.FC = () => {
         const payload: any = {
             id: userProfileData?._id,
             name: data.name,
-            phone: data.phoneNumber,
-            email: data.email,
+            // phone: data.phoneNumber,
+            // email: data.email,
             language: data.language,
             dob: data.dateOfBirth,
             gender: data.gender,
@@ -264,7 +264,8 @@ const Profile: React.FC = () => {
 
                 if (from === "buyButton") {
                     router.push({
-                        pathname: `(home)/courseDetails/purchase/${JSON.stringify({
+                        //@ts-ignore
+                        pathname: `/(home)/courseDetails/purchase/${JSON.stringify({
                             type: type,
                             planId: planId,
                             courseId: courseId,
@@ -274,7 +275,8 @@ const Profile: React.FC = () => {
 
                 if (from === "bookYourSeatButton") {
                     router.push({
-                        pathname: `(home)/courseDetails/purchase/${JSON.stringify({
+                        //@ts-ignore
+                        pathname: `/(home)/courseDetails/purchase/${JSON.stringify({
                             type: type,
                             planId: planId,
                             courseId: courseId,
@@ -330,51 +332,51 @@ const Profile: React.FC = () => {
                         )}
                     />
 
-                    <Controller
-                        name="phoneNumber"
-                        control={control}
-                        render={({ field: { onChange, value }, fieldState: { error } }) => (
-                            <AUIThemedView>
-                                <AUIThemedText style={styles.label}>
-                                    {t("mobile_number")}
+                    <AUIThemedView>
+                        <AUIThemedView style={styles.labelContainer}>
+                            <AUIThemedText style={styles.label}>{t("mobile_number")}</AUIThemedText>
+                            <TouchableOpacity
+                                onPress={() =>
+                                    router.push({
+                                        pathname: "/changeNumberEmail",
+                                        params: { type: "phoneNumber" },
+                                    })
+                                }
+                            >
+                                <AUIThemedText style={styles.link}>
+                                    {t("change_number")}
                                 </AUIThemedText>
-                                <AUIInputField
-                                    value={value}
-                                    onChangeText={onChange}
-                                    placeholder={"Enter Your Mobile Number"}
-                                />
-                                <AUIThemedView>
-                                    {error && (
-                                        <AUIThemedText style={styles.fieldError}>
-                                            {error.message}
-                                        </AUIThemedText>
-                                    )}
-                                </AUIThemedView>
-                            </AUIThemedView>
-                        )}
-                    />
+                            </TouchableOpacity>
+                        </AUIThemedView>
+                        <AUIInputField
+                            style={styles.disabledInput}
+                            editable={false}
+                            value={userProfileData?.phone}
+                        />
+                    </AUIThemedView>
 
-                    <Controller
-                        name="email"
-                        control={control}
-                        render={({ field: { onChange, value }, fieldState: { error } }) => (
-                            <AUIThemedView>
-                                <AUIThemedText style={styles.label}>{t("email")}</AUIThemedText>
-                                <AUIInputField
-                                    value={value}
-                                    onChangeText={onChange}
-                                    placeholder={"Enter Your Mail ID"}
-                                />
-                                <AUIThemedView>
-                                    {error && (
-                                        <AUIThemedText style={styles.fieldError}>
-                                            {error.message}
-                                        </AUIThemedText>
-                                    )}
-                                </AUIThemedView>
-                            </AUIThemedView>
-                        )}
-                    />
+                    <AUIThemedView>
+                        <AUIThemedView style={styles.labelContainer}>
+                            <AUIThemedText style={styles.label}>{t("email")}</AUIThemedText>
+                            <TouchableOpacity
+                                onPress={() =>
+                                    router.push({
+                                        pathname: "/changeNumberEmail",
+                                        params: { type: "email" },
+                                    })
+                                }
+                            >
+                                <AUIThemedText style={styles.link}>
+                                    {t("change_email")}
+                                </AUIThemedText>
+                            </TouchableOpacity>
+                        </AUIThemedView>
+                        <AUIInputField
+                            style={styles.disabledInput}
+                            editable={false}
+                            value={userProfileData?.email}
+                        />
+                    </AUIThemedView>
 
                     <AUIThemedView>
                         <AUIThemedText style={styles.label}>{t("date_of_birth")}</AUIThemedText>
@@ -552,7 +554,6 @@ const Profile: React.FC = () => {
                         render={({ field: { onChange, value }, fieldState: { error } }) => (
                             <AUIThemedView>
                                 <AUIThemedText style={styles.label}>
-                                    {" "}
                                     {t("my_language")}
                                 </AUIThemedText>
                                 {/* @ts-ignore */}
@@ -684,6 +685,25 @@ const Profile: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
+    disabledInput: {
+        backgroundColor: "#f0f0f0",
+        opacity: 0.5,
+        borderWidth: 0,
+        borderRadius: 10,
+    },
+    link: {
+        color: "blue",
+        marginTop: 10,
+        marginBottom: 5,
+        fontSize: 13,
+        fontWeight: "bold",
+        fontStyle: "normal",
+    },
+    labelContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+    },
     editIcon: {
         position: "absolute",
         left: 70,

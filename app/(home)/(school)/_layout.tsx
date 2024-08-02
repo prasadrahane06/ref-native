@@ -5,7 +5,6 @@ import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import HeaderIcons from "@/components/icons/HeaderIcon";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
-import schoolProfile from "@/components/screenComponents/schoolProfile";
 import { APP_THEME, BACKGROUND_THEME, TEXT_THEME, ThemeType } from "@/constants/Colors";
 import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { API_URL } from "@/constants/urlProperties";
@@ -14,15 +13,15 @@ import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector
 import { RootState } from "@/redux/store";
 import { FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { Asset } from "expo-asset";
 import { Image } from "expo-image";
 import { Tabs, useFocusEffect } from "expo-router";
-import { default as React, useCallback, useEffect, useState } from "react";
+import { default as React, useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Dimensions, FlatList, Modal, StyleSheet, TouchableOpacity, View } from "react-native";
+import { FlatList, Modal, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
 import AddNewEvent from "../events/AddNewEvent";
 import NotificationDrawer from "../notification/notification";
+import SchoolProfile from "@/components/screenComponents/schoolProfile";
 
 import { ChatBot } from "at-chatbot-native";
 
@@ -40,15 +39,13 @@ const EventsScreen = () => {
     const [isModalVisible, setModalVisible] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState<event | undefined>(undefined);
     const eventData = useLangTransformSelector((state: RootState) => state.api.myEvent || {});
-    const isRTL = useSelector((state: RootState) => state.global.isRTL || {});
-    const [event, setEvent] = useState<event[]>([]);
     const [page, setPage] = useState<number>(0);
     const { requestFn } = useApiRequest();
 
     const refreshEvents = () => {
         requestFn(API_URL.event, "myEvent", { client: true, page: `${page}` });
     };
-    console.log("eventdata" , JSON.stringify(eventData))
+
     useFocusEffect(
         useCallback(() => {
             refreshEvents();
@@ -71,7 +68,7 @@ const EventsScreen = () => {
     const renderItem = ({ item }: { item: event }) => (
         <TouchableOpacity onPress={() => handleEditEvent(item)}>
             <AUIThemedView style={styles.event}>
-                <Image source={{ uri: item.eventImage }} style={styles.image} />
+                <Image source={{ uri: item?.eventImage }} style={styles.image} />
                 <AUIThemedText style={styles.name} numberOfLines={1}>
                     {item?.eventName}
                 </AUIThemedText>
@@ -88,7 +85,6 @@ const EventsScreen = () => {
                 onPress={handleAddNewEvent}
             />
             <FlatList
-
                 data={eventData?.docs || []}
                 renderItem={renderItem}
                 keyExtractor={(item) => item?._id}
@@ -99,7 +95,7 @@ const EventsScreen = () => {
 
             <AUIThemedView>
                 <TouchableOpacity
-                    style={{  alignItems: "center" , padding : 10}}
+                    style={{ alignItems: "center", padding: 10 }}
                     disabled={page === eventData.totalPages}
                     onPress={() => {
                         setPage((prevPage) => prevPage + 1);
@@ -124,36 +120,11 @@ const EventsScreen = () => {
 //     <NotificationDrawer onClose={onClose} />
 // );
 
-const user = {
-    name: "Manchester School",
-    avatarUrl:
-        "https://b2bsalesconnections.com/wp-content/uploads/2023/01/college-grads-vasily-koloda-8CqDvPuo_kI-unsplash-300x200.jpg",
-};
-
-const items = [
-    {
-        label: "Facilities",
-        iconPath: Asset.fromModule(require("@/assets/images/drawerIcons/courses_icon.png")).uri,
-        navigateTo: "Facilities",
-    },
-    {
-        label: "Terms and Policy",
-        iconPath: Asset.fromModule(require("@/assets/images/drawerIcons/terms_and_policy_icon.png"))
-            .uri,
-        navigateTo: "Contact",
-    },
-    {
-        label: "Share the app",
-        iconPath: Asset.fromModule(require("@/assets/images/drawerIcons/share_icon.png")).uri,
-        navigateTo: "#",
-    },
-];
-
 export default function AUIDrawer() {
     const theme = useSelector((state: RootState) => state.global.theme);
     const isRTL = useSelector((state: RootState) => state.global.isRTL);
 
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     // const handleNotificationPress = () => {
@@ -203,7 +174,7 @@ export default function AUIDrawer() {
                 />
                 <Drawer.Screen
                     name="Profile"
-                    component={schoolProfile}
+                    component={SchoolProfile}
                     options={{
                         headerShown: false,
                         title: t(GLOBAL_TRANSLATION_LABEL.account),
@@ -358,10 +329,10 @@ const screenOptions = (navigation: any, isRTL: boolean, theme: ThemeType) => ({
     drawerPosition: isRTL ? "right" : "left",
 });
 
-const windowHeight = Dimensions.get("window").height;
+// const windowHeight = Dimensions.get("window").height;
 const styles = StyleSheet.create({
     mainContainer: {
-        flex : 1
+        flex: 1,
     },
     modalContainer: {
         flex: 1,

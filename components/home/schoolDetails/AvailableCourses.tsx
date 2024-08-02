@@ -74,7 +74,7 @@ export const AvailableCourses: React.FC<AvailableCoursesProps> = ({
                         style={styles.button}
                         onPress={() =>
                             router.push({
-                                pathname: `(home)/courseDetails/${_id}`,
+                                pathname: `/(home)/courseDetails/${_id}`,
                             })
                         }
                     >

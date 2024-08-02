@@ -2,7 +2,6 @@ import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
 import { Feather, FontAwesome6, Fontisto, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { Asset } from "expo-asset";
 import { router, useNavigation } from "expo-router";
 import React from "react";
 import { Alert, Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
@@ -32,7 +31,7 @@ const array = [
         pathname: "/transactions",
     },
 ];
-function schoolProfile() {
+function SchoolProfile() {
     // const userProfileData = useLangTransformSelector(
     //     (state: RootState) => state.api.userProfileData
     // );
@@ -69,17 +68,7 @@ function schoolProfile() {
                     </Pressable>
                 </View>
                 <View style={styles.avatarContainer}>
-                    <AUIImage
-                        path={
-                            // Asset.fromModule(
-                            //     require("@/assets/images/user.png")
-                            //     // "https://linguest-assets-dev.s3.ap-south-1.amazonaws.com/1718884990288-6296.jpeg"
-                            // ).uri
-
-                            MySchoolDetails?.logo
-                        }
-                        style={styles.avatar}
-                    />
+                    <AUIImage path={MySchoolDetails?.logo} style={styles.avatar} />
                     <AUIThemedText style={styles.name}>{MySchoolDetails?.name}</AUIThemedText>
                     <AUIThemedText style={styles.email}>{MySchoolDetails?.email}</AUIThemedText>
                 </View>
@@ -137,7 +126,7 @@ function schoolProfile() {
     );
 }
 
-export default schoolProfile;
+export default SchoolProfile;
 
 const styles = StyleSheet.create({
     root: {

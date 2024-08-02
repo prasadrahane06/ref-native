@@ -186,6 +186,7 @@ const LoginPage = () => {
                     dispatch(setUser(res?.data?.user));
 
                     router.dismissAll();
+                    //@ts-ignore
                     router.replace(`/(home)/(${profile})`);
                 }
             }

@@ -125,10 +125,10 @@ export default function SchoolDetails() {
         if (!result.canceled) {
             if (value === "logo") {
                 setValue(value, result.assets[0].base64);
-                setSelectedLogo(result.assets[0].uri);
+                setSelectedLogo(result.assets[0]?.uri);
             } else {
                 setValue(value, result.assets[0].base64);
-                setSelectedBanner(result.assets[0].uri);
+                setSelectedBanner(result.assets[0]?.uri);
             }
         } else {
             alert("You did not select any image.");
@@ -319,11 +319,9 @@ export default function SchoolDetails() {
                                         <AUIThemedView style={styles.imageContainer}>
                                             <ImageViewer
                                                 selectedImage={selectedBanner}
-                                                placeholderImageSource={
-                                                    Asset.fromModule(
-                                                        require("@/assets/images/favicon.png")
-                                                    ).uri
-                                                }
+                                                placeholderImageSource={Asset.fromModule(
+                                                    require("@/assets/images/favicon.png")
+                                                )}
                                                 style={{ width: 350, height: 200 }}
                                             />
                                         </AUIThemedView>

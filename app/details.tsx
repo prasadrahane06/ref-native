@@ -109,7 +109,7 @@ const DetailsPage = () => {
     const states = selectedCountry ? State.getStatesOfCountry(selectedCountry) : [];
     const cities = selectedState ? City.getCitiesOfState(selectedCountry, selectedState) : [];
 
-    const { reset, setValue, control, handleSubmit, formState } = useForm({
+    const { control, handleSubmit, formState } = useForm({
         resolver: yupResolver(schema),
         mode: "all",
         defaultValues: {
