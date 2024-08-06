@@ -133,7 +133,7 @@ export default function HomeScreen() {
 
                     <AUIThemedView style={styles.section}>
                         <SectionTitle style={{ paddingBottom: 10 }}>
-                            {GLOBAL_TEXT.ongoing_courses}
+                           { t("ongoing_courses")}
                         </SectionTitle>
                         <CourseList
                             data={myCourse?.docs?.slice(0, 4) || []}

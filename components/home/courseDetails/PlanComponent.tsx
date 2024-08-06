@@ -41,6 +41,7 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import ContactNow from "../schoolDetails/ContactNow";
 import { FacilitiesList } from "../schoolDetails/FacilitiesList";
+import { t } from "i18next";
 
 interface PlanComponentProps {
     courseId: string;
@@ -547,9 +548,9 @@ function EnquireNowModal({
 
                 <AUIThemedView style={enquireNowStyles.footerContainer}>
                     <AUIThemedView style={enquireNowStyles.buttonContainer}>
-                        <AUIButton title="Clear" onPress={() => reset()} style={{ width: "48%" }} />
+                        <AUIButton title={t("clear")} onPress={() => reset()} style={{ width: "48%" }} />
                         <AUIButton
-                            title={"Save"}
+                            title={t("save")}
                             selected
                             onPress={handleSubmit(onSave)}
                             disabled={!formState.isValid}
@@ -708,7 +709,7 @@ export default function PlanComponent({
                     >
                         <Ionicons name="bag-handle-outline" size={24} color="black" />
                         <AUIThemedText style={styles.whiteBoldText}>
-                            {GLOBAL_TEXT.buy_now}
+                        {t("buy_now")}
                         </AUIThemedText>
                     </Pressable>
                 </AUIThemedView>

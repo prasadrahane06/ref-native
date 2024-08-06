@@ -13,7 +13,6 @@ import {
     Modal,
     Platform,
     Pressable,
-    ScrollView,
     StyleSheet,
     TouchableOpacity,
 } from "react-native";

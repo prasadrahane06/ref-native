@@ -10,6 +10,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { Asset } from "expo-asset";
 import { router } from "expo-router";
+import { t } from "i18next";
 import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
@@ -132,7 +133,7 @@ const SearchSchool: React.FC = () => {
     return (
         <TouchableWithoutFeedback onPress={closeFavoriteDropdown}>
             <AUIThemedView style={styles.container}>
-                <AUIThemedText style={styles.searchschoolText}>Search school</AUIThemedText>
+                <AUIThemedText style={styles.searchschoolText}>{t("search_school")}</AUIThemedText>
                 <AUIThemedView style={styles.searchContainer}>
                     <Ionicons
                         name="search"
@@ -141,7 +142,7 @@ const SearchSchool: React.FC = () => {
                         style={styles.searchIcon}
                     />
                     <AUIInputField
-                        placeholder="Which school are you looking?"
+                        placeholder={t("which_school_are_you_looking")}
                         value={searchQuery}
                         onChangeText={setSearchQuery}
                         style={styles.searchInput}
@@ -166,7 +167,7 @@ const SearchSchool: React.FC = () => {
                     style={[styles.orContainer, { backgroundColor: APP_THEME[theme].background }]}
                 >
                     <AUIThemedView style={styles.line} />
-                    <AUIThemedText style={styles.orText}>OR</AUIThemedText>
+                    <AUIThemedText style={styles.orText}>{t("or")}</AUIThemedText>
                     <AUIThemedView style={styles.line} />
                 </AUIThemedView>
 
@@ -178,7 +179,7 @@ const SearchSchool: React.FC = () => {
                         color={APP_THEME.light.lightGray}
                     />
                     <AUIThemedText style={styles.favoriteText}>
-                        Choose from your favorite...
+                        {t("choose_from_your_favorite")}
                     </AUIThemedText>
                     <Ionicons
                         name="chevron-down-outline"
@@ -197,7 +198,7 @@ const SearchSchool: React.FC = () => {
                     </AUIThemedView>
                 )}
 
-                <AUIThemedText style={styles.recentText}>Recently searched schools</AUIThemedText>
+                <AUIThemedText style={styles.recentText}>{t("recently_searched_schools")}</AUIThemedText>
 
                 <FlatList
                     data={recentSearchedSchools}

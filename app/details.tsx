@@ -193,7 +193,7 @@ const DetailsPage = () => {
                                             }) => onChange(qualification)}
                                             labelField="qualification"
                                             valueField="qualification"
-                                            placeholder={"Select your qualification"}
+                                            placeholder={"Select your qualificatioN"}
                                             listWithIcon
                                         />
                                     </AUIThemedView>

@@ -4,7 +4,6 @@ import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import CourseList from "@/components/home/common/CourseList";
 import SectionTitle from "@/components/home/common/SectionTitle";
-import { GLOBAL_TEXT } from "@/constants/Properties";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import useDebounce from "@/customHooks/useDebounce";
@@ -12,6 +11,7 @@ import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector
 import { setResponse } from "@/redux/apiSlice";
 import { RootState } from "@/redux/store";
 import { router, useFocusEffect } from "expo-router";
+import { t } from "i18next";
 import { default as React, useCallback, useState } from "react";
 import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
@@ -74,11 +74,11 @@ export default function TabThreeScreen() {
                 <AUIThemedView>
                     <AUIThemedView style={styles.headerContainer}>
                         <SectionTitle style={{ paddingBottom: 10 }}>
-                            {GLOBAL_TEXT.recent_courses}
+                            {t("recent_courses")}
                         </SectionTitle>
                         <AUIButton
                             style={styles.AddNewCourseButton}
-                            title={"Add course"}
+                            title={t("add_course")}
                             selected
                             onPress={() =>
                                 router.push({
@@ -94,14 +94,14 @@ export default function TabThreeScreen() {
                         onEdit={handleEditCourse}
                     />
                     <TouchableOpacity
-                        style={{ padding: 10, alignItems: "center" }}
+                        style={{ padding:10, alignItems: "center" }}
                         disabled={page === myCourse.totalPages}
                         onPress={() => {
                             setPage((prevPage) => prevPage + 1);
                         }}
                     >
                         <AUIThemedText>
-                            {page === myCourse.totalPages ? "You are Caught Up" : "Load More"}
+                            {page === myCourse.totalPages ? `${t("you_are_caught_up")}` :`${t("load_more")}`}
                         </AUIThemedText>
                     </TouchableOpacity>
                 </AUIThemedView>

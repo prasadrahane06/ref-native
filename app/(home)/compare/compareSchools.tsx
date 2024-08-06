@@ -9,6 +9,7 @@ import { RootState } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
 import { router } from "expo-router";
+import { t } from "i18next";
 import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { useDispatch } from "react-redux";
 
@@ -88,7 +89,7 @@ const CompareSchools: React.FC = () => {
                                     size={50}
                                     color={APP_THEME.light.primary.first}
                                 />
-                                <AUIThemedText style={styles.cardText}>Add School</AUIThemedText>
+                                <AUIThemedText style={styles.cardText}>{t("add_school")}</AUIThemedText>
                             </TouchableOpacity>
                         )}
 
@@ -136,14 +137,14 @@ const CompareSchools: React.FC = () => {
                                     size={50}
                                     color={APP_THEME.light.primary.first}
                                 />
-                                <AUIThemedText style={styles.cardText}>Add School</AUIThemedText>
+                                <AUIThemedText style={styles.cardText}>{t("add_school")}</AUIThemedText>
                             </TouchableOpacity>
                         )}
                     </AUIThemedView>
 
                     <AUIThemedView style={styles.accordionSection}>
                         <AUIAccordion
-                            title="School Infomtion"
+                            title={t("school_information")}
                             style={styles.AUIAccordion}
                             icon={Asset.fromModule(
                                 require("@/assets/images/local/group_36763.png")
@@ -151,7 +152,7 @@ const CompareSchools: React.FC = () => {
                         >
                             <AUIThemedView>
                                 <AUIThemedView style={styles.row}>
-                                    <AUIThemedText style={styles.value}>information</AUIThemedText>
+                                    <AUIThemedText style={styles.value}>{t("information")}</AUIThemedText>
                                     <AUIThemedView style={styles.rowContainer}>
                                         <AUIThemedText style={styles.label}>
                                             {compareSchool1?.description || "--"}
@@ -163,47 +164,47 @@ const CompareSchools: React.FC = () => {
                                 </AUIThemedView>
                                 <AUIThemedView style={styles.row}>
                                     <AUIThemedText style={styles.value}>
-                                        have Mail support{" "}
+                                    {t("have_mail_support")}{" "}
                                     </AUIThemedText>
                                     <AUIThemedView style={styles.rowContainer}>
                                         <AUIThemedText style={styles.label}>
                                             {compareSchool1?.mailSupport === true
-                                                ? "true"
-                                                : "false" || "--"}
+                                                ?`${t("true")}`
+                                                : `${t("false")}`|| "--"}
                                         </AUIThemedText>
                                         <AUIThemedText style={styles.label2}>
                                             {compareSchool2?.mailSupport === true
-                                                ? "true"
-                                                : "false" || "--"}
+                                                ? `${t("true")}`
+                                                : `${t("false")}` || "--"}
                                         </AUIThemedText>
                                     </AUIThemedView>
                                 </AUIThemedView>
                                 <AUIThemedView style={styles.row2}>
-                                    <AUIThemedText style={styles.value}>callSupport</AUIThemedText>
+                                    <AUIThemedText style={styles.value}>{t("callSupport")}</AUIThemedText>
                                     <AUIThemedView style={styles.rowContainer}>
                                         <AUIThemedText style={styles.label}>
                                             {compareSchool1?.callSupport === true
-                                                ? "true"
-                                                : "false" || "--"}
+                                                ? `${t("true")}`
+                                                : `${t("false")}` || "--"}
                                         </AUIThemedText>
                                         <AUIThemedText style={styles.label2}>
                                             {compareSchool2?.callSupport === true
-                                                ? "true"
-                                                : "false" || "--"}
+                                                ? `${t("true")}`
+                                                : `${t("false")}` || "--"}
                                         </AUIThemedText>
                                     </AUIThemedView>
                                 </AUIThemedView>
                             </AUIThemedView>
                         </AUIAccordion>
                         <AUIAccordion
-                            title="Academics"
+                            title={t("academics")}
                             style={styles.AUIAccordion}
                             icon={Asset.fromModule(require("@/assets/images/local/group_2.png"))}
                         >
                             <AUIThemedView>
                                 <AUIThemedView style={styles.row2}>
                                     <AUIThemedText style={styles.value}>
-                                        Language to learn
+                                    {t("language_to_learn")}
                                     </AUIThemedText>
                                     <AUIThemedView style={styles.rowContainer}>
                                         <AUIThemedText style={styles.label}>
@@ -231,12 +232,12 @@ const CompareSchools: React.FC = () => {
                             </AUIThemedView>
                         </AUIAccordion>
                         <AUIAccordion
-                            title="Location"
+                            title={t("location")}
                             style={styles.AUIAccordion}
                             icon={Asset.fromModule(require("@/assets/images/local/layer_2.png"))}
                         >
                             <AUIThemedView style={styles.row2}>
-                                <AUIThemedText style={styles.value}>School Location</AUIThemedText>
+                                <AUIThemedText style={styles.value}>{t("school_location")}</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
                                     <AUIThemedText style={styles.label}>
                                         {compareSchool1?.location?.capital || "--"}
@@ -248,13 +249,13 @@ const CompareSchools: React.FC = () => {
                             </AUIThemedView>
                         </AUIAccordion>
                         <AUIAccordion
-                            title="Fee Structure"
+                            title={t("fee_structure")}
                             style={styles.AUIAccordion}
                             icon={Asset.fromModule(require("@/assets/images/local/fi_6926264.png"))}
                         >
                             <AUIThemedView>
                                 <AUIThemedView style={styles.row}>
-                                    <AUIThemedText style={styles.value}>Minimum Fee</AUIThemedText>
+                                    <AUIThemedText style={styles.value}>{t("minimum_fee")}</AUIThemedText>
                                     <AUIThemedView style={styles.rowContainer}>
                                         <AUIThemedText style={styles.label}>
                                             {compareSchool1?.minPrice || "--"}
@@ -266,7 +267,7 @@ const CompareSchools: React.FC = () => {
                                 </AUIThemedView>
 
                                 <AUIThemedView style={styles.row2}>
-                                    <AUIThemedText style={styles.value}>Maximum Fee</AUIThemedText>
+                                    <AUIThemedText style={styles.value}>{t("maximum_fee")}</AUIThemedText>
                                     <AUIThemedView style={styles.rowContainer}>
                                         <AUIThemedText style={styles.label}>
                                             {compareSchool1?.maxPrice || "--"}
@@ -279,7 +280,7 @@ const CompareSchools: React.FC = () => {
                             </AUIThemedView>
                         </AUIAccordion>
                         <AUIAccordion
-                            title="Campus and Facility"
+                            title={t("campus_and_facility")}
                             style={styles.AUIAccordion}
                             icon={Asset.fromModule(require("@/assets/images/local/fi_8716577.png"))}
                         >
@@ -297,7 +298,7 @@ const CompareSchools: React.FC = () => {
                             </AUIThemedView> */}
                                 <AUIThemedView style={styles.row}>
                                     <AUIThemedText style={styles.value}>
-                                        Total facilities
+                                    {t("total_facilities")}
                                     </AUIThemedText>
                                     <AUIThemedView style={styles.rowContainer}>
                                         <AUIThemedText style={styles.label}>
@@ -321,7 +322,7 @@ const CompareSchools: React.FC = () => {
                             </AUIThemedView> */}
                                 <AUIThemedView style={styles.row}>
                                     <AUIThemedText style={styles.value}>
-                                        Number of Seats
+                                    {t("number_of_seats")}
                                     </AUIThemedText>
                                     <AUIThemedView style={styles.rowContainer}>
                                         <AUIThemedText style={styles.label}>
@@ -334,14 +335,14 @@ const CompareSchools: React.FC = () => {
                                 </AUIThemedView>
                                 <AUIThemedView style={styles.row2}>
                                     <AUIThemedText style={styles.value}>
-                                        Form availability
+                                    {t("form_availability")}
                                     </AUIThemedText>
                                     <AUIThemedView style={styles.rowContainer}>
                                         <AUIThemedText style={styles.label}>
-                                            {compareSchool1?.formAvailability || "80"}
+                                            {compareSchool1?.formAvailability || ` ${t("eig")}`}
                                         </AUIThemedText>
                                         <AUIThemedText style={styles.label2}>
-                                            {compareSchool1?.formAvailability || "90"}
+                                            {compareSchool1?.formAvailability ||   ` ${t("nin")}`}
                                         </AUIThemedText>
                                     </AUIThemedView>
                                 </AUIThemedView>

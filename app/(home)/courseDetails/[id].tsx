@@ -16,6 +16,7 @@ import { RootState } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
 import { useLocalSearchParams, useNavigation } from "expo-router";
+import { t } from "i18next";
 import React, { useEffect, useState } from "react";
 import { Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import Animated, {
@@ -79,7 +80,7 @@ function CoursePlanTabs({ courseId, clientId }: CoursePlanTabsProps) {
                             ]}
                         >
                             {/* {plan.name} */}
-                            {`Plan ` + (index + 1)}
+                            {t("plan") + (index + 1)}
                         </AUIThemedText>
                     </Pressable>
                 ))}
@@ -340,7 +341,7 @@ export default function CourseDetails() {
                                         {course.courseName}
                                     </AUIThemedText>
                                     <AUIThemedText style={styles.startingDate}>
-                                        Starting from: {startingDate}
+                                        {t("starting_from")}: {startingDate}
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
@@ -384,7 +385,7 @@ export default function CourseDetails() {
                         ]}
                     >
                         <AUIThemedText style={styles.planText}>
-                            {GLOBAL_TEXT.select_your_plan}
+                            {t("select_your_plan")}
                         </AUIThemedText>
 
                         <CoursePlanTabs courseId={id} clientId={clientId} />

@@ -24,6 +24,7 @@ import NotificationDrawer from "../notification/notification";
 import SchoolProfile from "@/components/screenComponents/schoolProfile";
 
 import { ChatBot } from "at-chatbot-native";
+import { t } from "i18next";
 
 interface event {
     _id: string;
@@ -79,7 +80,7 @@ const EventsScreen = () => {
     return (
         <AUIThemedView style={styles.mainContainer}>
             <AUIButton
-                title="Add New Event"
+                title={t("add_new_event")}
                 selected
                 style={styles.AddEventButton}
                 onPress={handleAddNewEvent}
@@ -102,7 +103,7 @@ const EventsScreen = () => {
                     }}
                 >
                     <AUIThemedText>
-                        {page === eventData.totalPages ? "You are Caught Up" : "Load More"}
+                        {page === eventData.totalPages ? `${t("you_are_caught_up")}` :`${t("load_more")}`}
                     </AUIThemedText>
                 </TouchableOpacity>
             </AUIThemedView>

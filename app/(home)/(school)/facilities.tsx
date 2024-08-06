@@ -11,6 +11,7 @@ import { default as React, useCallback, useState } from "react";
 import { Image, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import AddNewFacilities from "../addNewFacility/AddFacility";
+import { t } from "i18next";
 
 interface Facility {
     _id: string;
@@ -59,9 +60,9 @@ export default function TabFourScreen() {
 
     return (
         <AUIThemedView style={styles.root}>
-            <AUIThemedText style={styles.title}>Facilities</AUIThemedText>
+            <AUIThemedText style={styles.title}>{t("facilities")}</AUIThemedText>
             <AUIButton
-                title="Add New Facilities"
+                title={t("add_new_facilities")}
                 selected
                 style={styles.button}
                 onPress={handleAddNewFacility}
@@ -85,17 +86,17 @@ export default function TabFourScreen() {
                 refreshFacilities={refreshFacilities}
                 facility={selectedFacility}
             />
-            <TouchableOpacity
-                style={{ padding: 10, alignItems: "center" }}
-                disabled={page === myFacilitys.totalPages}
-                onPress={() => {
-                    setPage((prevPage) => prevPage + 1);
-                }}
-            >
-                <AUIThemedText>
-                    {page === myFacilitys.totalPages ? "You are Caught Up" : "Load More"}
-                </AUIThemedText>
-            </TouchableOpacity>
+             <TouchableOpacity
+                        style={{ padding: 10, alignItems: "center" }}
+                        disabled={page === myFacilitys.totalPages}
+                        onPress={() => {
+                            setPage((prevPage) => prevPage + 1);
+                        }}
+                    >
+                        <AUIThemedText>
+                            {page === myFacilitys.totalPages ? `${t("you_are_caught_up")}` :`${t("load_more")}`}
+                        </AUIThemedText>
+                    </TouchableOpacity>
         </AUIThemedView>
     );
 }

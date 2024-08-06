@@ -113,19 +113,10 @@ const academicSessionData = [
     },
 ];
 
-const schema = Yup.object().shape({
-    name: Yup.string().required("Name is required"),
-    // phoneNumber: Yup.string().required(GLOBAL_TEXT.validate_mobile),
-    // email: Yup.string().email(GLOBAL_TEXT.validate_email).required(GLOBAL_TEXT.validate_email),
-    language: Yup.string().required("Language is required"),
-    dateOfBirth: Yup.string().required("Date of birth is required"),
-    gender: Yup.string().required("Gender is required"),
-    qualification: Yup.string().required("Qualification is required"),
-    academicSession: Yup.string().required("Academic session is required"),
-    country: Yup.string().required("Country is required"),
-    city: Yup.string().required("City is required"),
-    state: Yup.string().required("State is required"),
-});
+
+
+
+
 
 const Profile: React.FC = () => {
     const { patch } = useAxios();
@@ -144,7 +135,7 @@ const Profile: React.FC = () => {
     }>();
 
     if (from === "buyButton" || from === "bookYourSeatButton") {
-        ApiSuccessToast("❗Check you profile before making payment");
+        ApiSuccessToast(`${t("check_you_profile_before_making_payment")}`);
     }
 
     const theme = useSelector((state: RootState) => state.global.theme);
@@ -174,6 +165,20 @@ const Profile: React.FC = () => {
     const cities = selectedState
         ? City.getCitiesOfState(selectedCountry, selectedState)
         : allCitiesOfState;
+
+        const schema = Yup.object().shape({
+            name: Yup.string().required(`${t("name_is_required")}`),
+            // phoneNumber: Yup.string().required(`${t("enter_valid_mobile_number")}`),
+            // email: Yup.string().email(GLOBAL_TEXT.validate_email).required(`${t("please_provide_valid_email")}`),
+            language: Yup.string().required(`${t("language_is_required")}`),
+            dateOfBirth: Yup.string().required(`${t("date_of_birth_is_required")}`),
+            gender: Yup.string().required(`${t("gender_is_required")}`),
+            qualification: Yup.string().required(`${t("qualification_is_required")}`),
+            academicSession: Yup.string().required(`${t("academic_session_is_required")}`),
+            country: Yup.string().required(`${t("country_is_required")}`),
+            city: Yup.string().required(`${t("city_is_required")}`),
+            state: Yup.string().required(`${t("state_is_required ")}`),
+        });
 
     const { reset, setValue, control, handleSubmit, formState } = useForm({
         resolver: yupResolver(schema),
@@ -220,7 +225,7 @@ const Profile: React.FC = () => {
             setProfileBase64(result.assets[0].base64);
             setProfileImage(result.assets[0]?.uri);
         } else {
-            alert("You did not select any image.");
+            alert(`${t("you_did_not_select_any_image")}`);
         }
     };
 
@@ -319,7 +324,7 @@ const Profile: React.FC = () => {
                                 <AUIInputField
                                     value={value}
                                     onChangeText={onChange}
-                                    placeholder={"Enter Your Name"}
+                                    placeholder={t("enter_your_name")}
                                 />
                                 <AUIThemedView>
                                     {error && (
@@ -459,7 +464,7 @@ const Profile: React.FC = () => {
                                         color: "#333",
                                     }}
                                     valueField="gender"
-                                    placeholder={"Select your gender"}
+                                    placeholder={t("select_your_gender")}
                                     listWithIcon
                                     isSearchable={false}
                                 />
@@ -498,7 +503,7 @@ const Profile: React.FC = () => {
                                         color: "#333",
                                     }}
                                     valueField="qualification"
-                                    placeholder={"Select your qualification"}
+                                    placeholder={t("select_your_qualification")}
                                     listWithIcon
                                 />
                                 {error && (
@@ -536,7 +541,7 @@ const Profile: React.FC = () => {
                                         color: "#333",
                                     }}
                                     valueField="academicSession"
-                                    placeholder={"Select your academic session"}
+                                    placeholder={t("select_your_academic_session")}
                                     listWithIcon
                                 />
                                 {error && (
@@ -665,7 +670,7 @@ const Profile: React.FC = () => {
                         <AUIButton
                             title={t("reset_defaults")}
                             onPress={() => {
-                                ApiSuccessToast("Resetting to default values...");
+                                ApiSuccessToast(`${t("reset")}`);
                                 reset();
                             }}
                             style={{ width: "48%" }}

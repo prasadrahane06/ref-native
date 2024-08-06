@@ -9,6 +9,7 @@ import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector
 import { RootState } from "@/redux/store";
 import { MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { t } from "i18next";
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 
@@ -55,7 +56,7 @@ export default function TabTwoScreen() {
             <ScrollView>
                 <AUIThemedView>
                     <AUIThemedText style={styles.title}>
-                        Students Admitted through App
+                      {t("students_admitted_through_app")}
                     </AUIThemedText>
                     <AUIThemedView>
                         {schoolPurchaseCourse.docs && Array.isArray(schoolPurchaseCourse.docs) ? (
@@ -74,7 +75,7 @@ export default function TabTwoScreen() {
                                         {item.user?.name || "No name available"}
                                     </AUIThemedText>
                                     <AUIThemedText style={styles.id}>
-                                        ID: {item.user?.studentId || "No ID available"}
+                                        {t("id")}: {item.user?.studentId || `${t("no_id_available")}`}
                                     </AUIThemedText>
                                     <MaterialIcons
                                         name="keyboard-arrow-right"
@@ -96,8 +97,7 @@ export default function TabTwoScreen() {
                     >
                         <AUIThemedText>
                             {page === schoolPurchaseCourse.totalPages
-                                ? "You are Cought Up"
-                                : "Load More"}
+                                ?`${t("you_are_caught_up")}` :`${t("load_more")}`}
                         </AUIThemedText>
                     </TouchableOpacity>
                 </AUIThemedView>

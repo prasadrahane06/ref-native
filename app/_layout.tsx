@@ -328,7 +328,7 @@ const InitialLayout = () => {
                 options={{
                     headerShown: true,
                     title: "search_school",
-                    headerTitle: "Add to compare",
+                    headerTitle: `${t("add_to_compare")}`,
                     headerTitleStyle: { color: TEXT_THEME[theme].primary },
                     headerStyle: { backgroundColor: BACKGROUND_THEME[theme].background },
                     headerLeft: () => (
@@ -348,7 +348,7 @@ const InitialLayout = () => {
                 options={{
                     headerShown: true,
                     title: "compare school",
-                    headerTitle: "Compare Schools",
+                    headerTitle:  `${t("compare_schools")}`,
                     headerTitleStyle: { color: TEXT_THEME[theme].primary },
                     headerStyle: { backgroundColor: BACKGROUND_THEME[theme].background },
                     headerLeft: () => (
@@ -372,7 +372,7 @@ const InitialLayout = () => {
                 options={{
                     headerShown: true,
                     title: "Schools",
-                    headerTitle: "Popular schools",
+                    headerTitle: `${t("popular_schools")}`,
                     headerTitleStyle: { color: "#fff", fontFamily: "Gilroy" },
                     headerTransparent: true,
                     headerLeft: () => (
@@ -393,7 +393,7 @@ const InitialLayout = () => {
                 options={{
                     headerShown: true,
                     title: "Courses",
-                    headerTitle: "Popular Courses",
+                    headerTitle: `${t("popular_course")}`,
                     headerTitleStyle: { color: "#ffffff", fontFamily: "Gilroy" },
                     headerTransparent: true,
                     headerLeft: () => (
@@ -508,7 +508,7 @@ const InitialLayout = () => {
             <Stack.Screen
                 name="schoolProfile"
                 options={{
-                    headerTitle: "School Profile",
+                    headerTitle: `${t("school_profile")}`,
                     headerTitleStyle: { color: TEXT_THEME[theme].primary },
                     headerStyle: { backgroundColor: BACKGROUND_THEME[theme].background },
                     headerBackVisible: false,
@@ -544,7 +544,7 @@ const InitialLayout = () => {
                 options={{
                     headerShown: true,
                     title: "",
-                    headerTitle: "Student Information",
+                    headerTitle: `${t("student_information")}`,
                     headerTitleStyle: { color: TEXT_THEME[theme].primary },
                     headerStyle: {
                         backgroundColor: BACKGROUND_THEME[theme].background,

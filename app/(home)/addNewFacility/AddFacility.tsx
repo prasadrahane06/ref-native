@@ -11,6 +11,7 @@ import { RootState } from "@/redux/store";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as ImageManipulator from "expo-image-manipulator";
 import * as ImagePicker from "expo-image-picker";
+import { t } from "i18next";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Image, StyleSheet, TouchableOpacity } from "react-native";
@@ -83,12 +84,12 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
         };
         post(API_URL.facility, payload)
             .then((res) => {
-                ApiSuccessToast("New Facility Added Successfully.");
+                ApiSuccessToast(`${t("new_facility_added_successfully")}`);
                 refreshFacilities();
                 reset();
             })
             .catch((e) => {
-                ApiErrorToast("Failed to add facility");
+                ApiErrorToast(`${t("failed_to_add_facility")}`);
                 console.log(e);
             });
     };
@@ -109,12 +110,12 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
 
         patch(API_URL.facility, payload)
             .then((res) => {
-                ApiSuccessToast("Facility updated successfully.");
+                ApiSuccessToast(`${t("facility_updated_successfully")}`);
                 refreshFacilities();
                 reset();
             })
             .catch((e) => {
-                ApiErrorToast("Failed to update facility");
+                ApiErrorToast(`${t("failed_to_update_facility")}`);
                 console.log(e);
             });
     };
@@ -168,7 +169,7 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
                 reader.readAsDataURL(xhr.response);
             };
             xhr.onerror = function () {
-                reject(new Error("Failed to convert image to Base64"));
+                reject(new Error(`${t("failed_to_convert_image_to_base")}`));
             };
             xhr.open("GET", uri);
             xhr.responseType = "blob";
@@ -186,7 +187,7 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
             <AUIModal
                 visible={visible}
                 onClose={onClose}
-                title={facility ? "Edit Facility" : "Add your Facilities"}
+                title={facility ? "Edit Facility" : `${t("add_your_facilities")}`}
             >
                 <Controller
                     control={control}
@@ -194,8 +195,8 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
                     defaultValue=""
                     render={({ field: { onChange, value } }) => (
                         <AUIInputField
-                            label="Enter Facility name"
-                            placeholder="Facility Name"
+                            label={t("enter_facility_name")}
+                            placeholder={t("facility_name")}
                             value={value}
                             onChangeText={onChange}
                             style={styles.input}
@@ -208,22 +209,22 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
                     defaultValue=""
                     render={({ field: { onChange, value } }) => (
                         <AUIInputField
-                            label="Enter Description"
-                            placeholder="Description"
+                            label={t("enter_description")}
+                            placeholder={t("description")}
                             value={value}
                             onChangeText={onChange}
                             style={styles.input}
                         />
                     )}
                 />
-                <AUIThemedText>Select image</AUIThemedText>
+                <AUIThemedText>{t("select_image")}</AUIThemedText>
                 <AUIThemedView style={styles.imagePickerContainer}>
                     <TouchableOpacity onPress={pickImage} style={styles.uploadButton}>
                         <MaterialIcons name="cloud-upload" size={24} color="#5BD894" />
-                        <AUIThemedText style={styles.uploadButtonText}>Upload File</AUIThemedText>
+                        <AUIThemedText style={styles.uploadButtonText}>{t("upload_file")}</AUIThemedText>
                     </TouchableOpacity>
                     <AUIThemedText style={styles.fileName}>
-                        {image ? truncateFileName(image.split("/").pop()!, 18) : "No file chosen"}
+                        {image ? truncateFileName(image.split("/").pop()!, 18) :` ${t("no_file_chosen")}`}
                     </AUIThemedText>
                 </AUIThemedView>
                 {image && <Image source={{ uri: image }} style={styles.image} />}
@@ -259,7 +260,7 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
                     ) : (
                         <AUIThemedView style={styles.buttonContainer}>
                             <AUIButton
-                                title="Clear"
+                                title={t("clear")}
                                 onPress={() => {
                                     reset();
                                     clearFields();
@@ -267,7 +268,7 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
                                 style={{ width: "48%" }}
                             />
                             <AUIButton
-                                title="Save"
+                                title={t("save")}
                                 selected
                                 style={{ width: "48%" }}
                                 onPress={handleSubmit(handleSave)}

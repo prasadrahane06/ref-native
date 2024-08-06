@@ -12,6 +12,7 @@ import useApiRequest from "@/customHooks/useApiRequest";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
 import Checkbox from "expo-checkbox";
+import { t } from "i18next";
 import React, { useEffect, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { ScrollView, StyleSheet } from "react-native";
@@ -115,8 +116,8 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
         };
         post(API_URL.plan, payload)
             .then((res) => {
-                ApiSuccessToast("New Plan added successfully.");
-                ApiSuccessToast("New Plan added successfully.");
+                ApiSuccessToast(`${t("new_plan_added_successfully")}`);
+                ApiSuccessToast(`${t("new_plan_added_successfully")}`);
                 reset();
                 onClose();
             })
@@ -140,13 +141,13 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
         }
         patch(API_URL.plan, payload)
             .then((res) => {
-                ApiSuccessToast("Plan updated successfully.");
+                ApiSuccessToast(`${t("plan_updated_successfully")}`);
                 onClose();
                 refreshPlans();
                 reset();
             })
             .catch((e) => {
-                ApiErrorToast("Failed to update plan");
+                ApiErrorToast(`${t("failed_to_update_plan")}`);
                 console.log(e);
             });
     };
@@ -155,13 +156,13 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
         if (!plan?._id) return;
         del(`${API_URL.plan}?id=${plan?._id}`)
             .then((res) => {
-                ApiSuccessToast("Plan deleted successfully.");
+                ApiSuccessToast(`${t("plan_deleted_successfully")}`);
                 onClose();
                 setShowConfirmation(false);
                 refreshPlans();
             })
             .catch((e) => {
-                ApiErrorToast("Failed to delete plan.");
+                ApiErrorToast(`${t("failed_to_delete_plan")}`);
                 console.log(e);
             });
     };
@@ -186,7 +187,7 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
             <AUIModal
                 visible={visible}
                 onClose={onClose}
-                title={plan ? "Edit Plan" : "Add Your Plan"}
+                title={plan ? "Edit Plan" : `${t("add_your_plan")}`}
                 style={styles.modalContainerStyle}
             >
                 <ScrollView>
@@ -196,8 +197,8 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                         defaultValue=""
                         render={({ field: { onChange, value } }) => (
                             <AUIInputField
-                                label="Enter Plan Name"
-                                placeholder="Name"
+                                label={t("enter_plan_name")}
+                                placeholder={t("name")}
                                 value={value}
                                 onChangeText={onChange}
                                 style={styles.input}
@@ -210,8 +211,8 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                         defaultValue=""
                         render={({ field: { onChange, value } }) => (
                             <AUIInputField
-                                label="Enter Lessons Hour"
-                                placeholder="Lessons Hour"
+                                label={t("enter_lessons_hour")}
+                                placeholder={t("lessons_hour")}
                                 value={value}
                                 onChangeText={onChange}
                                 style={styles.input}
@@ -224,8 +225,8 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                         defaultValue=""
                         render={({ field: { onChange, value } }) => (
                             <AUIInputField
-                                label="Enter Total Duration"
-                                placeholder="Duration"
+                                label={t("enter_total_duration")}
+                                placeholder={t("duration")}
                                 value={value}
                                 onChangeText={onChange}
                                 style={styles.input}
@@ -238,8 +239,8 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                         defaultValue=""
                         render={({ field: { onChange, value } }) => (
                             <AUIInputField
-                                label="Enter Total schedule"
-                                placeholder="schedule"
+                                label={t("enter_total_schedule")}
+                                placeholder={t("schedule")}
                                 value={value}
                                 onChangeText={onChange}
                                 style={styles.input}
@@ -252,8 +253,8 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                         defaultValue=""
                         render={({ field: { onChange, value } }) => (
                             <AUIInputField
-                                label="Enter Total Fee"
-                                placeholder="totalFee"
+                                label={t("enter_total_fee")}
+                                placeholder={t("totalFee")}
                                 value={value}
                                 onChangeText={onChange}
                                 style={styles.input}
@@ -266,7 +267,7 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                         defaultValue=""
                         render={({ field: { onChange, value } }) => (
                             <AUIInputField
-                                label="Seat Booking Amount"
+                                label={t("seat_booking_amount")}
                                 placeholder="£"
                                 value={value}
                                 onChangeText={onChange}
@@ -275,7 +276,7 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                         )}
                     />
                     <AUIThemedView style={styles.courseDetailsContainer}>
-                        <AUIThemedText>Course Details</AUIThemedText>
+                        <AUIThemedText>{t("course_details")}</AUIThemedText>
                         {fields.map((item, index) => (
                             <AUIThemedView key={item.id}>
                                 <Controller
@@ -284,8 +285,8 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                                     defaultValue=""
                                     render={({ field: { onChange, value } }) => (
                                         <AUIInputField
-                                            label="Title"
-                                            placeholder="Title"
+                                            label={t("title")}
+                                            placeholder={t("title")}
                                             value={value}
                                             onChangeText={onChange}
                                             style={styles.input}
@@ -298,8 +299,8 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                                     defaultValue=""
                                     render={({ field: { onChange, value } }) => (
                                         <AUIInputField
-                                            label="SubTitle"
-                                            placeholder="SubTitle"
+                                            label={t("subTitle")}
+                                            placeholder={t("subTitle")}
                                             value={value}
                                             onChangeText={onChange}
                                             style={styles.input}
@@ -310,7 +311,7 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                         ))}
                         {fields.length < 5 && (
                             <AUIButton
-                                title="Add more course detailss"
+                                title={t("add_more_course_details")}
                                 selected
                                 onPress={addFields}
                             />
@@ -318,12 +319,12 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                     </AUIThemedView>
                     <AUIThemedView style={styles.planContainer}>
                         <AUIThemedText style={styles.createYourPlanTitle}>
-                            Select Facilities
+                        {t("select_facilities")}
                         </AUIThemedText>
                         <AUIAccordion
                             style={styles.AUIAccordion}
                             innerStyle={styles.AUIAccordionInnerStyle}
-                            title="Select Facilities"
+                            title={t("enter_plan_name")}
                         >
                             {facilities?.map((facility: Facility) => (
                                 <AUIThemedView key={facility?._id} style={styles.facilitiesRow}>
@@ -388,14 +389,14 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                         ) : (
                             <AUIThemedView style={styles.buttonContainer}>
                                 <AUIButton
-                                    title="Clear"
+                                    title={t("clear")}
                                     onPress={() => {
                                         reset();
                                     }}
                                     style={{ width: "48%" }}
                                 />
                                 <AUIButton
-                                    title="Save"
+                                    title={t("save")}
                                     selected
                                     style={{ width: "48%" }}
                                     onPress={handleSubmit(onSave)}

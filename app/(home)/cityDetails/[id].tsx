@@ -27,8 +27,10 @@ import Animated, {
     useScrollViewOffset,
 } from "react-native-reanimated";
 import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 export default function CityDetails() {
+    const { t } = useTranslation();
     const effect = useIsomorphicLayoutEffect();
     const { id } = useLocalSearchParams<{ id: any }>();
 
@@ -221,7 +223,7 @@ export default function CityDetails() {
                         ]}
                     >
                         <AUIThemedText style={styles.name}>
-                            Why study in {country?.name}
+                           {t("why_study_in")} {country?.name}
                         </AUIThemedText>
                         <AUIThemedView
                             style={[
@@ -264,7 +266,7 @@ export default function CityDetails() {
                                     contentFit="cover"
                                 />
                                 <AUIThemedView style={styles.iconTextContainer}>
-                                    <AUIThemedText style={styles.iconText}>Capital</AUIThemedText>
+                                    <AUIThemedText style={styles.iconText}>{t("capital")}</AUIThemedText>
                                     <AUIThemedText style={styles.iconSubText} numberOfLines={1}>
                                         {country?.capital}
                                     </AUIThemedText>
@@ -279,7 +281,7 @@ export default function CityDetails() {
                                 />
                                 <AUIThemedView style={styles.iconTextContainer}>
                                     <AUIThemedText style={styles.iconText}>
-                                        Population
+                                    {t("population")}
                                     </AUIThemedText>
                                     <AUIThemedText style={styles.iconSubText}>
                                         {formattedPopulation}
@@ -293,7 +295,7 @@ export default function CityDetails() {
                                     contentFit="cover"
                                 />
                                 <AUIThemedView style={styles.iconTextContainer}>
-                                    <AUIThemedText style={styles.iconText}>Language</AUIThemedText>
+                                    <AUIThemedText style={styles.iconText}>{t("language")}</AUIThemedText>
                                     <AUIThemedText style={styles.iconSubText}>
                                         {country?.language?.name}
                                     </AUIThemedText>
@@ -308,7 +310,8 @@ export default function CityDetails() {
                             ]}
                         >
                             <AUIThemedText style={styles.aboutTitle}>
-                                About {isRTL ? country?.name?.en : country?.name?.ar}
+                                {/* About {isRTL ? country?.name?.en : country?.name?.ar} */}
+                                {t("about")}
                             </AUIThemedText>
                             <AUIThemedText style={styles.aboutDescription}>
                                 {readMore ? aboutText : truncatedText}
@@ -332,7 +335,8 @@ export default function CityDetails() {
                             ]}
                         >
                             <AUIThemedText style={styles.photoGalleryText}>
-                                {GLOBAL_TEXT.photo_gallery}
+                              {/* {GLOBAL_TEXT.photo_gallery} */}
+                                {t("photo_gallery")}
                             </AUIThemedText>
                         </AUIThemedView>
                         <PhotoGallaryList data={country?.images} />
@@ -345,7 +349,8 @@ export default function CityDetails() {
                         ]}
                     >
                         <SectionTitle viewAll="(home)/school/AllSchoolsScreen">
-                            {GLOBAL_TEXT.popular_schools}
+                            {/* {GLOBAL_TEXT.popular_schools} */}
+                            {t("popular_school")}
                         </SectionTitle>
                         <SchoolList data={schoolsResponse?.docs} />
                     </AUIThemedView>

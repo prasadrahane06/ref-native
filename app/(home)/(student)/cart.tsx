@@ -63,7 +63,7 @@ export default function TabFourScreen() {
         <ScrollView>
             <AUIThemedView style={styles.container}>
                 <AUIThemedText style={styles.title}>
-                    {GLOBAL_TEXT.my_added_courses_in_cart}
+                   {t("my_added_courses_in_cart")}
                 </AUIThemedText>
 
                 <AUIThemedView style={styles.coursesContainer}>

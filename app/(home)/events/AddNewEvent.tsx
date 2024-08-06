@@ -13,6 +13,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { Image } from "expo-image";
 import * as ImageManipulator from "expo-image-manipulator";
 import * as ImagePicker from "expo-image-picker";
+import { t } from "i18next";
 import { default as React, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Dimensions, Platform, Pressable, StyleSheet, TouchableOpacity } from "react-native";
@@ -83,12 +84,13 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
         };
         post(API_URL.event, payload)
             .then((res) => {
-                ApiSuccessToast("New Event added successfully.");
+                ApiSuccessToast(`${t("new_event_added_successfully")}`);
                 reset();
                 onClose();
                 refreshEvents();
             })
             .catch((e) => {
+                ApiErrorToast(`${t("failed_to_add_event")}`);
                 console.log(e);
             });
     };
@@ -105,13 +107,13 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
 
         patch(API_URL.event, payload)
             .then((res) => {
-                ApiSuccessToast("Event updated successfully.");
+                ApiSuccessToast(`${t("event_updated_successfully")}`);
                 reset();
                 onClose();
                 refreshEvents();
             })
             .catch((e) => {
-                ApiErrorToast("Failed to update Event");
+                ApiErrorToast(`${t("failed_to_update_event")}`);
                 console.log(e);
             });
     };
@@ -120,13 +122,13 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
         if (event?._id) {
             del(`${API_URL.event}`, { id: event?._id })
                 .then((res) => {
-                    ApiSuccessToast("Event deleted successfully.");
+                    ApiSuccessToast(`${t("event_deleted_successfully")}`);
                     onClose();
                     setShowConfirmation(false);
                     refreshEvents();
                 })
                 .catch((e) => {
-                    ApiErrorToast("Failed to delete event.");
+                    ApiErrorToast(`${t("failed_to_delete_event")}`);
                     console.log(e);
                 });
         }
@@ -182,7 +184,7 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                 reader.readAsDataURL(xhr.response);
             };
             xhr.onerror = function () {
-                reject(new Error("Failed to convert image to Base64"));
+                reject(new Error(`${t("failed_to_convert_image_to_base")}`));
             };
             xhr.open("GET", uri);
             xhr.responseType = "blob";
@@ -200,7 +202,7 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
             <AUIModal
                 visible={visible}
                 onClose={onClose}
-                title={event ? "Edit Event" : "Add your Events"}
+                title={event ? "Edit Event" : `${(t("add_your_events"))}`}
             >
                 <Controller
                     control={control}
@@ -208,8 +210,8 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                     defaultValue=""
                     render={({ field: { onChange, value } }) => (
                         <AUIInputField
-                            label="Enter Event name"
-                            placeholder="Event Name"
+                            label={t("enter_event_name")}
+                            placeholder={t("event_name")}
                             value={value}
                             onChangeText={onChange}
                             style={styles.input}
@@ -222,8 +224,8 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                     defaultValue=""
                     render={({ field: { onChange, value } }) => (
                         <AUIInputField
-                            label="Enter Event Description"
-                            placeholder="Description"
+                            label={t("enter_event_description")}
+                            placeholder={t("description")}
                             value={value}
                             onChangeText={onChange}
                             style={styles.input}
@@ -238,8 +240,8 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                         render={({ field: { onChange, value } }) => (
                             <Pressable onPress={() => setDatePickerVisible(true)}>
                                 <AUIInputField
-                                    label="Event Date"
-                                    placeholder="Select Date"
+                                    label={t("event_date")}
+                                    placeholder={t("select_date")}
                                     value={selectedDate ? selectedDate.toDateString() : ""}
                                     style={styles.input}
                                     editable={false}
@@ -262,22 +264,22 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                     defaultValue=""
                     render={({ field: { onChange, value } }) => (
                         <AUIInputField
-                            label="Enter Event Location"
-                            placeholder="Event Location"
+                            label={t("enter_event_location")}
+                            placeholder={t("event_location")}
                             value={value}
                             onChangeText={onChange}
                             style={styles.input}
                         />
                     )}
                 />
-                <AUIThemedText>Select image</AUIThemedText>
+                <AUIThemedText>{t("select_image")}</AUIThemedText>
                 <AUIThemedView style={styles.imagePickerContainer}>
                     <TouchableOpacity onPress={pickImage} style={styles.uploadButton}>
                         <MaterialIcons name="cloud-upload" size={24} color="#5BD894" />
-                        <AUIThemedText style={styles.uploadButtonText}>Upload File</AUIThemedText>
+                        <AUIThemedText style={styles.uploadButtonText}>{t("upload_file")}</AUIThemedText>
                     </TouchableOpacity>
                     <AUIThemedText style={styles.fileName}>
-                        {image ? truncateFileName(image.split("/").pop()!, 18) : "No file chosen"}
+                        {image ? truncateFileName(image.split("/").pop()!, 18) : `${t("no_file_chosen")}`}
                     </AUIThemedText>
                 </AUIThemedView>
                 {image && <Image source={{ uri: image }} style={styles.image} />}
@@ -313,7 +315,7 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                     ) : (
                         <AUIThemedView style={styles.buttonContainer}>
                             <AUIButton
-                                title="Clear"
+                                title={t("clear")}
                                 onPress={() => {
                                     reset();
                                     clearFields();
@@ -321,7 +323,7 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                                 style={{ width: "48%" }}
                             />
                             <AUIButton
-                                title="Save"
+                                title={t("save")}
                                 selected
                                 style={{ width: "48%" }}
                                 onPress={handleSubmit(handleSave)}

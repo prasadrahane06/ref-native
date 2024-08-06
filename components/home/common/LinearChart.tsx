@@ -2,6 +2,7 @@ import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { RootState } from "@/redux/store";
+import { t } from "i18next";
 import React from "react";
 import { Dimensions, StyleSheet, Text, View } from "react-native";
 import { LineChart } from "react-native-chart-kit";
@@ -56,7 +57,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
             >
                 <AUIThemedText style={[styles.title]}>{title}</AUIThemedText>
                 {isDataEmpty ? (
-                    <AUIThemedText style={styles.noDataText}>No Data Available</AUIThemedText>
+                    <AUIThemedText style={styles.noDataText}>{t("no_data_available")}</AUIThemedText>
                 ) : (
                     <>
                         <AUIThemedView style={styles.legendContainer}>

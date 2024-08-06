@@ -26,6 +26,7 @@ import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { Platform, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { useSelector } from "react-redux";
 import AddPlan from "./AddPlan";
+import { t } from "i18next";
 
 interface Plan {
     _id: string;
@@ -126,7 +127,7 @@ const AUIAddNewCourse = () => {
             headerBackVisible: false,
             headerTitle: () => (
                 <AUIThemedText style={styles.screenTitle}>
-                    {edit === "true" ? "Edit Course" : "Add New Course"}
+                    {edit === "true" ? `${t("edit_course")}` : `${t("add_new_course")}`}
                 </AUIThemedText>
             ),
         });
@@ -196,12 +197,11 @@ const AUIAddNewCourse = () => {
                 plan: selectedPlan,
             };
             post(API_URL.course, payload);
-            ApiSuccessToast("New Course added successfully.");
+            ApiSuccessToast(`${t("new_course_added_successfully")}`);
             navigation.goBack();
             reset();
         } catch (error) {
-            console.log("error in add new course", error);
-            ApiErrorToast("Failed to Add New Course");
+            ApiErrorToast(`${t("new_course_added_successfully")}`);
         }
     };
 
@@ -218,12 +218,12 @@ const AUIAddNewCourse = () => {
         }
         patch(API_URL.course, payload)
             .then((res) => {
-                ApiSuccessToast("Plan updated successfully.");
+                ApiSuccessToast(`${t("plan_updated_successfully")}`);
                 navigation.goBack();
                 reset();
             })
             .catch((e) => {
-                ApiErrorToast("Failed to update plan");
+                ApiErrorToast(`${t("failed_to_update_plan")}`);
                 console.log(e);
             });
     };
@@ -231,13 +231,13 @@ const AUIAddNewCourse = () => {
         if (!course?._id) return;
         del(`${API_URL.course}?id=${course?._id}`)
             .then((res) => {
-                ApiSuccessToast("course deleted successfully.");
+                ApiSuccessToast(`${t("course_deleted_successfully")}`);
                 navigation.goBack();
                 setShowConfirmation(false);
                 refreshPlans();
             })
             .catch((e) => {
-                ApiErrorToast("Failed to delete course.");
+                ApiErrorToast(`${t("failed_to_delete_course")}`);
                 console.log(e);
             });
     };
@@ -274,7 +274,7 @@ const AUIAddNewCourse = () => {
                 reader.readAsDataURL(xhr.response);
             };
             xhr.onerror = function () {
-                reject(new Error("Failed to convert image to Base64"));
+                reject(new Error(`${t("failed_to_convert_image_to_base")}`));
             };
             xhr.open("GET", uri);
             xhr.responseType = "blob";
@@ -322,8 +322,8 @@ const AUIAddNewCourse = () => {
                 name="courseName"
                 render={({ field: { onChange, value } }) => (
                     <AUIInputField
-                        label="Enter your Course Name"
-                        placeholder="Course Name"
+                        label={t("enter_your_course_name")}
+                        placeholder={t("course_name")}
                         value={value}
                         onChangeText={onChange}
                         style={styles.input}
@@ -335,8 +335,8 @@ const AUIAddNewCourse = () => {
                 name="description"
                 render={({ field: { onChange, value } }) => (
                     <AUIInputField
-                        label="Enter Course Description"
-                        placeholder="Description"
+                        label={t("enter_course_description")}
+                        placeholder={t("description")}
                         value={value}
                         onChangeText={onChange}
                         style={styles.input}
@@ -348,8 +348,8 @@ const AUIAddNewCourse = () => {
                 name="totalSeats"
                 render={({ field: { onChange, value } }) => (
                     <AUIInputField
-                        label="Total Number of Seats"
-                        placeholder="Seats"
+                        label={t("total_number_of_seats")}
+                        placeholder={t("seats")}
                         value={value}
                         onChangeText={onChange}
                         keyboardType="numeric"
@@ -363,11 +363,11 @@ const AUIAddNewCourse = () => {
                 defaultValue=""
                 render={({ field: { onChange, value } }) => (
                     <DropdownComponent
-                        label="Select Language"
+                        label={t("select_language")}
                         list={languageList}
                         value={value}
                         setValue={onChange}
-                        placeholder="Select Language"
+                        placeholder={t("select_language")}
                         style={styles.input}
                     />
                 )}
@@ -378,11 +378,11 @@ const AUIAddNewCourse = () => {
                 defaultValue=""
                 render={({ field: { onChange, value } }) => (
                     <DropdownComponent
-                        label="Select Category"
+                        label={t("select_category")}
                         list={categoryList}
                         value={value}
                         setValue={onChange}
-                        placeholder="Select Category"
+                        placeholder={t("select_category")}
                         style={styles.input}
                     />
                 )}
@@ -393,8 +393,8 @@ const AUIAddNewCourse = () => {
                 defaultValue=""
                 render={({ field: { onChange, value } }) => (
                     <AUIInputField
-                        label="Enter Currency Type"
-                        placeholder="Currency Type"
+                        label={t("enter_currency_type")}
+                        placeholder={t("currency_type")}
                         value={value}
                         onChangeText={onChange}
                         style={styles.input}
@@ -409,7 +409,7 @@ const AUIAddNewCourse = () => {
                     render={({ field: { onChange, value } }) => (
                         <>
                             <AUIInputField
-                                label="From"
+                                label={t("from")}
                                 placeholder="DD/MM/YY"
                                 value={value.toLocaleDateString()}
                                 onFocus={() => setShowFromDatePicker(true)}
@@ -436,7 +436,7 @@ const AUIAddNewCourse = () => {
                     render={({ field: { onChange, value } }) => (
                         <>
                             <AUIInputField
-                                label="To"
+                                label={t("to")}
                                 placeholder="DD/MM/YY"
                                 value={value.toLocaleDateString()}
                                 onFocus={() => setShowToDatePicker(true)}
@@ -457,24 +457,24 @@ const AUIAddNewCourse = () => {
                     )}
                 />
             </AUIThemedView>
-            <AUIThemedText style={styles.selectBannerLabel}>Select banner</AUIThemedText>
+            <AUIThemedText style={styles.selectBannerLabel}>{t("select_banner")}</AUIThemedText>
             <AUIThemedView style={styles.imagePickerContainer}>
                 <TouchableOpacity onPress={pickImage} style={styles.uploadButton}>
                     <MaterialIcons name="cloud-upload" size={24} color="#5BD894" />
-                    <AUIThemedText style={styles.uploadButtonText}>Upload File</AUIThemedText>
+                    <AUIThemedText style={styles.uploadButtonText}>{t("upload_file")}</AUIThemedText>
                 </TouchableOpacity>
                 <AUIThemedText style={styles.fileName}>
-                    {image ? truncateFileName(image.split("/").pop()!, 18) : "No file chosen"}
+                    {image ? truncateFileName(image.split("/").pop()!, 18) :` ${t("no_file_chosen")}`}
                 </AUIThemedText>
             </AUIThemedView>
             {image && <Image source={{ uri: image }} style={styles.image} />}
             <AUIThemedView>
                 <AUIThemedView style={styles.planContainer}>
-                    <AUIThemedText style={styles.createYourPlanTitle}>Select Plan</AUIThemedText>
+                    <AUIThemedText style={styles.createYourPlanTitle}>{t("select_plan")}</AUIThemedText>
                     <AUIAccordion
                         style={styles.AUIAccordion}
                         innerStyle={styles.AUIAccordionInnerStyle}
-                        title="Select Plans"
+                        title={t("select_plans")}
                     >
                         {plans?.map((plan: Plan, index: number) => (
                             <AUIThemedView
@@ -559,12 +559,12 @@ const AUIAddNewCourse = () => {
                     })}
                 </AUIThemedView>
                 <AUIThemedText style={styles.createYourPlanTitle}>
-                    Create your plan for fees
+                    {t("create_your_plan_for_fees")}
                 </AUIThemedText>
             </AUIThemedView>
             <AUIThemedView style={styles.buttonContainer}>
                 <AUIButton
-                    title={"Add Plan"}
+                    title={t("add_plan")}
                     selected
                     onPress={handleAddPlanClick}
                     style={{ width: "100%" }}
@@ -576,21 +576,21 @@ const AUIAddNewCourse = () => {
                     <AUIThemedView style={styles.buttonMainContainer}>
                         <AUIThemedView style={styles.buttonContainer}>
                             <AUIButton
-                                title="Clear"
+                                title={t("clear")}
                                 onPress={() => {
                                     reset();
                                 }}
                                 style={{ width: "48%" }}
                             />
                             <AUIButton
-                                title="Update"
+                                title={t("update")}
                                 selected
                                 style={{ width: "48%" }}
                                 onPress={handleSubmit(handleEdit)}
                             />
                         </AUIThemedView>
                         <AUIButton
-                            title="Delete"
+                            title={t("delete")}
                             selected
                             background={TEXT_THEME.light.danger}
                             style={{ width: "100%" }}
@@ -602,14 +602,14 @@ const AUIAddNewCourse = () => {
                 ) : (
                     <AUIThemedView style={styles.buttonContainer}>
                         <AUIButton
-                            title="Clear"
+                            title={t("clear")}
                             onPress={() => {
                                 reset();
                             }}
                             style={{ width: "48%" }}
                         />
                         <AUIButton
-                            title="Save"
+                            title={t("save")}
                             selected
                             style={{ width: "48%" }}
                             onPress={handleSubmit(onSave)}
@@ -620,17 +620,17 @@ const AUIAddNewCourse = () => {
             <AUIModal
                 visible={showConfirmation}
                 onClose={() => setShowConfirmation(false)}
-                title="Confirm Delete"
+                title={t("confirm_delete")}
             >
-                <AUIThemedText>Are you sure you want to delete this course?</AUIThemedText>
+                <AUIThemedText>{t("confirm_message")}</AUIThemedText>
                 <AUIThemedView style={styles.buttonContainer}>
                     <AUIButton
-                        title="Cancel"
+                        title={t("cancel")}
                         onPress={() => setShowConfirmation(false)}
                         style={{ width: "48%" }}
                     />
                     <AUIButton
-                        title="Delete"
+                        title={t("delete")}
                         selected
                         background={TEXT_THEME.light.danger}
                         style={{ width: "48%" }}

@@ -10,6 +10,7 @@ import { RootState } from "@/redux/store";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
+import { t } from "i18next";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { ImageBackground, ScrollView, StyleSheet } from "react-native";
@@ -23,14 +24,17 @@ const SchoolProfile = () => {
     const [selectedBanner, setSelectedBanner] = useState("");
     const { patch } = useAxios();
     const schema = Yup.object().shape({
-        name: Yup.string().required("Name is required"),
-        phoneNumber: Yup.string().required(GLOBAL_TEXT.validate_mobile),
-        email: Yup.string().email(GLOBAL_TEXT.validate_email).required(GLOBAL_TEXT.validate_email),
-        description: Yup.string().required("Description is required"),
-        logo: Yup.string().required("Logo is required"),
-        banner: Yup.string().required("Banner is required"),
-        remark: Yup.string().required("Remark is required"),
+        name: Yup.string().required(`${t("name_is_required")}`),
+        phoneNumber: Yup.string().required(`${t("enter_valid_mobile_number")}`),
+        email: Yup.string().email(GLOBAL_TEXT.validate_email).required(`${t("please_provide_valid_email")}`),
+        description: Yup.string().required(`${t("description_is_required")}`),
+        logo: Yup.string().required(`${t("logo_is_required")}`),
+        banner: Yup.string().required(`${t("banner_is_required")}`),
+        remark: Yup.string().required(`${t("remark_is_required")}`),
     });
+
+
+
     const { reset, setValue, control, handleSubmit, formState } = useForm({
         resolver: yupResolver(schema),
         mode: "onChange",
@@ -74,7 +78,7 @@ const SchoolProfile = () => {
                 setSelectedBanner(result.assets[0]?.uri);
             }
         } else {
-            alert("You did not select any image.");
+            alert(`${t("you_did_not_select_any_image")}`);
         }
     };
     const onSave = (data: any) => {
@@ -115,10 +119,10 @@ const SchoolProfile = () => {
                     control={control}
                     render={({ field: { onChange, value }, fieldState: { error } }) => (
                         <AUIThemedView>
-                            <AUIThemedText style={styles.label}>Name</AUIThemedText>
+                            <AUIThemedText style={styles.label}>{t("name")}</AUIThemedText>
                             <AUIInputField
                                 onChangeText={onChange}
-                                placeholder="Enter Your Name"
+                                placeholder={t("enter_your_name")}
                                 value={value}
                             />
                             {error && (
@@ -134,10 +138,10 @@ const SchoolProfile = () => {
                     control={control}
                     render={({ field: { onChange, value }, fieldState: { error } }) => (
                         <AUIThemedView>
-                            <AUIThemedText style={styles.label}>Mobile Number</AUIThemedText>
+                            <AUIThemedText style={styles.label}>{t("mobile_number")}</AUIThemedText>
                             <AUIInputField
                                 onChangeText={onChange}
-                                placeholder="Enter Your Mobile Number"
+                                placeholder={t("enter_your_mobile_number")}
                                 value={value}
                             />
                             {error && (
@@ -153,10 +157,10 @@ const SchoolProfile = () => {
                     control={control}
                     render={({ field: { onChange, value }, fieldState: { error } }) => (
                         <AUIThemedView>
-                            <AUIThemedText style={styles.label}>Email</AUIThemedText>
+                            <AUIThemedText style={styles.label}>{t("email")}</AUIThemedText>
                             <AUIInputField
                                 onChangeText={onChange}
-                                placeholder="Enter Your Mail ID"
+                                placeholder={t("enter_your_mail_id")}
                                 value={value}
                             />
                             {error && (
@@ -172,10 +176,10 @@ const SchoolProfile = () => {
                     control={control}
                     render={({ field: { onChange, value }, fieldState: { error } }) => (
                         <AUIThemedView>
-                            <AUIThemedText style={styles.label}>Description</AUIThemedText>
+                            <AUIThemedText style={styles.label}>{t("description")}</AUIThemedText>
                             <AUIInputField
                                 onChangeText={onChange}
-                                placeholder="Enter Description"
+                                placeholder={t("enter_description")}
                                 value={value}
                             />
                             {error && (
@@ -191,10 +195,10 @@ const SchoolProfile = () => {
                     control={control}
                     render={({ field: { onChange, value }, fieldState: { error } }) => (
                         <AUIThemedView>
-                            <AUIThemedText style={styles.label}>Remark</AUIThemedText>
+                            <AUIThemedText style={styles.label}>{t("remark")}</AUIThemedText>
                             <AUIInputField
                                 onChangeText={onChange}
-                                placeholder="Enter Remark"
+                                placeholder={t("enter_remark")}
                                 value={value}
                             />
                             {error && (
@@ -207,9 +211,9 @@ const SchoolProfile = () => {
                 />
                 <AUIThemedView style={styles.footerContainer}>
                     <AUIThemedView style={styles.buttonContainer}>
-                        <AUIButton title="Clear" onPress={() => reset()} style={{ width: "48%" }} />
+                        <AUIButton title={t("clear")} onPress={() => reset()} style={{ width: "48%" }} />
                         <AUIButton
-                            title="Save"
+                            title={t("save")}
                             selected
                             onPress={handleSubmit(onSave)}
                             disabled={!formState.isValid}

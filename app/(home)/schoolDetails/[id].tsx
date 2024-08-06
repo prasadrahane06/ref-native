@@ -28,6 +28,8 @@ import { StarRatingDisplay } from "react-native-star-rating-widget";
 import { useDispatch, useSelector } from "react-redux";
 
 import { ChatBot } from "at-chatbot-native";
+import { setResponse } from "@/redux/apiSlice";
+
 
 interface TabProps {
     courseId: string;
@@ -125,7 +127,7 @@ export default function SchoolDetails() {
     const { post, del } = useAxios();
     const { requestFn } = useApiRequest();
     const dispatch = useDispatch();
-    // const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const effect = useIsomorphicLayoutEffect();
 
     // chatbot
@@ -366,9 +368,7 @@ export default function SchoolDetails() {
                             <AUIThemedText style={styles.name}>
                                 {schoolsResponse?.name}
                             </AUIThemedText>
-                            <AUIThemedText style={styles.viewsText}>
-                                {school?.view} view
-                            </AUIThemedText>
+                            <AUIThemedText style={styles.viewsText}>{school?.view} {t("views")}</AUIThemedText>
                         </AUIThemedView>
 
                         <AUIThemedView

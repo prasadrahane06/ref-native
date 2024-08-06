@@ -10,6 +10,7 @@ import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector
 import { RootState } from "@/redux/store";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import useDebounce from "@/customHooks/useDebounce";
+import { t } from "i18next";
 
 export default function CoursesTab({ schoolCourses }: { schoolCourses: any }) {
     const [searchPhrase, setSearchPhrase] = useState("");
@@ -151,7 +152,7 @@ export default function CoursesTab({ schoolCourses }: { schoolCourses: any }) {
                 onPress={() => setPage(page + 1)}
             >
                 <AUIThemedText>
-                    {page === schoolCourse?.totalPages ? "You are Caught Up" : "Load More"}
+                    {page === schoolCourse?.totalPages ? `${t("you_are_caught_up")}` :`${t("load_more")}`}
                 </AUIThemedText>
             </TouchableOpacity>
         </AUIThemedView>

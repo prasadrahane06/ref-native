@@ -5,11 +5,13 @@ import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
+import { t } from "i18next";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 import AllSchoolsList from "../list/AllSchoolsList";
+
 
 interface SchoolListProps {
     data: any[];
@@ -50,7 +52,7 @@ const AllSchoolsScreen: React.FC<SchoolListProps> = ({ data }) => {
                     onPress={() => setPage(page + 1)}
                 >
                     <AUIThemedText>
-                        {page === schoolsResponse.totalPages ? "You are Caught Up" : "Load More"}
+                        {page === schoolsResponse.totalPages ? `${t("you_are_caught_up")}` :`${t("load_more")}` }
                     </AUIThemedText>
                 </TouchableOpacity>
             </ScrollView>

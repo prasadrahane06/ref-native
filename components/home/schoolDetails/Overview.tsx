@@ -45,6 +45,7 @@ import * as Yup from "yup";
 import ContactNow from "./ContactNow";
 import { Asset } from "expo-asset";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
+// import { t } from "i18next";
 
 interface EnquireNowModalProps {
     isVisible: boolean;
@@ -60,22 +61,11 @@ interface OverviewTabProps {
     clientId: string;
 }
 
-const schema = Yup.object().shape({
-    name: Yup.string().required("Name is required"),
-    nationality: Yup.string().required("Nationality is required"),
-    phoneCode: Yup.string().required("Phone code is required"),
-    phoneNumber: Yup.string()
-        .matches(/^[0-9]{10}$/, "Enter valid mobile number")
-        .required(GLOBAL_TEXT.validate_mobile),
-    email: Yup.string().email(GLOBAL_TEXT.validate_email).required(GLOBAL_TEXT.validate_email),
-    language: Yup.string().required("Language is required"),
-    startDate: Yup.string().required("Start date is required"),
-    endDate: Yup.string().required("End date is required"),
-    accommodation: Yup.string().required("Accommodation is required"),
-    comment: Yup.string().required("Comment is required"),
-});
+
 
 function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: EnquireNowModalProps) {
+     const { t } = useTranslation();
+    
     const [showStartDatePicker, setShowStartDatePicker] = useState(false);
     const [showEndDatePicker, setShowEndDatePicker] = useState(false);
     const { post } = useAxios();
@@ -89,6 +79,22 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
 
     const dispatch = useDispatch();
     const theme = useSelector((state: RootState) => state.global.theme);
+
+    const schema = Yup.object().shape({
+   
+        name: Yup.string().required(`${t("name_is_required")}`),
+        nationality: Yup.string().required(`${t("nationality_is_required")}`),
+        phoneCode: Yup.string().required(`${t("phone_code_is_required")}`),
+        phoneNumber: Yup.string()
+            .matches(/^[0-9]{10}$/, `${t("enter_valid_mobile_number")}`)
+            .required("Enter valid mobile number"),
+        email: Yup.string().email(GLOBAL_TEXT.validate_email).required(`${t("please_provide_valid_email")}`),
+        language: Yup.string().required(`${t("language_is_required")}`),
+        startDate: Yup.string().required(`${t("start_date_is_required")}`),
+        endDate: Yup.string().required(`${t("end_date_is_required")}`),
+        accommodation: Yup.string().required(`${t("accommodation_is_required")}`),
+        comment: Yup.string().required(`${t("comment_is_required")}`),
+    });
 
     const { reset, setValue, control, handleSubmit, formState, trigger } = useForm({
         resolver: yupResolver(schema),
@@ -178,6 +184,7 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
         Keyboard.dismiss();
         trigger(["name", "email", "phoneNumber", "accommodation", "comment"]);
     };
+    // const { t } = useTranslation();
 
     return (
         <Modal
@@ -201,7 +208,8 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
                         ]}
                     >
                         <AUIThemedText style={enquireNowStyles.title}>
-                            {GLOBAL_TEXT.enquire_now}
+                            {/* {GLOBAL_TEXT.enquire_now} */}
+                            {t("enquireNow")}
                         </AUIThemedText>
                         <Pressable onPress={onClose} style={{ padding: 10 }}>
                             <MaterialIcons
@@ -226,8 +234,8 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
                                         <AUIInputField
                                             value={value}
                                             onChangeText={onChange}
-                                            placeholder={ENQUIRY_FIELDS.name.placeholder}
-                                            label={ENQUIRY_FIELDS.name.label}
+                                            placeholder={t("John_doe")}
+                                            label={t("enter_your_name")}
                                             autoFocus={true}
                                         />
                                         <AUIThemedView>
@@ -250,7 +258,8 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
                                         }}
                                     >
                                         <AUIThemedText style={[inputFieldStyle.label]}>
-                                            {ENQUIRY_FIELDS.nationality.label}
+                                            {/* {ENQUIRY_FIELDS.nationality.label} */}
+                                            {t("nationality")}
                                         </AUIThemedText>
                                         <DropdownComponent
                                             // @ts-ignore
@@ -262,7 +271,7 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
                                             }
                                             labelField="nationality"
                                             valueField="nationality"
-                                            placeholder={ENQUIRY_FIELDS.nationality.placeholder}
+                                            placeholder={t("please_specify")}
                                             listWithIcon
                                         />
                                     </AUIThemedView>
@@ -271,7 +280,8 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
 
                             <AUIThemedView style={{ paddingBottom: 30 }}>
                                 <AUIThemedText style={inputFieldStyle.label}>
-                                    {ENQUIRY_FIELDS.phone.label}
+                                    {/* {ENQUIRY_FIELDS.phone.label} */}
+                                    {t("phone_number")}
                                 </AUIThemedText>
                                 <AUIThemedView style={enquiryFormStyles.phoneContainer}>
                                     <Controller
@@ -307,7 +317,7 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
                                                 <AUIInputField
                                                     value={value}
                                                     onChangeText={onChange}
-                                                    placeholder={ENQUIRY_FIELDS.phone.placeholder}
+                                                    placeholder={t("enter_your_number")}
                                                     keyboardType="numeric"
                                                 />
                                                 {error && (
@@ -335,12 +345,13 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
                                 render={({ field: { onChange, value }, fieldState: { error } }) => (
                                     <AUIThemedView style={enquiryFormStyles.fieldContainer}>
                                         <AUIThemedText style={enquiryFormStyles.fieldLabel}>
-                                            {ENQUIRY_FIELDS.email.label}
+                                            {/* {ENQUIRY_FIELDS.email.label} */}
+                                            {t("mail_id")}
                                         </AUIThemedText>
                                         <AUIInputField
                                             value={value}
                                             onChangeText={onChange}
-                                            placeholder={ENQUIRY_FIELDS.email.placeholder}
+                                            placeholder= {t("enter_your_email")}
                                         />
                                         <AUIThemedView>
                                             {error && (
@@ -359,7 +370,8 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
                                 render={({ field: { onChange, value }, fieldState: { error } }) => (
                                     <AUIThemedView style={enquiryFormStyles.fieldContainer}>
                                         <AUIThemedText style={[inputFieldStyle.label]}>
-                                            {ENQUIRY_FIELDS.language.label}
+                                            {/* {ENQUIRY_FIELDS.language.label} */}
+                                            {t("select_language_to_learn")}
                                         </AUIThemedText>
                                         {/* @ts-ignore */}
                                         <DropdownComponent
@@ -381,11 +393,12 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
 
                             <AUIThemedView style={{ paddingBottom: 30 }}>
                                 <AUIThemedText style={inputFieldStyle.label}>
-                                    {ENQUIRY_FIELDS.date.label}
+                                    {/* {ENQUIRY_FIELDS.date.label} */}
+                                  {t("when_you_want_to_start_course")}
                                 </AUIThemedText>
                                 <AUIThemedView style={enquiryFormStyles.dateContainer}>
                                     <AUIThemedText style={inputFieldStyle.label}>
-                                        From
+                                    {t("from")}
                                     </AUIThemedText>
                                     <Controller
                                         name="startDate"
@@ -448,7 +461,7 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
                                             </AUIThemedView>
                                         )}
                                     />
-                                    <AUIThemedText style={inputFieldStyle.label}>To</AUIThemedText>
+                                    <AUIThemedText style={inputFieldStyle.label}>{t("to")}</AUIThemedText>
                                     <Controller
                                         name="endDate"
                                         control={control}
@@ -519,7 +532,8 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
                                 render={({ field: { onChange, value }, fieldState: { error } }) => (
                                     <AUIThemedView style={enquiryFormStyles.fieldContainer}>
                                         <AUIThemedText style={enquiryFormStyles.fieldLabel}>
-                                            {ENQUIRY_FIELDS.accommodation.label}
+                                            {/* {ENQUIRY_FIELDS.accommodation.label} */}
+                                            {t("select_your_accommodation")}
                                         </AUIThemedText>
                                         <DropdownComponent
                                             //@ts-ignore
@@ -531,7 +545,7 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
                                             labelField="name"
                                             valueField="name"
                                             listWithIcon
-                                            placeholder={ENQUIRY_FIELDS.nationality.placeholder}
+                                            placeholder={t("please_specify")}
                                             position="top"
                                         />
                                     </AUIThemedView>
@@ -544,14 +558,15 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
                                 render={({ field: { onChange, value }, fieldState: { error } }) => (
                                     <AUIThemedView style={{ paddingBottom: 40 }}>
                                         <AUIThemedText style={enquiryFormStyles.fieldLabel}>
-                                            {ENQUIRY_FIELDS.comment.label}
+                                            {/* {ENQUIRY_FIELDS.comment.label} */}
+                                            {t("add_comment")}
                                         </AUIThemedText>
                                         <AUIInputField
                                             multiline
                                             numberOfLines={4}
                                             value={value}
                                             onChangeText={onChange}
-                                            placeholder={ENQUIRY_FIELDS.comment.placeholder}
+                                            placeholder= {t("enter_your_message")}
                                         />
                                         <AUIThemedView>
                                             {error && (
@@ -569,12 +584,12 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
                     <AUIThemedView style={enquireNowStyles.footerContainer}>
                         <AUIThemedView style={enquireNowStyles.buttonContainer}>
                             <AUIButton
-                                title="Clear"
+                                title={t("clear")}
                                 onPress={() => reset()}
                                 style={{ width: "48%" }}
                             />
                             <AUIButton
-                                title={"Save"}
+                                title={t("save")}
                                 selected
                                 onPress={handleSubmit(onSave)}
                                 disabled={!formState.isValid}

@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import AUIImage from "./AUIImage";
 import { AUIThemedText } from "./AUIThemedText";
 import { AUIThemedView } from "./AUIThemedView";
+import { t } from "i18next";
 import { Image } from "expo-image";
 
 interface DropdownItem {
@@ -87,7 +88,7 @@ const DropdownComponent = ({
                 maxHeight={300}
                 labelField={labelField || "label"}
                 valueField={valueField || "value"}
-                placeholder={!isFocus ? placeholder || "Select item" : "..."}
+                placeholder={!isFocus ? placeholder ||` ${t("select_item")}` : "..."}
                 searchPlaceholder="Search..."
                 value={value}
                 onFocus={() => setIsFocus(true)}

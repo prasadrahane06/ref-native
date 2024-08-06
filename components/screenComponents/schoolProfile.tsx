@@ -10,28 +10,31 @@ import AUIImage from "../common/AUIImage";
 import { AUIThemedText } from "../common/AUIThemedText";
 import { AUIThemedView } from "../common/AUIThemedView";
 import { ApiSuccessToast } from "../common/AUIToast";
+import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 const array = [
     {
         id: 1,
         icon: <FontAwesome6 name="user-circle" size={24} color={APP_THEME.light.primary.first} />,
-        label: "School Profile",
+        label:"school_profile",
         pathname: "/schoolProfile",
     },
     {
         id: 2,
         icon: <Feather name="help-circle" size={24} color={APP_THEME.light.primary.first} />,
-        label: "Help",
+        label: "help",
         pathname: "/help",
     },
     {
         id: 3,
         icon: <Fontisto name="wallet" size={24} color={APP_THEME.light.primary.first} />,
-        label: "Transaction history",
-        pathname: "/transactions",
+        label: "transaction_history",
+        patame: "/transactions",
     },
 ];
 function SchoolProfile() {
+    const { t } = useTranslation();
     // const userProfileData = useLangTransformSelector(
     //     (state: RootState) => state.api.userProfileData
     // );
@@ -83,7 +86,7 @@ function SchoolProfile() {
                     >
                         <View style={styles.labelContainer}>
                             {item.icon}
-                            <AUIThemedText>{item.label}</AUIThemedText>
+                            <AUIThemedText>{t(item.label)}</AUIThemedText>
                         </View>
                         <MaterialIcons
                             name="keyboard-arrow-right"
@@ -98,14 +101,14 @@ function SchoolProfile() {
                     style={styles.deleteLayout}
                     onPress={() => {
                         Alert.alert(
-                            "Delete Account",
-                            "Are you sure you want to delete your account? This action cannot be undone.",
+                           ` ${t("delete_account")}`,
+                           ` ${t("delete_sure")}`,
                             [
-                                { text: "Cancel" },
+                                { text: `${t("cancel")}` },
                                 {
-                                    text: "Confirm",
+                                    text: `${t("confirm")}`,
                                     onPress: () => {
-                                        ApiSuccessToast("Account deleted successfully");
+                                        ApiSuccessToast(`${t("account_deleted_successfully")}`);
                                         router.push({ pathname: "/login" });
                                     },
                                     style: "destructive",
@@ -117,7 +120,7 @@ function SchoolProfile() {
                 >
                     <View style={styles.deleteContainer}>
                         <MaterialIcons name="delete" size={24} color="white" />
-                        <AUIThemedText style={{ color: "white" }}>Delete Account</AUIThemedText>
+                        <AUIThemedText style={{ color: "white" }}>{t("delete_account")}</AUIThemedText>
                     </View>
                     <MaterialIcons name="keyboard-arrow-right" size={24} color="white" />
                 </TouchableOpacity>
@@ -127,6 +130,7 @@ function SchoolProfile() {
 }
 
 export default SchoolProfile;
+
 
 const styles = StyleSheet.create({
     root: {

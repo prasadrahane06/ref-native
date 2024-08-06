@@ -16,6 +16,8 @@ import { useDispatch, useSelector } from "react-redux";
 import AUIImage from "./AUIImage";
 import AUILangToggle from "./AUILangToggle";
 import { AUIThemedView } from "./AUIThemedView";
+import Profile from "@/app/profile";
+import schoolProfile from "../screenComponents/schoolProfile";
 
 //interface
 export interface DrawerItem {
@@ -41,6 +43,7 @@ const AUIDrawerContent = (props: any) => {
     const { t } = useTranslation();
 
     const globalState = useLangTransformSelector((state: RootState) => state.global);
+    const profile = useLangTransformSelector((state: RootState) => state.global.profile);
     const theme = useSelector((state: RootState) => state.global.theme);
     const isDarkMode = useLangTransformSelector(
         (state: RootState) => state.global.theme === "dark"
@@ -63,6 +66,9 @@ const AUIDrawerContent = (props: any) => {
         clearAllData();
         router.replace({ pathname: "/" });
     };
+
+    
+    
     return (
         <AUIThemedView style={{ flex: 1 }}>
             <DrawerContentScrollView
