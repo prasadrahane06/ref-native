@@ -62,10 +62,8 @@ const AUIAddNewCourse = () => {
     const { t } = useTranslation();
     const params = useLocalSearchParams();
     const id = params.id;
-    console.log("id =>", id);
     const edit = params.edit;
     const EditCourseResponse = useLangTransformSelector((state: RootState) => state.api.editCourse);
-    console.log("EditCourseResponse =>", JSON.stringify(EditCourseResponse));
     const user = useSelector((state: RootState) => state.global.user);
     const theme = useSelector((state: RootState) => state.global.theme);
     const plans = useLangTransformSelector((state: RootState) => state.api.coursePlans)?.docs || [];
@@ -108,7 +106,6 @@ const AUIAddNewCourse = () => {
     const navigation = useNavigation();
     const effect = useIsomorphicLayoutEffect();
     const hasMounted = useRef(false);
-    console.log("editCourse---", editCourse);
     const { control, handleSubmit, reset, setValue, watch } = useForm<FormValues>({
         mode: "onChange",
         defaultValues: editCourse

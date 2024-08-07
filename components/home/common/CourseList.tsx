@@ -20,7 +20,7 @@ const CourseList: React.FC<CourseListProps> = ({ data, showEditIcons, onEdit }) 
                     marginVertical: 100,
                 }}
             >
-                <AUIThemedText>No Courses for this language</AUIThemedText>
+                <AUIThemedText>No Courses</AUIThemedText>
             </AUIThemedView>
         );
     }
