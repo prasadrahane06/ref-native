@@ -7,14 +7,17 @@ import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { API_URL } from "@/constants/urlProperties";
+import useLoading from "@/customHooks/useLoading";
 import { RootState } from "@/redux/store";
 import { MaterialIcons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Image } from "expo-image";
 import * as ImageManipulator from "expo-image-manipulator";
 import * as ImagePicker from "expo-image-picker";
+// import { t } from "i18next";
 import { default as React, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { Dimensions, Platform, Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import { useSelector } from "react-redux";
 
@@ -26,10 +29,7 @@ interface AddEvent {
 }
 interface event {
     _id: string;
-    eventName: {
-        en: string;
-        ar: string;
-    };
+    eventName: string;
     description: string;
     date: string;
     location: string;
@@ -37,10 +37,12 @@ interface event {
 }
 
 const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvents }) => {
+    const { t } = useTranslation();
     const [image, setImage] = useState<string | null>(null);
     const user = useSelector((state: RootState) => state.global.user);
     const { post, patch, del } = useAxios();
-    const { control, handleSubmit, reset, setValue, getValues } = useForm({
+    const {loading  , setLoading } = useLoading();
+    const { control, handleSubmit, reset, setValue, getValues  } = useForm({
         defaultValues: {
             eventName: "",
             description: "",
@@ -75,6 +77,7 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
     }, [event, visible, reset, setValue]);
 
     const handleSave = () => {
+        setLoading(true);
         const values = getValues();
         const payload = {
             client: user?.client,
@@ -86,50 +89,52 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
         };
         post(API_URL.event, payload)
             .then((res) => {
-                ApiSuccessToast("New Event added successfully.");
+                ApiSuccessToast(`${t("new_event_added_successfully")}`);
                 reset();
                 onClose();
                 refreshEvents();
             })
             .catch((e) => {
+                ApiErrorToast(`${t("failed_to_add_event")}`);
                 console.log(e);
-            });
+            }).finally(() => setLoading(false));
     };
 
     const handleEdit = () => {
         const values = getValues();
         const payload: any = { id: event?._id };
-
+        
         if (values.eventName !== event?.eventName) payload.eventName = values.eventName;
         if (values.description !== event?.description) payload.description = values.description;
         if (selectedDate?.toISOString() !== event?.date) payload.date = selectedDate?.toISOString();
         if (values.location !== event?.location) payload.location = values.location;
         if (image !== event?.eventImage) payload.eventImage = image;
-
+        
+        setLoading(true);
         patch(API_URL.event, payload)
             .then((res) => {
-                ApiSuccessToast("Event updated successfully.");
+                ApiSuccessToast(`${t("event_updated_successfully")}`);
                 reset();
                 onClose();
                 refreshEvents();
             })
             .catch((e) => {
-                ApiErrorToast("Failed to update Event");
+                ApiErrorToast(`${t("failed_to_update_event")}`);
                 console.log(e);
-            });
+            }).finally(() => setLoading(false));
     };
 
     const handleDelete = () => {
         if (event?._id) {
-            del(`${API_URL.event}`, { id: event._id })
+            del(`${API_URL.event}`, { id: event?._id })
                 .then((res) => {
-                    ApiSuccessToast("Event deleted successfully.");
+                    ApiSuccessToast(`${t("event_deleted_successfully")}`);
                     onClose();
                     setShowConfirmation(false);
                     refreshEvents();
                 })
                 .catch((e) => {
-                    ApiErrorToast("Failed to delete event.");
+                    ApiErrorToast(`${t("failed_to_delete_event")}`);
                     console.log(e);
                 });
         }
@@ -163,13 +168,13 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
         });
 
         if (!result.canceled) {
-            const assetUri = result.assets[0].uri;
+            const assetUri = result.assets[0]?.uri;
             const manipResult = await ImageManipulator.manipulateAsync(
                 assetUri,
                 [{ resize: { width: 500 } }],
                 { compress: 0.2, format: ImageManipulator.SaveFormat.JPEG }
             );
-            const base64Image = await convertImageToBase64(manipResult.uri);
+            const base64Image = await convertImageToBase64(manipResult?.uri);
             setImage(base64Image);
         }
     };
@@ -185,7 +190,7 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                 reader.readAsDataURL(xhr.response);
             };
             xhr.onerror = function () {
-                reject(new Error("Failed to convert image to Base64"));
+                reject(new Error(`${t("failed_to_convert_image_to_base")}`));
             };
             xhr.open("GET", uri);
             xhr.responseType = "blob";
@@ -203,20 +208,24 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
             <AUIModal
                 visible={visible}
                 onClose={onClose}
-                title={event ? "Edit Event" : "Add your Events"}
+                title={event ? "Edit Event" : `${(t("add_your_events"))}`}
             >
                 <Controller
                     control={control}
                     name="eventName"
                     defaultValue=""
-                    render={({ field: { onChange, value } }) => (
+                    rules={{ required: "Event name is required" }}
+                    render={({ field: { onChange, value }  , fieldState: { error }}) => (
+                        <>
                         <AUIInputField
-                            label="Enter Event name"
-                            placeholder="Event Name"
+                            label={t("enter_event_name")}
+                            placeholder={t("event_name")}
                             value={value}
                             onChangeText={onChange}
                             style={styles.input}
                         />
+                        {error && <AUIThemedText style={{ color: 'red' , fontSize : 10}}>{error.message}</AUIThemedText>}
+                        </>
                     )}
                 />
                 <Controller
@@ -225,8 +234,8 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                     defaultValue=""
                     render={({ field: { onChange, value } }) => (
                         <AUIInputField
-                            label="Enter Event Description"
-                            placeholder="Description"
+                            label={t("enter_event_description")}
+                            placeholder={t("description")}
                             value={value}
                             onChangeText={onChange}
                             style={styles.input}
@@ -241,8 +250,8 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                         render={({ field: { onChange, value } }) => (
                             <Pressable onPress={() => setDatePickerVisible(true)}>
                                 <AUIInputField
-                                    label="Event Date"
-                                    placeholder="Select Date"
+                                    label={t("event_date")}
+                                    placeholder={t("select_date")}
                                     value={selectedDate ? selectedDate.toDateString() : ""}
                                     style={styles.input}
                                     editable={false}
@@ -265,22 +274,22 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                     defaultValue=""
                     render={({ field: { onChange, value } }) => (
                         <AUIInputField
-                            label="Enter Event Location"
-                            placeholder="Event Location"
+                            label={t("enter_event_location")}
+                            placeholder={t("event_location")}
                             value={value}
                             onChangeText={onChange}
                             style={styles.input}
                         />
                     )}
                 />
-                <AUIThemedText>Select image</AUIThemedText>
+                <AUIThemedText>{t("select_image")}</AUIThemedText>
                 <AUIThemedView style={styles.imagePickerContainer}>
                     <TouchableOpacity onPress={pickImage} style={styles.uploadButton}>
                         <MaterialIcons name="cloud-upload" size={24} color="#5BD894" />
-                        <AUIThemedText style={styles.uploadButtonText}>Upload File</AUIThemedText>
+                        <AUIThemedText style={styles.uploadButtonText}>{t("upload_file")}</AUIThemedText>
                     </TouchableOpacity>
                     <AUIThemedText style={styles.fileName}>
-                        {image ? truncateFileName(image.split("/").pop()!, 18) : "No file chosen"}
+                        {image ? truncateFileName(image.split("/").pop()!, 18) : `${t("no_file_chosen")}`}
                     </AUIThemedText>
                 </AUIThemedView>
                 {image && <Image source={{ uri: image }} style={styles.image} />}
@@ -290,6 +299,7 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                             <AUIThemedView style={styles.buttonContainer}>
                                 <AUIButton
                                     title="Clear"
+                                    disabled={loading ? true : false }
                                     onPress={() => {
                                         reset();
                                         clearFields();
@@ -298,6 +308,7 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                                 />
                                 <AUIButton
                                     title="Update"
+                                    disabled={loading ? true : false }
                                     selected
                                     style={{ width: "48%" }}
                                     onPress={handleSubmit(handleEdit)}
@@ -317,6 +328,7 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                         <AUIThemedView style={styles.buttonContainer}>
                             <AUIButton
                                 title="Clear"
+                                disabled={loading ? true : false }
                                 onPress={() => {
                                     reset();
                                     clearFields();
@@ -325,6 +337,7 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                             />
                             <AUIButton
                                 title="Save"
+                                disabled={loading ? true : false }
                                 selected
                                 style={{ width: "48%" }}
                                 onPress={handleSubmit(handleSave)}
@@ -359,7 +372,7 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
 };
 export default AddNewEvent;
 
-const windowHeight = Dimensions.get("window").height;
+// const windowHeight = Dimensions.get("window").height;
 const styles = StyleSheet.create({
     input: { marginBottom: 10 },
     buttonMainContainer: { gap: 5 },

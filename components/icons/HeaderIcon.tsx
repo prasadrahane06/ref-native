@@ -1,6 +1,11 @@
 import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
+import { API_URL } from "@/constants/urlProperties";
+import useApiRequest from "@/customHooks/useApiRequest";
+import useDebounce from "@/customHooks/useDebounce";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
-import { Fontisto, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
     FlatList,
@@ -11,20 +16,11 @@ import {
     ScrollView,
     StyleSheet,
     TouchableOpacity,
-    View,
 } from "react-native";
 import { useSelector } from "react-redux";
 import AUISearchBar from "../common/AUISearchBar";
-import { AUIThemedView } from "../common/AUIThemedView";
-import { API_URL } from "@/constants/urlProperties";
-import useDebounce from "@/customHooks/useDebounce";
-import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
-import useApiRequest from "@/customHooks/useApiRequest";
 import { AUIThemedText } from "../common/AUIThemedText";
-import { GLOBAL_TEXT } from "@/constants/Properties";
-import { router } from "expo-router";
-import AUIImage from "../common/AUIImage";
-import { Asset } from "expo-asset";
+import { AUIThemedView } from "../common/AUIThemedView";
 
 interface HeaderIconsProps {
     onNotificationPress: () => void;
@@ -56,17 +52,20 @@ function SearchModal({ isVisible, onClose }: any) {
         switch (type) {
             case "country":
                 router.push({
-                    pathname: `(home)/cityDetails/${item?._id}`,
+                    // @ts-ignore
+                    pathname: `/(home)/cityDetails/${item?._id}`,
                 });
                 break;
             case "course":
                 router.push({
-                    pathname: `(home)/courseDetails/${item?._id}`,
+                    // @ts-ignore
+                    pathname: `/(home)/courseDetails/${item?._id}`,
                 });
                 break;
             case "school":
                 router.push({
-                    pathname: `(home)/schoolDetails/${item?._id}`,
+                    // @ts-ignore
+                    pathname: `/(home)/schoolDetails/${item?._id}`,
                 });
                 break;
         }
@@ -77,16 +76,24 @@ function SearchModal({ isVisible, onClose }: any) {
     const renderResultItem = (type: string, item: any) => (
         <TouchableOpacity
             style={searchStyles.resultItem}
-            onPress={() => handleNavigation(type, item)}
+            onPress={() => {
+                handleNavigation(type, item);
+                onClose();
+            }}
         >
-            <AUIThemedText style={{ fontWeight: "bold" }}>
+            <AUIThemedText style={{ fontWeight: "600" }}>
                 {type === "course" ? item.courseName : item.name}
             </AUIThemedText>
         </TouchableOpacity>
     );
 
     return (
-        <Modal animationType="slide" transparent={true} visible={isVisible}>
+        <Modal
+            animationType="slide"
+            transparent={true}
+            visible={isVisible}
+            onRequestClose={onClose}
+        >
             <AUIThemedView
                 style={
                     Platform.OS === "ios"
@@ -95,8 +102,15 @@ function SearchModal({ isVisible, onClose }: any) {
                 }
             >
                 <AUIThemedView style={searchStyles.titleContainer}>
-                    <AUIThemedText style={searchStyles.title}>{GLOBAL_TEXT.search}</AUIThemedText>
-                    <Pressable onPress={onClose} style={{ padding: 10 }}>
+                    <AUIThemedText style={searchStyles.title}>Search</AUIThemedText>
+                    <Pressable
+                        onPress={() => {
+                            onClose();
+                            setSearchPhrase("");
+                            setClicked(false);
+                        }}
+                        style={{ padding: 10 }}
+                    >
                         <MaterialIcons name="close" color={TEXT_THEME[theme].primary} size={22} />
                     </Pressable>
                 </AUIThemedView>
@@ -119,7 +133,7 @@ function SearchModal({ isVisible, onClose }: any) {
                     />
                     <AUIThemedView>
                         {results && searchPhrase.length > 0 && (
-                            <AUIThemedView style={searchStyles.resultsContainer}>
+                            <ScrollView style={searchStyles.resultsContainer}>
                                 {results?.country && (
                                     <AUIThemedView style={searchStyles.sectionContainer}>
                                         <AUIThemedText style={searchStyles.sectionTitle}>
@@ -184,7 +198,7 @@ function SearchModal({ isVisible, onClose }: any) {
                                         />
                                     </AUIThemedView>
                                 )}
-                            </AUIThemedView>
+                            </ScrollView>
                         )}
                     </AUIThemedView>
                 </KeyboardAvoidingView>
@@ -248,6 +262,7 @@ const searchStyles = StyleSheet.create({
     sectionTitle: {
         paddingVertical: 5,
         fontSize: 20,
+        fontWeight: "bold",
     },
     resultsContainer: {
         padding: 10,

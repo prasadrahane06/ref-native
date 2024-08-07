@@ -19,6 +19,7 @@ export interface UserState {
     status: number;
     type: string;
     updatedAt: string;
+    gender?: string;
 }
 
 export interface GlobalState {

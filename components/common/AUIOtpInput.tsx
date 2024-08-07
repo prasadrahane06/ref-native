@@ -3,6 +3,7 @@ import { RootState } from "@/redux/store";
 import React, { useRef, useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import { useSelector } from "react-redux";
+import { AUIThemedView } from "./AUIThemedView";
 
 const AUIOTPInput = ({ length, onChange, disabled }: any) => {
     const theme = useSelector((state: RootState) => state.global.theme);
@@ -32,35 +33,42 @@ const AUIOTPInput = ({ length, onChange, disabled }: any) => {
     };
 
     return (
-        <View style={[styles.container]}>
-            {otp?.map((digit, index) => (
-                <TextInput
-                    key={index}
-                    autoFocus={index === 0}
-                    // @ts-ignore
-                    ref={(ref) => (inputs.current[index] = ref)}
-                    style={[
-                        styles.input,
-                        {
-                            borderColor: APP_THEME[theme].primary.first,
-                            shadowColor: APP_THEME[theme].primary.first,
-                        },
-                        disabled && {
-                            borderColor: "gray",
-                            shadowColor: "gray",
-                            opacity: 0.5,
-                            // backgroundColor: APP_THEME.gray,
-                        },
-                    ]}
-                    keyboardType="numeric"
-                    maxLength={1}
-                    value={digit}
-                    editable={!disabled}
-                    onChangeText={(text) => handleChange(text, index)}
-                    onKeyPress={(e) => handleKeyPress(e, index)}
-                />
-            ))}
-        </View>
+        <AUIThemedView
+            style={{
+                justifyContent: "center",
+                alignItems: "center",
+            }}
+        >
+            <AUIThemedView style={[styles.container]}>
+                {otp?.map((digit, index) => (
+                    <TextInput
+                        key={index}
+                        autoFocus={index === 0}
+                        // @ts-ignore
+                        ref={(ref) => (inputs.current[index] = ref)}
+                        style={[
+                            styles.input,
+                            {
+                                borderColor: APP_THEME[theme].primary.first,
+                                shadowColor: APP_THEME[theme].primary.first,
+                            },
+                            disabled && {
+                                borderColor: "gray",
+                                shadowColor: "gray",
+                                opacity: 0.5,
+                                // backgroundColor: APP_THEME.gray,
+                            },
+                        ]}
+                        keyboardType="numeric"
+                        maxLength={1}
+                        value={digit}
+                        editable={!disabled}
+                        onChangeText={(text) => handleChange(text, index)}
+                        onKeyPress={(e) => handleKeyPress(e, index)}
+                    />
+                ))}
+            </AUIThemedView>
+        </AUIThemedView>
     );
 };
 
@@ -68,10 +76,11 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
         gap: 10,
-        justifyContent: "space-between",
+        justifyContent: "center",
+        alignItems: "center",
     },
     input: {
-        width: 80,
+        width: 70,
         height: 50,
         borderWidth: 1,
         // borderColor: APP_THEME.primary.first, //"#7A827A",

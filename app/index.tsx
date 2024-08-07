@@ -12,14 +12,13 @@ import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector
 import { setProfile, setSignInType, setToken, setUser } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
 import { Asset } from "expo-asset";
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
 import { useEffect } from "react";
 import { Platform, Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { firebase } from "../firebase";
 
 const InitialPage = () => {
-    const router = useRouter();
     const dispatch = useDispatch();
     const profile = useLangTransformSelector((state: RootState) => state.global.profile);
     const theme = useSelector((state: RootState) => state.global.theme);
@@ -49,11 +48,11 @@ const InitialPage = () => {
     }, []);
     const navigateToLogin = () => {
         dispatch(setSignInType("exist"));
-        router.navigate("/login");
+        router.push("/login");
     };
     const navigateToSignup = () => {
         dispatch(setSignInType("new"));
-        router.navigate("/signup");
+        router.push("/signup");
     };
     return (
         <AUISafeAreaView
@@ -106,11 +105,11 @@ const InitialPage = () => {
                                 path={
                                     profile === "student"
                                         ? Asset.fromModule(
-                                              require("@/assets/images/initialPage/fi_3135773.png")
-                                          ).uri
+                                              require("@/assets/images/local/fi_3135773.png")
+                                          )
                                         : Asset.fromModule(
-                                              require("@/assets/images/initialPage/student.png")
-                                          ).uri
+                                              require("@/assets/images/local/student.png")
+                                          )
                                 }
                             />
 
@@ -156,11 +155,11 @@ const InitialPage = () => {
                                 path={
                                     profile === "school"
                                         ? Asset.fromModule(
-                                              require("@/assets/images/initialPage/school_white.png")
-                                          ).uri
+                                              require("@/assets/images/local/school_white.png")
+                                          )
                                         : Asset.fromModule(
-                                              require("@/assets/images/initialPage/school.png")
-                                          ).uri
+                                              require("@/assets/images/local/school.png")
+                                          )
                                 }
                             />
 
@@ -209,19 +208,11 @@ const InitialPage = () => {
                 <AUIThemedView style={initialPageStyles.imageContainer}>
                     {theme === "dark" ? (
                         <AUIImage
-                            path={
-                                Asset.fromModule(
-                                    require("@/assets/images/initialPage/home_dark.png")
-                                ).uri
-                            }
+                            path={Asset.fromModule(require("@/assets/images/local/home_dark.png"))}
                         />
                     ) : (
                         <AUIImage
-                            path={
-                                Asset.fromModule(
-                                    require("@/assets/images/initialPage/home_light.png")
-                                ).uri
-                            }
+                            path={Asset.fromModule(require("@/assets/images/local/home_light.png"))}
                         />
                     )}
                 </AUIThemedView>

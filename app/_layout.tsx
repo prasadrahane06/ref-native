@@ -1,24 +1,25 @@
 import AUILoader from "@/components/common/AUILoader";
 import "@/components/i18n/i18n.config";
-import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
+import { BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
 import { getUserData, storeUserDeviceData } from "@/constants/RNAsyncStore";
-import { setDeviceToken, setTheme } from "@/redux/globalSlice";
+import { API_URL } from "@/constants/urlProperties";
+import useApiRequest from "@/customHooks/useApiRequest";
+import { setResponse } from "@/redux/apiSlice";
+import { setTheme } from "@/redux/globalSlice";
 import { RootState, store } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import messaging from "@react-native-firebase/messaging";
+import axios from "axios";
 import { useFonts } from "expo-font";
-import { Link, Stack, useRouter } from "expo-router";
+import { Link, router, Stack, useFocusEffect, useNavigation } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Alert, Pressable, TouchableOpacity } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
 import { Provider, useDispatch, useSelector } from "react-redux";
-import useAxios from "./services/axiosClient";
-import { API_URL } from "@/constants/urlProperties";
-import { setResponse } from "@/redux/apiSlice";
+import { baseURL } from "./services/axiosClient";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -34,10 +35,13 @@ const _XHR = global.originalXMLHttpRequest
 XMLHttpRequest = _XHR;
 
 const InitialLayout = () => {
-    const { post } = useAxios();
+    const { requestFn } = useApiRequest();
+    const { t } = useTranslation();
+    const navigation = useNavigation();
     const dispatch = useDispatch();
-
     const theme = useSelector((state: RootState) => state.global.theme);
+    const token = useSelector((state: RootState) => state.global.token);
+    const deviceToken = useSelector((state: RootState) => state.global.deviceToken);
 
     // comment requestUserPermission and useEffect when in development to avoid firbase error
     // and uncomment when building for production
@@ -61,18 +65,6 @@ const InitialLayout = () => {
     //                 dispatch(setDeviceToken(token));
     //                 console.log("fcm token", token);
     //                 Alert.alert("fcm token", token);
-
-    //                 // send token to server
-    //                 // post(API_URL.login, {
-    //                 //     fcmToken: token,
-    //                 // })
-    //                 //     .then((res) => {
-    //                 //         Alert.alert("fcm token send to server", token);
-    //                 //     })
-    //                 //     .catch((error) => {
-    //                 //         console.log("res", error);
-    //                 //         Alert.alert("error in sending fcm token to server", token);
-    //                 //     });
     //             });
     //     } else {
     //         console.log("Permission not granted");
@@ -104,15 +96,40 @@ const InitialLayout = () => {
     //     return unsubscribe;
     // }, []);
 
+    useEffect(() => {
+        // send token to server
+        if (token && deviceToken) {
+            axios
+                .patch(
+                    `${baseURL}${API_URL.deviceToken}`,
+                    {
+                        deviceToken: deviceToken,
+                    },
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                )
+                .then((res) => {
+                    console.log("API_URL.deviceToken res", res.data);
+                    Alert.alert("fcm token send to server", JSON.stringify(res.data));
+                })
+                .catch((error) => {
+                    console.log("Error in sending FCM token to server", error);
+                    Alert.alert(
+                        "Error in sending FCM token to server",
+                        JSON.stringify(error?.response?.data)
+                    );
+                });
+        }
+    }, [token, deviceToken]);
+
     const [loaded, error] = useFonts({
-        SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
-        Inter: require("../assets/fonts/Inter/static/Inter-Regular.ttf"),
-        Gilroy: require("../assets/fonts/gilroy/Gilroy-Black.ttf"),
-        GilroyMedium: require("../assets/fonts/gilroy/Gilroy-Medium.ttf"),
-        GilroyLight: require("../assets/fonts/gilroy/Gilroy-Light.ttf"),
-        ...FontAwesome.font,
+        "Inter-Black": require("../assets/fonts/Inter/static/Inter-Regular.ttf"),
     });
-    const router = useRouter();
+
     // Expo Router uses Error Boundaries to catch errors in the navigation tree.
     useEffect(() => {
         if (error) throw error;
@@ -145,6 +162,24 @@ const InitialLayout = () => {
     return (
         <Stack>
             <Stack.Screen name="index" options={{ headerShown: false }} />
+
+            <Stack.Screen
+                name="(home)/(school)"
+                options={{
+                    headerShown: false,
+                    title: "Home",
+                    headerTitle: "Home",
+                }}
+            />
+            <Stack.Screen
+                name="(home)/(student)"
+                options={{
+                    headerShown: false,
+                    title: "Home",
+                    headerTitle: "Home",
+                }}
+            />
+
             <Stack.Screen
                 name="signup"
                 options={{
@@ -246,30 +281,51 @@ const InitialLayout = () => {
                 }}
             />
 
-            <Stack.Screen name="help" options={{ title: "Help", presentation: "modal" }} />
             <Stack.Screen
-                name="(home)/(school)"
+                name="help"
                 options={{
-                    headerShown: false,
-                    title: "Home",
-                    headerTitle: "Home",
+                    title: "Help",
+                    headerTitle: `${t("help")}`,
+                    headerTitleStyle: { color: TEXT_THEME[theme].primary, fontWeight: "bold" },
+                    headerStyle: { backgroundColor: BACKGROUND_THEME[theme].background },
+                    headerLeft: () => (
+                        <Ionicons
+                            name="arrow-back"
+                            size={27}
+                            color={TEXT_THEME[theme].primary}
+                            style={{ marginRight: 20 }}
+                            onPress={() => router.back()}
+                        />
+                    ),
                 }}
             />
+
             <Stack.Screen
-                name="(home)/(student)"
+                name="transactions"
                 options={{
-                    headerShown: false,
-                    title: "Home",
-                    headerTitle: "Home",
+                    title: "Transactions",
+                    headerTitle: `${t("transactions")}`,
+                    headerTitleStyle: { color: TEXT_THEME[theme].primary, fontWeight: "bold" },
+                    headerStyle: { backgroundColor: BACKGROUND_THEME[theme].background },
+                    headerLeft: () => (
+                        <Ionicons
+                            name="arrow-back"
+                            size={27}
+                            color={TEXT_THEME[theme].primary}
+                            style={{ marginRight: 20 }}
+                            onPress={() => router.back()}
+                        />
+                    ),
                 }}
             />
+
             <Stack.Screen
                 name="(home)/compare/searchSchool"
                 options={{
                     headerShown: true,
                     title: "search_school",
-                    headerTitle: "Add to compare",
-                    headerTitleStyle: { color: TEXT_THEME[theme].primary },
+                    headerTitle: `${t("add_to_compare")}`,
+                    headerTitleStyle: { color: TEXT_THEME[theme].primary, fontWeight: "bold" },
                     headerStyle: { backgroundColor: BACKGROUND_THEME[theme].background },
                     headerLeft: () => (
                         <TouchableOpacity onPress={router.back}>
@@ -288,18 +344,22 @@ const InitialLayout = () => {
                 options={{
                     headerShown: true,
                     title: "compare school",
-                    headerTitle: "Compare Schools",
-                    headerTitleStyle: { color: TEXT_THEME[theme].primary },
+                    headerTitle: `${t("compare_schools")}`,
+                    headerTitleStyle: { color: TEXT_THEME[theme].primary, fontWeight: "bold" },
                     headerStyle: { backgroundColor: BACKGROUND_THEME[theme].background },
                     headerLeft: () => (
-                        <TouchableOpacity onPress={router.back}>
-                            <Ionicons
-                                name="arrow-back"
-                                size={27}
-                                color={TEXT_THEME[theme].primary}
-                                style={{ marginRight: 20 }}
-                            />
-                        </TouchableOpacity>
+                        <Ionicons
+                            name="arrow-back"
+                            size={27}
+                            color={TEXT_THEME[theme].primary}
+                            style={{ marginRight: 20 }}
+                            onPress={() => {
+                                dispatch(setResponse({ storeName: "compareSchool1", data: null }));
+                                dispatch(setResponse({ storeName: "compareSchool2", data: null }));
+                                //@ts-ignore
+                                navigation.navigate("compare");
+                            }}
+                        />
                     ),
                 }}
             />
@@ -308,8 +368,8 @@ const InitialLayout = () => {
                 options={{
                     headerShown: true,
                     title: "Schools",
-                    headerTitle: "Popular schools",
-                    headerTitleStyle: { color: "#fff", fontFamily: "Gilroy" },
+                    headerTitle: `${t("popular_schools")}`,
+                    headerTitleStyle: { color: "#fff", fontWeight: "bold" },
                     headerTransparent: true,
                     headerLeft: () => (
                         <TouchableOpacity onPress={router.back}>
@@ -329,8 +389,8 @@ const InitialLayout = () => {
                 options={{
                     headerShown: true,
                     title: "Courses",
-                    headerTitle: "Popular Courses",
-                    headerTitleStyle: { color: "#ffffff", fontFamily: "Gilroy" },
+                    headerTitle: `${t("popular_course")}`,
+                    headerTitleStyle: { color: "#ffffff", fontWeight: "bold" },
                     headerTransparent: true,
                     headerLeft: () => (
                         <TouchableOpacity onPress={router.back}>
@@ -358,7 +418,7 @@ const InitialLayout = () => {
                             />
                         </TouchableOpacity>
                     ),
-                    headerTitleStyle: { color: TEXT_THEME[theme].primary },
+                    headerTitleStyle: { color: TEXT_THEME[theme].primary, fontWeight: "bold" },
                     headerStyle: { backgroundColor: BACKGROUND_THEME[theme].background },
                 }}
             />
@@ -426,8 +486,8 @@ const InitialLayout = () => {
             <Stack.Screen
                 name="profile"
                 options={{
-                    headerTitle: "My Profile",
-                    headerTitleStyle: { color: TEXT_THEME[theme].primary },
+                    headerTitle: `${t("profile")}`,
+                    headerTitleStyle: { color: TEXT_THEME[theme].primary, fontWeight: "bold" },
                     headerStyle: { backgroundColor: BACKGROUND_THEME[theme].background },
                     headerLeft: () => (
                         <TouchableOpacity onPress={router.back}>
@@ -441,11 +501,32 @@ const InitialLayout = () => {
                     ),
                 }}
             />
+
+            <Stack.Screen
+                name="changeNumberEmail"
+                options={{
+                    headerTitle: "",
+                    headerTitleStyle: { color: TEXT_THEME[theme].primary, fontWeight: "bold" },
+                    headerStyle: { backgroundColor: BACKGROUND_THEME[theme].background },
+
+                    headerLeft: () => (
+                        <TouchableOpacity onPress={router.back}>
+                            <Ionicons
+                                name="arrow-back"
+                                size={27}
+                                color={TEXT_THEME[theme].primary}
+                                style={{ marginRight: 20 }}
+                            />
+                        </TouchableOpacity>
+                    ),
+                }}
+            />
+
             <Stack.Screen
                 name="schoolProfile"
                 options={{
-                    headerTitle: "School Profile",
-                    headerTitleStyle: { color: TEXT_THEME[theme].primary },
+                    headerTitle: `${t("school_profile")}`,
+                    headerTitleStyle: { color: TEXT_THEME[theme].primary, fontWeight: "bold" },
                     headerStyle: { backgroundColor: BACKGROUND_THEME[theme].background },
                     headerBackVisible: false,
                     headerLeft: () => (
@@ -466,7 +547,7 @@ const InitialLayout = () => {
                     headerShown: true,
                     title: "",
                     headerTitle: "Ratings and review",
-                    headerTitleStyle: { color: "black", fontFamily: "Gilroy" },
+                    headerTitleStyle: { color: "black", fontWeight: "bold" },
                     headerTransparent: false,
                     headerLeft: () => (
                         <TouchableOpacity onPress={router.back}>
@@ -480,8 +561,8 @@ const InitialLayout = () => {
                 options={{
                     headerShown: true,
                     title: "",
-                    headerTitle: "Student Information",
-                    headerTitleStyle: { color: TEXT_THEME[theme].primary },
+                    headerTitle: `${t("student_information")}`,
+                    headerTitleStyle: { color: TEXT_THEME[theme].primary, fontWeight: "bold" },
                     headerStyle: {
                         backgroundColor: BACKGROUND_THEME[theme].background,
                     },

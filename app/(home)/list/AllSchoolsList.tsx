@@ -9,6 +9,7 @@ interface SchoolData {
     image: any;
     caption?: string;
     favorite?: boolean;
+    approvalStatus?: string;
 }
 
 interface SchoolListProps {
@@ -17,23 +18,27 @@ interface SchoolListProps {
 }
 
 const AllSchoolsList: React.FC<SchoolListProps> = ({ data, style }) => {
-    const renderItem: ListRenderItem<SchoolData> = ({ item }) => (
-        <View style={styles.schoolItem}>
-            <School
-                id={item?.id}
-                title={item?.name}
-                caption={item?.caption}
-                image={item?.image}
-                favorite={item?.favorite}
-                style={{ width: 165, height: 160 }}
-            />
-        </View>
-    );
+    const renderItem: ListRenderItem<SchoolData> = ({ item }) => {
+        return (
+            <View style={styles.schoolItem}>
+                <School
+                    id={item?.id}
+                    title={item?.name}
+                    caption={item?.caption}
+                    image={item?.image}
+                    favorite={item?.favorite}
+                    style={{ width: 165, height: 160 }}
+                />
+            </View>
+        );
+    };
+
+    const approvedSchools = data?.filter((school: any) => school?.approvalStatus === "approved");
 
     return (
         <AUIThemedView style={styles.schoolContainer}>
             <FlatList
-                data={data}
+                data={approvedSchools}
                 renderItem={renderItem}
                 keyExtractor={(item) => item?.id}
                 numColumns={2}

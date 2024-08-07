@@ -1,18 +1,20 @@
 import Course from "@/components/Course";
 import { AUILinearGradient } from "@/components/common/AUILinearGradient";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
-import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { APP_THEME, BACKGROUND_THEME } from "@/constants/Colors";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
+// import { t } from "i18next";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 
 const AllCoursesScreen = () => {
+    const { t } = useTranslation();
     //state
     const [page, setPage] = useState(1);
     const theme = useSelector((state: RootState) => state.global.theme);
@@ -63,7 +65,7 @@ const AllCoursesScreen = () => {
                     onPress={() => setPage(page + 1)}
                 >
                     <AUIThemedText>
-                        {page === courseResponse?.totalPages ? "You are Caught Up" : "Load More"}
+                        {page === courseResponse?.totalPages ? `${t("you_are_caught_up")}` :`${t("load_more")}`}
                     </AUIThemedText>
                 </TouchableOpacity>
             </ScrollView>

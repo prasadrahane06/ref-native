@@ -16,9 +16,7 @@ const AUIRatingsAndReview = () => {
                 return {
                     id: "a1",
                     name: rtng?.user?.name,
-                    image: rtng?.user?.photo
-                        ? rtng?.user?.photo
-                        : Asset.fromModule(require("@/assets/images/user.png")).uri,
+                    image: rtng?.user?.photo,
                     role: "Student",
                     comment: rtng?.comment,
                     rating: rtng?.rating,

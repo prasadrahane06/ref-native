@@ -38,6 +38,8 @@ function Profile() {
     const userProfileData = useLangTransformSelector(
         (state: RootState) => state.api.userProfileData
     );
+    const gender = userProfileData?.gender;
+
     const theme = useSelector((state: RootState) => state.global.theme);
     const navigation = useNavigation();
 
@@ -62,13 +64,24 @@ function Profile() {
                     </Pressable>
                 </View>
                 <View style={styles.avatarContainer}>
-                    <AUIImage
+                    {/* <AUIImage
                         path={
                             userProfileData?.photo ||
-                            Asset.fromModule(require("@/assets/images/user.png")).uri
+                            Asset.fromModule(require("@/assets/images/local/user.png"))
                         }
                         style={styles.avatar}
-                    />
+                    /> */}
+                    {gender === "Male" ? (
+                        <AUIImage
+                            path={Asset.fromModule(require("@/assets/images/local/user.png"))}
+                            style={styles.avatar}
+                        />
+                    ) : (
+                        <AUIImage
+                            path={Asset.fromModule(require("@/assets/images/local/female.png"))}
+                            style={styles.avatar}
+                        />
+                    )}
                     <AUIThemedText style={styles.name}>{userProfileData?.name}</AUIThemedText>
                     <AUIThemedText style={styles.email}>{userProfileData?.email}</AUIThemedText>
                 </View>
@@ -84,7 +97,9 @@ function Profile() {
                         <View style={styles.labelContainer}>
                             {item.icon}
 
-                            <AUIThemedText>{t(item.label)}</AUIThemedText>
+                            <AUIThemedText style={{ fontWeight: "bold" }}>
+                                {t(item.label)}
+                            </AUIThemedText>
                         </View>
                         <MaterialIcons
                             name="keyboard-arrow-right"

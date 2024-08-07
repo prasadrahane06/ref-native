@@ -154,7 +154,7 @@ export default function PurchaseScreen() {
                     onPress={() => setPaymentMode("Razor pay")}
                 >
                     <AUIImage
-                        path={Asset.fromModule(require("@/assets/icons/razorpay.png")).uri}
+                        path={Asset.fromModule(require("@/assets/icons/razorpay.png"))}
                         style={{ width: 30, height: 30 }}
                     />
 
@@ -175,7 +175,7 @@ export default function PurchaseScreen() {
                     onPress={() => setPaymentMode("Card payment")}
                 >
                     <AUIImage
-                        path={Asset.fromModule(require("@/assets/icons/card.png")).uri}
+                        path={Asset.fromModule(require("@/assets/icons/card.png"))}
                         style={{ width: 30, height: 30 }}
                     />
 
@@ -196,7 +196,7 @@ export default function PurchaseScreen() {
                     onPress={() => setPaymentMode("Net Banking")}
                 >
                     <AUIImage
-                        path={Asset.fromModule(require("@/assets/icons/net_banking.png")).uri}
+                        path={Asset.fromModule(require("@/assets/icons/net_banking.png"))}
                         style={{ width: 30, height: 30 }}
                     />
                     <AUIThemedText style={styles.paymentModeText}>

@@ -1,12 +1,12 @@
 import { ApiErrorToast } from "@/components/common/AUIToast";
-import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
-const baseURL = "https://vi6pxwh9w7.execute-api.ap-south-1.amazonaws.com/dev/";
+export const baseURL = "https://vi6pxwh9w7.execute-api.ap-south-1.amazonaws.com/dev/";
 
 const useAxios = () => {
-    const token = useLangTransformSelector((state: RootState) => state.global.token);
+    const token = useSelector((state: RootState) => state.global.token);
     const axiosClient = axios.create({
         baseURL,
         headers: {
@@ -57,9 +57,10 @@ const useAxios = () => {
         }
     };
 
-    const del = async (url: string, payload?: any) => {
+    const del = async (url: string, payload?: any, query = {}) => {
         try {
-            const response = await axiosClient.delete(url, { data: payload });
+            const queryString = new URLSearchParams(query).toString();
+            const response = await axiosClient.delete(`${url}?${queryString}`, { data: payload });
             return response.data;
         } catch (error) {
             throw error;

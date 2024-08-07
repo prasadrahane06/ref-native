@@ -14,10 +14,10 @@ import { addToFavorite, removeFromFavorite } from "@/redux/favoriteSlice";
 import { RootState } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
-import { useLocalSearchParams, useNavigation } from "expo-router";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Dimensions, Pressable, StyleSheet, TouchableOpacity } from "react-native";
+import { BackHandler, Dimensions, Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import Animated, {
     interpolate,
     useAnimatedRef,
@@ -27,9 +27,8 @@ import Animated, {
 import { StarRatingDisplay } from "react-native-star-rating-widget";
 import { useDispatch, useSelector } from "react-redux";
 
-import { ChatBot } from "at-chatbot-native";
 import { setResponse } from "@/redux/apiSlice";
-// import ChatBot from "@/components/chatbot/ChatBot";
+import { ChatBot } from "at-chatbot-native";
 
 interface TabProps {
     courseId: string;
@@ -127,7 +126,7 @@ export default function SchoolDetails() {
     const { post, del } = useAxios();
     const { requestFn } = useApiRequest();
     const dispatch = useDispatch();
-    // const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const effect = useIsomorphicLayoutEffect();
 
     // chatbot
@@ -144,6 +143,18 @@ export default function SchoolDetails() {
     const [overallRatings, setRatings] = useState(0);
 
     useEffect(() => {
+        const backAction = () => {
+            dispatch(setResponse({ storeName: "individualSchool", data: null }));
+            router.back();
+            return true;
+        };
+
+        const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
+
+        return () => backHandler.remove();
+    }, []);
+
+    useEffect(() => {
         if (ratingsOfTheSchool?.docs) {
             let overallRatings = 0;
             ratingsOfTheSchool?.docs.forEach((rtng: any) => {
@@ -154,14 +165,15 @@ export default function SchoolDetails() {
     }, [ratingsOfTheSchool]);
 
     const schoolsResponse = school[0];
+    const rating = schoolsResponse?.averageRating;
 
     useEffect(() => {
-        requestFn(API_URL.schoolOverview, "individualSchool", { id: id });
-    }, []);
+        requestFn(API_URL.schoolOverview, "individualSchool", { client: id });
+    }, [id]);
 
     useEffect(() => {
         requestFn(API_URL.rating, "ratingsOfTheSchool", { client: id ? id : {} });
-    }, []);
+    }, [id]);
 
     const scrollRef = useAnimatedRef<Animated.ScrollView>();
     const navigation = useNavigation();
@@ -196,11 +208,11 @@ export default function SchoolDetails() {
         };
     });
 
-    const isCourseFavorited = (id: string) =>
+    const isSchoolFavorited = (id: string) =>
         favorite.clients.some((favClient: any) => favClient._id === id);
 
     const handleFavoriteClick = (id: string, type: string) => {
-        if (isCourseFavorited(id)) {
+        if (isSchoolFavorited(id)) {
             // Remove from favorites
             del(API_URL.favorite, { id, type })
                 .then((res: any) => {
@@ -271,9 +283,9 @@ export default function SchoolDetails() {
                         }}
                     >
                         <Ionicons
-                            name={isCourseFavorited(id) ? "heart" : "heart-outline"}
+                            name={isSchoolFavorited(id) ? "heart" : "heart-outline"}
                             size={24}
-                            color={isCourseFavorited(id) ? "red" : APP_THEME[theme].secondary.first}
+                            color={isSchoolFavorited(id) ? "red" : APP_THEME[theme].secondary.first}
                         />
                     </AUIThemedView>
                 </TouchableOpacity>
@@ -289,6 +301,7 @@ export default function SchoolDetails() {
         id,
         theme,
         navigation,
+        favorite,
         headerBackgroundAnimatedStyle,
         headerTitleAnimatedStyle,
     ]);
@@ -341,15 +354,14 @@ export default function SchoolDetails() {
             <Animated.ScrollView ref={scrollRef} scrollEventThrottle={16}>
                 <AUIThemedView style={styles.container}>
                     <Animated.Image
-                        source={
-                            schoolsResponse?.banner
-                                ? { uri: schoolsResponse.banner }
-                                : {
-                                      uri: Asset.fromModule(
-                                          require("@/assets/images/common/no_image.png")
-                                      ).uri,
-                                  }
-                        }
+                        source={{
+                            uri:
+                                schoolsResponse?.banner ||
+                                Asset.fromModule(require("@/assets/images/local/no_image.png"))
+                                    ?.uri ||
+                                Asset.fromModule(require("@/assets/images/local/no_image.png"))
+                                    ?.localUri,
+                        }}
                         style={[styles.image, imageAnimatedStyle]}
                         resizeMode="cover"
                     />
@@ -367,7 +379,9 @@ export default function SchoolDetails() {
                             <AUIThemedText style={styles.name}>
                                 {schoolsResponse?.name}
                             </AUIThemedText>
-                            <AUIThemedText style={styles.viewsText}>150 Views</AUIThemedText>
+                            <AUIThemedText style={styles.viewsText}>
+                                {school?.view} {t("views")}
+                            </AUIThemedText>
                         </AUIThemedView>
 
                         <AUIThemedView
@@ -380,8 +394,9 @@ export default function SchoolDetails() {
                         >
                             <StarRatingDisplay
                                 color={APP_THEME.light.primary.first}
-                                rating={overallRatings}
+                                rating={rating}
                             />
+                            <AUIThemedText>{schoolsResponse?.totalRatings}</AUIThemedText>
                         </AUIThemedView>
 
                         <AUIThemedView style={styles.contactsContainer}>

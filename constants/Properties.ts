@@ -174,7 +174,7 @@ export const DETAILS_FIELDS = {
         placeholder: "Select language",
     },
     country: {
-        label: "Looking for country",
+        label: "Country",
         type: "DROPDOWN",
         placeholder: "Select country",
     },

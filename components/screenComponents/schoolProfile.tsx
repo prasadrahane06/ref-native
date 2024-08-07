@@ -2,7 +2,6 @@ import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
 import { Feather, FontAwesome6, Fontisto, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { Asset } from "expo-asset";
 import { router, useNavigation } from "expo-router";
 import React from "react";
 import { Alert, Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
@@ -11,28 +10,31 @@ import AUIImage from "../common/AUIImage";
 import { AUIThemedText } from "../common/AUIThemedText";
 import { AUIThemedView } from "../common/AUIThemedView";
 import { ApiSuccessToast } from "../common/AUIToast";
+// import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 const array = [
     {
         id: 1,
         icon: <FontAwesome6 name="user-circle" size={24} color={APP_THEME.light.primary.first} />,
-        label: "School Profile",
+        label: "school_profile",
         pathname: "/schoolProfile",
     },
     {
         id: 2,
         icon: <Feather name="help-circle" size={24} color={APP_THEME.light.primary.first} />,
-        label: "Help",
+        label: "help",
         pathname: "/help",
     },
     {
         id: 3,
         icon: <Fontisto name="wallet" size={24} color={APP_THEME.light.primary.first} />,
-        label: "Transaction history",
+        label: "transaction_history",
         pathname: "/transactions",
     },
 ];
-function schoolProfile() {
+function SchoolProfile() {
+    const { t } = useTranslation();
     // const userProfileData = useLangTransformSelector(
     //     (state: RootState) => state.api.userProfileData
     // );
@@ -69,17 +71,7 @@ function schoolProfile() {
                     </Pressable>
                 </View>
                 <View style={styles.avatarContainer}>
-                    <AUIImage
-                        path={
-                            // Asset.fromModule(
-                            //     require("@/assets/images/user.png")
-                            //     // "https://linguest-assets-dev.s3.ap-south-1.amazonaws.com/1718884990288-6296.jpeg"
-                            // ).uri
-
-                            MySchoolDetails?.logo
-                        }
-                        style={styles.avatar}
-                    />
+                    <AUIImage path={MySchoolDetails?.logo} style={styles.avatar} />
                     <AUIThemedText style={styles.name}>{MySchoolDetails?.name}</AUIThemedText>
                     <AUIThemedText style={styles.email}>{MySchoolDetails?.email}</AUIThemedText>
                 </View>
@@ -94,7 +86,7 @@ function schoolProfile() {
                     >
                         <View style={styles.labelContainer}>
                             {item.icon}
-                            <AUIThemedText>{item.label}</AUIThemedText>
+                            <AUIThemedText>{t(item.label)}</AUIThemedText>
                         </View>
                         <MaterialIcons
                             name="keyboard-arrow-right"
@@ -105,18 +97,18 @@ function schoolProfile() {
                 ))}
 
                 {/* Delete Account */}
-                <TouchableOpacity
+                {/* <TouchableOpacity
                     style={styles.deleteLayout}
                     onPress={() => {
                         Alert.alert(
-                            "Delete Account",
-                            "Are you sure you want to delete your account? This action cannot be undone.",
+                           ` ${t("delete_account")}`,
+                           ` ${t("delete_sure")}`,
                             [
-                                { text: "Cancel" },
+                                { text: `${t("cancel")}` },
                                 {
-                                    text: "Confirm",
+                                    text: `${t("confirm")}`,
                                     onPress: () => {
-                                        ApiSuccessToast("Account deleted successfully");
+                                        ApiSuccessToast(`${t("account_deleted_successfully")}`);
                                         router.push({ pathname: "/login" });
                                     },
                                     style: "destructive",
@@ -128,16 +120,16 @@ function schoolProfile() {
                 >
                     <View style={styles.deleteContainer}>
                         <MaterialIcons name="delete" size={24} color="white" />
-                        <AUIThemedText style={{ color: "white" }}>Delete Account</AUIThemedText>
+                        <AUIThemedText style={{ color: "white" }}>{t("delete_account")}</AUIThemedText>
                     </View>
                     <MaterialIcons name="keyboard-arrow-right" size={24} color="white" />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
             </AUIThemedView>
         </AUIThemedView>
     );
 }
 
-export default schoolProfile;
+export default SchoolProfile;
 
 const styles = StyleSheet.create({
     root: {

@@ -23,4 +23,9 @@ export const API_URL = {
     schoolStudentSearch: "/school/studentSearch",
     schoolAnalytics: "/school/schoolAnylytics",
     search: "search",
+    language: "language",
+    deviceToken: "user/device-token",
+    notification: "notification",
+    changeContact: "auth/changeContact",
+    verifyChangeDetails: "auth/verifyChangeDetails",
 };

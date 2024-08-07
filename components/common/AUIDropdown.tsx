@@ -7,6 +7,9 @@ import { useSelector } from "react-redux";
 import AUIImage from "./AUIImage";
 import { AUIThemedText } from "./AUIThemedText";
 import { AUIThemedView } from "./AUIThemedView";
+// import { t } from "i18next";
+import { Image } from "expo-image";
+import { useTranslation } from "react-i18next";
 
 interface DropdownItem {
     label: string;
@@ -27,6 +30,7 @@ type Props = {
     renderLeftIcon?: any;
     labelStyles?: TextStyle;
     itemLabelStyle?: TextStyle;
+    isSearchable?: boolean;
 };
 
 const DropdownComponent = ({
@@ -44,10 +48,11 @@ const DropdownComponent = ({
     renderLeftIcon,
     labelStyles,
     itemLabelStyle,
+    isSearchable = true,
 }: Props) => {
+    const { t } = useTranslation();
     const [isFocus, setIsFocus] = useState(false);
     const theme = useSelector((state: RootState) => state.global.theme) as ThemeType;
-    // @ts-ignore
 
     return (
         <AUIThemedView style={style}>
@@ -69,20 +74,23 @@ const DropdownComponent = ({
                     { backgroundColor: BACKGROUND_THEME[theme].background },
                     isFocus && { borderColor: TEXT_THEME[theme].primary },
                 ]}
-                placeholderStyle={styles.placeholderStyle}
+                placeholderStyle={[styles.placeholderStyle, { color: TEXT_THEME[theme].primary }]}
                 selectedTextStyle={[styles.selectedTextStyle, { color: TEXT_THEME[theme].primary }]}
                 inputSearchStyle={[
                     styles.inputSearchStyle,
-                    { backgroundColor: BACKGROUND_THEME[theme].background },
+                    {
+                        backgroundColor: BACKGROUND_THEME[theme].background,
+                        color: TEXT_THEME[theme].primary,
+                    },
                 ]}
                 // itemTextStyle={{ borderWidth: 1, width: "100%" }}
                 iconStyle={styles.iconStyle}
                 data={list}
-                search
+                search={isSearchable}
                 maxHeight={300}
                 labelField={labelField || "label"}
                 valueField={valueField || "value"}
-                placeholder={!isFocus ? placeholder || "Select item" : "..."}
+                placeholder={!isFocus ? placeholder ||` ${t("select_item")}` : "..."}
                 searchPlaceholder="Search..."
                 value={value}
                 onFocus={() => setIsFocus(true)}
@@ -95,18 +103,19 @@ const DropdownComponent = ({
                 renderLeftIcon={
                     renderLeftIcon
                         ? () => (
-                              <AUIImage
-                                  icon
+                              <Image
                                   style={{
                                       borderRadius: 50,
                                       width: 30,
                                       height: 30,
                                       marginRight: 3,
                                   }}
-                                  path={
+                                  source={{
                                       // @ts-ignore
-                                      list.find((x: any) => x[valueField] === value)[iconField]
-                                  }
+                                      uri: list.find((x: any) => x[valueField] === value)[
+                                          iconField
+                                      ],
+                                  }}
                               />
                           )
                         : () => null
@@ -157,15 +166,14 @@ const RenderItemWithIcon = ({
             backgroundColor: BACKGROUND_THEME[theme].background,
         }}
     >
-        <AUIImage
-            icon
+        <Image
             style={{
                 borderRadius: 50,
                 width: 30,
                 height: 30,
                 marginRight: 3,
             }}
-            path={item[iconField]}
+            source={item[iconField]}
         />
         <AUIThemedText style={[itemLabelStyle]}>{item[labelField]}</AUIThemedText>
     </AUIThemedView>
@@ -194,7 +202,6 @@ const styles = StyleSheet.create({
     },
     placeholderStyle: {
         fontSize: 16,
-        color: "gray",
     },
     selectedTextStyle: {
         fontSize: 16,

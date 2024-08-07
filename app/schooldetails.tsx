@@ -102,9 +102,9 @@ export default function SchoolDetails() {
                     }).then(() => {
                         dispatch(setUser({ ...userData, ...res?.data }));
                         ApiSuccessToast(res.message);
-                        router.replace({
-                            pathname: `(home)/(school)`,
-                        });
+
+                        router.dismissAll();
+                        router.replace("/(home)/(school)");
                     });
                 }
             })
@@ -125,10 +125,10 @@ export default function SchoolDetails() {
         if (!result.canceled) {
             if (value === "logo") {
                 setValue(value, result.assets[0].base64);
-                setSelectedLogo(result.assets[0].uri);
+                setSelectedLogo(result.assets[0]?.uri);
             } else {
                 setValue(value, result.assets[0].base64);
-                setSelectedBanner(result.assets[0].uri);
+                setSelectedBanner(result.assets[0]?.uri);
             }
         } else {
             alert("You did not select any image.");
@@ -148,24 +148,24 @@ export default function SchoolDetails() {
                                 name="remark"
                                 control={control}
                                 render={({ field: { onChange, value }, fieldState: { error } }) => (
+                                    <AUIThemedView style={styles.fieldSpacing}>
+                                    <AUIInputField
+                                        value={value}
+                                        onChangeText={onChange}
+                                        placeholder="Enter your remark"
+                                        label="Remark"
+                                    />
                                     <AUIThemedView>
-                                        <AUIInputField
-                                            value={value}
-                                            onChangeText={onChange}
-                                            placeholder="Enter your remark"
-                                            label="Remark"
-                                        />
-                                        <AUIThemedView>
-                                            {error && (
-                                                <AUIThemedText
-                                                    style={styles.fieldError}
-                                                    type="subtitle"
-                                                >
-                                                    {error.message}
-                                                </AUIThemedText>
-                                            )}
-                                        </AUIThemedView>
+                                        {error && (
+                                            <AUIThemedText
+                                                style={styles.fieldError}
+                                                type="subtitle"
+                                            >
+                                                {error.message}
+                                            </AUIThemedText>
+                                        )}
                                     </AUIThemedView>
+                                </AUIThemedView>
                                 )}
                             />
 
@@ -173,7 +173,7 @@ export default function SchoolDetails() {
                                 name="website"
                                 control={control}
                                 render={({ field: { onChange, value }, fieldState: { error } }) => (
-                                    <AUIThemedView style={{ marginTop: 10 }}>
+                                    <AUIThemedView style={styles.fieldSpacing}>
                                         <AUIInputField
                                             value={value}
                                             onChangeText={onChange}
@@ -198,24 +198,24 @@ export default function SchoolDetails() {
                                 name="description"
                                 control={control}
                                 render={({ field: { onChange, value }, fieldState: { error } }) => (
+                                    <AUIThemedView style={styles.fieldSpacing}>
+                                    <AUIInputField
+                                        value={value}
+                                        onChangeText={onChange}
+                                        placeholder="Enter your description"
+                                        label="Description"
+                                    />
                                     <AUIThemedView>
-                                        <AUIInputField
-                                            value={value}
-                                            onChangeText={onChange}
-                                            placeholder="Enter your description"
-                                            label="Description"
-                                        />
-                                        <AUIThemedView>
-                                            {error && (
-                                                <AUIThemedText
-                                                    style={styles.fieldError}
-                                                    type="subtitle"
-                                                >
-                                                    {error.message}
-                                                </AUIThemedText>
-                                            )}
-                                        </AUIThemedView>
+                                        {error && (
+                                            <AUIThemedText
+                                                style={styles.fieldError}
+                                                type="subtitle"
+                                            >
+                                                {error.message}
+                                            </AUIThemedText>
+                                        )}
                                     </AUIThemedView>
+                                </AUIThemedView>
                                 )}
                             />
 
@@ -223,34 +223,30 @@ export default function SchoolDetails() {
                                 name="location"
                                 control={control}
                                 render={({ field: { onChange, value }, fieldState: { error } }) => (
-                                    <AUIThemedView
-                                        style={{
-                                            paddingBottom: 20,
-                                        }}
-                                    >
-                                        <DropdownComponent
-                                            list={locationData}
-                                            value={value}
-                                            setValue={({ _id }: { _id: string }) => onChange(_id)}
-                                            label="Select your location"
-                                            labelField="location"
-                                            valueField="_id"
-                                            placeholder="Select your location"
-                                            position="top"
-                                            listWithIcon
-                                        />
+                                    <AUIThemedView style={styles.fieldSpacing}>
+                                    <DropdownComponent
+                                        list={locationData}
+                                        value={value}
+                                        setValue={({ _id }: { _id: string }) => onChange(_id)}
+                                        label="Select your location"
+                                        labelField="location"
+                                        valueField="_id"
+                                        placeholder="Select your location"
+                                        position="top"
+                                        listWithIcon
+                                    />
 
-                                        <AUIThemedView>
-                                            {error && (
-                                                <AUIThemedText
-                                                    style={styles.fieldError}
-                                                    type="subtitle"
-                                                >
-                                                    {error.message}
-                                                </AUIThemedText>
-                                            )}
-                                        </AUIThemedView>
+                                    <AUIThemedView>
+                                        {error && (
+                                            <AUIThemedText
+                                                style={styles.fieldError}
+                                                type="subtitle"
+                                            >
+                                                {error.message}
+                                            </AUIThemedText>
+                                        )}
                                     </AUIThemedView>
+                                </AUIThemedView>
                                 )}
                             />
 
@@ -258,24 +254,24 @@ export default function SchoolDetails() {
                                 name="logo"
                                 control={control}
                                 render={({ field: { onChange, value }, fieldState: { error } }) => (
-                                    <AUIThemedView>
-                                        <AUIThemedText style={inputFieldStyle.label}>
-                                            Pick your school logo
-                                        </AUIThemedText>
+                                    <AUIThemedView style={styles.fieldSpacing}>
+                                    <AUIThemedText style={inputFieldStyle.label}>
+                                        Pick your school logo
+                                    </AUIThemedText>
 
-                                        <AUIThemedView>
-                                            {error && (
-                                                <AUIThemedText
-                                                    style={{
-                                                        color: "red",
-                                                        fontSize: 12,
-                                                    }}
-                                                    type="subtitle"
-                                                >
-                                                    {error.message}
-                                                </AUIThemedText>
-                                            )}
-                                        </AUIThemedView>
+                                    <AUIThemedView>
+                                        {error && (
+                                            <AUIThemedText
+                                                style={{
+                                                    color: "red",
+                                                    fontSize: 12,
+                                                }}
+                                                type="subtitle"
+                                            >
+                                                {error.message}
+                                            </AUIThemedText>
+                                        )}
+                                    </AUIThemedView>
 
                                         <AUIThemedView style={styles.imageContainer}>
                                             <ImageViewer
@@ -298,32 +294,30 @@ export default function SchoolDetails() {
                                 name="banner"
                                 control={control}
                                 render={({ field: { onChange, value }, fieldState: { error } }) => (
+                                    <AUIThemedView style={styles.fieldSpacing}>
+                                    <AUIThemedText style={inputFieldStyle.label}>
+                                        School Banner
+                                    </AUIThemedText>
                                     <AUIThemedView>
-                                        <AUIThemedText style={inputFieldStyle.label}>
-                                            School Banner
-                                        </AUIThemedText>
-                                        <AUIThemedView>
-                                            {error && (
-                                                <AUIThemedText
-                                                    style={{
-                                                        color: "red",
-                                                        fontSize: 12,
-                                                    }}
-                                                    type="subtitle"
-                                                >
-                                                    {error.message}
-                                                </AUIThemedText>
-                                            )}
-                                        </AUIThemedView>
+                                        {error && (
+                                            <AUIThemedText
+                                                style={{
+                                                    color: "red",
+                                                    fontSize: 12,
+                                                }}
+                                                type="subtitle"
+                                            >
+                                                {error.message}
+                                            </AUIThemedText>
+                                        )}
+                                    </AUIThemedView>
 
                                         <AUIThemedView style={styles.imageContainer}>
                                             <ImageViewer
                                                 selectedImage={selectedBanner}
-                                                placeholderImageSource={
-                                                    Asset.fromModule(
-                                                        require("@/assets/images/favicon.png")
-                                                    ).uri
-                                                }
+                                                placeholderImageSource={Asset.fromModule(
+                                                    require("@/assets/images/favicon.png")
+                                                )}
                                                 style={{ width: 350, height: 200 }}
                                             />
                                         </AUIThemedView>
@@ -358,6 +352,9 @@ export default function SchoolDetails() {
 }
 
 const styles = StyleSheet.create({
+    fieldSpacing: {
+        marginBottom: 10,
+    },
     imageContainer: {
         justifyContent: "center",
         alignItems: "center",

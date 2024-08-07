@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import AUIImage from "./AUIImage";
 import AUILangToggle from "./AUILangToggle";
 import { AUIThemedView } from "./AUIThemedView";
+import Profile from "@/app/profile";
 import schoolProfile from "../screenComponents/schoolProfile";
 
 //interface
@@ -42,12 +43,15 @@ const AUIDrawerContent = (props: any) => {
     const { t } = useTranslation();
 
     const globalState = useLangTransformSelector((state: RootState) => state.global);
+    const profile = useLangTransformSelector((state: RootState) => state.global.profile);
     const theme = useSelector((state: RootState) => state.global.theme);
     const isDarkMode = useLangTransformSelector(
         (state: RootState) => state.global.theme === "dark"
     );
     const data = useLangTransformSelector((state: RootState) => state.global.user);
-    const name = data?.name || "";
+    const name = data?.name;
+    const gender = data?.gender;
+    const type = data?.type;
 
     const isRTL = globalState.isRTL;
 
@@ -58,11 +62,13 @@ const AUIDrawerContent = (props: any) => {
         await storeUserData("@theme", { darkMode: newDarkModeState });
     };
 
-
     const onLogout = () => {
         clearAllData();
-        router.push({ pathname: "/" });
+        router.replace({ pathname: "/" });
     };
+
+    
+    
     return (
         <AUIThemedView style={{ flex: 1 }}>
             <DrawerContentScrollView
@@ -76,16 +82,29 @@ const AUIDrawerContent = (props: any) => {
                     <View
                         style={[styles.avatarContainer, isRTL && { flexDirection: "row-reverse" }]}
                     >
-                        <AUIImage
-                            path={
-                                Asset.fromModule(
-                                    require("@/assets/images/user.png")
+                        {type === "student" ? (
+                            gender === "Male" ? (
+                                <AUIImage
+                                    path={Asset.fromModule(
+                                        require("@/assets/images/local/user.png")
+                                    )}
+                                    style={styles.avatar}
+                                />
+                            ) : (
+                                <AUIImage
+                                    path={Asset.fromModule(
+                                        require("@/assets/images/local/female.png")
+                                    )}
+                                    style={styles.avatar}
+                                />
+                            )
+                        ) : (
+                            <AUIImage
+                                path={Asset.fromModule(require("@/assets/images/local/sclogo.png"))}
+                                style={styles.avatar}
+                            />
+                        )}
 
-                                    // "https://linguest-assets-dev.s3.ap-south-1.amazonaws.com/1718884990288-6296.jpeg"
-                                ).uri
-                            }
-                            style={styles.avatar}
-                        />
                         <View style={styles.nameContainer}>
                             <AUIThemedText
                                 style={[styles.name, { color: APP_THEME[theme].primary.first }]}
@@ -99,7 +118,6 @@ const AUIDrawerContent = (props: any) => {
                         </View>
                     </View>
                 </AUIThemedView>
-                {/* </AUIBackgroundImage> */}
                 <View
                     style={{
                         flex: 1,
@@ -130,7 +148,6 @@ const AUIDrawerContent = (props: any) => {
                         style={{
                             fontSize: 15,
                             marginLeft: 5,
-                            fontFamily: "GilroyMedium",
                         }}
                     >
                         {t(GLOBAL_TRANSLATION_LABEL.darkMode)}
@@ -143,9 +160,11 @@ const AUIDrawerContent = (props: any) => {
                     borderTopColor: "#ccc",
                 }}
             >
-                <AUIThemedView style={styles.switchTextContainer}>
-                    <AUILangToggle />
-                </AUIThemedView>
+                {type === "student" && (
+                    <AUIThemedView style={styles.switchTextContainer}>
+                        <AUILangToggle />
+                    </AUIThemedView>
+                )}
             </View>
             <View style={{ padding: 20, borderTopWidth: 1, borderTopColor: "#ccc" }}>
                 <TouchableOpacity
@@ -210,6 +229,7 @@ const styles = StyleSheet.create({
     },
     welcome: {
         fontSize: 15,
+        fontWeight: "bold",
         // color: APP_THEME.gray,
     },
     menuItemContainer: {

@@ -1,20 +1,27 @@
 import AUIAccordion from "@/components/common/AUIAccordion";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { APP_THEME } from "@/constants/Colors";
+import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { RootState } from "@/redux/store";
+// import { t } from "i18next";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
 
 export default function CourseDetailsComponent({ plan }: any) {
+    const { t } = useTranslation();
     const theme = useSelector((state: RootState) => state.global.theme);
 
     return (
         <AUIThemedView style={styles.container}>
             <AUIThemedView style={styles.accordionSection}>
                 {plan.courseDetails.map((courseDetail: any) => (
-                    <AUIAccordion key={courseDetail._id} title={courseDetail.title}>
+                    <AUIAccordion
+                        key={courseDetail._id}
+                        title={courseDetail.title}
+                        style={{ borderColor: TEXT_THEME[theme].primary }}
+                    >
                         <AUIThemedView>
                             <AUIThemedView style={styles.row}>
                                 <AUIThemedView style={styles.rowContainer}>
@@ -29,9 +36,9 @@ export default function CourseDetailsComponent({ plan }: any) {
             </AUIThemedView>
 
             <AUIThemedView style={styles.detailsContainer2}>
-                <AUIThemedText style={styles.courseDetailsText}>Course Fees</AUIThemedText>
+                <AUIThemedText style={styles.courseDetailsText}>{t("course_fees")}</AUIThemedText>
                 <AUIThemedView style={styles.detailsHeader}>
-                    <AUIThemedText style={styles.courseLabel}>Total Fee</AUIThemedText>
+                    <AUIThemedText style={styles.courseLabel}>{t("total_fee")}</AUIThemedText>
                     <AUIThemedText
                         style={[styles.primaryText, { color: APP_THEME[theme].primary.first }]}
                     >
@@ -40,7 +47,7 @@ export default function CourseDetailsComponent({ plan }: any) {
                 </AUIThemedView>
 
                 <AUIThemedView style={styles.detailsHeader}>
-                    <AUIThemedText style={styles.courseLabel}>Book your seat</AUIThemedText>
+                    <AUIThemedText style={styles.courseLabel}>{t("book_your_seat")}</AUIThemedText>
                     <AUIThemedText
                         style={[styles.primaryText, { color: APP_THEME[theme].primary.first }]}
                     >
@@ -48,7 +55,7 @@ export default function CourseDetailsComponent({ plan }: any) {
                     </AUIThemedText>
                 </AUIThemedView>
                 <AUIThemedView style={styles.detailsHeader}>
-                    <AUIThemedText style={styles.courseLabel}>Duration</AUIThemedText>
+                    <AUIThemedText style={styles.courseLabel}>{t("duration")}</AUIThemedText>
                     <AUIThemedText
                         style={[styles.primaryText, { color: APP_THEME[theme].primary.first }]}
                     >

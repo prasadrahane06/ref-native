@@ -10,15 +10,14 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 
 export default function TabThreeScreen(props: any) {
     const { t } = useTranslation();
+
     return (
         <AUIThemedView style={styles.container}>
             <AUIThemedText style={styles.title}>{t("compare_schools")}</AUIThemedText>
             <AUIImage
                 style={styles.image}
-                path={
-                    Asset.fromModule(require("@/assets/images/compareScreen/group_36754.png")).uri
-                }
-                resizeMode="contain"
+                path={Asset.fromModule(require("@/assets/images/local/group_36754.png"))}
+                contentFit="contain"
             />
             <AUIThemedText style={styles.description}>{t("compare_description")}</AUIThemedText>
             <AUIThemedView style={styles.cardContainer}>
@@ -26,7 +25,7 @@ export default function TabThreeScreen(props: any) {
                     style={styles.card}
                     onPress={() =>
                         router.push({
-                            pathname: `(home)/compare/searchSchool`,
+                            pathname: `/(home)/compare/searchSchool`,
                             params: { compareSlot: "compareSchool1" },
                         })
                     }
@@ -38,7 +37,7 @@ export default function TabThreeScreen(props: any) {
                     style={styles.card}
                     onPress={() =>
                         router.push({
-                            pathname: `(home)/compare/searchSchool`,
+                            pathname: `/(home)/compare/searchSchool`,
                             params: { compareSlot: "compareSchool2" },
                         })
                     }

@@ -11,6 +11,7 @@ export const countriesData = [
         dialling_code: "+1",
         isoCode: "840",
         uniqueId: "united_states_of_america_548352",
+        flag: "https://flagcdn.com/w320/us.png",
     },
     {
         name: "United Kingdom of Great Britain and Northern Ireland",
@@ -22,6 +23,7 @@ export const countriesData = [
         dialling_code: "+44",
         isoCode: "826",
         uniqueId: "united_kingdom_of_great_britain_and_northern_ireland_785299",
+        flag: "https://flagcdn.com/w320/gb.png",
     },
     {
         name: "Saudi Arabia",
@@ -33,6 +35,7 @@ export const countriesData = [
         dialling_code: "+966",
         isoCode: "682",
         uniqueId: "saudi_arabia_944587",
+        flag: "https://flagcdn.com/w320/sa.png",
     },
     {
         name: "Iran (Islamic Republic of)",
@@ -44,6 +47,7 @@ export const countriesData = [
         dialling_code: "+98",
         isoCode: "364",
         uniqueId: "iran_(islamic_republic_of)_229980",
+        flag: "https://flagcdn.com/w320/ir.png",
     },
     {
         name: "Turkey",
@@ -55,6 +59,7 @@ export const countriesData = [
         dialling_code: "+90",
         isoCode: "792",
         uniqueId: "turkey_706610",
+        flag: "https://flagcdn.com/w320/tr.png",
     },
     {
         name: "Afghanistan",
@@ -66,6 +71,7 @@ export const countriesData = [
         dialling_code: "+93",
         isoCode: "004",
         uniqueId: "afghanistan_35779",
+        flag: "https://flagcdn.com/w320/af.png",
     },
     {
         name: "Albania",
@@ -77,6 +83,7 @@ export const countriesData = [
         dialling_code: "+355",
         isoCode: "008",
         uniqueId: "albania_339069",
+        flag: "https://flagcdn.com/w320/al.png",
     },
     {
         name: "Algeria",
@@ -88,6 +95,7 @@ export const countriesData = [
         dialling_code: "+213",
         isoCode: "012",
         uniqueId: "algeria_926734",
+        flag: "https://flagcdn.com/w320/dz.png",
     },
     {
         name: "American Samoa",
@@ -99,6 +107,7 @@ export const countriesData = [
         dialling_code: "+1",
         isoCode: "016",
         uniqueId: "american_samoa_685391",
+        flag: "https://flagcdn.com/w320/as.png",
     },
     {
         name: "Andorra",
@@ -110,6 +119,7 @@ export const countriesData = [
         dialling_code: "+376",
         isoCode: "020",
         uniqueId: "andorra_235109",
+        flag: "https://flagcdn.com/w320/ad.png",
     },
     {
         name: "Angola",
@@ -121,6 +131,7 @@ export const countriesData = [
         dialling_code: "+244",
         isoCode: "024",
         uniqueId: "angola_289902",
+        flag: "https://flagcdn.com/w320/ao.png",
     },
     {
         name: "Anguilla",
@@ -132,6 +143,7 @@ export const countriesData = [
         dialling_code: "+43",
         isoCode: "660",
         uniqueId: "anguilla_474918",
+        flag: "https://flagcdn.com/w320/ai.png",
     },
     {
         name: "Antigua and Barbuda",
@@ -143,6 +155,7 @@ export const countriesData = [
         dialling_code: "+1",
         isoCode: "028",
         uniqueId: "antigua_and_barbuda_406088",
+        flag: "https://flagcdn.com/w320/ag.png",
     },
     {
         name: "Argentina",
@@ -154,6 +167,7 @@ export const countriesData = [
         dialling_code: "+54",
         isoCode: "032",
         uniqueId: "argentina_509654",
+        flag: "https://flagcdn.com/w320/ar.png",
     },
     {
         name: "Armenia",
@@ -165,6 +179,7 @@ export const countriesData = [
         dialling_code: "+374",
         isoCode: "051",
         uniqueId: "armenia_379990",
+        flag: "https://flagcdn.com/w320/am.png",
     },
     {
         name: "Aruba",
@@ -176,6 +191,7 @@ export const countriesData = [
         dialling_code: "+297",
         isoCode: "533",
         uniqueId: "aruba_275550",
+        flag: "https://flagcdn.com/w320/aw.png",
     },
     {
         name: "Australia",
@@ -187,6 +203,7 @@ export const countriesData = [
         dialling_code: "+61",
         isoCode: "036",
         uniqueId: "australia_708459",
+        flag: "https://flagcdn.com/w320/au.png",
     },
     {
         name: "Azerbaijan",
@@ -198,6 +215,7 @@ export const countriesData = [
         dialling_code: "+994",
         isoCode: "031",
         uniqueId: "azerbaijan_224911",
+        flag: "https://flagcdn.com/w320/az.png",
     },
     {
         name: "Bahamas",
@@ -209,6 +227,7 @@ export const countriesData = [
         dialling_code: "+1",
         isoCode: "044",
         uniqueId: "bahamas_965186",
+        flag: "https://flagcdn.com/w320/bs.png",
     },
     {
         name: "Bahrain",
@@ -220,6 +239,7 @@ export const countriesData = [
         dialling_code: "+973",
         isoCode: "048",
         uniqueId: "bahrain_516600",
+        flag: "https://flagcdn.com/w320/bh.png",
     },
     {
         name: "Bangladesh",
@@ -231,6 +251,7 @@ export const countriesData = [
         dialling_code: "+880",
         isoCode: "050",
         uniqueId: "bangladesh_754600",
+        flag: "https://flagcdn.com/w320/bd.png",
     },
     {
         name: "Barbados",
@@ -242,6 +263,7 @@ export const countriesData = [
         dialling_code: "+1",
         isoCode: "052",
         uniqueId: "barbados_30199",
+        flag: "https://flagcdn.com/w320/bb.png",
     },
     {
         name: "Belarus",
@@ -253,6 +275,7 @@ export const countriesData = [
         dialling_code: "+375",
         isoCode: "112",
         uniqueId: "belarus_944850",
+        flag: "https://flagcdn.com/w320/by.png",
     },
     {
         name: "Belgium",
@@ -264,6 +287,7 @@ export const countriesData = [
         dialling_code: "+32",
         isoCode: "056",
         uniqueId: "belgium_621180",
+        flag: "https://flagcdn.com/w320/be.png",
     },
     {
         name: "Belize",
@@ -275,6 +299,7 @@ export const countriesData = [
         dialling_code: "+501",
         isoCode: "084",
         uniqueId: "belize_191065",
+        flag: "https://flagcdn.com/w320/bz.png",
     },
     {
         name: "Benin",
@@ -286,6 +311,7 @@ export const countriesData = [
         dialling_code: "+229",
         isoCode: "204",
         uniqueId: "benin_280690",
+        flag: "https://flagcdn.com/w320/bj.png",
     },
     {
         name: "Bermuda",
@@ -297,6 +323,7 @@ export const countriesData = [
         dialling_code: "+1",
         isoCode: "060",
         uniqueId: "bermuda_425091",
+        flag: "https://flagcdn.com/w320/bm.png",
     },
     {
         name: "Bhutan",
@@ -308,6 +335,7 @@ export const countriesData = [
         dialling_code: "+975",
         isoCode: "064",
         uniqueId: "bhutan_84314",
+        flag: "https://flagcdn.com/w320/bt.png",
     },
     {
         name: "Bolivia (Plurinational State of)",
@@ -319,6 +347,7 @@ export const countriesData = [
         dialling_code: "+591",
         isoCode: "068",
         uniqueId: "bolivia_(plurinational_state_of)_153440",
+        flag: "https://flagcdn.com/w320/bo.png",
     },
     {
         name: "Bosnia and Herzegovina",
@@ -330,6 +359,7 @@ export const countriesData = [
         dialling_code: "+387",
         isoCode: "070",
         uniqueId: "bosnia_and_herzegovina_595614",
+        flag: "https://flagcdn.com/w320/ba.png",
     },
     {
         name: "Botswana",
@@ -341,6 +371,7 @@ export const countriesData = [
         dialling_code: "+267",
         isoCode: "072",
         uniqueId: "botswana_1931",
+        flag: "https://flagcdn.com/w320/bw.png",
     },
     {
         name: "Brazil",
@@ -352,6 +383,7 @@ export const countriesData = [
         dialling_code: "+55",
         isoCode: "076",
         uniqueId: "brazil_751798",
+        flag: "https://flagcdn.com/w320/br.png",
     },
     {
         name: "British Indian Ocean Territory",
@@ -363,6 +395,7 @@ export const countriesData = [
         dialling_code: "+246",
         isoCode: "086",
         uniqueId: "british_indian_ocean_territory_575684",
+        flag: "https://flagcdn.com/w320/io.png",
     },
     {
         name: "Virgin Islands (British)",
@@ -374,6 +407,7 @@ export const countriesData = [
         dialling_code: "+1",
         isoCode: "092",
         uniqueId: "virgin_islands_(british)_526323",
+        flag: "https://flagcdn.com/w320/vg.png",
     },
     {
         name: "Virgin Islands (U.S.)",
@@ -385,6 +419,7 @@ export const countriesData = [
         dialling_code: "+1",
         isoCode: "850",
         uniqueId: "virgin_islands_(u.s.)_367225",
+        flag: "https://flagcdn.com/w320/vi.png",
     },
     {
         name: "Brunei Darussalam",
@@ -396,6 +431,7 @@ export const countriesData = [
         dialling_code: "+673",
         isoCode: "096",
         uniqueId: "brunei_darussalam_351536",
+        flag: "https://flagcdn.com/w320/bn.png",
     },
     {
         name: "Bulgaria",
@@ -407,6 +443,7 @@ export const countriesData = [
         dialling_code: "+359",
         isoCode: "100",
         uniqueId: "bulgaria_488242",
+        flag: "https://flagcdn.com/w320/bg.png",
     },
     {
         name: "Burkina Faso",
@@ -418,6 +455,7 @@ export const countriesData = [
         dialling_code: "+226",
         isoCode: "854",
         uniqueId: "burkina_faso_392878",
+        flag: "https://flagcdn.com/w320/bf.png",
     },
     {
         name: "Burundi",
@@ -429,6 +467,7 @@ export const countriesData = [
         dialling_code: "+257",
         isoCode: "108",
         uniqueId: "burundi_256027",
+        flag: "https://flagcdn.com/w320/bi.png",
     },
     {
         name: "Cambodia",
@@ -440,6 +479,7 @@ export const countriesData = [
         dialling_code: "+855",
         isoCode: "116",
         uniqueId: "cambodia_258787",
+        flag: "https://flagcdn.com/w320/kh.png",
     },
     {
         name: "Cameroon",
@@ -451,6 +491,7 @@ export const countriesData = [
         dialling_code: "+237",
         isoCode: "120",
         uniqueId: "cameroon_867995",
+        flag: "https://flagcdn.com/w320/cm.png",
     },
     {
         name: "Canada",
@@ -462,6 +503,7 @@ export const countriesData = [
         dialling_code: "+1",
         isoCode: "124",
         uniqueId: "canada_993603",
+        flag: "https://flagcdn.com/w320/ca.png",
     },
     {
         name: "Cabo Verde",
@@ -475,6 +517,7 @@ export const countriesData = [
         dialling_code: "+238",
         isoCode: "132",
         uniqueId: "cabo_verde_960329",
+        flag: "https://flagcdn.com/w320/cv.png",
     },
     {
         name: "Cayman Islands",
@@ -487,6 +530,7 @@ export const countriesData = [
         dialling_code: "+1",
         isoCode: "136",
         uniqueId: "cayman_islands_312454",
+        flag: "https://flagcdn.com/w320/ky.png",
     },
     {
         name: "Central African Republic",
@@ -498,6 +542,7 @@ export const countriesData = [
         dialling_code: "+236",
         isoCode: "140",
         uniqueId: "central_african_republic_729129",
+        flag: "https://flagcdn.com/w320/cf.png",
     },
     {
         name: "Central African Republic",
@@ -509,6 +554,7 @@ export const countriesData = [
         dialling_code: "+236",
         isoCode: "140",
         uniqueId: "central_african_republic_945384",
+        flag: "https://flagcdn.com/w320/cf.png",
     },
     {
         name: "Chile",
@@ -522,6 +568,7 @@ export const countriesData = [
         dialling_code: "+56",
         isoCode: "152",
         uniqueId: "chile_653245",
+        flag: "https://flagcdn.com/w320/cl.png",
     },
     {
         name: "China",
@@ -533,6 +580,7 @@ export const countriesData = [
         dialling_code: "+86",
         isoCode: "156",
         uniqueId: "china_93074",
+        flag: "https://flagcdn.com/w320/cn.png",
     },
     {
         name: "Colombia",
@@ -544,6 +592,7 @@ export const countriesData = [
         dialling_code: "+57",
         isoCode: "170",
         uniqueId: "colombia_806813",
+        flag: "https://flagcdn.com/w320/co.png",
     },
     {
         name: "Comoros",
@@ -555,6 +604,7 @@ export const countriesData = [
         dialling_code: "+269",
         isoCode: "174",
         uniqueId: "comoros_629062",
+        flag: "https://flagcdn.com/w320/km.png",
     },
     {
         name: "Congo",
@@ -566,6 +616,7 @@ export const countriesData = [
         dialling_code: "+242",
         isoCode: "178",
         uniqueId: "congo_772287",
+        flag: "https://flagcdn.com/w320/cg.png",
     },
     {
         name: "Congo (Democratic Republic of the)",
@@ -577,6 +628,7 @@ export const countriesData = [
         dialling_code: "+243",
         isoCode: "180",
         uniqueId: "congo_(democratic_republic_of_the)_744464",
+        flag: "https://flagcdn.com/w320/cd.png",
     },
     {
         name: "Cook Islands",
@@ -588,6 +640,7 @@ export const countriesData = [
         dialling_code: "+682",
         isoCode: "184",
         uniqueId: "cook_islands_129953",
+        flag: "https://flagcdn.com/w320/ck.png",
     },
     {
         name: "Costa Rica",
@@ -599,6 +652,7 @@ export const countriesData = [
         dialling_code: "+506",
         isoCode: "188",
         uniqueId: "costa_rica_290773",
+        flag: "https://flagcdn.com/w320/cr.png",
     },
     {
         name: "Croatia",
@@ -610,6 +664,7 @@ export const countriesData = [
         dialling_code: "+385",
         isoCode: "191",
         uniqueId: "croatia_990",
+        flag: "https://flagcdn.com/w320/hr.png",
     },
     {
         name: "Cuba",
@@ -621,6 +676,7 @@ export const countriesData = [
         dialling_code: "+53",
         isoCode: "192",
         uniqueId: "cuba_39840",
+        flag: "https://flagcdn.com/w320/cu.png",
     },
     {
         name: "Cuba",
@@ -632,6 +688,7 @@ export const countriesData = [
         dialling_code: "+53",
         isoCode: "192",
         uniqueId: "cuba_45460",
+        flag: "https://flagcdn.com/w320/cu.png",
     },
     {
         name: "Cyprus",
@@ -643,6 +700,7 @@ export const countriesData = [
         dialling_code: "+357",
         isoCode: "196",
         uniqueId: "cyprus_950385",
+        flag: "https://flagcdn.com/w320/cy.png",
     },
     {
         name: "Czech Republic",
@@ -654,6 +712,7 @@ export const countriesData = [
         dialling_code: "+420",
         isoCode: "203",
         uniqueId: "czech_republic_740420",
+        flag: "https://flagcdn.com/w320/cz.png",
     },
     {
         name: "Denmark",
@@ -665,6 +724,7 @@ export const countriesData = [
         dialling_code: "+45",
         isoCode: "208",
         uniqueId: "denmark_718583",
+        flag: "https://flagcdn.com/w320/dk.png",
     },
     {
         name: "Djibouti",
@@ -676,6 +736,7 @@ export const countriesData = [
         dialling_code: "+253",
         isoCode: "262",
         uniqueId: "djibouti_11297",
+        flag: "https://flagcdn.com/w320/dj.png",
     },
     {
         name: "Dominica",
@@ -687,6 +748,7 @@ export const countriesData = [
         dialling_code: "+1",
         isoCode: "212",
         uniqueId: "dominica_347584",
+        flag: "https://flagcdn.com/w320/dm.png",
     },
     {
         name: "Dominican Republic",
@@ -698,6 +760,7 @@ export const countriesData = [
         dialling_code: "+1",
         isoCode: "214",
         uniqueId: "dominican_republic_514604",
+        flag: "https://flagcdn.com/w320/do.png",
     },
     {
         name: "Ecuador",
@@ -709,6 +772,7 @@ export const countriesData = [
         dialling_code: "+593",
         isoCode: "218",
         uniqueId: "ecuador_69154",
+        flag: "https://flagcdn.com/w320/ec.png",
     },
     {
         name: "Egypt",
@@ -720,6 +784,7 @@ export const countriesData = [
         dialling_code: "+20",
         isoCode: "818",
         uniqueId: "egypt_727886",
+        flag: "https://flagcdn.com/w320/eg.png",
     },
     {
         name: "El Salvador",
@@ -731,6 +796,7 @@ export const countriesData = [
         dialling_code: "+503",
         isoCode: "222",
         uniqueId: "el_salvador_88260",
+        flag: "https://flagcdn.com/w320/sv.png",
     },
     {
         name: "Equatorial Guinea",
@@ -744,6 +810,7 @@ export const countriesData = [
         dialling_code: "+240",
         isoCode: "226",
         uniqueId: "equatorial_guinea_637996",
+        flag: "https://flagcdn.com/w320/gq.png",
     },
     {
         name: "Eritrea",
@@ -755,6 +822,7 @@ export const countriesData = [
         dialling_code: "+291",
         isoCode: "232",
         uniqueId: "eritrea_261492",
+        flag: "https://flagcdn.com/w320/er.png",
     },
     {
         name: "Estonia",
@@ -766,6 +834,7 @@ export const countriesData = [
         dialling_code: "+372",
         isoCode: "233",
         uniqueId: "estonia_94330",
+        flag: "https://flagcdn.com/w320/ee.png",
     },
     {
         name: "Ethiopia",
@@ -777,6 +846,7 @@ export const countriesData = [
         dialling_code: "+251",
         isoCode: "231",
         uniqueId: "ethiopia_972726",
+        flag: "https://flagcdn.com/w320/et.png",
     },
     {
         name: "Falkland Islands (Malvinas)",
@@ -788,6 +858,7 @@ export const countriesData = [
         dialling_code: "+500",
         isoCode: "238",
         uniqueId: "falkland_islands_(malvinas)_418707",
+        flag: "https://flagcdn.com/w320/fk.png",
     },
     {
         name: "Faroe Islands",
@@ -799,6 +870,7 @@ export const countriesData = [
         dialling_code: "+298",
         isoCode: "234",
         uniqueId: "faroe_islands_855178",
+        flag: "https://flagcdn.com/w320/fo.png",
     },
     {
         name: "Fiji",
@@ -810,6 +882,7 @@ export const countriesData = [
         dialling_code: "+679",
         isoCode: "242",
         uniqueId: "fiji_678304",
+        flag: "https://flagcdn.com/w320/fj.png",
     },
     {
         name: "Finland",
@@ -823,6 +896,7 @@ export const countriesData = [
         dialling_code: "+358",
         isoCode: "246",
         uniqueId: "finland_671557",
+        flag: "https://flagcdn.com/w320/fi.png",
     },
     {
         name: "France",
@@ -835,6 +909,7 @@ export const countriesData = [
         dialling_code: "+33",
         isoCode: "250",
         uniqueId: "france_586539",
+        flag: "https://flagcdn.com/w320/fr.png",
     },
     {
         name: "French Guiana",
@@ -846,6 +921,7 @@ export const countriesData = [
         dialling_code: "+594",
         isoCode: "254",
         uniqueId: "french_guiana_239010",
+        flag: "https://flagcdn.com/w320/gf.png",
     },
     {
         name: "French Polynesia",
@@ -857,6 +933,7 @@ export const countriesData = [
         dialling_code: "+689",
         isoCode: "258",
         uniqueId: "french_polynesia_6249",
+        flag: "https://flagcdn.com/w320/pf.png",
     },
     {
         name: "Gabon",
@@ -868,6 +945,7 @@ export const countriesData = [
         dialling_code: "+241",
         isoCode: "266",
         uniqueId: "gabon_909859",
+        flag: "https://flagcdn.com/w320/ga.png",
     },
     {
         name: "Gambia",
@@ -879,6 +957,7 @@ export const countriesData = [
         dialling_code: "+220",
         isoCode: "270",
         uniqueId: "gambia_384575",
+        flag: "https://flagcdn.com/w320/gm.png",
     },
     {
         name: "Georgia",
@@ -890,6 +969,7 @@ export const countriesData = [
         dialling_code: "+995",
         isoCode: "268",
         uniqueId: "georgia_225916",
+        flag: "https://flagcdn.com/w320/ge.png",
     },
     {
         name: "Germany",
@@ -901,6 +981,7 @@ export const countriesData = [
         dialling_code: "+49",
         isoCode: "276",
         uniqueId: "germany_454793",
+        flag: "https://flagcdn.com/w320/de.png",
     },
     {
         name: "Ghana",
@@ -912,6 +993,7 @@ export const countriesData = [
         dialling_code: "+233",
         isoCode: "288",
         uniqueId: "ghana_768863",
+        flag: "https://flagcdn.com/w320/gh.png",
     },
     {
         name: "Gibraltar",
@@ -923,6 +1005,7 @@ export const countriesData = [
         dialling_code: "+350",
         isoCode: "292",
         uniqueId: "gibraltar_4658",
+        flag: "https://flagcdn.com/w320/gi.png",
     },
     {
         name: "Greece",
@@ -934,6 +1017,7 @@ export const countriesData = [
         dialling_code: "+30",
         isoCode: "300",
         uniqueId: "greece_153713",
+        flag: "https://flagcdn.com/w320/gr.png",
     },
     {
         name: "Greenland",
@@ -945,6 +1029,7 @@ export const countriesData = [
         dialling_code: "+299",
         isoCode: "304",
         uniqueId: "greenland_293348",
+        flag: "https://flagcdn.com/w320/gl.png",
     },
     {
         name: "Grenada",
@@ -956,6 +1041,7 @@ export const countriesData = [
         dialling_code: "+1",
         isoCode: "308",
         uniqueId: "grenada_430807",
+        flag: "https://flagcdn.com/w320/gd.png",
     },
     {
         name: "Guadeloupe",
@@ -967,6 +1053,7 @@ export const countriesData = [
         dialling_code: "+590",
         isoCode: "312",
         uniqueId: "guadeloupe_445322",
+        flag: "https://flagcdn.com/w320/gp.png",
     },
     {
         name: "Guam",
@@ -978,6 +1065,7 @@ export const countriesData = [
         dialling_code: "+1",
         isoCode: "316",
         uniqueId: "guam_313761",
+        flag: "https://flagcdn.com/w320/gu.png",
     },
     {
         name: "Guatemala",
@@ -989,6 +1077,7 @@ export const countriesData = [
         dialling_code: "+502",
         isoCode: "320",
         uniqueId: "guatemala_727814",
+        flag: "https://flagcdn.com/w320/gt.png",
     },
     {
         name: "Guinea",
@@ -1000,6 +1089,7 @@ export const countriesData = [
         dialling_code: "+224",
         isoCode: "324",
         uniqueId: "guinea_483739",
+        flag: "https://flagcdn.com/w320/gn.png",
     },
     {
         name: "Guinea-Bissau",
@@ -1011,6 +1101,7 @@ export const countriesData = [
         dialling_code: "+245",
         isoCode: "624",
         uniqueId: "guinea-bissau_945606",
+        flag: "https://flagcdn.com/w320/gw.png",
     },
     {
         name: "Guyana",
@@ -1022,6 +1113,7 @@ export const countriesData = [
         dialling_code: "+592",
         isoCode: "328",
         uniqueId: "guyana_944736",
+        flag: "https://flagcdn.com/w320/gy.png",
     },
     {
         name: "Haiti",
@@ -1033,6 +1125,7 @@ export const countriesData = [
         dialling_code: "+509",
         isoCode: "332",
         uniqueId: "haiti_193289",
+        flag: "https://flagcdn.com/w320/ht.png",
     },
     {
         name: "Holy See",
@@ -1044,6 +1137,7 @@ export const countriesData = [
         dialling_code: "+39",
         isoCode: "336",
         uniqueId: "holy_see_817494",
+        flag: "https://flagcdn.com/w320/va.png",
     },
     {
         name: "Honduras",
@@ -1055,6 +1149,7 @@ export const countriesData = [
         dialling_code: "+504",
         isoCode: "340",
         uniqueId: "honduras_933979",
+        flag: "https://flagcdn.com/w320/hn.png",
     },
     {
         name: "Hong Kong",
@@ -1066,6 +1161,7 @@ export const countriesData = [
         dialling_code: "+852",
         isoCode: "344",
         uniqueId: "hong_kong_811893",
+        flag: "https://flagcdn.com/w320/hk.png",
     },
     {
         name: "Hungary",
@@ -1077,6 +1173,7 @@ export const countriesData = [
         dialling_code: "+36",
         isoCode: "348",
         uniqueId: "hungary_447433",
+        flag: "https://flagcdn.com/w320/hu.png",
     },
     {
         name: "Iceland",
@@ -1088,6 +1185,7 @@ export const countriesData = [
         dialling_code: "+354",
         isoCode: "352",
         uniqueId: "iceland_278040",
+        flag: "https://flagcdn.com/w320/is.png",
     },
     {
         name: "India",
@@ -1099,6 +1197,7 @@ export const countriesData = [
         dialling_code: "+91",
         isoCode: "356",
         uniqueId: "india_272876",
+        flag: "https://flagcdn.com/w320/in.png",
     },
     {
         name: "Indonesia",
@@ -1110,6 +1209,7 @@ export const countriesData = [
         dialling_code: "+62",
         isoCode: "360",
         uniqueId: "indonesia_680936",
+        flag: "https://flagcdn.com/w320/id.png",
     },
     {
         name: "Côte d'Ivoire",
@@ -1121,6 +1221,7 @@ export const countriesData = [
         dialling_code: "+225",
         isoCode: "384",
         uniqueId: "côte_d'ivoire_695980",
+        flag: "https://flagcdn.com/w320/ci.png",
     },
     {
         name: "Iran (Islamic Republic of)",
@@ -1132,6 +1233,7 @@ export const countriesData = [
         dialling_code: "+98",
         isoCode: "364",
         uniqueId: "iran_(islamic_republic_of)_229980",
+        flag: "https://flagcdn.com/w320/ir.png",
     },
     {
         name: "Iraq",
@@ -1143,6 +1245,7 @@ export const countriesData = [
         dialling_code: "+964",
         isoCode: "368",
         uniqueId: "iraq_804914",
+        flag: "https://flagcdn.com/w320/iq.png",
     },
     {
         name: "Ireland",
@@ -1154,6 +1257,7 @@ export const countriesData = [
         dialling_code: "+353",
         isoCode: "372",
         uniqueId: "ireland_902619",
+        flag: "https://flagcdn.com/w320/ie.png",
     },
     {
         name: "Israel",
@@ -1165,6 +1269,7 @@ export const countriesData = [
         dialling_code: "+972",
         isoCode: "376",
         uniqueId: "israel_628121",
+        flag: "https://flagcdn.com/w320/il.png",
     },
     {
         name: "Italy",
@@ -1176,6 +1281,7 @@ export const countriesData = [
         dialling_code: "+39",
         isoCode: "380",
         uniqueId: "italy_247004",
+        flag: "https://flagcdn.com/w320/it.png",
     },
     {
         name: "Jamaica",
@@ -1187,6 +1293,7 @@ export const countriesData = [
         dialling_code: "+1",
         isoCode: "388",
         uniqueId: "jamaica_742391",
+        flag: "https://flagcdn.com/w320/jm.png",
     },
     {
         name: "Japan",
@@ -1198,6 +1305,7 @@ export const countriesData = [
         dialling_code: "+81",
         isoCode: "392",
         uniqueId: "japan_450018",
+        flag: "https://flagcdn.com/w320/jp.png",
     },
     {
         name: "Jordan",
@@ -1209,6 +1317,7 @@ export const countriesData = [
         dialling_code: "+962",
         isoCode: "400",
         uniqueId: "jordan_417416",
+        flag: "https://flagcdn.com/w320/jo.png",
     },
     {
         name: "Kazakhstan",
@@ -1220,6 +1329,7 @@ export const countriesData = [
         dialling_code: "+7",
         isoCode: "398",
         uniqueId: "kazakhstan_372819",
+        flag: "https://flagcdn.com/w320/kz.png",
     },
     {
         name: "Kenya",
@@ -1231,6 +1341,7 @@ export const countriesData = [
         dialling_code: "+254",
         isoCode: "404",
         uniqueId: "kenya_643256",
+        flag: "https://flagcdn.com/w320/ke.png",
     },
     {
         name: "Kiribati",
@@ -1242,6 +1353,7 @@ export const countriesData = [
         dialling_code: "+686",
         isoCode: "296",
         uniqueId: "kiribati_984299",
+        flag: "https://flagcdn.com/w320/ki.png",
     },
     {
         name: "Kuwait",
@@ -1253,6 +1365,7 @@ export const countriesData = [
         dialling_code: "+965",
         isoCode: "414",
         uniqueId: "kuwait_388362",
+        flag: "https://flagcdn.com/w320/kw.png",
     },
     {
         name: "Kyrgyzstan",
@@ -1264,6 +1377,7 @@ export const countriesData = [
         dialling_code: "+996",
         isoCode: "417",
         uniqueId: "kyrgyzstan_665595",
+        flag: "https://flagcdn.com/w320/kg.png",
     },
     {
         name: "Lao People's Democratic Republic",
@@ -1275,6 +1389,7 @@ export const countriesData = [
         dialling_code: "+856",
         isoCode: "418",
         uniqueId: "lao_people's_democratic_republic_54262",
+        flag: "https://flagcdn.com/w320/la.png",
     },
     {
         name: "Latvia",
@@ -1286,6 +1401,7 @@ export const countriesData = [
         dialling_code: "+371",
         isoCode: "428",
         uniqueId: "latvia_605064",
+        flag: "https://flagcdn.com/w320/lv.png",
     },
     {
         name: "Lebanon",
@@ -1297,6 +1413,7 @@ export const countriesData = [
         dialling_code: "+961",
         isoCode: "422",
         uniqueId: "lebanon_523636",
+        flag: "https://flagcdn.com/w320/lb.png",
     },
     {
         name: "Lesotho",
@@ -1308,6 +1425,7 @@ export const countriesData = [
         dialling_code: "+266",
         isoCode: "426",
         uniqueId: "lesotho_169228",
+        flag: "https://flagcdn.com/w320/ls.png",
     },
     {
         name: "Liberia",
@@ -1319,6 +1437,7 @@ export const countriesData = [
         dialling_code: "+231",
         isoCode: "430",
         uniqueId: "liberia_497922",
+        flag: "https://flagcdn.com/w320/lr.png",
     },
     {
         name: "Libya",
@@ -1330,6 +1449,7 @@ export const countriesData = [
         dialling_code: "+218",
         isoCode: "434",
         uniqueId: "libya_571086",
+        flag: "https://flagcdn.com/w320/ly.png",
     },
     {
         name: "Liechtenstein",
@@ -1341,6 +1461,7 @@ export const countriesData = [
         dialling_code: "+423",
         isoCode: "438",
         uniqueId: "liechtenstein_933153",
+        flag: "https://flagcdn.com/w320/li.png",
     },
     {
         name: "Lithuania",
@@ -1352,6 +1473,7 @@ export const countriesData = [
         dialling_code: "+370",
         isoCode: "440",
         uniqueId: "lithuania_375351",
+        flag: "https://flagcdn.com/w320/lt.png",
     },
     {
         name: "Luxembourg",
@@ -1363,6 +1485,7 @@ export const countriesData = [
         dialling_code: "+352",
         isoCode: "442",
         uniqueId: "luxembourg_724701",
+        flag: "https://flagcdn.com/w320/lu.png",
     },
     {
         name: "Macao",
@@ -1374,9 +1497,10 @@ export const countriesData = [
         dialling_code: "+853",
         isoCode: "446",
         uniqueId: "macao_724121",
+        flag: "https://flagcdn.com/w320/mo.png",
     },
     {
-        name: "Macedonia (the former Yugoslav Republic of)",
+        name: "Macedonia",
         code: "MK",
         language: {
             code: "mk",
@@ -1385,6 +1509,7 @@ export const countriesData = [
         dialling_code: "+389",
         isoCode: "807",
         uniqueId: "macedonia_(the_former_yugoslav_republic_of)_748008",
+        flag: "https://flagcdn.com/w320/mk.png",
     },
     {
         name: "Madagascar",
@@ -1396,6 +1521,7 @@ export const countriesData = [
         dialling_code: "+261",
         isoCode: "450",
         uniqueId: "madagascar_837042",
+        flag: "https://flagcdn.com/w320/mg.png",
     },
     {
         name: "Malawi",
@@ -1407,6 +1533,7 @@ export const countriesData = [
         dialling_code: "+265",
         isoCode: "454",
         uniqueId: "malawi_881673",
+        flag: "https://flagcdn.com/w320/mw.png",
     },
     {
         name: "Malaysia",
@@ -1418,6 +1545,7 @@ export const countriesData = [
         dialling_code: "+60",
         isoCode: "458",
         uniqueId: "malaysia_844272",
+        flag: "https://flagcdn.com/w320/my.png",
     },
     {
         name: "Maldives",
@@ -1429,6 +1557,7 @@ export const countriesData = [
         dialling_code: "+960",
         isoCode: "462",
         uniqueId: "maldives_846585",
+        flag: "https://flagcdn.com/w320/mv.png",
     },
     {
         name: "Mali",
@@ -1440,6 +1569,7 @@ export const countriesData = [
         dialling_code: "+223",
         isoCode: "466",
         uniqueId: "mali_766502",
+        flag: "https://flagcdn.com/w320/ml.png",
     },
     {
         name: "Malta",
@@ -1451,6 +1581,7 @@ export const countriesData = [
         dialling_code: "+356",
         isoCode: "470",
         uniqueId: "malta_618251",
+        flag: "https://flagcdn.com/w320/mt.png",
     },
     {
         name: "Marshall Islands",
@@ -1462,6 +1593,7 @@ export const countriesData = [
         dialling_code: "+692",
         isoCode: "584",
         uniqueId: "marshall_islands_426253",
+        flag: "https://flagcdn.com/w320/mh.png",
     },
     {
         name: "Martinique",
@@ -1473,6 +1605,7 @@ export const countriesData = [
         dialling_code: "+596",
         isoCode: "474",
         uniqueId: "martinique_919263",
+        flag: "https://flagcdn.com/w320/mq.png",
     },
     {
         name: "Mauritania",
@@ -1484,6 +1617,7 @@ export const countriesData = [
         dialling_code: "+222",
         isoCode: "478",
         uniqueId: "mauritania_846724",
+        flag: "https://flagcdn.com/w320/mr.png",
     },
     {
         name: "Mauritius",
@@ -1495,6 +1629,7 @@ export const countriesData = [
         dialling_code: "+230",
         isoCode: "480",
         uniqueId: "mauritius_228531",
+        flag: "https://flagcdn.com/w320/mu.png",
     },
     {
         name: "Mayotte",
@@ -1506,6 +1641,7 @@ export const countriesData = [
         dialling_code: "+262",
         isoCode: "175",
         uniqueId: "mayotte_913844",
+        flag: "https://flagcdn.com/w320/yt.png",
     },
     {
         name: "Mexico",
@@ -1517,6 +1653,7 @@ export const countriesData = [
         dialling_code: "+52",
         isoCode: "484",
         uniqueId: "mexico_458432",
+        flag: "https://flagcdn.com/w320/mx.png",
     },
     {
         name: "Micronesia (Federated States of)",
@@ -1528,6 +1665,7 @@ export const countriesData = [
         dialling_code: "+691",
         isoCode: "583",
         uniqueId: "micronesia_(federated_states_of)_551696",
+        flag: "https://flagcdn.com/w320/fm.png",
     },
     {
         name: "Moldova (Republic of)",
@@ -1539,6 +1677,7 @@ export const countriesData = [
         dialling_code: "+373",
         isoCode: "498",
         uniqueId: "moldova_(republic_of)_931411",
+        flag: "https://flagcdn.com/w320/md.png",
     },
     {
         name: "Monaco",
@@ -1550,6 +1689,7 @@ export const countriesData = [
         dialling_code: "+377",
         isoCode: "492",
         uniqueId: "monaco_100501",
+        flag: "https://flagcdn.com/w320/mc.png",
     },
     {
         name: "Mongolia",
@@ -1561,6 +1701,7 @@ export const countriesData = [
         dialling_code: "+976",
         isoCode: "496",
         uniqueId: "mongolia_898189",
+        flag: "https://flagcdn.com/w320/mn.png",
     },
     {
         name: "Montenegro",
@@ -1572,6 +1713,7 @@ export const countriesData = [
         dialling_code: "+382",
         isoCode: "499",
         uniqueId: "montenegro_892471",
+        flag: "https://flagcdn.com/w320/me.png",
     },
     {
         name: "Montserrat",
@@ -1583,6 +1725,7 @@ export const countriesData = [
         dialling_code: "+1",
         isoCode: "500",
         uniqueId: "montserrat_709153",
+        flag: "https://flagcdn.com/w320/ms.png",
     },
     {
         name: "Morocco",
@@ -1594,6 +1737,7 @@ export const countriesData = [
         dialling_code: "+212",
         isoCode: "504",
         uniqueId: "morocco_138757",
+        flag: "https://flagcdn.com/w320/ma.png",
     },
     {
         name: "Mozambique",
@@ -1605,6 +1749,7 @@ export const countriesData = [
         dialling_code: "+258",
         isoCode: "508",
         uniqueId: "mozambique_501490",
+        flag: "https://flagcdn.com/w320/mz.png",
     },
     {
         name: "Myanmar",
@@ -1616,6 +1761,7 @@ export const countriesData = [
         dialling_code: "+95",
         isoCode: "104",
         uniqueId: "myanmar_48701",
+        flag: "https://flagcdn.com/w320/mm.png",
     },
     {
         name: "Namibia",
@@ -1627,6 +1773,7 @@ export const countriesData = [
         dialling_code: "+264",
         isoCode: "516",
         uniqueId: "namibia_537571",
+        flag: "https://flagcdn.com/w320/na.png",
     },
     {
         name: "Nauru",
@@ -1638,6 +1785,7 @@ export const countriesData = [
         dialling_code: "+674",
         isoCode: "520",
         uniqueId: "nauru_930030",
+        flag: "https://flagcdn.com/w320/nr.png",
     },
     {
         name: "Nepal",
@@ -1649,6 +1797,7 @@ export const countriesData = [
         dialling_code: "+977",
         isoCode: "524",
         uniqueId: "nepal_670490",
+        flag: "https://flagcdn.com/w320/np.png",
     },
     {
         name: "Netherlands",
@@ -1660,6 +1809,7 @@ export const countriesData = [
         dialling_code: "+31",
         isoCode: "528",
         uniqueId: "netherlands_886329",
+        flag: "https://flagcdn.com/w320/nl.png",
     },
     {
         name: "New Caledonia",
@@ -1671,6 +1821,7 @@ export const countriesData = [
         dialling_code: "+687",
         isoCode: "540",
         uniqueId: "new_caledonia_399790",
+        flag: "https://flagcdn.com/w320/nc.png",
     },
     {
         name: "New Zealand",
@@ -1682,6 +1833,7 @@ export const countriesData = [
         dialling_code: "+64",
         isoCode: "554",
         uniqueId: "new_zealand_452464",
+        flag: "https://flagcdn.com/w320/nz.png",
     },
     {
         name: "Nicaragua",
@@ -1693,6 +1845,7 @@ export const countriesData = [
         dialling_code: "+505",
         isoCode: "558",
         uniqueId: "nicaragua_38754",
+        flag: "https://flagcdn.com/w320/ni.png",
     },
     {
         name: "Niger",
@@ -1704,6 +1857,7 @@ export const countriesData = [
         dialling_code: "+227",
         isoCode: "562",
         uniqueId: "niger_444785",
+        flag: "https://flagcdn.com/w320/ne.png",
     },
     {
         name: "Nigeria",
@@ -1715,6 +1869,7 @@ export const countriesData = [
         dialling_code: "+234",
         isoCode: "566",
         uniqueId: "nigeria_175972",
+        flag: "https://flagcdn.com/w320/ng.png",
     },
     {
         name: "Niue",
@@ -1726,6 +1881,7 @@ export const countriesData = [
         dialling_code: "+683",
         isoCode: "570",
         uniqueId: "niue_209896",
+        flag: "https://flagcdn.com/w320/nu.png",
     },
     {
         name: "Norfolk Island",
@@ -1737,6 +1893,7 @@ export const countriesData = [
         dialling_code: "+672",
         isoCode: "574",
         uniqueId: "norfolk_island_159014",
+        flag: "https://flagcdn.com/w320/nf.png",
     },
     {
         name: "Korea (Democratic People's Republic of)",
@@ -1748,6 +1905,7 @@ export const countriesData = [
         dialling_code: "+850",
         isoCode: "408",
         uniqueId: "korea_(democratic_people's_republic_of)_80809",
+        flag: "https://flagcdn.com/w320/kp.png",
     },
     {
         name: "Northern Mariana Islands",
@@ -1759,6 +1917,7 @@ export const countriesData = [
         dialling_code: "+1",
         isoCode: "580",
         uniqueId: "northern_mariana_islands_63432",
+        flag: "https://flagcdn.com/w320/mp.png",
     },
     {
         name: "Norway",
@@ -1770,6 +1929,7 @@ export const countriesData = [
         dialling_code: "+47",
         isoCode: "578",
         uniqueId: "norway_168728",
+        flag: "https://flagcdn.com/w320/no.png",
     },
     {
         name: "Oman",
@@ -1781,6 +1941,7 @@ export const countriesData = [
         dialling_code: "+968",
         isoCode: "512",
         uniqueId: "oman_322157",
+        flag: "https://flagcdn.com/w320/om.png",
     },
     {
         name: "Pakistan",
@@ -1792,6 +1953,7 @@ export const countriesData = [
         dialling_code: "+92",
         isoCode: "586",
         uniqueId: "pakistan_863777",
+        flag: "https://flagcdn.com/w320/pk.png",
     },
     {
         name: "Palau",
@@ -1803,6 +1965,7 @@ export const countriesData = [
         dialling_code: "+680",
         isoCode: "585",
         uniqueId: "palau_5344",
+        flag: "https://flagcdn.com/w320/pw.png",
     },
     {
         name: "Palestine, State of",
@@ -1814,6 +1977,7 @@ export const countriesData = [
         dialling_code: "+970",
         isoCode: "275",
         uniqueId: "palestine,_state_of_715255",
+        flag: "https://flagcdn.com/w320/ps.png",
     },
     {
         name: "Panama",
@@ -1825,6 +1989,7 @@ export const countriesData = [
         dialling_code: "+507",
         isoCode: "591",
         uniqueId: "panama_595547",
+        flag: "https://flagcdn.com/w320/pa.png",
     },
     {
         name: "Papua New Guinea",
@@ -1836,6 +2001,7 @@ export const countriesData = [
         dialling_code: "+675",
         isoCode: "598",
         uniqueId: "papua_new_guinea_430554",
+        flag: "https://flagcdn.com/w320/pg.png",
     },
     {
         name: "Paraguay",
@@ -1847,6 +2013,7 @@ export const countriesData = [
         dialling_code: "+595",
         isoCode: "600",
         uniqueId: "paraguay_695276",
+        flag: "https://flagcdn.com/w320/py.png",
     },
     {
         name: "Peru",
@@ -1858,6 +2025,7 @@ export const countriesData = [
         dialling_code: "+51",
         isoCode: "604",
         uniqueId: "peru_782678",
+        flag: "https://flagcdn.com/w320/pe.png",
     },
     {
         name: "Philippines",
@@ -1869,6 +2037,7 @@ export const countriesData = [
         dialling_code: "+63",
         isoCode: "608",
         uniqueId: "philippines_193475",
+        flag: "https://flagcdn.com/w320/ph.png",
     },
     {
         name: "Poland",
@@ -1880,6 +2049,7 @@ export const countriesData = [
         dialling_code: "+48",
         isoCode: "616",
         uniqueId: "poland_392376",
+        flag: "https://flagcdn.com/w320/pl.png",
     },
     {
         name: "Portugal",
@@ -1891,6 +2061,7 @@ export const countriesData = [
         dialling_code: "+351",
         isoCode: "620",
         uniqueId: "portugal_680334",
+        flag: "https://flagcdn.com/w320/pt.png",
     },
     {
         name: "Puerto Rico",
@@ -1902,6 +2073,7 @@ export const countriesData = [
         dialling_code: "+1",
         isoCode: "630",
         uniqueId: "puerto_rico_742158",
+        flag: "https://flagcdn.com/w320/pr.png",
     },
     {
         name: "Qatar",
@@ -1913,6 +2085,7 @@ export const countriesData = [
         dialling_code: "+974",
         isoCode: "634",
         uniqueId: "qatar_158016",
+        flag: "https://flagcdn.com/w320/qa.png",
     },
     {
         name: "Republic of Kosovo",
@@ -1924,6 +2097,7 @@ export const countriesData = [
         dialling_code: "+381",
         isoCode: "383",
         uniqueId: "republic_of_kosovo_145665",
+        flag: "https://flagcdn.com/w320/xk.png",
     },
     {
         name: "Réunion",
@@ -1935,6 +2109,7 @@ export const countriesData = [
         dialling_code: "+262",
         isoCode: "638",
         uniqueId: "réunion_494781",
+        flag: "https://flagcdn.com/w320/re.png",
     },
     {
         name: "Romania",
@@ -1946,6 +2121,7 @@ export const countriesData = [
         dialling_code: "+40",
         isoCode: "642",
         uniqueId: "romania_305614",
+        flag: "https://flagcdn.com/w320/ro.png",
     },
     {
         name: "Russian Federation",
@@ -1957,6 +2133,7 @@ export const countriesData = [
         dialling_code: "+7",
         isoCode: "643",
         uniqueId: "russian_federation_888306",
+        flag: "https://flagcdn.com/w320/ru.png",
     },
     {
         name: "Rwanda",
@@ -1968,6 +2145,7 @@ export const countriesData = [
         dialling_code: "+250",
         isoCode: "646",
         uniqueId: "rwanda_738461",
+        flag: "https://flagcdn.com/w320/rw.png",
     },
     {
         name: "Saint Barthélemy",
@@ -1979,6 +2157,7 @@ export const countriesData = [
         dialling_code: "+590",
         isoCode: "652",
         uniqueId: "saint_barthélemy_908492",
+        flag: "https://flagcdn.com/w320/bl.png",
     },
     {
         name: "Saint Helena, Ascension and Tristan da Cunha",
@@ -1990,6 +2169,7 @@ export const countriesData = [
         dialling_code: "+290",
         isoCode: "654",
         uniqueId: "saint_helena,_ascension_and_tristan_da_cunha_647893",
+        flag: "https://flagcdn.com/w320/sh.png",
     },
     {
         name: "Saint Kitts and Nevis",
@@ -2001,6 +2181,7 @@ export const countriesData = [
         dialling_code: "+1",
         isoCode: "659",
         uniqueId: "saint_kitts_and_nevis_556794",
+        flag: "https://flagcdn.com/w320/kn.png",
     },
     {
         name: "Saint Lucia",
@@ -2012,6 +2193,7 @@ export const countriesData = [
         dialling_code: "+1",
         isoCode: "662",
         uniqueId: "saint_lucia_603137",
+        flag: "https://flagcdn.com/w320/lc.png",
     },
     {
         name: "Saint Martin (French part)",
@@ -2023,6 +2205,7 @@ export const countriesData = [
         dialling_code: "+590",
         isoCode: "663",
         uniqueId: "saint_martin_(french_part)_752572",
+        flag: "https://flagcdn.com/w320/mf.png",
     },
     {
         name: "Saint Pierre and Miquelon",
@@ -2034,6 +2217,7 @@ export const countriesData = [
         dialling_code: "+508",
         isoCode: "666",
         uniqueId: "saint_pierre_and_miquelon_651575",
+        flag: "https://flagcdn.com/w320/pm.png",
     },
     {
         name: "Saint Vincent and the Grenadines",
@@ -2045,6 +2229,7 @@ export const countriesData = [
         dialling_code: "+1",
         isoCode: "670",
         uniqueId: "saint_vincent_and_the_grenadines_716082",
+        flag: "https://flagcdn.com/w320/vc.png",
     },
     {
         name: "Samoa",
@@ -2056,6 +2241,7 @@ export const countriesData = [
         dialling_code: "+685",
         isoCode: "882",
         uniqueId: "samoa_59323",
+        flag: "https://flagcdn.com/w320/ws.png",
     },
     {
         name: "San Marino",
@@ -2067,6 +2253,7 @@ export const countriesData = [
         dialling_code: "+378",
         isoCode: "674",
         uniqueId: "san_marino_806584",
+        flag: "https://flagcdn.com/w320/sm.png",
     },
     {
         name: "Sao Tome and Principe",
@@ -2078,6 +2265,7 @@ export const countriesData = [
         dialling_code: "+239",
         isoCode: "678",
         uniqueId: "sao_tome_and_principe_437447",
+        flag: "https://flagcdn.com/w320/st.png",
     },
     {
         name: "Saudi Arabia",
@@ -2089,6 +2277,7 @@ export const countriesData = [
         dialling_code: "+966",
         isoCode: "682",
         uniqueId: "saudi_arabia_944587",
+        flag: "https://flagcdn.com/w320/sa.png",
     },
     {
         name: "Senegal",
@@ -2100,6 +2289,7 @@ export const countriesData = [
         dialling_code: "+221",
         isoCode: "686",
         uniqueId: "senegal_142743",
+        flag: "https://flagcdn.com/w320/sn.png",
     },
     {
         name: "Serbia",
@@ -2111,6 +2301,7 @@ export const countriesData = [
         dialling_code: "+381",
         isoCode: "688",
         uniqueId: "serbia_704889",
+        flag: "https://flagcdn.com/w320/rs.png",
     },
     {
         name: "Seychelles",
@@ -2122,6 +2313,7 @@ export const countriesData = [
         dialling_code: "+248",
         isoCode: "690",
         uniqueId: "seychelles_829127",
+        flag: "https://flagcdn.com/w320/sc.png",
     },
     {
         name: "Sierra Leone",
@@ -2133,6 +2325,7 @@ export const countriesData = [
         dialling_code: "+232",
         isoCode: "694",
         uniqueId: "sierra_leone_568059",
+        flag: "https://flagcdn.com/w320/sl.png",
     },
     {
         name: "Singapore",
@@ -2144,6 +2337,7 @@ export const countriesData = [
         dialling_code: "+65",
         isoCode: "702",
         uniqueId: "singapore_49866",
+        flag: "https://flagcdn.com/w320/sg.png",
     },
     {
         name: "Singapore",
@@ -2155,6 +2349,7 @@ export const countriesData = [
         dialling_code: "+65",
         isoCode: "702",
         uniqueId: "singapore_39402",
+        flag: "https://flagcdn.com/w320/sg.png",
     },
     {
         name: "Slovakia",
@@ -2166,6 +2361,7 @@ export const countriesData = [
         dialling_code: "+421",
         isoCode: "703",
         uniqueId: "slovakia_747023",
+        flag: "https://flagcdn.com/w320/sk.png",
     },
     {
         name: "Slovenia",
@@ -2177,6 +2373,7 @@ export const countriesData = [
         dialling_code: "+386",
         isoCode: "705",
         uniqueId: "slovenia_22787",
+        flag: "https://flagcdn.com/w320/si.png",
     },
     {
         name: "Solomon Islands",
@@ -2188,6 +2385,7 @@ export const countriesData = [
         dialling_code: "+677",
         isoCode: "090",
         uniqueId: "solomon_islands_207060",
+        flag: "https://flagcdn.com/w320/sb.png",
     },
     {
         name: "Somalia",
@@ -2199,6 +2397,7 @@ export const countriesData = [
         dialling_code: "+252",
         isoCode: "706",
         uniqueId: "somalia_374589",
+        flag: "https://flagcdn.com/w320/so.png",
     },
     {
         name: "South Africa",
@@ -2212,6 +2411,7 @@ export const countriesData = [
         dialling_code: "+27",
         isoCode: "710",
         uniqueId: "south_africa_831819",
+        flag: "https://flagcdn.com/w320/za.png",
     },
     {
         name: "Korea (Republic of)",
@@ -2223,6 +2423,7 @@ export const countriesData = [
         dialling_code: "+82",
         isoCode: "410",
         uniqueId: "korea_(republic_of)_526179",
+        flag: "https://flagcdn.com/w320/kr.png",
     },
     {
         name: "Spain",
@@ -2234,6 +2435,7 @@ export const countriesData = [
         dialling_code: "+34",
         isoCode: "724",
         uniqueId: "spain_912735",
+        flag: "https://flagcdn.com/w320/es.png",
     },
     {
         name: "Sri Lanka",
@@ -2247,6 +2449,7 @@ export const countriesData = [
         dialling_code: "+94",
         isoCode: "144",
         uniqueId: "sri_lanka_176473",
+        flag: "https://flagcdn.com/w320/lk.png",
     },
     {
         name: "Sudan",
@@ -2258,6 +2461,7 @@ export const countriesData = [
         dialling_code: "+249",
         isoCode: "729",
         uniqueId: "sudan_909460",
+        flag: "https://flagcdn.com/w320/sd.png",
     },
     {
         name: "Suriname",
@@ -2269,6 +2473,7 @@ export const countriesData = [
         dialling_code: "+597",
         isoCode: "740",
         uniqueId: "suriname_852145",
+        flag: "https://flagcdn.com/w320/sr.png",
     },
     {
         name: "Swaziland",
@@ -2280,6 +2485,7 @@ export const countriesData = [
         dialling_code: "+268",
         isoCode: "748",
         uniqueId: "swaziland_820056",
+        flag: "https://flagcdn.com/w320/sz.png",
     },
     {
         name: "Sweden",
@@ -2291,6 +2497,7 @@ export const countriesData = [
         dialling_code: "+46",
         isoCode: "752",
         uniqueId: "sweden_158658",
+        flag: "https://flagcdn.com/w320/se.png",
     },
     {
         name: "Switzerland",
@@ -2302,6 +2509,7 @@ export const countriesData = [
         dialling_code: "+41",
         isoCode: "756",
         uniqueId: "switzerland_608357",
+        flag: "https://flagcdn.com/w320/ch.png",
     },
     {
         name: "Syrian Arab Republic",
@@ -2313,6 +2521,7 @@ export const countriesData = [
         dialling_code: "+963",
         isoCode: "760",
         uniqueId: "syrian_arab_republic_745639",
+        flag: "https://flagcdn.com/w320/sy.png",
     },
     {
         name: "Taiwan",
@@ -2324,6 +2533,7 @@ export const countriesData = [
         dialling_code: "+886",
         isoCode: "158",
         uniqueId: "taiwan_770433",
+        flag: "https://flagcdn.com/w320/tw.png",
     },
     {
         name: "Tajikistan",
@@ -2335,6 +2545,7 @@ export const countriesData = [
         dialling_code: "+992",
         isoCode: "762",
         uniqueId: "tajikistan_54092",
+        flag: "https://flagcdn.com/w320/tj.png",
     },
     {
         name: "Tanzania, United Republic of",
@@ -2346,6 +2557,7 @@ export const countriesData = [
         dialling_code: "+255",
         isoCode: "834",
         uniqueId: "tanzania,_united_republic_of_987351",
+        flag: "https://flagcdn.com/w320/tz.png",
     },
     {
         name: "Thailand",
@@ -2357,6 +2569,7 @@ export const countriesData = [
         dialling_code: "+66",
         isoCode: "764",
         uniqueId: "thailand_959431",
+        flag: "https://flagcdn.com/w320/th.png",
     },
     {
         name: "Timor-Leste",
@@ -2368,6 +2581,7 @@ export const countriesData = [
         dialling_code: "+670",
         isoCode: "626",
         uniqueId: "timor-leste_957008",
+        flag: "https://flagcdn.com/w320/tl.png",
     },
     {
         name: "Togo",
@@ -2379,6 +2593,7 @@ export const countriesData = [
         dialling_code: "+228",
         isoCode: "768",
         uniqueId: "togo_907822",
+        flag: "https://flagcdn.com/w320/tg.png",
     },
     {
         name: "Tokelau",
@@ -2390,6 +2605,7 @@ export const countriesData = [
         dialling_code: "+690",
         isoCode: "772",
         uniqueId: "tokelau_681273",
+        flag: "https://flagcdn.com/w320/tk.png",
     },
     {
         name: "Tonga",
@@ -2401,6 +2617,7 @@ export const countriesData = [
         dialling_code: "+676",
         isoCode: "776",
         uniqueId: "tonga_206248",
+        flag: "https://flagcdn.com/w320/to.png",
     },
     {
         name: "Trinidad and Tobago",
@@ -2412,6 +2629,7 @@ export const countriesData = [
         dialling_code: "+1",
         isoCode: "780",
         uniqueId: "trinidad_and_tobago_383036",
+        flag: "https://flagcdn.com/w320/tt.png",
     },
     {
         name: "Tunisia",
@@ -2423,6 +2641,7 @@ export const countriesData = [
         dialling_code: "+216",
         isoCode: "788",
         uniqueId: "tunisia_119445",
+        flag: "https://flagcdn.com/w320/tn.png",
     },
     {
         name: "Turkey",
@@ -2434,6 +2653,7 @@ export const countriesData = [
         dialling_code: "+90",
         isoCode: "792",
         uniqueId: "turkey_706610",
+        flag: "https://flagcdn.com/w320/tr.png",
     },
     {
         name: "Turkmenistan",
@@ -2445,6 +2665,7 @@ export const countriesData = [
         dialling_code: "+993",
         isoCode: "795",
         uniqueId: "turkmenistan_546829",
+        flag: "https://flagcdn.com/w320/tm.png",
     },
     {
         name: "Turks and Caicos Islands",
@@ -2456,6 +2677,7 @@ export const countriesData = [
         dialling_code: "+1",
         isoCode: "796",
         uniqueId: "turks_and_caicos_islands_279503",
+        flag: "https://flagcdn.com/w320/tc.png",
     },
     {
         name: "Tuvalu",
@@ -2467,6 +2689,7 @@ export const countriesData = [
         dialling_code: "+688",
         isoCode: "798",
         uniqueId: "tuvalu_92644",
+        flag: "https://flagcdn.com/w320/tv.png",
     },
     {
         name: "Uganda",
@@ -2478,6 +2701,7 @@ export const countriesData = [
         dialling_code: "+256",
         isoCode: "800",
         uniqueId: "uganda_499821",
+        flag: "https://flagcdn.com/w320/ug.png",
     },
     {
         name: "Ukraine",
@@ -2489,6 +2713,7 @@ export const countriesData = [
         dialling_code: "+380",
         isoCode: "804",
         uniqueId: "ukraine_450630",
+        flag: "https://flagcdn.com/w320/ua.png",
     },
     {
         name: "United Arab Emirates",
@@ -2500,6 +2725,7 @@ export const countriesData = [
         dialling_code: "+971",
         isoCode: "784",
         uniqueId: "united_arab_emirates_47208",
+        flag: "https://flagcdn.com/w320/ae.png",
     },
     {
         name: "Uruguay",
@@ -2511,6 +2737,7 @@ export const countriesData = [
         dialling_code: "+598",
         isoCode: "858",
         uniqueId: "uruguay_937723",
+        flag: "https://flagcdn.com/w320/uy.png",
     },
     {
         name: "Uzbekistan",
@@ -2522,6 +2749,7 @@ export const countriesData = [
         dialling_code: "+998",
         isoCode: "860",
         uniqueId: "uzbekistan_190105",
+        flag: "https://flagcdn.com/w320/uz.png",
     },
     {
         name: "Vanuatu",
@@ -2533,6 +2761,7 @@ export const countriesData = [
         dialling_code: "+678",
         isoCode: "548",
         uniqueId: "vanuatu_26244",
+        flag: "https://flagcdn.com/w320/vu.png",
     },
     {
         name: "Venezuela (Bolivarian Republic of)",
@@ -2544,6 +2773,7 @@ export const countriesData = [
         dialling_code: "+58",
         isoCode: "862",
         uniqueId: "venezuela_(bolivarian_republic_of)_706504",
+        flag: "https://flagcdn.com/w320/ve.png",
     },
     {
         name: "Viet Nam",
@@ -2555,6 +2785,7 @@ export const countriesData = [
         dialling_code: "+84",
         isoCode: "704",
         uniqueId: "viet_nam_914962",
+        flag: "https://flagcdn.com/w320/vn.png",
     },
     {
         name: "Wallis and Futuna",
@@ -2566,6 +2797,7 @@ export const countriesData = [
         dialling_code: "+681",
         isoCode: "876",
         uniqueId: "wallis_and_futuna_232189",
+        flag: "https://flagcdn.com/w320/wf.png",
     },
     {
         name: "Wallis and Futuna",
@@ -2577,6 +2809,7 @@ export const countriesData = [
         dialling_code: "+681",
         isoCode: "876",
         uniqueId: "wallis_and_futuna_837817",
+        flag: "https://flagcdn.com/w320/wf.png",
     },
     {
         name: "Yemen",
@@ -2588,6 +2821,7 @@ export const countriesData = [
         dialling_code: "+967",
         isoCode: "887",
         uniqueId: "yemen_149410",
+        flag: "https://flagcdn.com/w320/ye.png",
     },
     {
         name: "Zambia",
@@ -2599,6 +2833,7 @@ export const countriesData = [
         dialling_code: "+260",
         isoCode: "894",
         uniqueId: "zambia_711406",
+        flag: "https://flagcdn.com/w320/zm.png",
     },
     {
         name: "Zimbabwe",
@@ -2612,5 +2847,6 @@ export const countriesData = [
         dialling_code: "+263",
         isoCode: "716",
         uniqueId: "zimbabwe_113641",
+        flag: "https://flagcdn.com/w320/zw.png",
     },
 ];

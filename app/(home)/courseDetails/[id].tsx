@@ -4,20 +4,20 @@ import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import PlanComponent from "@/components/home/courseDetails/PlanComponent";
-import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
-import { GLOBAL_TEXT } from "@/constants/Properties";
+import { APP_THEME } from "@/constants/Colors";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import useIsomorphicLayoutEffect from "@/customHooks/useIsomorphicLayoutEffect";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
-import { setResponse } from "@/redux/apiSlice";
 import { addItemToCart, removeItemFromCart } from "@/redux/cartSlice";
 import { addToFavorite, removeFromFavorite } from "@/redux/favoriteSlice";
 import { RootState } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
 import { useLocalSearchParams, useNavigation } from "expo-router";
+// import { t } from "i18next";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import Animated, {
     interpolate,
@@ -33,18 +33,22 @@ interface CoursePlanTabsProps {
 }
 
 function CoursePlanTabs({ courseId, clientId }: CoursePlanTabsProps) {
+    const { t } = useTranslation();
     const [plans, setPlans] = useState<any[]>([]);
     const [selectedPlan, setSelectedPlan] = useState("");
+    const [clientDetails, setClientDetails] = useState({});
+    const similarCourse = useLangTransformSelector((state: RootState) => state.api.similarCourse);
 
     const individualCourse = useLangTransformSelector(
         (state: RootState) => state.api.individualCourse
     );
-    const similarCourse = useLangTransformSelector((state: RootState) => state.api.similarCourse);
 
     useEffect(() => {
         if (individualCourse && individualCourse.docs && individualCourse.docs.length > 0) {
             const plans = individualCourse.docs[0].plan;
+            const client = individualCourse.docs[0].client;
             setPlans(plans);
+            setClientDetails(client);
             if (plans?.length > 0) {
                 setSelectedPlan(plans[0]?.name);
             }
@@ -77,7 +81,7 @@ function CoursePlanTabs({ courseId, clientId }: CoursePlanTabsProps) {
                             ]}
                         >
                             {/* {plan.name} */}
-                            {`Plan ` + (index + 1)}
+                            {t("plan") + (index + 1)}
                         </AUIThemedText>
                     </Pressable>
                 ))}
@@ -88,6 +92,7 @@ function CoursePlanTabs({ courseId, clientId }: CoursePlanTabsProps) {
                         selectedPlan === plan.name && (
                             <PlanComponent
                                 clientId={clientId}
+                                clientDetails={clientDetails}
                                 key={plan?._id}
                                 planId={plan?._id}
                                 courseId={courseId}
@@ -104,6 +109,7 @@ function CoursePlanTabs({ courseId, clientId }: CoursePlanTabsProps) {
 }
 
 export default function CourseDetails() {
+    const { t } = useTranslation();
     const { requestFn } = useApiRequest();
     const dispatch = useDispatch();
     const effect = useIsomorphicLayoutEffect();
@@ -115,6 +121,11 @@ export default function CourseDetails() {
     const scrollRef = useAnimatedRef<Animated.ScrollView>();
     const navigation = useNavigation();
     const scrollOffset = useScrollViewOffset(scrollRef);
+    const userData = useSelector((state: RootState) => state.global.user);
+
+    const userType = userData?.type;
+
+    console.log("userData", userData.type);
 
     const individualCourse = useLangTransformSelector(
         (state: RootState) => state.api.individualCourse
@@ -130,17 +141,19 @@ export default function CourseDetails() {
     useEffect(() => {
         if (individualCourse && individualCourse.docs && individualCourse.docs.length > 0) {
             const course = individualCourse.docs[0];
-            const clientId = course.client._id;
+            const clientId = course?.client?._id;
             setCourse(course);
-            requestFn(API_URL.course, "similarCourse", { similar: course.language, limit: 4 });
+            if (userType !== "school") {
+                requestFn(API_URL.course, "similarCourse", { similar: course.language, limit: 4 });
+            }
             setClientId(clientId);
         }
     }, [individualCourse]);
 
     const isCourseFavorited = (id: string) =>
-        favorite.courses.some((favCourse: any) => favCourse._id === id);
+        favorite.courses.some((favCourse: any) => favCourse?._id === id);
     const isCourseInCart = (id: string) =>
-        cartItems.courses.some((cartItem: any) => cartItem.course._id === id);
+        cartItems.courses.some((cartItem: any) => cartItem?.course?._id === id);
 
     const handleFavoriteClick = (id: string, type: string) => {
         if (isCourseFavorited(id)) {
@@ -214,7 +227,10 @@ export default function CourseDetails() {
         ],
     }));
 
-    effect(() => {
+    useEffect(() => {
+        // Assuming `userType` is a prop or a value from context/state
+        const shouldShowFavorite = userType !== "school";
+
         navigation.setOptions({
             headerTransparent: true,
             headerBackVisible: false,
@@ -231,25 +247,34 @@ export default function CourseDetails() {
                     ]}
                 />
             ),
-            headerRight: () => (
-                <TouchableOpacity onPress={() => handleFavoriteClick(id, "course")}>
-                    <AUIThemedView
-                        style={{
-                            backgroundColor: "rgba(91, 216, 148, 0.3)",
-                            borderRadius: 50,
-                            padding: 10,
-                            justifyContent: "center",
-                            alignItems: "center",
-                        }}
-                    >
-                        <Ionicons
-                            name={isCourseFavorited(id) ? "heart" : "heart-outline"}
-                            size={24}
-                            color={isCourseFavorited(id) ? "red" : APP_THEME[theme].secondary.first}
-                        />
-                    </AUIThemedView>
-                </TouchableOpacity>
-            ),
+
+            // Conditionally render the headerRight component based on userType
+            headerRight: shouldShowFavorite
+                ? () => (
+                      <TouchableOpacity onPress={() => handleFavoriteClick(id, "course")}>
+                          <AUIThemedView
+                              style={{
+                                  backgroundColor: "rgba(91, 216, 148, 0.3)",
+                                  borderRadius: 50,
+                                  padding: 10,
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                              }}
+                          >
+                              <Ionicons
+                                  name={isCourseFavorited(id) ? "heart" : "heart-outline"}
+                                  size={24}
+                                  color={
+                                      isCourseFavorited(id)
+                                          ? "red"
+                                          : APP_THEME[theme].secondary.first
+                                  }
+                              />
+                          </AUIThemedView>
+                      </TouchableOpacity>
+                  )
+                : null,
+
             headerTitle: () => (
                 <Animated.Text style={[headerTitleAnimatedStyle, styles.screenTitle]}>
                     {course.courseName}
@@ -264,6 +289,7 @@ export default function CourseDetails() {
         theme,
         headerBackgroundAnimatedStyle,
         headerTitleAnimatedStyle,
+        userType,
     ]);
 
     const startingDate: string = new Date(course.startDate).toLocaleDateString("en-GB", {
@@ -286,7 +312,7 @@ export default function CourseDetails() {
                 <AUIThemedView style={styles.container}>
                     <Animated.Image
                         source={{
-                            uri: course.image,
+                            uri: course?.image,
                         }}
                         style={[styles.image, imageAnimatedStyle]}
                         resizeMode="cover"
@@ -306,9 +332,7 @@ export default function CourseDetails() {
                         >
                             <AUIThemedView style={styles.header}>
                                 <AUIImage
-                                    path={
-                                        Asset.fromModule(require("@/assets/icons/course.png")).uri
-                                    }
+                                    path={Asset.fromModule(require("@/assets/icons/course.png"))}
                                     icon
                                     style={{ width: 40 }}
                                 />
@@ -319,24 +343,26 @@ export default function CourseDetails() {
                                         {course.courseName}
                                     </AUIThemedText>
                                     <AUIThemedText style={styles.startingDate}>
-                                        Starting from: {startingDate}
+                                        {t("starting_from")}: {startingDate}
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
-                            <TouchableOpacity onPress={handleAddToCart}>
-                                <AUIThemedView
-                                    style={[
-                                        styles.cartIconContainer,
-                                        { backgroundColor: APP_THEME[theme].primary.first },
-                                    ]}
-                                >
-                                    <Ionicons
-                                        name={isCourseInCart(id) ? "cart" : "cart-outline"}
-                                        size={24}
-                                        color="#fff"
-                                    />
-                                </AUIThemedView>
-                            </TouchableOpacity>
+                            {userType !== "school" && (
+                                <TouchableOpacity onPress={handleAddToCart}>
+                                    <AUIThemedView
+                                        style={[
+                                            styles.cartIconContainer,
+                                            { backgroundColor: APP_THEME[theme].primary.first },
+                                        ]}
+                                    >
+                                        <Ionicons
+                                            name={isCourseInCart(id) ? "cart" : "cart-outline"}
+                                            size={24}
+                                            color="#fff"
+                                        />
+                                    </AUIThemedView>
+                                </TouchableOpacity>
+                            )}
                         </AUIThemedView>
                     </AUIThemedView>
                     {/* <AUIThemedView style={{ paddingHorizontal: 15, marginBottom: 10 }}>
@@ -361,7 +387,7 @@ export default function CourseDetails() {
                         ]}
                     >
                         <AUIThemedText style={styles.planText}>
-                            {GLOBAL_TEXT.select_your_plan}
+                            {t("select_your_plan")}
                         </AUIThemedText>
 
                         <CoursePlanTabs courseId={id} clientId={clientId} />

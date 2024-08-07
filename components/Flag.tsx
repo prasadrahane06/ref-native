@@ -47,7 +47,6 @@ const styles = StyleSheet.create({
     flagNames: {
         fontSize: 13,
         textAlign: "center",
-        fontFamily: "GilroyMedium",
         letterSpacing: 1,
         opacity: 0.8,
     },

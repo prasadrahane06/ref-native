@@ -14,24 +14,21 @@ import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector
 import { RootState } from "@/redux/store";
 import { FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { ChatBot } from "at-chatbot-native";
-import { Asset } from "expo-asset";
 import { Image } from "expo-image";
-import { Tabs } from "expo-router";
-import { default as React, useEffect, useState } from "react";
+import { Tabs, useFocusEffect } from "expo-router";
+import { default as React, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Dimensions, FlatList, Modal, StyleSheet, TouchableOpacity, View } from "react-native";
+import { FlatList, Modal, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
 import AddNewEvent from "../events/AddNewEvent";
 import NotificationDrawer from "../notification/notification";
-import schoolProfile from "@/components/screenComponents/schoolProfile";
+
+import { ChatBot } from "at-chatbot-native";
+import { t } from "i18next";
 
 interface event {
     _id: string;
-    eventName: {
-        en: string;
-        ar: string;
-    };
+    eventName: string;
     description: string;
     date: string;
     location: string;
@@ -43,23 +40,29 @@ const EventsScreen = () => {
     const [isModalVisible, setModalVisible] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState<event | undefined>(undefined);
     const eventData = useLangTransformSelector((state: RootState) => state.api.myEvent || {});
-    const isRTL = useSelector((state: RootState) => state.global.isRTL || {});
-    const [event, setEvent] = useState<event[]>([]);
+    const [page, setPage] = useState<number>(0);
+    const [showMessage, setShowMessage] = useState(true);
     const { requestFn } = useApiRequest();
 
     const refreshEvents = () => {
-        requestFn(API_URL.event, "myEvent", { client: true });
+        requestFn(API_URL.event, "myEvent", { client: true, page: `${page}` });
     };
 
+    useFocusEffect(
+        useCallback(() => {
+            refreshEvents();
+        }, [page])
+    );
     useEffect(() => {
-        refreshEvents();
-    }, []);
-
-    useEffect(() => {
-        if (eventData?.docs?.length > 0) {
-            setEvent(eventData?.docs);
+        if (page === eventData.totalPages) {
+            const timer = setTimeout(() => {
+                setShowMessage(false);
+            }, 5000);
+            return () => clearTimeout(timer);
+        } else {
+            setShowMessage(true);
         }
-    }, [eventData?.docs?.length]);
+    }, [page, eventData.totalPages]);
 
     const handleAddNewEvent = () => {
         setSelectedEvent(undefined);
@@ -77,13 +80,9 @@ const EventsScreen = () => {
     const renderItem = ({ item }: { item: event }) => (
         <TouchableOpacity onPress={() => handleEditEvent(item)}>
             <AUIThemedView style={styles.event}>
-                <Image source={{ uri: item.eventImage }} style={styles.image} />
+                <Image source={{ uri: item?.eventImage }} style={styles.image} />
                 <AUIThemedText style={styles.name} numberOfLines={1}>
-                    {typeof item.eventName === "string"
-                        ? item?.eventName
-                        : isRTL
-                        ? item?.eventName?.ar
-                        : item?.eventName?.en}
+                    {item?.eventName}
                 </AUIThemedText>
             </AUIThemedView>
         </TouchableOpacity>
@@ -92,19 +91,33 @@ const EventsScreen = () => {
     return (
         <AUIThemedView style={styles.mainContainer}>
             <AUIButton
-                title="Add New Event"
+                title={t("add_new_event")}
                 selected
                 style={styles.AddEventButton}
                 onPress={handleAddNewEvent}
             />
             <FlatList
-                data={event}
+                data={eventData?.docs || []}
                 renderItem={renderItem}
                 keyExtractor={(item) => item?._id}
                 numColumns={3}
                 columnWrapperStyle={styles.row}
                 contentContainerStyle={styles.container}
             />
+
+            <AUIThemedView>
+                <TouchableOpacity
+                    style={{ padding: 10, alignItems: "center" }}
+                    disabled={page === eventData.totalPages}
+                    onPress={() => setPage((prevPage: any) => prevPage + 1)}
+                >
+                    {page === eventData.totalPages ? (
+                        showMessage && <AUIThemedText>{`${t("you_are_caught_up")}`}</AUIThemedText>
+                    ) : (
+                        <AUIThemedText>{`${t("load_more")}`}</AUIThemedText>
+                    )}
+                </TouchableOpacity>
+            </AUIThemedView>
             <AddNewEvent
                 visible={isModalVisible}
                 onClose={handleCloseModal}
@@ -119,36 +132,12 @@ const EventsScreen = () => {
 //     <NotificationDrawer onClose={onClose} />
 // );
 
-const user = {
-    name: "Manchester School",
-    avatarUrl:
-        "https://b2bsalesconnections.com/wp-content/uploads/2023/01/college-grads-vasily-koloda-8CqDvPuo_kI-unsplash-300x200.jpg",
-};
-
-const items = [
-    {
-        label: "Facilities",
-        iconPath: Asset.fromModule(require("@/assets/images/drawerIcons/courses_icon.png")).uri,
-        navigateTo: "Facilities",
-    },
-    {
-        label: "Terms and Policy",
-        iconPath: Asset.fromModule(require("@/assets/images/drawerIcons/terms_and_policy_icon.png"))
-            .uri,
-        navigateTo: "Contact",
-    },
-    {
-        label: "Share the app",
-        iconPath: Asset.fromModule(require("@/assets/images/drawerIcons/share_icon.png")).uri,
-        navigateTo: "#",
-    },
-];
-
 export default function AUIDrawer() {
     const theme = useSelector((state: RootState) => state.global.theme);
     const isRTL = useSelector((state: RootState) => state.global.isRTL);
 
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
+    const { requestFn } = useApiRequest();
 
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     // const handleNotificationPress = () => {
@@ -163,7 +152,9 @@ export default function AUIDrawer() {
         <>
             <Drawer.Navigator
                 initialRouteName="Home"
-                screenOptions={({ navigation }) => screenOptions(navigation, isRTL, theme) as any}
+                screenOptions={({ navigation }) =>
+                    screenOptions(navigation, isRTL, theme, setModalVisible) as any
+                }
                 drawerContent={(props) => <AUIDrawerContent {...props} />}
             >
                 <Drawer.Screen
@@ -198,7 +189,7 @@ export default function AUIDrawer() {
                 />
                 <Drawer.Screen
                     name="Profile"
-                    component={schoolProfile}
+                    component={SchoolProfile}
                     options={{
                         headerShown: false,
                         title: t(GLOBAL_TRANSLATION_LABEL.account),
@@ -218,21 +209,26 @@ export default function AUIDrawer() {
                 visible={modalVisible}
                 onRequestClose={closeModal}
             >
-                <View style={styles.modalContainer}>
-                    <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
-                        <Ionicons name="close" size={24} color={TEXT_THEME[theme].primary} />
-                    </TouchableOpacity>
+                <AUIThemedView style={styles.modalContainer}>
                     <NotificationDrawer onClose={closeModal} />
-                </View>
+                </AUIThemedView>
             </Modal>
         </>
     );
 }
 
 export function TabLayout() {
+    const { requestFn } = useApiRequest();
+
     const [config, setConfig] = useState({});
 
     const user = useLangTransformSelector((state: RootState) => state.global.user);
+
+    useFocusEffect(
+        useCallback(() => {
+            requestFn(API_URL.notification, "notification");
+        }, [])
+    );
 
     return (
         <View style={{ flex: 1 }}>
@@ -334,7 +330,12 @@ const MenuButton = ({ navigation }: any) => (
     </TouchableOpacity>
 );
 
-const screenOptions = (navigation: any, isRTL: boolean, theme: ThemeType) => ({
+const screenOptions = (
+    navigation: any,
+    isRTL: boolean,
+    theme: ThemeType,
+    setModalVisible: any
+) => ({
     headerBackground: () => (
         <AUILinearGradient
             colors={[BACKGROUND_THEME[theme].background, BACKGROUND_THEME[theme].background]} //["rgba(118, 250,178, 1)", "rgba(91, 216,148, 1)"]}
@@ -345,7 +346,8 @@ const screenOptions = (navigation: any, isRTL: boolean, theme: ThemeType) => ({
 
     headerLeft: () => <MenuButton navigation={navigation} />,
     headerRight: () => (
-        <HeaderIcons onNotificationPress={() => navigation.navigate("Notifications")} />
+        // <HeaderIcons onNotificationPress={() => navigation.navigate("Notifications")} />
+        <HeaderIcons onNotificationPress={() => setModalVisible(true)} />
     ),
     drawerLabelStyle: { marginLeft: -20, fontSize: 15, color: TEXT_THEME[theme].gray },
     drawerActiveBackgroundColor: APP_THEME[theme].primary.first,
@@ -353,14 +355,13 @@ const screenOptions = (navigation: any, isRTL: boolean, theme: ThemeType) => ({
     drawerPosition: isRTL ? "right" : "left",
 });
 
-const windowHeight = Dimensions.get("window").height;
+// const windowHeight = Dimensions.get("window").height;
 const styles = StyleSheet.create({
     mainContainer: {
-        height: windowHeight,
+        flex: 1,
     },
     modalContainer: {
         flex: 1,
-        paddingTop: 50,
     },
     closeButton: {
         alignSelf: "flex-end",

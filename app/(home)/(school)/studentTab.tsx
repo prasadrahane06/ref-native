@@ -1,22 +1,24 @@
+import AUISearchBar from "@/components/common/AUISearchBar";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
+import useDebounce from "@/customHooks/useDebounce";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
 import { MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { StyleSheet, TouchableOpacity, View, ScrollView } from "react-native";
+import { t } from "i18next";
 import { useEffect, useState } from "react";
-import useDebounce from "@/customHooks/useDebounce";
-import AUISearchBar from "@/components/common/AUISearchBar";
+import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 
 export default function TabTwoScreen() {
     const { requestFn } = useApiRequest();
     const [page, setPage] = useState<any>(1);
     const [searchPhrase, setSearchPhrase] = useState("");
     const [clicked, setClicked] = useState(false);
+    const [showMessage, setShowMessage] = useState(true);
     const debouncedSearchPhrase = useDebounce(searchPhrase, 500);
     const schoolPurchaseCourse = useLangTransformSelector(
         (state: RootState) => state.api.schoolPurchaseCourse || {}
@@ -41,6 +43,17 @@ export default function TabTwoScreen() {
         }
     }, [debouncedSearchPhrase]);
 
+    useEffect(() => {
+        if (page === schoolPurchaseCourse.totalPages) {
+            const timer = setTimeout(() => {
+                setShowMessage(false);
+            }, 5000);
+            return () => clearTimeout(timer);
+        } else {
+            setShowMessage(true);
+        }
+    }, [page, schoolPurchaseCourse.totalPages]);
+
     return (
         <AUIThemedView style={styles.root}>
             <AUIThemedView style={{ paddingBottom: 20 }}>
@@ -55,7 +68,7 @@ export default function TabTwoScreen() {
             <ScrollView>
                 <AUIThemedView>
                     <AUIThemedText style={styles.title}>
-                        Students Admitted through App
+                      {t("students_admitted_through_app")}
                     </AUIThemedText>
                     <AUIThemedView>
                         {schoolPurchaseCourse.docs && Array.isArray(schoolPurchaseCourse.docs) ? (
@@ -65,7 +78,8 @@ export default function TabTwoScreen() {
                                     style={styles.layout}
                                     onPress={() =>
                                         router.push({
-                                            pathname: `(home)/studentInfo/${item?._id}`,
+                                            // @ts-ignore
+                                            pathname: `/(home)/studentInfo/${item?._id}`,
                                             params: { student: JSON.stringify(item) },
                                         })
                                     }
@@ -74,7 +88,7 @@ export default function TabTwoScreen() {
                                         {item.user?.name || "No name available"}
                                     </AUIThemedText>
                                     <AUIThemedText style={styles.id}>
-                                        ID: {item.user?._id || "No ID available"}
+                                        {t("id")}: {item.user?.studentId || `${t("no_id_available")}`}
                                     </AUIThemedText>
                                     <MaterialIcons
                                         name="keyboard-arrow-right"
@@ -87,21 +101,19 @@ export default function TabTwoScreen() {
                             <AUIThemedText style={styles.noData}>No data available</AUIThemedText>
                         )}
                     </AUIThemedView>
-                    <TouchableOpacity
-                        style={{ padding: 10 }}
-                        disabled={page === schoolPurchaseCourse.totalPages}
-                        onPress={() => {
-                            setPage(page + 1);
-                        }}
-                    >
-                        <AUIThemedText>
-                            {page === schoolPurchaseCourse.totalPages
-                                ? "You are Cought Up"
-                                : "Load More"}
-                        </AUIThemedText>
-                    </TouchableOpacity>
                 </AUIThemedView>
             </ScrollView>
+            <TouchableOpacity
+                style={{ padding: 10, alignItems: "center" }}
+                disabled={page === schoolPurchaseCourse.totalPages}
+                onPress={() => setPage((prevPage: any) => prevPage + 1)}
+            >
+                {page === schoolPurchaseCourse.totalPages ? (
+                    showMessage && <AUIThemedText>{`${t("you_are_caught_up")}`}</AUIThemedText>
+                ) : (
+                    <AUIThemedText>{`${t("load_more")}`}</AUIThemedText>
+                )}
+            </TouchableOpacity>
         </AUIThemedView>
     );
 }
@@ -113,7 +125,9 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 17,
-        letterSpacing: 2,
+        letterSpacing: 1,
+        fontWeight: "bold",
+        marginLeft:10
     },
     layout: {
         flexDirection: "row",

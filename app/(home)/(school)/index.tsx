@@ -1,27 +1,22 @@
+import useAxios from "@/app/services/axiosClient";
 import AUIInfoCard from "@/components/AUIInfoCard";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
+import { ApiSuccessToast } from "@/components/common/AUIToast";
 import CourseList from "@/components/home/common/CourseList";
 import ChartComponent from "@/components/home/common/LinearChart";
 import SectionTitle from "@/components/home/common/SectionTitle";
-import { APP_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
 import formatNumberWithComma from "@/utils/numberFomatter";
-import "react-native-gesture-handler";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FlatList, ScrollView, StyleSheet } from "react-native";
-import { useSelector } from "react-redux";
-// import { post as botPost } from "@/app/services/botAxiosClient";
-import useAxios from "@/app/services/axiosClient";
-import { ApiSuccessToast } from "@/components/common/AUIToast";
+import "react-native-gesture-handler";
 
 import { useAxiosClient as useBotAxios } from "at-chatbot-native";
-import { useTranslation } from "react-i18next";
-// import { post as botPost } from "@/app/services/botAxiosClient";
-// import ChatBot from "@/components/chatbot/ChatBot";
 
 export default function HomeScreen() {
     const { requestFn } = useApiRequest();
@@ -57,7 +52,7 @@ export default function HomeScreen() {
                 })
                     .then((res) => {
                         console.log("school bot updated =>", res);
-                        ApiSuccessToast(res.message);
+                        // ApiSuccessToast(res.message);
                     })
                     .catch((e) => {
                         console.log("Error in update school =>", e);
@@ -100,6 +95,12 @@ export default function HomeScreen() {
     //         });
     // }, []);
 
+    const specificDummyData = {
+        labels: ["month"],
+        pendingData: [0],
+        doneData: [0],
+    };
+
     return (
         <AUIThemedView>
             <ScrollView>
@@ -118,8 +119,13 @@ export default function HomeScreen() {
                                             fontSize: 14,
                                             color: "#777",
                                         }}
-                                        title={formatNumberWithComma(item.title)}
-                                        subtitle={item.subtitle}
+                                        title={formatNumberWithComma(
+                                            item?.title &&
+                                                item?.title.toLowerCase().includes("undefined")
+                                                ? 0
+                                                : item?.title
+                                        )}
+                                        subtitle={item?.subtitle}
                                     />
                                 )}
                                 keyExtractor={(item) => item.id}
@@ -129,16 +135,20 @@ export default function HomeScreen() {
 
                     <ChartComponent
                         title={t(GLOBAL_TEXT.my_earnings)}
-                        labels={MySchoolDetails?.graphData?.labels || []}
-                        pendingData={MySchoolDetails?.graphData?.pendingData || []}
-                        doneData={MySchoolDetails?.graphData?.doneData || []}
+                        labels={MySchoolDetails?.graphData?.labels || specificDummyData.labels}
+                        pendingData={
+                            MySchoolDetails?.graphData?.pendingData || specificDummyData.pendingData
+                        }
+                        doneData={
+                            MySchoolDetails?.graphData?.doneData || specificDummyData.doneData
+                        }
                         yAxisLabel="$"
                         yAxisInterval={10}
                     />
 
                     <AUIThemedView style={styles.section}>
                         <SectionTitle style={{ paddingBottom: 10 }}>
-                            {GLOBAL_TEXT.ongoing_courses}
+                            {t("ongoing_courses")}
                         </SectionTitle>
                         <CourseList
                             data={myCourse?.docs?.slice(0, 4) || []}

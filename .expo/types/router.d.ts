@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import type { TextProps, GestureResponderEvent } from 'react-native';
 
 export namespace ExpoRouter {
-  type StaticRoutes = `/` | `/(home)/` | `/(home)/(school)` | `/(home)/(student)` | `/(home)/AddNewCourse/AddCourse` | `/(home)/compare/compareSchools` | `/(home)/compare/searchSchool` | `/(home)/course/AllCoursesScreen` | `/(home)/list/AllSchoolsList` | `/(home)/notification/notification` | `/(home)/ratingsAndReview/AUIRatingsAndReview` | `/(home)/school/AllSchoolsScreen` | `/(school)` | `/(student)` | `/AddNewCourse/AddCourse` | `/_sitemap` | `/cart` | `/compare` | `/compare/compareSchools` | `/compare/searchSchool` | `/course/AllCoursesScreen` | `/courses` | `/details` | `/facilities` | `/favourite` | `/help` | `/list/AllSchoolsList` | `/login` | `/notification/notification` | `/profile` | `/ratingsAndReview/AUIRatingsAndReview` | `/school/AllSchoolsScreen` | `/schooldetails` | `/services/axiosClient` | `/services/botAxiosClient` | `/services/data.json` | `/signup` | `/studentTab` | `/transactions`;
+  type StaticRoutes = `/` | `/(home)/` | `/(home)/(school)` | `/(home)/(student)` | `/(home)/AddNewCourse/AddCourse` | `/(home)/compare/compareSchools` | `/(home)/compare/searchSchool` | `/(home)/course/AllCoursesScreen` | `/(home)/events/AddNewEvent` | `/(home)/list/AllSchoolsList` | `/(home)/notification/notification` | `/(home)/ratingsAndReview/AUIRatingsAndReview` | `/(home)/school/AllSchoolsScreen` | `/(school)` | `/(student)` | `/AddNewCourse/AddCourse` | `/_sitemap` | `/cart` | `/compare` | `/compare/compareSchools` | `/compare/searchSchool` | `/course/AllCoursesScreen` | `/courses` | `/details` | `/events/AddNewEvent` | `/facilities` | `/favourite` | `/help` | `/list/AllSchoolsList` | `/login` | `/notification/notification` | `/profile` | `/ratingsAndReview/AUIRatingsAndReview` | `/school/AllSchoolsScreen` | `/schoolProfile` | `/schooldetails` | `/services/axiosClient` | `/services/botAxiosClient` | `/services/data.json` | `/signup` | `/studentTab` | `/transactions`;
   type DynamicRoutes<T extends string> = `/(home)/cityDetails/${SingleRoutePart<T>}` | `/(home)/courseDetails/${SingleRoutePart<T>}` | `/(home)/courseDetails/purchase/${SingleRoutePart<T>}` | `/(home)/schoolDetails/${SingleRoutePart<T>}` | `/(home)/studentInfo/${SingleRoutePart<T>}` | `/cityDetails/${SingleRoutePart<T>}` | `/courseDetails/${SingleRoutePart<T>}` | `/courseDetails/purchase/${SingleRoutePart<T>}` | `/schoolDetails/${SingleRoutePart<T>}` | `/studentInfo/${SingleRoutePart<T>}`;
   type DynamicRouteTemplate = `/(home)/cityDetails/[id]` | `/(home)/courseDetails/[id]` | `/(home)/courseDetails/purchase/[id]` | `/(home)/schoolDetails/[id]` | `/(home)/studentInfo/[id]` | `/cityDetails/[id]` | `/courseDetails/[id]` | `/courseDetails/purchase/[id]` | `/schoolDetails/[id]` | `/studentInfo/[id]`;
 
@@ -301,8 +301,9 @@ export namespace ExpoRouter {
   type useRouter = typeof useRouter;
 
   /**
-   * Returns the URL search parameters for the contextually focused route. e.g. \`/acme?foo=bar\` -> \`{ foo: "bar" }\`.
+   * Returns the URL parameters for the contextually focused route. e.g. \`/acme?foo=bar\` -> \`{ foo: "bar" }\`.
    * This is useful for stacks where you may push a new screen that changes the query parameters.
+   * For dynamic routes, both the route parameters and the search parameters are returned.
    *
    * To observe updates even when the invoking route is not focused, use \`useGlobalSearchParams()\`.
    * @see \`useGlobalSearchParams\`
@@ -318,10 +319,10 @@ export namespace ExpoRouter {
   type useSearchParams = typeof useSearchParams;
 
   /**
-   * Get the globally selected query parameters, including dynamic path segments. This function will update even when the route is not focused.
+   * Get the globally selected URL parameters, including search parameters and dynamic path segments as route parameters. This function will update even when the route is not focused.
    * Useful for analytics or other background operations that don't draw to the screen.
    *
-   * When querying search params in a stack, opt-towards using \`useLocalSearchParams\` as these will only
+   * When querying URL params in a stack, opt-towards using \`useLocalSearchParams\` as these will only
    * update when the route is focused.
    *
    * @see \`useLocalSearchParams\`

@@ -3,6 +3,8 @@ import React from "react";
 import { FlatList } from "react-native";
 import { Review } from "../../Review";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
+import { useTranslation } from "react-i18next";
+// import { t } from "i18next";
 
 interface ReviewProps {
     data: any[];
@@ -10,6 +12,7 @@ interface ReviewProps {
 }
 
 export const ReviewList: React.FC<ReviewProps> = ({ data, horizontal = false }) => {
+    const { t } = useTranslation();
     return (
         <AUIThemedView style={{ paddingLeft: 15 }}>
             {data?.length > 0 ? (
@@ -28,7 +31,7 @@ export const ReviewList: React.FC<ReviewProps> = ({ data, horizontal = false }) 
                     keyExtractor={(item) => item.id}
                 />
             ) : (
-                <AUIThemedText>No Reviews...</AUIThemedText>
+                <AUIThemedText>{t("no_reviews")}...</AUIThemedText>
             )}
         </AUIThemedView>
     );

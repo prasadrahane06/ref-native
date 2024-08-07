@@ -2,11 +2,12 @@ import useAxios from "@/app/services/axiosClient";
 import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { API_URL } from "@/constants/urlProperties";
+import useDebouncedNavigate from "@/customHooks/useDebouncedNavigate";
 import { removeItemFromCart } from "@/redux/cartSlice";
 import { removeFromFavorite } from "@/redux/favoriteSlice";
 import { setLoader } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
-import { useRouter } from "expo-router";
+import { FontAwesome, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Alert, StyleSheet, Text, TouchableOpacity, ViewStyle } from "react-native";
@@ -15,7 +16,6 @@ import AUIImage from "./common/AUIImage";
 import { AUIThemedText } from "./common/AUIThemedText";
 import { AUIThemedView } from "./common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "./common/AUIToast";
-import { MaterialCommunityIcons,MaterialIcons, FontAwesome } from '@expo/vector-icons';
 
 interface CourseProps {
     title: string;
@@ -46,8 +46,8 @@ const Course: React.FC<CourseProps> = ({
 }) => {
     const { del } = useAxios();
     const dispatch = useDispatch();
-    const router = useRouter();
     const { t } = useTranslation();
+    const handlePress = useDebouncedNavigate(2000);
 
     const theme = useSelector((state: RootState) => state.global.theme);
 
@@ -73,16 +73,16 @@ const Course: React.FC<CourseProps> = ({
 
     const handleRemoveFav = (id: string, type: string) => {
         Alert.alert(
-            'Remove Favorite',
-            `Are you sure you want to remove ${title} from your favorites?`,
+            `${t("remove_favorite")}`,
+            `${t("remove_fav_description")}`,
             [
                 {
-                    text: 'Cancel',
-                    onPress: () => console.log('Remove cancelled'),
-                    style: 'cancel',
+                    text: `${t("cancel")}`,
+                    onPress: () => console.log("Remove cancelled"),
+                    style: "cancel",
                 },
                 {
-                    text: 'Remove',
+                    text: `${t("remove")}`,
                     onPress: () => {
                         dispatch(setLoader(true));
                         del(API_URL.favorite, { id, type })
@@ -96,7 +96,7 @@ const Course: React.FC<CourseProps> = ({
                             })
                             .finally(() => dispatch(setLoader(false)));
                     },
-                    style: 'destructive',
+                    style: "destructive",
                 },
             ],
             { cancelable: false }
@@ -106,11 +106,7 @@ const Course: React.FC<CourseProps> = ({
     return (
         <TouchableOpacity
             style={[styles.courseContainer, style]}
-            onPress={() =>
-                router.push({
-                    pathname: `(home)/courseDetails/${courseId}`,
-                })
-            }
+            onPress={() => handlePress(`(home)/courseDetails/${courseId}`)}
         >
             <AUIThemedView style={styles.layout}>
                 <AUIImage style={styles.courseImage} path={image} />
@@ -142,10 +138,10 @@ const Course: React.FC<CourseProps> = ({
                         onPress={() => handleRemoveFav(courseId, "course")}
                         style={styles.iconContainer}
                     >
-                        <MaterialCommunityIcons name="delete-forever-outline" size={24} color="red" />
+                        <MaterialCommunityIcons name="delete-forever" size={24} color="red" />
                     </TouchableOpacity>
                 )}
-                {edit  && onEdit && (
+                {edit && onEdit && (
                     <TouchableOpacity
                         style={styles.editiConContainer}
                         onPress={() => onEdit(courseId)}
@@ -175,7 +171,7 @@ const Course: React.FC<CourseProps> = ({
 };
 
 const styles = StyleSheet.create({
-    dateStyle: { fontSize: 11 },
+    dateStyle: { fontSize: 11, marginHorizontal: 6 },
     courseContainer: {},
     layout: {
         backgroundColor: "transparent",
@@ -202,6 +198,7 @@ const styles = StyleSheet.create({
     courseTitle: {
         fontSize: 13,
         fontWeight: "700",
+        marginHorizontal: 6,
     },
     courseCaption: {
         fontSize: 11,
@@ -211,7 +208,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         top: 10,
         right: 10,
-        // backgroundColor: "rgba(255, 0, 0, 0.2)",
+        backgroundColor: "rgba(255, 0, 0, 0.2)",
         borderRadius: 20,
         padding: 5,
     },

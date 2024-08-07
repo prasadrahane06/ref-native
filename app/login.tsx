@@ -3,11 +3,11 @@ import DropdownComponent from "@/components/common/AUIDropdown";
 import AUIInputField from "@/components/common/AUIInputField";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { ApiErrorToast } from "@/components/common/AUIToast";
+import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import OTPScreen from "@/components/screenComponents/OTPScreen";
 import { APP_THEME, BACKGROUND_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT, SIGNUP_FIELDS } from "@/constants/Properties";
-import { getUserData, storeUserData } from "@/constants/RNAsyncStore";
+import { storeUserData } from "@/constants/RNAsyncStore";
 import { loginPageStyles, secondaryButtonStyle } from "@/constants/Styles";
 import { countriesData } from "@/constants/dummy data/countriesData";
 import { API_URL } from "@/constants/urlProperties";
@@ -16,7 +16,7 @@ import { setLoader, setToken, setUser } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
 import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
@@ -56,7 +56,6 @@ const schema = Yup.object().shape({
     selectedButton: Yup.string().required(),
 });
 const LoginPage = () => {
-    const router = useRouter();
     const dispatch = useDispatch();
 
     const globalState = useLangTransformSelector((state: RootState) => state.global);
@@ -100,6 +99,7 @@ const LoginPage = () => {
             return x;
         });
     }, []);
+
     const handleSendOtp = () => {
         let code = phoneCode?.split("+")[1];
         let payload =
@@ -112,16 +112,30 @@ const LoginPage = () => {
                       email: inputValue,
                       deviceToken: deviceToken,
                   };
+
         dispatch(setLoader(true));
         post(API_URL.login, payload)
             .then((res) => {
                 dispatch(setLoader(false));
-                setOtpSent(true);
+
+                if (res.statusCode !== 200) {
+                    ApiErrorToast(res.message);
+                }
+
+                const userType = res.data.registerType;
+
+                if (userType === profile) {
+                    setOtpSent(true);
+                    ApiSuccessToast("OTP send successfully");
+                } else {
+                    ApiErrorToast("User is not registered");
+                }
             })
             .catch((e) => {
                 dispatch(setLoader(false));
             });
     };
+
     const handleOTPChange = (newOtp: string, name: string) => {
         setOtp({
             ...otp,
@@ -161,9 +175,9 @@ const LoginPage = () => {
                     dispatch(setUser(res?.data?.user));
 
                     if (profile === "student") {
-                        router.push({ pathname: "/details" });
+                        router.replace("/details");
                     } else {
-                        router.push({ pathname: "/schooldetails" });
+                        router.replace("/schooldetails");
                     }
                 }
             }
@@ -172,7 +186,7 @@ const LoginPage = () => {
                 if (res.statusCode === 400) {
                     return ApiErrorToast(res.message);
                 }
-                
+
                 if (res?.data?.accessToken) {
                     const userData = res?.data?.user;
                     const accessToken = res?.data?.accessToken;
@@ -186,9 +200,9 @@ const LoginPage = () => {
                     dispatch(setToken(res?.data?.accessToken));
                     dispatch(setUser(res?.data?.user));
 
-                    router.push({
-                        pathname: `(home)/(${profile})`,
-                    });
+                    router.dismissAll();
+                    //@ts-ignore
+                    router.replace(`/(home)/(${profile})`);
                 }
             }
         } catch (error) {
@@ -241,18 +255,27 @@ const LoginPage = () => {
         setOtpSent(false);
         reset({ input: inputValue, selectedButton });
     };
-    const handleOnResendOtp = (val: any, name: string) => {
-        let payload = {
-            [name]: val,
-        };
+    const handleOnResendOtp = (phoneCode: any, val: any, name: string) => {
+        let code = phoneCode?.split("+")[1];
+        let payload =
+            name === "email"
+                ? {
+                      email: inputValue,
+                  }
+                : {
+                      phone: `${code}${inputValue}`,
+                  };
+
         post(API_URL.resendOTP, payload)
             .then((res) => {
                 console.log("res", res);
+                ApiSuccessToast(res.message);
             })
             .catch((e: any) => {
                 console.log("e", e);
             });
     };
+
     const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
     if (signInType === "new") {
         return (
@@ -271,7 +294,9 @@ const LoginPage = () => {
                             changeLabel={"email"}
                             onChange={(val: any) => handleOTPChange(val, "signUpEmail")}
                             onBackToInput={handleBackToInput}
-                            onResendOtp={() => handleOnResendOtp(signupDetails?.email, "email")}
+                            onResendOtp={() =>
+                                handleOnResendOtp(phoneCode, signupDetails?.email, "email")
+                            }
                             disabled={otpVerified.signUpEmail}
                             inputValue={signupDetails?.email}
                         />
@@ -284,7 +309,9 @@ const LoginPage = () => {
                             length={4}
                             onChange={(val: any) => handleOTPChange(val, "signUpPhone")}
                             onBackToInput={handleBackToInput}
-                            onResendOtp={() => handleOnResendOtp(signupDetails?.phone, "phone")}
+                            onResendOtp={() =>
+                                handleOnResendOtp(phoneCode, signupDetails?.phone, "phone")
+                            }
                             disabled={otpVerified.signUpPhone}
                             inputValue={signupDetails?.phone}
                         />
@@ -296,10 +323,12 @@ const LoginPage = () => {
             </AUIThemedView>
         );
     }
+
     const dismissKeyboard = () => {
         Keyboard.dismiss();
         trigger("input");
     };
+
     return (
         <TouchableWithoutFeedback onPress={dismissKeyboard}>
             <AUIThemedView style={loginPageStyles.container}>
@@ -383,7 +412,9 @@ const LoginPage = () => {
                                     length={4}
                                     onChange={(val: any) => handleOTPChange(val, "login")}
                                     onBackToInput={handleBackToInput}
-                                    onResendOtp={() => handleOnResendOtp(inputValue, "phone")}
+                                    onResendOtp={() =>
+                                        handleOnResendOtp(phoneCode, inputValue, "phone")
+                                    }
                                     disabled={otpVerified.login}
                                     inputValue={inputValue}
                                 />
@@ -396,13 +427,15 @@ const LoginPage = () => {
         </TouchableWithoutFeedback>
     );
 };
+
 const OTPVerified = ({ label }: any) => (
     <AUIThemedView style={{ flexDirection: "row", gap: 10 }}>
         <AUIThemedText style={{ fontSize: 14, fontWeight: "bold" }}>{label}</AUIThemedText>
         <MaterialIcons name="verified-user" size={24} color="green" />
     </AUIThemedView>
 );
-const ContactNumberField = ({ label, control }: any) => {
+
+export const ContactNumberField = ({ label, control }: any) => {
     const theme = useSelector((state: RootState) => state.global.theme);
 
     return (
@@ -488,7 +521,8 @@ const ContactNumberField = ({ label, control }: any) => {
         </AUIThemedView>
     );
 };
-const InputField = ({ control }: any) => (
+
+export const InputField = ({ control }: any) => (
     <Controller
         name="input"
         control={control}

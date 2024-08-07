@@ -13,24 +13,28 @@ import { API_URL } from "@/constants/urlProperties";
 import { removeFromFavorite } from "@/redux/favoriteSlice";
 import { setLoader } from "@/redux/globalSlice";
 import { ApiSuccessToast, ApiErrorToast } from "./common/AUIToast";
+import useDebouncedNavigate from "@/customHooks/useDebouncedNavigate";
+import { useTranslation } from "react-i18next";
 
 const Destination = ({ title, image, countryWidth, countryHeight, favorite, id }: any) => {
     const theme = useSelector((state: RootState) => state.global.theme);
     const dispatch = useDispatch();
     const { del } = useAxios();
+    const { t } = useTranslation();
+    const handlePress = useDebouncedNavigate(2000);
 
     const handleRemoveFav = (id: string, type: string) => {
         Alert.alert(
-            'Remove Favorite',
-            `Are you sure you want to remove ${title} from your favorites?`,
+            `${t("remove_favorite")}`,
+            `${t("remove_fav_description")}`,
             [
                 {
-                    text: 'Cancel',
-                    onPress: () => console.log('Remove cancelled'),
-                    style: 'cancel',
+                    text: `${t("cancel")}`,
+                    onPress: () => console.log("Remove cancelled"),
+                    style: "cancel",
                 },
                 {
-                    text: 'Remove',
+                    text: `${t("remove")}`,
                     onPress: () => {
                         dispatch(setLoader(true));
                         del(API_URL.favorite, { id, type })
@@ -44,7 +48,7 @@ const Destination = ({ title, image, countryWidth, countryHeight, favorite, id }
                             })
                             .finally(() => dispatch(setLoader(false)));
                     },
-                    style: 'destructive',
+                    style: "destructive",
                 },
             ],
             { cancelable: false }
@@ -52,13 +56,7 @@ const Destination = ({ title, image, countryWidth, countryHeight, favorite, id }
     };
 
     return (
-        <TouchableOpacity
-            onPress={() =>
-                router.push({
-                    pathname: `(home)/cityDetails/${id}`,
-                })
-            }
-        >
+        <TouchableOpacity onPress={() => handlePress(`(home)/cityDetails/${id}`)}>
             <AUIThemedView
                 style={[styles.item, { backgroundColor: APP_THEME[theme].ternary.first }]}
             >
@@ -89,7 +87,11 @@ const Destination = ({ title, image, countryWidth, countryHeight, favorite, id }
                                 onPress={() => handleRemoveFav(id, "country")}
                                 style={styles.iconContainer}
                             >
-                                <MaterialCommunityIcons name="delete-forever-outline" size={24} color="red" />
+                                <MaterialCommunityIcons
+                                    name="delete-forever"
+                                    size={24}
+                                    color="red"
+                                />
                             </TouchableOpacity>
                         )}
                     </AUIBackgroundImage>
@@ -136,7 +138,7 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         color: "white",
-        fontWeight: "600",
+        fontWeight: "bold",
         fontSize: 16,
         textAlign: "center",
     },
@@ -145,7 +147,7 @@ const styles = StyleSheet.create({
         top: 10,
         right: 10,
         backgroundColor: "rgba(255, 0, 0, 0.2)",
-        // borderRadius: 20,
+        borderRadius: 20,
         padding: 5,
     },
     icon: {

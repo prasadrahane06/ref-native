@@ -1,26 +1,35 @@
 import { AUILinearGradient } from "@/components/common/AUILinearGradient";
-import { AUIThemedView } from "@/components/common/AUIThemedView";
+import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { APP_THEME, BACKGROUND_THEME } from "@/constants/Colors";
+import { API_URL } from "@/constants/urlProperties";
+import useApiRequest from "@/customHooks/useApiRequest";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
+// import { t } from "i18next";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 import AllSchoolsList from "../list/AllSchoolsList";
-import { AUIThemedText } from "@/components/common/AUIThemedText";
-import { ScrollView } from "react-native-gesture-handler";
-import useApiRequest from "@/customHooks/useApiRequest";
-import { API_URL } from "@/constants/urlProperties";
+import { useTranslation } from "react-i18next";
 
+
+import { ApiSuccessToast } from "@/components/common/AUIToast";
 
 interface SchoolListProps {
     data: any[];
 }
 
 const AllSchoolsScreen: React.FC<SchoolListProps> = ({ data }) => {
-    const [page, setPage] = useState(1);
-    const schoolsResponse = useLangTransformSelector((state: RootState) => state.api.AllSchool || {});
+    const { t } = useTranslation();
     const { requestFn } = useApiRequest();
+
+    const [page, setPage] = useState(1);
+
+    const schoolsResponse = useLangTransformSelector(
+        (state: RootState) => state.api.AllSchool || {}
+    );
+
     const theme = useSelector((state: RootState) => state.global.theme);
 
     useEffect(() => {
@@ -37,22 +46,27 @@ const AllSchoolsScreen: React.FC<SchoolListProps> = ({ data }) => {
             <ScrollView style={styles.wrapper}>
                 <AllSchoolsList
                     data={schoolsResponse?.docs?.map((school: any) => ({
-                        id: school._id,
-                        name: school.name,
-                        image: school.banner,
-                        caption: school.description,
+                        id: school?._id,
+                        name: school?.name,
+                        image: school?.banner,
+                        caption: school?.description,
                         favorite: false,
+                        approvalStatus: school?.approvalStatus,
                     }))}
                 />
-                <TouchableOpacity
-                    style={styles.loadMoreButton}
-                    disabled={page === schoolsResponse.totalPages}
-                    onPress={() => setPage(page + 1)}
-                >
-                    <AUIThemedText>
-                        {page === schoolsResponse.totalPages ? "You are Caught Up" : "Load More"}
-                    </AUIThemedText>
-                </TouchableOpacity>
+                {page !== schoolsResponse.totalPages && (
+                    <TouchableOpacity
+                        style={styles.loadMoreButton}
+                        disabled={page === schoolsResponse.totalPages}
+                        onPress={() => setPage(page + 1)}
+                    >
+                        <AUIThemedText
+                            style={{ textAlign: "center", textDecorationLine: "underline" }}
+                        >
+                            {t("load_more")}
+                        </AUIThemedText>
+                    </TouchableOpacity>
+                )}
             </ScrollView>
         </AUILinearGradient>
     );
@@ -61,7 +75,6 @@ const AllSchoolsScreen: React.FC<SchoolListProps> = ({ data }) => {
 export default AllSchoolsScreen;
 
 const styles = StyleSheet.create({
-
     scrollContainer: {
         flexGrow: 1,
         justifyContent: "flex-start",
@@ -71,6 +84,7 @@ const styles = StyleSheet.create({
     },
     loadMoreButton: {
         padding: 10,
+        marginVertical: 10,
     },
     container: {
         flex: 1,

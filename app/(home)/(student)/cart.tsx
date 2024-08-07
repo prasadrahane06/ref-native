@@ -9,7 +9,6 @@ import useApiRequest from "@/customHooks/useApiRequest";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { addItemToCart } from "@/redux/cartSlice";
 import { RootState } from "@/redux/store";
-import { AntDesign } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import { Asset } from "expo-asset";
 import React, { useCallback, useEffect } from "react";
@@ -52,9 +51,7 @@ export default function TabFourScreen() {
 
                 <AUIThemedView style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
                     <AUIImage
-                        path={
-                            Asset.fromModule(require("@/assets/images/common/cart_image.png")).uri
-                        }
+                        path={Asset.fromModule(require("@/assets/images/local/cart_image.png"))}
                         style={{ width: 200, height: 200 }}
                     />
                 </AUIThemedView>
@@ -66,7 +63,7 @@ export default function TabFourScreen() {
         <ScrollView>
             <AUIThemedView style={styles.container}>
                 <AUIThemedText style={styles.title}>
-                    {GLOBAL_TEXT.my_added_courses_in_cart}
+                   {t("my_added_courses_in_cart")}
                 </AUIThemedText>
 
                 <AUIThemedView style={styles.coursesContainer}>

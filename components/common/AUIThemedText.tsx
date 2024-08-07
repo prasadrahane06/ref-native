@@ -19,7 +19,7 @@ export function AUIThemedText({ style, type = "default", ...rest }: ThemedTextPr
                 type === "defaultSemiBold" ? styles.defaultSemiBold : undefined,
                 type === "subtitle" ? styles.subtitle : undefined,
                 type === "link" ? styles.link : undefined,
-                { fontFamily: "Gilroy" },
+                { fontFamily: "Inter-Black" },
                 style,
             ]}
             {...rest}
