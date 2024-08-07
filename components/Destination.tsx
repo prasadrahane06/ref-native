@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         color: "white",
-        fontWeight: "600",
+        fontWeight: "bold",
         fontSize: 16,
         textAlign: "center",
     },

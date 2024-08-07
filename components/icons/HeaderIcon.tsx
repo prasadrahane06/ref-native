@@ -13,6 +13,7 @@ import {
     Modal,
     Platform,
     Pressable,
+    ScrollView,
     StyleSheet,
     TouchableOpacity,
 } from "react-native";
@@ -51,16 +52,19 @@ function SearchModal({ isVisible, onClose }: any) {
         switch (type) {
             case "country":
                 router.push({
+                    // @ts-ignore
                     pathname: `/(home)/cityDetails/${item?._id}`,
                 });
                 break;
             case "course":
                 router.push({
+                    // @ts-ignore
                     pathname: `/(home)/courseDetails/${item?._id}`,
                 });
                 break;
             case "school":
                 router.push({
+                    // @ts-ignore
                     pathname: `/(home)/schoolDetails/${item?._id}`,
                 });
                 break;
@@ -77,14 +81,19 @@ function SearchModal({ isVisible, onClose }: any) {
                 onClose();
             }}
         >
-            <AUIThemedText style={{ fontWeight: "bold" }}>
+            <AUIThemedText style={{ fontWeight: "600" }}>
                 {type === "course" ? item.courseName : item.name}
             </AUIThemedText>
         </TouchableOpacity>
     );
 
     return (
-        <Modal animationType="slide" transparent={true} visible={isVisible} onRequestClose={onClose}>
+        <Modal
+            animationType="slide"
+            transparent={true}
+            visible={isVisible}
+            onRequestClose={onClose}
+        >
             <AUIThemedView
                 style={
                     Platform.OS === "ios"
@@ -94,7 +103,14 @@ function SearchModal({ isVisible, onClose }: any) {
             >
                 <AUIThemedView style={searchStyles.titleContainer}>
                     <AUIThemedText style={searchStyles.title}>Search</AUIThemedText>
-                    <Pressable onPress={onClose} style={{ padding: 10 }}>
+                    <Pressable
+                        onPress={() => {
+                            onClose();
+                            setSearchPhrase("");
+                            setClicked(false);
+                        }}
+                        style={{ padding: 10 }}
+                    >
                         <MaterialIcons name="close" color={TEXT_THEME[theme].primary} size={22} />
                     </Pressable>
                 </AUIThemedView>
@@ -246,6 +262,7 @@ const searchStyles = StyleSheet.create({
     sectionTitle: {
         paddingVertical: 5,
         fontSize: 20,
+        fontWeight: "bold",
     },
     resultsContainer: {
         padding: 10,

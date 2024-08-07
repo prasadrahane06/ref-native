@@ -18,12 +18,15 @@ import {
 } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Tabs } from "expo-router";
-import { default as React, useState } from "react";
+import { default as React, useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Modal, Platform, StyleSheet, TouchableOpacity } from "react-native";
 import "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 import NotificationDrawer from "../notification/notification";
+import useApiRequest from "@/customHooks/useApiRequest";
+import { useFocusEffect } from "@react-navigation/native";
+import { API_URL } from "@/constants/urlProperties";
 
 const ProfileScreen = () => <Profile />;
 const CoursesScreen = () => <MyCourses />;
@@ -187,7 +190,15 @@ export default function AUIDrawer() {
 }
 
 export function TabLayout() {
+    const { requestFn } = useApiRequest();
+
     const { t } = useTranslation();
+
+    useFocusEffect(
+        useCallback(() => {
+            requestFn(API_URL.notification, "notification");
+        }, [])
+    );
 
     return (
         <Tabs

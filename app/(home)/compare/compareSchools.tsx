@@ -9,11 +9,13 @@ import { RootState } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
 import { router } from "expo-router";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
+// import { t } from "i18next";
 import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { useDispatch } from "react-redux";
 
 const CompareSchools: React.FC = () => {
+    const { t } = useTranslation();
     // const [date1, setDate1] = useState<Date>(new Date());
     // const [show1, setShow1] = useState<boolean>(false);
     // const [date2, setDate2] = useState<Date>(new Date());

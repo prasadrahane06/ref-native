@@ -14,10 +14,10 @@ import { addToFavorite, removeFromFavorite } from "@/redux/favoriteSlice";
 import { RootState } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
-import { useLocalSearchParams, useNavigation } from "expo-router";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Dimensions, Pressable, StyleSheet, TouchableOpacity } from "react-native";
+import { BackHandler, Dimensions, Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import Animated, {
     interpolate,
     useAnimatedRef,
@@ -27,9 +27,8 @@ import Animated, {
 import { StarRatingDisplay } from "react-native-star-rating-widget";
 import { useDispatch, useSelector } from "react-redux";
 
-import { ChatBot } from "at-chatbot-native";
 import { setResponse } from "@/redux/apiSlice";
-
+import { ChatBot } from "at-chatbot-native";
 
 interface TabProps {
     courseId: string;
@@ -142,6 +141,18 @@ export default function SchoolDetails() {
     const isRTL = useSelector((state: RootState) => state.global.isRTL);
     const theme = useSelector((state: RootState) => state.global.theme);
     const [overallRatings, setRatings] = useState(0);
+
+    useEffect(() => {
+        const backAction = () => {
+            dispatch(setResponse({ storeName: "individualSchool", data: null }));
+            router.back();
+            return true;
+        };
+
+        const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
+
+        return () => backHandler.remove();
+    }, []);
 
     useEffect(() => {
         if (ratingsOfTheSchool?.docs) {
@@ -368,7 +379,9 @@ export default function SchoolDetails() {
                             <AUIThemedText style={styles.name}>
                                 {schoolsResponse?.name}
                             </AUIThemedText>
-                            <AUIThemedText style={styles.viewsText}>{school?.view} {t("views")}</AUIThemedText>
+                            <AUIThemedText style={styles.viewsText}>
+                                {school?.view} {t("views")}
+                            </AUIThemedText>
                         </AUIThemedView>
 
                         <AUIThemedView

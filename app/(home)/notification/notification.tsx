@@ -1,91 +1,89 @@
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
+import { API_URL } from "@/constants/urlProperties";
+import useApiRequest from "@/customHooks/useApiRequest";
 import { RootState } from "@/redux/store";
 import { MaterialIcons } from "@expo/vector-icons";
-import React from "react";
-import {
-    FlatList,
-    ListRenderItem,
-    StyleSheet,
-    TouchableOpacity,
-    View
-} from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
+import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { FlatList, ListRenderItem, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
 
 interface NotificationItem {
-    id: string;
-    icon: "check-circle" | "event-seat";
+    _id: string;
+    recipient: string;
     title: string;
-    description: string;
-    time: string;
-    read: boolean;
+    message: string;
+    notificationType: string;
+    isView: boolean;
+    status: number;
+    createdAt: string;
+    updatedAt: string;
 }
 
 interface NotificationDrawerProps {
     onClose: () => void;
 }
 
-const notifications: NotificationItem[] = [
-    {
-        id: "1",
-        icon: "check-circle",
-        title: "Your course successfully purchased",
-        description:
-            "Congratulation you have been successfully purchased this course waiting for confirmation from school, Thanks.",
-        time: "2 Hours ago",
-        read: false,
-    },
-    {
-        id: "2",
-        icon: "event-seat",
-        title: "Seat booked!",
-        description: "Congratulation your seat has been confirm by school.",
-        time: "2 Hours ago",
-        read: true,
-    },
-    {
-        id: "3",
-        icon: "event-seat",
-        title: "Your course Confirm!",
-        description: "Congratulation your purchased course has been confirm by school.",
-        time: "2 Hours ago",
-        read: true,
-    },
-];
-
 const NotificationDrawer: React.FC<NotificationDrawerProps> = ({ onClose }) => {
+    const { t } = useTranslation();
+
     const theme = useSelector((state: RootState) => state.global.theme);
-    const renderItem: ListRenderItem<NotificationItem> = ({ item }) => (
-        <AUIThemedView
-            style={[styles.notificationItem, !item.read && styles.unreadNotificationItem]}
-        >
-            <TouchableOpacity style={styles.iconContainer}>
-                <MaterialIcons name={item.icon} size={28} color="#fff" style={styles.icon} />
-            </TouchableOpacity>
-            <View style={styles.notificationText}>
-                <View style={styles.titleContainer}>
-                    <AUIThemedText style={styles.title}>{item.title}</AUIThemedText>
-                    {!item.read && <AUIThemedView style={styles.unreadDot}></AUIThemedView>}
+    const notificationData = useSelector((state: RootState) => state.api.notification);
+
+    const renderItem: ListRenderItem<NotificationItem> = ({ item }) => {
+        const timestamp = new Date(item?.createdAt).getTime();
+        const now = new Date().getTime();
+        const difference = now - timestamp;
+        let time = "";
+
+        if (difference < 1000) {
+            time = "just now";
+        } else if (difference < 60000) {
+            time = Math.floor(difference / 1000) + " seconds ago";
+        } else if (difference < 3600000) {
+            time = Math.floor(difference / 60000) + " minutes ago";
+        } else if (difference < 86400000) {
+            time = Math.floor(difference / 3600000) + " hours ago";
+        } else if (difference < 172800000) {
+            time = "yesterday";
+        } else {
+            time = Math.floor(difference / 86400000) + " days ago";
+        }
+
+        return (
+            <AUIThemedView
+                style={[styles.notificationItem, !item?.isView && styles.unreadNotificationItem]}
+            >
+                <TouchableOpacity style={styles.iconContainer}>
+                    <MaterialIcons name="check" size={28} color="#fff" style={styles.icon} />
+                </TouchableOpacity>
+                <View style={styles.notificationText}>
+                    <View style={styles.titleContainer}>
+                        <AUIThemedText style={styles.title}>{item?.title}</AUIThemedText>
+                        {!item?.isView && <AUIThemedView style={styles.unreadDot}></AUIThemedView>}
+                    </View>
+                    <AUIThemedText style={styles.description}>{item?.message}</AUIThemedText>
+                    <AUIThemedText style={styles.time}>{time}</AUIThemedText>
                 </View>
-                <AUIThemedText style={styles.description}>{item.description}</AUIThemedText>
-                <AUIThemedText style={styles.time}>{item.time}</AUIThemedText>
-            </View>
-        </AUIThemedView>
-    );
+            </AUIThemedView>
+        );
+    };
 
     return (
         <AUIThemedView style={styles.container}>
             <AUIThemedView style={styles.headerRow}>
-                <AUIThemedText style={styles.header}>Notification</AUIThemedText>
+                <AUIThemedText style={styles.header}>{t("notification")}</AUIThemedText>
                 <TouchableOpacity onPress={onClose} style={styles.closeButton}>
                     <MaterialIcons name="close" size={28} color={TEXT_THEME[theme].primary} />
                 </TouchableOpacity>
             </AUIThemedView>
             <FlatList
-                data={notifications}
+                data={notificationData}
                 renderItem={renderItem}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item) => item._id}
             />
         </AUIThemedView>
     );

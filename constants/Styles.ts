@@ -74,10 +74,9 @@ export const initialPageStyles = StyleSheet.create({
         justifyContent: "center",
     },
     optionLabel: {
-        // fontFamily: FontFamily.interSemiBold,
         fontSize: 16,
         textAlign: "left",
-        fontWeight: "600",
+        fontWeight: "bold",
         lineHeight: 21,
         letterSpacing: 0,
     },
@@ -211,7 +210,7 @@ export const inputFieldStyle = StyleSheet.create({
         fontWeight: "semibold",
         letterSpacing: -0.32,
         // color: APP_THEME.light.gray,
-        fontFamily: "Gilroy",
+        fontFamily: "Inter-Black",
     },
     input: {
         height: 50,

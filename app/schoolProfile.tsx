@@ -10,58 +10,61 @@ import { RootState } from "@/redux/store";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
-import { t } from "i18next";
+// import { t } from "i18next";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { ImageBackground, ScrollView, StyleSheet } from "react-native";
+import {
+    ImageBackground,
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    TouchableOpacity,
+} from "react-native";
 import * as Yup from "yup";
 import useAxios from "./services/axiosClient";
+import { BACKGROUND_THEME } from "@/constants/Colors";
+import { useDispatch, useSelector } from "react-redux";
+import AUIBackgroundImage from "@/components/common/AUIBackgroundImage";
+import { useTranslation } from "react-i18next";
+import { setLoader, setUser } from "@/redux/globalSlice";
+import { storeUserData } from "@/constants/RNAsyncStore";
+import { setResponse } from "@/redux/apiSlice";
+
 const SchoolProfile = () => {
-    const MySchoolDetails = useLangTransformSelector(
+    const { patch } = useAxios();
+    const { t } = useTranslation();
+    const dispatch = useDispatch();
+
+    const theme = useSelector((state: RootState) => state.global.theme);
+    const mySchoolDetails = useLangTransformSelector(
         (state: RootState) => state.api.MySchoolDetails
     );
-    const [selectedLogo, setSelectedLogo] = useState("");
-    const [selectedBanner, setSelectedBanner] = useState("");
-    const { patch } = useAxios();
+
+    const [banner, setBanner] = useState<string>(mySchoolDetails?.banner);
+    const [logo, setLogo] = useState<string>(mySchoolDetails?.logo);
+
+    const [bannerBase64, setBannerBase64] = useState<any>(null);
+    const [logoBase64, setLogoBase64] = useState<any>(null);
+
     const schema = Yup.object().shape({
         name: Yup.string().required(`${t("name_is_required")}`),
-        phoneNumber: Yup.string().required(`${t("enter_valid_mobile_number")}`),
-        email: Yup.string().email(GLOBAL_TEXT.validate_email).required(`${t("please_provide_valid_email")}`),
         description: Yup.string().required(`${t("description_is_required")}`),
-        logo: Yup.string().required(`${t("logo_is_required")}`),
-        banner: Yup.string().required(`${t("banner_is_required")}`),
         remark: Yup.string().required(`${t("remark_is_required")}`),
+        website: Yup.string().required(`${t("website_is_required")}`),
     });
-
-
 
     const { reset, setValue, control, handleSubmit, formState } = useForm({
         resolver: yupResolver(schema),
         mode: "onChange",
         defaultValues: {
-            name: MySchoolDetails?.name,
-            phoneNumber: MySchoolDetails?.phone,
-            email: MySchoolDetails?.email,
-            description: MySchoolDetails?.description,
-            remark: MySchoolDetails?.remark,
-            // name: "",
-            // phoneNumber: "",
-            // email: "",
-            // description: "",
-            // remark: "",
+            name: mySchoolDetails?.name,
+            description: mySchoolDetails?.description,
+            remark: mySchoolDetails?.remark,
+            website: mySchoolDetails?.website,
         },
     });
-    useEffect(() => {
-        if (MySchoolDetails) {
-            reset({
-                name: MySchoolDetails.name || "",
-                phoneNumber: MySchoolDetails.phone || "",
-                email: MySchoolDetails.email || "",
-                description: MySchoolDetails.description || "",
-                remark: MySchoolDetails.remark || "",
-            });
-        }
-    }, [MySchoolDetails]);
+
     const pickImageAsync = async (value: any) => {
         let result = await ImagePicker.launchImageLibraryAsync({
             base64: true,
@@ -72,161 +75,238 @@ const SchoolProfile = () => {
         if (!result.canceled) {
             if (value === "logo") {
                 setValue(value, result.assets[0].base64);
-                setSelectedLogo(result.assets[0]?.uri);
+                setLogo(result.assets[0]?.uri);
             } else {
                 setValue(value, result.assets[0].base64);
-                setSelectedBanner(result.assets[0]?.uri);
+                setBanner(result.assets[0]?.uri);
             }
         } else {
             alert(`${t("you_did_not_select_any_image")}`);
         }
     };
+
     const onSave = (data: any) => {
-        const payload = {
+        dispatch(setLoader(true));
+
+        const payload: any = {
             name: data.name,
-            phone: data.phoneNumber,
-            email: data.email,
             description: data.description,
             remark: data.remark,
+            website: data.website,
         };
 
-        patch(API_URL.school, payload)
-            .then((res: any) => {
-                ApiSuccessToast(res.message);
-                router.push({
-                    pathname: `/(home)/(school)`,
-                });
-            })
-            .catch((error: any) => {
-                ApiErrorToast(error);
-                console.log("error in schooldetails onSave =>", error);
-            });
+        if (bannerBase64) {
+            // payload.banner = `data:image/png;base64,${bannerBase64}`;
+            payload.banner = "hello";
+        }
+
+        console.log("onSave payload", payload);
+
+        // patch(API_URL.school, payload)
+        //     .then((res: any) => {
+        //         console.log("onSave res", res);
+
+        //         storeUserData("@user-data", {
+        //             ...res?.data,
+        //         });
+        //         dispatch(setUser(res?.data));
+        //         dispatch(setResponse({ storeName: "MySchoolDetails", data: res?.data }));
+        //         ApiSuccessToast(res.message);
+        //         dispatch(setLoader(false));
+        //     })
+        //     .catch((error: any) => {
+        //         console.log("error in school profile save", error);
+        //         ApiErrorToast(error);
+        //         console.log("error in schooldetails onSave =>", error);
+        //     });
     };
+
+    const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
+
     return (
-        <ScrollView>
-            <AUIThemedView style={styles.container}>
-                <ImageBackground
-                    source={{
-                        uri:
-                            MySchoolDetails?.banner ||
-                            selectedBanner ||
-                            "https://linguest-assets-dev.s3.ap-south-1.amazonaws.com/1721125318338-2650.jpeg",
-                    }}
-                    style={styles.banner}
-                />
-                <Controller
-                    name="name"
-                    control={control}
-                    render={({ field: { onChange, value }, fieldState: { error } }) => (
-                        <AUIThemedView>
-                            <AUIThemedText style={styles.label}>{t("name")}</AUIThemedText>
-                            <AUIInputField
-                                onChangeText={onChange}
-                                placeholder={t("enter_your_name")}
-                                value={value}
-                            />
-                            {error && (
-                                <AUIThemedText style={styles.fieldError}>
-                                    {error.message}
-                                </AUIThemedText>
-                            )}
-                        </AUIThemedView>
-                    )}
-                />
-                <Controller
-                    name="phoneNumber"
-                    control={control}
-                    render={({ field: { onChange, value }, fieldState: { error } }) => (
-                        <AUIThemedView>
+        <KeyboardAvoidingView
+            style={{ flex: 1, backgroundColor: BACKGROUND_THEME[theme].background }}
+            behavior="padding"
+            keyboardVerticalOffset={keyboardVerticalOffset}
+        >
+            <ScrollView>
+                <AUIThemedView style={styles.container}>
+                    <TouchableOpacity onPress={() => pickImageAsync("banner")}>
+                        <AUIBackgroundImage path={banner} style={styles.banner} />
+                    </TouchableOpacity>
+
+                    <Controller
+                        name="name"
+                        control={control}
+                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <AUIThemedView>
+                                <AUIThemedText style={styles.label}>{t("name")}</AUIThemedText>
+                                <AUIInputField
+                                    onChangeText={onChange}
+                                    placeholder={t("enter_your_name")}
+                                    value={value}
+                                />
+                                {error && (
+                                    <AUIThemedText style={styles.fieldError}>
+                                        {error.message}
+                                    </AUIThemedText>
+                                )}
+                            </AUIThemedView>
+                        )}
+                    />
+
+                    <AUIThemedView>
+                        <AUIThemedView style={styles.labelContainer}>
                             <AUIThemedText style={styles.label}>{t("mobile_number")}</AUIThemedText>
-                            <AUIInputField
-                                onChangeText={onChange}
-                                placeholder={t("enter_your_mobile_number")}
-                                value={value}
-                            />
-                            {error && (
-                                <AUIThemedText style={styles.fieldError}>
-                                    {error.message}
+                            <TouchableOpacity
+                                onPress={() =>
+                                    router.push({
+                                        pathname: "/changeNumberEmail",
+                                        params: { type: "phoneNumber" },
+                                    })
+                                }
+                            >
+                                <AUIThemedText style={styles.link}>
+                                    {t("change_number")}
                                 </AUIThemedText>
-                            )}
+                            </TouchableOpacity>
                         </AUIThemedView>
-                    )}
-                />
-                <Controller
-                    name="email"
-                    control={control}
-                    render={({ field: { onChange, value }, fieldState: { error } }) => (
-                        <AUIThemedView>
-                            <AUIThemedText style={styles.label}>{t("email")}</AUIThemedText>
-                            <AUIInputField
-                                onChangeText={onChange}
-                                placeholder={t("enter_your_mail_id")}
-                                value={value}
-                            />
-                            {error && (
-                                <AUIThemedText style={styles.fieldError}>
-                                    {error.message}
-                                </AUIThemedText>
-                            )}
-                        </AUIThemedView>
-                    )}
-                />
-                <Controller
-                    name="description"
-                    control={control}
-                    render={({ field: { onChange, value }, fieldState: { error } }) => (
-                        <AUIThemedView>
-                            <AUIThemedText style={styles.label}>{t("description")}</AUIThemedText>
-                            <AUIInputField
-                                onChangeText={onChange}
-                                placeholder={t("enter_description")}
-                                value={value}
-                            />
-                            {error && (
-                                <AUIThemedText style={styles.fieldError}>
-                                    {error.message}
-                                </AUIThemedText>
-                            )}
-                        </AUIThemedView>
-                    )}
-                />
-                <Controller
-                    name="remark"
-                    control={control}
-                    render={({ field: { onChange, value }, fieldState: { error } }) => (
-                        <AUIThemedView>
-                            <AUIThemedText style={styles.label}>{t("remark")}</AUIThemedText>
-                            <AUIInputField
-                                onChangeText={onChange}
-                                placeholder={t("enter_remark")}
-                                value={value}
-                            />
-                            {error && (
-                                <AUIThemedText style={styles.fieldError}>
-                                    {error.message}
-                                </AUIThemedText>
-                            )}
-                        </AUIThemedView>
-                    )}
-                />
-                <AUIThemedView style={styles.footerContainer}>
-                    <AUIThemedView style={styles.buttonContainer}>
-                        <AUIButton title={t("clear")} onPress={() => reset()} style={{ width: "48%" }} />
-                        <AUIButton
-                            title={t("save")}
-                            selected
-                            onPress={handleSubmit(onSave)}
-                            disabled={!formState.isValid}
-                            style={{ width: "48%" }}
+                        <AUIInputField
+                            style={styles.disabledInput}
+                            editable={false}
+                            value={mySchoolDetails?.phone}
                         />
                     </AUIThemedView>
+
+                    <AUIThemedView>
+                        <AUIThemedView style={styles.labelContainer}>
+                            <AUIThemedText style={styles.label}>{t("email")}</AUIThemedText>
+                            <TouchableOpacity
+                                onPress={() =>
+                                    router.push({
+                                        pathname: "/changeNumberEmail",
+                                        params: { type: "email" },
+                                    })
+                                }
+                            >
+                                <AUIThemedText style={styles.link}>
+                                    {t("change_email")}
+                                </AUIThemedText>
+                            </TouchableOpacity>
+                        </AUIThemedView>
+                        <AUIInputField
+                            style={styles.disabledInput}
+                            editable={false}
+                            value={mySchoolDetails?.email}
+                        />
+                    </AUIThemedView>
+
+                    <Controller
+                        name="description"
+                        control={control}
+                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <AUIThemedView>
+                                <AUIThemedText style={styles.label}>
+                                    {t("description")}
+                                </AUIThemedText>
+                                <AUIInputField
+                                    onChangeText={onChange}
+                                    placeholder={t("enter_description")}
+                                    value={value}
+                                />
+                                {error && (
+                                    <AUIThemedText style={styles.fieldError}>
+                                        {error.message}
+                                    </AUIThemedText>
+                                )}
+                            </AUIThemedView>
+                        )}
+                    />
+                    <Controller
+                        name="remark"
+                        control={control}
+                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <AUIThemedView>
+                                <AUIThemedText style={styles.label}>{t("remark")}</AUIThemedText>
+                                <AUIInputField
+                                    onChangeText={onChange}
+                                    placeholder={t("enter_remark")}
+                                    value={value}
+                                />
+                                {error && (
+                                    <AUIThemedText style={styles.fieldError}>
+                                        {error.message}
+                                    </AUIThemedText>
+                                )}
+                            </AUIThemedView>
+                        )}
+                    />
+
+                    <Controller
+                        name="website"
+                        control={control}
+                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <AUIThemedView>
+                                <AUIThemedText style={styles.label}>{t("website")}</AUIThemedText>
+                                <AUIInputField
+                                    onChangeText={onChange}
+                                    placeholder={t("enter_website")}
+                                    value={value}
+                                />
+                                {error && (
+                                    <AUIThemedText style={styles.fieldError}>
+                                        {error.message}
+                                    </AUIThemedText>
+                                )}
+                            </AUIThemedView>
+                        )}
+                    />
+
+                    <AUIThemedView style={styles.footerContainer}>
+                        <AUIThemedView style={styles.buttonContainer}>
+                            <AUIButton
+                                title={t("reset_defaults")}
+                                onPress={() => {
+                                    ApiSuccessToast(`${t("reset")}`);
+                                    reset();
+                                }}
+                                style={{ width: "48%" }}
+                            />
+                            <AUIButton
+                                title={t("save")}
+                                selected
+                                onPress={handleSubmit(onSave)}
+                                disabled={!formState.isValid}
+                                style={{ width: "48%" }}
+                            />
+                        </AUIThemedView>
+                    </AUIThemedView>
                 </AUIThemedView>
-            </AUIThemedView>
-        </ScrollView>
+            </ScrollView>
+        </KeyboardAvoidingView>
     );
 };
 
 const styles = StyleSheet.create({
+    disabledInput: {
+        backgroundColor: "#f0f0f0",
+        opacity: 0.5,
+        borderWidth: 0,
+        borderRadius: 10,
+    },
+    link: {
+        color: "blue",
+        marginTop: 10,
+        marginBottom: 5,
+        fontSize: 13,
+        fontWeight: "bold",
+        fontStyle: "normal",
+    },
+    labelContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+    },
     container: {
         flex: 1,
         padding: 20,
@@ -266,14 +346,12 @@ const styles = StyleSheet.create({
         fontSize: 13,
     },
     buttonContainer: {
-        marginTop: 10,
+        marginVertical: 20,
         flexDirection: "row",
         justifyContent: "space-between",
         gap: 10,
     },
     footerContainer: {
-        paddingHorizontal: 20,
-        paddingBottom: 20,
         justifyContent: "center",
     },
 });

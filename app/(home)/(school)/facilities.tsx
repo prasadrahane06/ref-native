@@ -7,7 +7,7 @@ import useApiRequest from "@/customHooks/useApiRequest";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
 import { useFocusEffect } from "expo-router";
-import { default as React, useCallback, useState } from "react";
+import { default as React, useCallback, useEffect, useState } from "react";
 import { Image, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import AddNewFacilities from "../addNewFacility/AddFacility";
@@ -27,6 +27,7 @@ export default function TabFourScreen() {
     const [isAddFacilityVisible, setAddFacilityVisible] = useState(false);
     const [selectedFacility, setSelectedFacility] = useState<Facility | undefined>(undefined);
     const [page, setPage] = useState<number>(1);
+    const [showMessage, setShowMessage] = useState(true);
 
     const refreshFacilities = () => {
         requestFn(API_URL.facility, "myFacilitys", { client: true, page: `${page}` });
@@ -48,6 +49,17 @@ export default function TabFourScreen() {
         setSelectedFacility(facility);
         setAddFacilityVisible(true);
     };
+
+    useEffect(() => {
+        if (page === myFacilitys.totalPages) {
+            const timer = setTimeout(() => {
+                setShowMessage(false);
+            }, 5000);
+            return () => clearTimeout(timer);
+        } else {
+            setShowMessage(true);
+        }
+    }, [page, myFacilitys.totalPages]);
 
     const renderItem = ({ item }: { item: Facility }) => (
         <TouchableOpacity onPress={() => handleEditFacility(item)}>
@@ -86,17 +98,17 @@ export default function TabFourScreen() {
                 refreshFacilities={refreshFacilities}
                 facility={selectedFacility}
             />
-             <TouchableOpacity
-                        style={{ padding: 10, alignItems: "center" }}
-                        disabled={page === myFacilitys.totalPages}
-                        onPress={() => {
-                            setPage((prevPage) => prevPage + 1);
-                        }}
-                    >
-                        <AUIThemedText>
-                            {page === myFacilitys.totalPages ? `${t("you_are_caught_up")}` :`${t("load_more")}`}
-                        </AUIThemedText>
-                    </TouchableOpacity>
+            <TouchableOpacity
+                style={{ padding: 10, alignItems: "center" }}
+                disabled={page === myFacilitys.totalPages}
+                onPress={() => setPage((prevPage: any) => prevPage + 1)}
+            >
+                {page === myFacilitys.totalPages ? (
+                    showMessage && <AUIThemedText>{`${t("you_are_caught_up")}`}</AUIThemedText>
+                ) : (
+                    <AUIThemedText>{`${t("load_more")}`}</AUIThemedText>
+                )}
+            </TouchableOpacity>
         </AUIThemedView>
     );
 }

@@ -30,6 +30,7 @@ function PurchaseCourses({
     type,
     courseId,
 }: PurchaseCoursesProps) {
+    const { t } = useTranslation();
     return (
         <TouchableOpacity
             style={purchaseCoursesStyle.item}
@@ -63,7 +64,7 @@ function PurchaseCourses({
                                 ? "Starting from:01-08-2024"
                                 : type === "COMPLETED"
                                 ? "View Certificate"
-                                : "Ongoing"
+                                : `${t("ongoing")}`
                         }
                         selected
                         style={{ width: "40%" }}

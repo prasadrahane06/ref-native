@@ -12,9 +12,10 @@ import useApiRequest from "@/customHooks/useApiRequest";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
 import Checkbox from "expo-checkbox";
-import { t } from "i18next";
+// import { t } from "i18next";
 import React, { useEffect, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { ScrollView, StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
 
@@ -46,6 +47,7 @@ interface Facility {
     status: number;
 }
 const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans }) => {
+    const { t } = useTranslation();
     const user = useSelector((state: RootState) => state.global.user);
     const { control, handleSubmit, reset, setValue, getValues } = useForm();
     const { post, patch, del } = useAxios();
@@ -55,14 +57,22 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
     const [facilities, setFacilities] = useState<Facility[]>([]);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [initialValues, setInitialValues] = useState<any>({});
+    const [newFacility, setNewFacility] = useState<string[]>([]);
 
     useEffect(() => {
         requestFn(API_URL.facility, "myFacilitys", { client: true });
     }, []);
 
     useEffect(() => {
-        requestFn(API_URL.plan, "coursePlans", { client: true });
-    }, []);
+        if (plan && plan.facilities && plan.facilities.length > 0) {
+            const facilityIds = plan.facilities.map((item: any) => item._id);
+            setNewFacility(facilityIds);
+        }
+    }, [plan]);
+
+    useEffect(() => {
+        setSelectedFacilities(newFacility);
+    }, [newFacility]);
 
     useEffect(() => {
         if (facility?.docs?.length > 0) {
@@ -117,15 +127,12 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
         post(API_URL.plan, payload)
             .then((res) => {
                 ApiSuccessToast(`${t("new_plan_added_successfully")}`);
-                ApiSuccessToast(`${t("new_plan_added_successfully")}`);
                 reset();
                 onClose();
             })
             .catch((e) => {
                 console.log(e);
             });
-
-        // requestFn()
     };
 
     const handleEdit = (data: any) => {
@@ -282,7 +289,6 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                                 <Controller
                                     control={control}
                                     name={`courses[${index}].title`}
-                                    defaultValue=""
                                     render={({ field: { onChange, value } }) => (
                                         <AUIInputField
                                             label={t("title")}
@@ -319,7 +325,7 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                     </AUIThemedView>
                     <AUIThemedView style={styles.planContainer}>
                         <AUIThemedText style={styles.createYourPlanTitle}>
-                        {t("select_facilities")}
+                            {t("select_facilities")}
                         </AUIThemedText>
                         <AUIAccordion
                             style={styles.AUIAccordion}
@@ -332,7 +338,7 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                                         <Controller
                                             control={control}
                                             name={`facility_${facility?._id}`}
-                                            defaultValue={false}
+                                            defaultValue={selectedFacilities.includes(facility._id)}
                                             render={({ field: { onChange, value } }) => (
                                                 <>
                                                     <Checkbox
@@ -478,6 +484,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         gap: 10,
         paddingLeft: 10,
+        alignItems:"center"
     },
     CheckboxContainer1: {
         flexDirection: "column",

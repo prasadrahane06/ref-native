@@ -26,7 +26,8 @@ import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { Platform, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { useSelector } from "react-redux";
 import AddPlan from "./AddPlan";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
+// import { t } from "i18next";
 
 interface Plan {
     _id: string;
@@ -58,45 +59,70 @@ interface FormValues {
 }
 
 const AUIAddNewCourse = () => {
+    const { t } = useTranslation();
+    const params = useLocalSearchParams();
+    const id = params.id;
+    console.log("id =>", id);
+    const edit = params.edit;
+    const EditCourseResponse = useLangTransformSelector((state: RootState) => state.api.editCourse);
+    console.log("EditCourseResponse =>", JSON.stringify(EditCourseResponse));
     const user = useSelector((state: RootState) => state.global.user);
     const theme = useSelector((state: RootState) => state.global.theme);
     const plans = useLangTransformSelector((state: RootState) => state.api.coursePlans)?.docs || [];
     const [showFromDatePicker, setShowFromDatePicker] = useState(false);
     const [showToDatePicker, setShowToDatePicker] = useState(false);
     const [isAddPlanVisible, setAddPlanVisible] = useState(false);
-    const [selectedPlan, setSelectedPlan] = useState<string[]>([]);
-    const [renderSelectedPlan, setRenderSelectedPlan] = useState<Plan[]>([]);
+
+    const [editCourse, setEditCourse] = useState<any>(() => {
+        if (edit && EditCourseResponse?.docs[0]) {
+            return EditCourseResponse?.docs[0];
+        }
+    });
+    const [selectedPlan, setSelectedPlan] = useState<string[]>(() => {
+        if (edit && editCourse && editCourse.plan && editCourse.plan.length > 0) {
+            return editCourse?.plan.map((item: any) => {
+                return item._id;
+            });
+        }
+        return [];
+    });
+    const [renderSelectedPlan, setRenderSelectedPlan] = useState<Plan[]>(() => {
+        if (edit && editCourse && editCourse.plan && editCourse.plan.length > 0) {
+            return editCourse.plan;
+        }
+        return [];
+    });
+
     const [currentPlan, setCurrentPlan] = useState<Plan | undefined>(undefined);
     const [isImageEdited, setIsImageEdited] = useState(false);
-    const [image, setImage] = useState<string | null>(null);
+    const [image, setImage] = useState<string | any>(() => {
+        if (edit && editCourse && editCourse.image) {
+            return editCourse.image;
+        }
+        return "";
+    });
+    const [showImage, setShowImage] = useState<any>("");
     const [showConfirmation, setShowConfirmation] = useState(false);
     const { post, patch, del } = useAxios();
     const { requestFn } = useApiRequest();
     const navigation = useNavigation();
     const effect = useIsomorphicLayoutEffect();
-    const params = useLocalSearchParams();
-    const course = params.course
-        ? JSON.parse(Array.isArray(params.course) ? params.course[0] : params.course)
-        : null;
-    const edit = params.edit;
     const hasMounted = useRef(false);
-    const { control, handleSubmit, reset, setValue } = useForm<FormValues>({
+    console.log("editCourse---", editCourse);
+    const { control, handleSubmit, reset, setValue, watch } = useForm<FormValues>({
         mode: "onChange",
-        defaultValues: course
+        defaultValues: editCourse
             ? {
-                  courseName: course.courseName,
-                  description: course.description,
-                  language: course.language,
-                  totalSeats: course.numberOfSeats,
-                  scheduleFrom: new Date(course.startDate),
-                  scheduleTo: new Date(course.endDate),
-                  currentType: course.currencyType,
-                  category: course.category,
-                  image: course.image,
-                  plans: plans.reduce(
-                      (acc: any, plan: { _id: any }) => ({ ...acc, [plan?._id]: false }),
-                      {}
-                  ),
+                  courseName: editCourse.courseName,
+                  description: editCourse.description,
+                  language: editCourse.language,
+                  totalSeats: editCourse.numberOfSeats,
+                  scheduleFrom: new Date(editCourse.startDate),
+                  scheduleTo: new Date(editCourse.endDate),
+                  currentType: editCourse.currencyType,
+                  category: editCourse.category,
+                  image: editCourse.image,
+                  plans: [],
               }
             : {
                   courseName: "",
@@ -108,18 +134,15 @@ const AUIAddNewCourse = () => {
                   currentType: "",
                   category: "",
                   image: "",
-                  plans: plans.reduce(
-                      (acc: any, plan: { _id: any }) => ({ ...acc, [plan?._id]: false }),
-                      {}
-                  ),
+                  plans: [],
               },
     });
+
     useEffect(() => {
-        if (course && !hasMounted.current) {
-            setImage(course.image);
-            hasMounted.current = true;
+        if (id) {
+            requestFn(API_URL.course, "editCourse", { id: id });
         }
-    }, [course]);
+    }, [id]);
 
     effect(() => {
         navigation.setOptions({
@@ -130,6 +153,8 @@ const AUIAddNewCourse = () => {
                     {edit === "true" ? `${t("edit_course")}` : `${t("add_new_course")}`}
                 </AUIThemedText>
             ),
+            headerTitleStyle: { color: TEXT_THEME[theme].primary, fontWeight: "bold" },
+            headerStyle: { backgroundColor: BACKGROUND_THEME[theme].background },
         });
     }, [edit, navigation]);
 
@@ -152,12 +177,6 @@ const AUIAddNewCourse = () => {
             refreshPlans();
         }, [isAddPlanVisible])
     );
-
-    const filteredPlans = useMemo(() => {
-        return renderSelectedPlan.filter((plan) =>
-            plans.some((p: { _id: string }) => p?._id === plan?._id)
-        );
-    }, [plans, renderSelectedPlan]);
     const { fields, append } = useFieldArray({
         control,
         name: "courses",
@@ -169,13 +188,27 @@ const AUIAddNewCourse = () => {
         }
     }, [fields.length, append]);
 
+    const scheduleFrom = watch("scheduleFrom");
     const onChangeFrom = (event: any, selectedDate?: Date) => {
         setShowFromDatePicker(Platform.OS === "ios");
         setValue("scheduleFrom", selectedDate || new Date());
+        if (selectedDate) {
+            // Ensure scheduleTo is not earlier than scheduleFrom
+            const scheduleTo = watch("scheduleTo");
+            if (scheduleTo && selectedDate > scheduleTo) {
+                setValue("scheduleTo", selectedDate);
+            }
+        }
     };
 
     const onChangeTo = (event: any, selectedDate?: Date) => {
         setShowToDatePicker(Platform.OS === "ios");
+        if (selectedDate && selectedDate < scheduleFrom) {
+            // Optionally show an error message
+            alert("End date cannot be before the start date.");
+            setShowToDatePicker(true);
+            return;
+        }
         setValue("scheduleTo", selectedDate || new Date());
     };
 
@@ -192,7 +225,7 @@ const AUIAddNewCourse = () => {
                 currencyType: data.currentType,
                 category: data.category.value,
                 courses: data.courses,
-                image: image,
+                image: `data:image/png;base64,${image}`,
                 status: 1,
                 plan: selectedPlan,
             };
@@ -208,17 +241,18 @@ const AUIAddNewCourse = () => {
     const handleEdit = (data: any) => {
         const payload: any = {
             ...data,
-            id: course?._id,
+            id: editCourse?._id,
             plan: selectedPlan,
         };
+        console.log("image", image);
         if (isImageEdited) {
-            payload.image = image;
+            payload.image = `data:image/png;base64,${image}`;
         } else {
             delete payload.image;
         }
         patch(API_URL.course, payload)
             .then((res) => {
-                ApiSuccessToast(`${t("plan_updated_successfully")}`);
+                ApiSuccessToast(res.message);
                 navigation.goBack();
                 reset();
             })
@@ -228,8 +262,8 @@ const AUIAddNewCourse = () => {
             });
     };
     const handleDelete = () => {
-        if (!course?._id) return;
-        del(`${API_URL.course}?id=${course?._id}`)
+        if (!editCourse?._id) return;
+        del(API_URL.course, {}, { id: editCourse?._id })
             .then((res) => {
                 ApiSuccessToast(`${t("course_deleted_successfully")}`);
                 navigation.goBack();
@@ -244,48 +278,19 @@ const AUIAddNewCourse = () => {
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            base64: true,
             allowsEditing: true,
-            aspect: [4, 3],
             quality: 1,
         });
 
         if (!result.canceled) {
-            const assetUri = result.assets[0]?.uri;
-            const manipResult = await ImageManipulator.manipulateAsync(
-                assetUri,
-                [{ resize: { width: 500 } }],
-                { compress: 0.2, format: ImageManipulator.SaveFormat.JPEG }
-            );
-            const base64Image = await convertImageToBase64(manipResult?.uri);
-            setImage(base64Image);
+            setImage(result.assets[0].base64);
+            setShowImage(result.assets[0].uri);
             setIsImageEdited(true);
-            setValue("image", base64Image);
+        } else {
+            alert("You did not select any image.");
         }
     };
-    const convertImageToBase64 = (uri: string) => {
-        return new Promise<string>((resolve, reject) => {
-            const xhr = new XMLHttpRequest();
-            xhr.onload = function () {
-                const reader = new FileReader();
-                reader.onloadend = function () {
-                    resolve(reader.result as string);
-                };
-                reader.readAsDataURL(xhr.response);
-            };
-            xhr.onerror = function () {
-                reject(new Error(`${t("failed_to_convert_image_to_base")}`));
-            };
-            xhr.open("GET", uri);
-            xhr.responseType = "blob";
-            xhr.send();
-        });
-    };
-    const truncateFileName = (fileName: string, maxLength: number) => {
-        if (fileName.length <= maxLength) return fileName;
-        return fileName.substring(0, maxLength - 3) + "...";
-    };
-
     const handleCheckboxChange = (planId: string, isChecked: boolean, plan: Plan) => {
         setSelectedPlan((prev) => {
             const updatedSelectedPlan = isChecked
@@ -308,6 +313,10 @@ const AUIAddNewCourse = () => {
         setSelectedPlan([]);
         setAddPlanVisible(true);
         setCurrentPlan(undefined);
+    };
+    const truncateFileName = (fileName: string, maxLength: number) => {
+        if (fileName.length <= maxLength) return fileName;
+        return fileName.substring(0, maxLength - 3) + "...";
     };
 
     return (
@@ -461,16 +470,27 @@ const AUIAddNewCourse = () => {
             <AUIThemedView style={styles.imagePickerContainer}>
                 <TouchableOpacity onPress={pickImage} style={styles.uploadButton}>
                     <MaterialIcons name="cloud-upload" size={24} color="#5BD894" />
-                    <AUIThemedText style={styles.uploadButtonText}>{t("upload_file")}</AUIThemedText>
+                    <AUIThemedText style={styles.uploadButtonText}>
+                        {t("upload_file")}
+                    </AUIThemedText>
                 </TouchableOpacity>
                 <AUIThemedText style={styles.fileName}>
-                    {image ? truncateFileName(image.split("/").pop()!, 18) :` ${t("no_file_chosen")}`}
+                    {image
+                        ? truncateFileName(image.split("/").pop()!, 18)
+                        : ` ${t("no_file_chosen")}`}
                 </AUIThemedText>
             </AUIThemedView>
-            {image && <Image source={{ uri: image }} style={styles.image} />}
+            {showImage ? (
+                <Image source={{ uri: showImage }} style={styles.image} />
+            ) : (
+                image && <Image source={{ uri: image }} style={styles.image} />
+            )}
+
             <AUIThemedView>
                 <AUIThemedView style={styles.planContainer}>
-                    <AUIThemedText style={styles.createYourPlanTitle}>{t("select_plan")}</AUIThemedText>
+                    <AUIThemedText style={styles.createYourPlanTitle}>
+                        {t("select_plan")}
+                    </AUIThemedText>
                     <AUIAccordion
                         style={styles.AUIAccordion}
                         innerStyle={styles.AUIAccordionInnerStyle}
@@ -488,7 +508,7 @@ const AUIAddNewCourse = () => {
                                     <Controller
                                         control={control}
                                         name={`plans.${plan?._id}`}
-                                        defaultValue={false}
+                                        defaultValue={selectedPlan.includes(plan?._id)}
                                         render={({ field: { onChange, value } }) => (
                                             <>
                                                 <Checkbox
@@ -505,7 +525,7 @@ const AUIAddNewCourse = () => {
                                                     color={value ? "#5BD894" : undefined}
                                                 />
                                                 <AUIThemedText style={styles.facilitiesLabel}>
-                                                    {plan.name}
+                                                    {plan?.name}
                                                 </AUIThemedText>
                                             </>
                                         )}
@@ -514,7 +534,7 @@ const AUIAddNewCourse = () => {
                             </AUIThemedView>
                         ))}
                     </AUIAccordion>
-                    {filteredPlans?.map((plan: Plan, index: number) => {
+                    {renderSelectedPlan?.map((plan: Plan, index: number) => {
                         return (
                             <AUIAccordion
                                 key={plan?._id}
@@ -530,7 +550,7 @@ const AUIAddNewCourse = () => {
                                             Total Duration
                                         </AUIThemedText>
                                         <AUIThemedText style={styles.label2}>
-                                            {plan.duration}
+                                            {plan?.duration}
                                         </AUIThemedText>
                                     </AUIThemedView>
                                 </AUIThemedView>
@@ -540,7 +560,7 @@ const AUIAddNewCourse = () => {
                                             Total fee
                                         </AUIThemedText>
                                         <AUIThemedText style={styles.label2}>
-                                            {plan.price}
+                                            {plan?.price}
                                         </AUIThemedText>
                                     </AUIThemedView>
                                 </AUIThemedView>
@@ -550,7 +570,7 @@ const AUIAddNewCourse = () => {
                                             Book your seat
                                         </AUIThemedText>
                                         <AUIThemedText style={styles.label2}>
-                                            {plan.bookYourSeat}
+                                            {plan?.bookYourSeat}
                                         </AUIThemedText>
                                     </AUIThemedView>
                                 </AUIThemedView>
@@ -572,7 +592,7 @@ const AUIAddNewCourse = () => {
                 />
             </AUIThemedView>
             <AUIThemedView style={styles.buttonContainer}>
-                {course ? (
+                {editCourse ? (
                     <AUIThemedView style={styles.buttonMainContainer}>
                         <AUIThemedView style={styles.buttonContainer}>
                             <AUIButton
@@ -696,6 +716,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         gap: 10,
         paddingLeft: 10,
+        alignItems: "center",
     },
     CheckboxContainer1: {
         flexDirection: "column",

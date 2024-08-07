@@ -3,13 +3,15 @@ import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { StyleSheet,ScrollView, View  } from "react-native";
 import AUIAccordion from "@/components/common/AUIAccordion";
 import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
-import { t } from "i18next";
+// import { t } from "i18next";
 import { APP_THEME, BACKGROUND_THEME, TEXT_THEME, ThemeType } from "@/constants/Colors";
 import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 
 const Help = () => {
+  const { t } = useTranslation();
     const theme = useSelector((state: RootState) => state.global.theme);
     const faqData = [
         { question: ' What are some of the advantages of attending college online?', answer: "Online education is known for its flexibility" },
@@ -46,6 +48,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 20,
         color:"orange"
+        // color: APP_THEME.light.ternary.first,
       },
       container: {
         flexGrow: 1,
@@ -58,8 +61,10 @@ const styles = StyleSheet.create({
         paddingVertical: 5,
       },
       answer: {
+        flex: 1,
         fontSize: 16,
-        // color={TEXT_THEME[theme].primary}
+        marginLeft:18
+        
       },
 });
 

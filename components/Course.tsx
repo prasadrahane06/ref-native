@@ -171,7 +171,7 @@ const Course: React.FC<CourseProps> = ({
 };
 
 const styles = StyleSheet.create({
-    dateStyle: { fontSize: 11,marginHorizontal:6 },
+    dateStyle: { fontSize: 11, marginHorizontal: 6 },
     courseContainer: {},
     layout: {
         backgroundColor: "transparent",
@@ -198,8 +198,7 @@ const styles = StyleSheet.create({
     courseTitle: {
         fontSize: 13,
         fontWeight: "700",
-        marginHorizontal:6
-
+        marginHorizontal: 6,
     },
     courseCaption: {
         fontSize: 11,

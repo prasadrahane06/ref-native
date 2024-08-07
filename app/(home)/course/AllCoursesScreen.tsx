@@ -6,13 +6,15 @@ import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
-import { t } from "i18next";
+// import { t } from "i18next";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 
 const AllCoursesScreen = () => {
+    const { t } = useTranslation();
     //state
     const [page, setPage] = useState(1);
     const theme = useSelector((state: RootState) => state.global.theme);

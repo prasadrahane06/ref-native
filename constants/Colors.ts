@@ -72,7 +72,8 @@ const APP_THEME: { [key in ThemeType]: AppTheme } = {
         primary: {
             first: "#5BD894", //"#93D1BF",
             second: "#A5D7B9",
-            third: "#95CF9C",
+            // third: "#95CF9C",
+            third: "#D3FFE7",
         },
         secondary: {
             first: "#76FAB2", //"#9CD292",

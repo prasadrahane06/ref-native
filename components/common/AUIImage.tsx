@@ -4,15 +4,15 @@ import { Image } from "expo-image";
 import { Asset } from "expo-asset";
 
 const AUIImage = ({ path, style, preview, icon, ...props }: any) => {
-    let source = "";
+    let source = null;
 
     if (typeof path === "object") {
-        if (path.uri) {
-            source = path.uri;
-        } else if (path.localUri) {
-            source = path.localUri;
+        if (path?.uri) {
+            source = path?.uri;
+        } else if (path?.localUri) {
+            source = path?.localUri;
         } else {
-            return null;
+            source = null;
         }
     } else {
         source = path;

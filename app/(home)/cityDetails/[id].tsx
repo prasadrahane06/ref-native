@@ -209,7 +209,10 @@ export default function CityDetails() {
                             source={{
                                 uri:
                                     country?.images?.[0] ||
-                                    Asset.fromModule(require("@/assets/images/local/no_image.png")),
+                                    Asset.fromModule(require("@/assets/images/local/no_image.png"))
+                                        ?.uri ||
+                                    Asset.fromModule(require("@/assets/images/local/no_image.png"))
+                                        ?.localUri,
                             }}
                             style={[styles.image, imageAnimatedStyle]}
                             resizeMode="cover"

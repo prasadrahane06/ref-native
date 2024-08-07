@@ -38,6 +38,10 @@ export default function HomeScreen() {
     const _id = user?._id;
 
     let schoolsResponse = response?.school;
+    const approvedSchools = schoolsResponse?.docs?.filter(
+        (school: any) => school?.approvalStatus === "approved"
+    );
+
     const courseResponse = response?.selectedLanguagecourse;
     const countryResponse = response?.country;
     let lastChanceResponse = response?.lastDateToApply;
@@ -118,7 +122,7 @@ export default function HomeScreen() {
                 >
                     {t(GLOBAL_TRANSLATION_LABEL.popular_school)}
                 </SectionTitle>
-                <SchoolList data={schoolsResponse?.docs.slice(0, 4)} />
+                <SchoolList data={approvedSchools?.slice(0, 4)} />
             </AUIThemedView>
 
             <AUIThemedView>

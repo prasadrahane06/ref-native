@@ -148,7 +148,6 @@ const AUIDrawerContent = (props: any) => {
                         style={{
                             fontSize: 15,
                             marginLeft: 5,
-                            fontFamily: "GilroyMedium",
                         }}
                     >
                         {t(GLOBAL_TRANSLATION_LABEL.darkMode)}
@@ -230,6 +229,7 @@ const styles = StyleSheet.create({
     },
     welcome: {
         fontSize: 15,
+        fontWeight: "bold",
         // color: APP_THEME.gray,
     },
     menuItemContainer: {

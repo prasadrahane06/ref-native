@@ -10,14 +10,14 @@ import AUIImage from "../common/AUIImage";
 import { AUIThemedText } from "../common/AUIThemedText";
 import { AUIThemedView } from "../common/AUIThemedView";
 import { ApiSuccessToast } from "../common/AUIToast";
-import { t } from "i18next";
+// import { t } from "i18next";
 import { useTranslation } from "react-i18next";
 
 const array = [
     {
         id: 1,
         icon: <FontAwesome6 name="user-circle" size={24} color={APP_THEME.light.primary.first} />,
-        label:"school_profile",
+        label: "school_profile",
         pathname: "/schoolProfile",
     },
     {
@@ -30,7 +30,7 @@ const array = [
         id: 3,
         icon: <Fontisto name="wallet" size={24} color={APP_THEME.light.primary.first} />,
         label: "transaction_history",
-        patame: "/transactions",
+        pathname: "/transactions",
     },
 ];
 function SchoolProfile() {
@@ -97,7 +97,7 @@ function SchoolProfile() {
                 ))}
 
                 {/* Delete Account */}
-                <TouchableOpacity
+                {/* <TouchableOpacity
                     style={styles.deleteLayout}
                     onPress={() => {
                         Alert.alert(
@@ -123,14 +123,13 @@ function SchoolProfile() {
                         <AUIThemedText style={{ color: "white" }}>{t("delete_account")}</AUIThemedText>
                     </View>
                     <MaterialIcons name="keyboard-arrow-right" size={24} color="white" />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
             </AUIThemedView>
         </AUIThemedView>
     );
 }
 
 export default SchoolProfile;
-
 
 const styles = StyleSheet.create({
     root: {

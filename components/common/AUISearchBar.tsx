@@ -46,16 +46,19 @@ const AUISearchBar: React.FC<SearchBarProps> = ({
         switch (type) {
             case "country":
                 router.push({
+                    //@ts-ignore
                     pathname: `/(home)/cityDetails/${item?._id}`,
                 });
                 break;
             case "course":
                 router.push({
+                    //@ts-ignore
                     pathname: `/(home)/courseDetails/${item?._id}`,
                 });
                 break;
             case "school":
                 router.push({
+                    //@ts-ignore
                     pathname: `/(home)/schoolDetails/${item?._id}`,
                 });
                 break;

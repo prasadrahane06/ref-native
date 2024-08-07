@@ -3,12 +3,14 @@ import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { RootState } from "@/redux/store";
-import { t } from "i18next";
+// import { t } from "i18next";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
 
 export default function CourseDetailsComponent({ plan }: any) {
+    const { t } = useTranslation();
     const theme = useSelector((state: RootState) => state.global.theme);
 
     return (

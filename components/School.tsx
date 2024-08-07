@@ -80,9 +80,21 @@ const School: React.FC<SchoolProps> = ({ id, title, image, caption, favorite, st
                             start={{ x: 0, y: 1 }}
                             end={{ x: 0, y: 0 }}
                         />
-                        <AUIThemedText style={styles.schoolTitle}>{title}</AUIThemedText>
+                        <AUIThemedText
+                            style={styles.schoolTitle}
+                            numberOfLines={2}
+                            ellipsizeMode="tail"
+                        >
+                            {title}
+                        </AUIThemedText>
                         {caption && (
-                            <AUIThemedText style={styles.schoolCaption}>{caption}</AUIThemedText>
+                            <AUIThemedText
+                                style={styles.schoolCaption}
+                                numberOfLines={2}
+                                ellipsizeMode="tail"
+                            >
+                                {caption}
+                            </AUIThemedText>
                         )}
                         {favorite && (
                             <TouchableOpacity
@@ -114,23 +126,23 @@ const styles = StyleSheet.create({
         overflow: "hidden",
     },
     schoolTitle: {
-        top: 100,
+        top: 90,
         textAlign: "center",
         color: "white",
-        fontSize: 14,
-        fontWeight: "600",
+        fontSize: 15,
+        fontWeight: "bold",
         letterSpacing: 1,
         lineHeight: 15,
+        paddingHorizontal: 10,
     },
     schoolCaption: {
         top: 95,
         textAlign: "center",
         color: "white",
-        fontSize: 10,
-        lineHeight: 10,
+        fontSize: 12,
+        lineHeight: 13,
         opacity: 0.8,
-        fontFamily: "GilroyMedium",
-        paddingTop: 10,
+        paddingHorizontal: 10,
     },
     image: {
         width: "100%",

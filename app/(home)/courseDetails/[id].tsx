@@ -16,8 +16,9 @@ import { RootState } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { t } from "i18next";
+// import { t } from "i18next";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import Animated, {
     interpolate,
@@ -33,6 +34,7 @@ interface CoursePlanTabsProps {
 }
 
 function CoursePlanTabs({ courseId, clientId }: CoursePlanTabsProps) {
+    const { t } = useTranslation();
     const [plans, setPlans] = useState<any[]>([]);
     const [selectedPlan, setSelectedPlan] = useState("");
     const [clientDetails, setClientDetails] = useState({});
@@ -108,6 +110,7 @@ function CoursePlanTabs({ courseId, clientId }: CoursePlanTabsProps) {
 }
 
 export default function CourseDetails() {
+    const { t } = useTranslation();
     const { requestFn } = useApiRequest();
     const dispatch = useDispatch();
     const effect = useIsomorphicLayoutEffect();

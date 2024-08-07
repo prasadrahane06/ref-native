@@ -1,9 +1,11 @@
 import React from "react";
 import { AUIThemedView } from "./AUIThemedView";
 import { AUIThemedText } from "./AUIThemedText";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
+// import { t } from "i18next";
 
 const AUIComingSoon = () => {
+    const { t } = useTranslation();
     return (
         <AUIThemedView
             style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 50 }}

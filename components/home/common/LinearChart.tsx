@@ -2,8 +2,9 @@ import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { RootState } from "@/redux/store";
-import { t } from "i18next";
+// import { t } from "i18next";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Dimensions, StyleSheet, Text, View } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import { useSelector } from "react-redux";
@@ -27,6 +28,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     yAxisSuffix,
     yAxisInterval,
 }) => {
+    const { t } = useTranslation();
     const theme = useSelector((state: RootState) => state.global.theme);
 
     const isDataEmpty = labels.length === 0 || pendingData.length === 0 || doneData.length === 0;
@@ -56,9 +58,6 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
                 style={[styles.container, { backgroundColor: APP_THEME[theme].background }]}
             >
                 <AUIThemedText style={[styles.title]}>{title}</AUIThemedText>
-                {isDataEmpty ? (
-                    <AUIThemedText style={styles.noDataText}>{t("no_data_available")}</AUIThemedText>
-                ) : (
                     <>
                         <AUIThemedView style={styles.legendContainer}>
                             <AUIThemedView style={styles.legendItem}>
@@ -102,7 +101,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
                             }}
                             width={Dimensions.get("window").width * 0.9}
                             height={220}
-                            yAxisLabel={yAxisLabel}
+                            yAxisLabel={yAxisLabel }
                             yAxisSuffix={yAxisSuffix}
                             yAxisInterval={yAxisInterval}
                             chartConfig={chartConfig}
@@ -110,7 +109,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
                             style={styles.chart}
                         />
                     </>
-                )}
+      
             </AUIThemedView>
         </AUIThemedView>
     );

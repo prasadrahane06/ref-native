@@ -188,6 +188,7 @@ const TabTwoScreen: React.FC = () => {
                         ]}
                     >
                         <SectionTitle
+                            viewAllVisible={fav?.courses.length > 6}
                             onViewAllClick={handleViewAllCoursesClick}
                             style={{ paddingHorizontal: 5 }}
                             titleStyle={styles.title}
@@ -216,6 +217,7 @@ const TabTwoScreen: React.FC = () => {
                         ]}
                     >
                         <SectionTitle
+                            viewAllVisible={fav?.clients.length > 6}
                             onViewAllClick={handleViewAllSchoolsClick}
                             style={{ paddingBottom: 10, paddingHorizontal: 5 }}
                             titleStyle={styles.title}
@@ -239,6 +241,7 @@ const TabTwoScreen: React.FC = () => {
                 {fav?.countries && fav?.countries.length > 0 && (
                     <AUIThemedView style={styles.destinationContainer}>
                         <SectionTitle
+                            viewAllVisible={fav?.countries.length > 6}
                             onViewAllClick={handleViewAllCountrySchoolsClick}
                             style={{ paddingHorizontal: 5 }}
                             titleStyle={styles.title}
@@ -296,7 +299,6 @@ const styles = StyleSheet.create({
     },
     title: {
         letterSpacing: 0,
-        fontFamily: "GilroyLight",
         fontWeight: "700",
     },
     destinationContainer: {

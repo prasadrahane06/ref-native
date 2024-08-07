@@ -7,15 +7,17 @@ import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { API_URL } from "@/constants/urlProperties";
+import useLoading from "@/customHooks/useLoading";
 import { RootState } from "@/redux/store";
 import { MaterialIcons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Image } from "expo-image";
 import * as ImageManipulator from "expo-image-manipulator";
 import * as ImagePicker from "expo-image-picker";
-import { t } from "i18next";
+// import { t } from "i18next";
 import { default as React, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { Dimensions, Platform, Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import { useSelector } from "react-redux";
 
@@ -35,10 +37,12 @@ interface event {
 }
 
 const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvents }) => {
+    const { t } = useTranslation();
     const [image, setImage] = useState<string | null>(null);
     const user = useSelector((state: RootState) => state.global.user);
     const { post, patch, del } = useAxios();
-    const { control, handleSubmit, reset, setValue, getValues } = useForm({
+    const {loading  , setLoading } = useLoading();
+    const { control, handleSubmit, reset, setValue, getValues  } = useForm({
         defaultValues: {
             eventName: "",
             description: "",
@@ -73,6 +77,7 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
     }, [event, visible, reset, setValue]);
 
     const handleSave = () => {
+        setLoading(true);
         const values = getValues();
         const payload = {
             client: user?.client,
@@ -92,19 +97,20 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
             .catch((e) => {
                 ApiErrorToast(`${t("failed_to_add_event")}`);
                 console.log(e);
-            });
+            }).finally(() => setLoading(false));
     };
 
     const handleEdit = () => {
         const values = getValues();
         const payload: any = { id: event?._id };
-
+        
         if (values.eventName !== event?.eventName) payload.eventName = values.eventName;
         if (values.description !== event?.description) payload.description = values.description;
         if (selectedDate?.toISOString() !== event?.date) payload.date = selectedDate?.toISOString();
         if (values.location !== event?.location) payload.location = values.location;
         if (image !== event?.eventImage) payload.eventImage = image;
-
+        
+        setLoading(true);
         patch(API_URL.event, payload)
             .then((res) => {
                 ApiSuccessToast(`${t("event_updated_successfully")}`);
@@ -115,7 +121,7 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
             .catch((e) => {
                 ApiErrorToast(`${t("failed_to_update_event")}`);
                 console.log(e);
-            });
+            }).finally(() => setLoading(false));
     };
 
     const handleDelete = () => {
@@ -208,7 +214,9 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                     control={control}
                     name="eventName"
                     defaultValue=""
-                    render={({ field: { onChange, value } }) => (
+                    rules={{ required: "Event name is required" }}
+                    render={({ field: { onChange, value }  , fieldState: { error }}) => (
+                        <>
                         <AUIInputField
                             label={t("enter_event_name")}
                             placeholder={t("event_name")}
@@ -216,6 +224,8 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                             onChangeText={onChange}
                             style={styles.input}
                         />
+                        {error && <AUIThemedText style={{ color: 'red' , fontSize : 10}}>{error.message}</AUIThemedText>}
+                        </>
                     )}
                 />
                 <Controller
@@ -289,6 +299,7 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                             <AUIThemedView style={styles.buttonContainer}>
                                 <AUIButton
                                     title="Clear"
+                                    disabled={loading ? true : false }
                                     onPress={() => {
                                         reset();
                                         clearFields();
@@ -297,6 +308,7 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                                 />
                                 <AUIButton
                                     title="Update"
+                                    disabled={loading ? true : false }
                                     selected
                                     style={{ width: "48%" }}
                                     onPress={handleSubmit(handleEdit)}
@@ -315,7 +327,8 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                     ) : (
                         <AUIThemedView style={styles.buttonContainer}>
                             <AUIButton
-                                title={t("clear")}
+                                title="Clear"
+                                disabled={loading ? true : false }
                                 onPress={() => {
                                     reset();
                                     clearFields();
@@ -323,7 +336,8 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                                 style={{ width: "48%" }}
                             />
                             <AUIButton
-                                title={t("save")}
+                                title="Save"
+                                disabled={loading ? true : false }
                                 selected
                                 style={{ width: "48%" }}
                                 onPress={handleSubmit(handleSave)}

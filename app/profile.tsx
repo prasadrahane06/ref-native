@@ -113,11 +113,6 @@ const academicSessionData = [
     },
 ];
 
-
-
-
-
-
 const Profile: React.FC = () => {
     const { patch } = useAxios();
     const dispatch = useDispatch();
@@ -142,10 +137,20 @@ const Profile: React.FC = () => {
     const [dateOfBirth, setDateOfBirth] = useState(
         userProfileData?.dob ? new Date(userProfileData?.dob) : new Date()
     );
+    const gender = userProfileData?.gender;
+
+    const maleAvatar =
+        Asset.fromModule(require("@/assets/images/local/user.png")).uri ||
+        Asset.fromModule(require("@/assets/images/local/user.png")).localUri;
+    const femaleAvatar =
+        Asset.fromModule(require("@/assets/images/local/female.png")).uri ||
+        Asset.fromModule(require("@/assets/images/local/female.png")).localUri;
+
+    const avatar = gender === "Male" ? maleAvatar : femaleAvatar;
+
     const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
-    const [profileImage, setProfileImage] = useState<string>(
-        userProfileData?.photo || Asset.fromModule(require("@/assets/images/local/user.png"))
-    );
+    const [profileImage, setProfileImage] = useState<string>(userProfileData?.photo || avatar);
+
     const [profileBase64, setProfileBase64] = useState<any>(null);
     const [selectedCountry, setSelectedCountry] = useState<any>(null);
     const [selectedState, setSelectedState] = useState<any>(null);
@@ -166,19 +171,19 @@ const Profile: React.FC = () => {
         ? City.getCitiesOfState(selectedCountry, selectedState)
         : allCitiesOfState;
 
-        const schema = Yup.object().shape({
-            name: Yup.string().required(`${t("name_is_required")}`),
-            // phoneNumber: Yup.string().required(`${t("enter_valid_mobile_number")}`),
-            // email: Yup.string().email(GLOBAL_TEXT.validate_email).required(`${t("please_provide_valid_email")}`),
-            language: Yup.string().required(`${t("language_is_required")}`),
-            dateOfBirth: Yup.string().required(`${t("date_of_birth_is_required")}`),
-            gender: Yup.string().required(`${t("gender_is_required")}`),
-            qualification: Yup.string().required(`${t("qualification_is_required")}`),
-            academicSession: Yup.string().required(`${t("academic_session_is_required")}`),
-            country: Yup.string().required(`${t("country_is_required")}`),
-            city: Yup.string().required(`${t("city_is_required")}`),
-            state: Yup.string().required(`${t("state_is_required ")}`),
-        });
+    const schema = Yup.object().shape({
+        name: Yup.string().required(`${t("name_is_required")}`),
+        // phoneNumber: Yup.string().required(`${t("enter_valid_mobile_number")}`),
+        // email: Yup.string().email(GLOBAL_TEXT.validate_email).required(`${t("please_provide_valid_email")}`),
+        language: Yup.string().required(`${t("language_is_required")}`),
+        dateOfBirth: Yup.string().required(`${t("date_of_birth_is_required")}`),
+        gender: Yup.string().required(`${t("gender_is_required")}`),
+        qualification: Yup.string().required(`${t("qualification_is_required")}`),
+        academicSession: Yup.string().required(`${t("academic_session_is_required")}`),
+        country: Yup.string().required(`${t("country_is_required")}`),
+        city: Yup.string().required(`${t("city_is_required")}`),
+        state: Yup.string().required(`${t("state_is_required ")}`),
+    });
 
     const { reset, setValue, control, handleSubmit, formState } = useForm({
         resolver: yupResolver(schema),
@@ -290,6 +295,7 @@ const Profile: React.FC = () => {
                 }
             })
             .catch((error: any) => {
+                console.log("error in school profile save", error);
                 dispatch(setLoader(false));
                 ApiErrorToast(error.message);
             });
@@ -408,14 +414,6 @@ const Profile: React.FC = () => {
                                             paddingHorizontal: 10,
                                         }}
                                     >
-                                        {showDatePicker && (
-                                            <DateTimePicker
-                                                value={dateOfBirth}
-                                                mode="date"
-                                                display="default"
-                                                onChange={onDateChange}
-                                            />
-                                        )}
                                         <TextInput
                                             style={{
                                                 flex: 1,
@@ -436,6 +434,15 @@ const Profile: React.FC = () => {
                                         <AUIThemedText style={styles.fieldError}>
                                             {error.message}
                                         </AUIThemedText>
+                                    )}
+                                    {showDatePicker && (
+                                        <DateTimePicker
+                                            value={dateOfBirth}
+                                            mode="date"
+                                            display="default"
+                                            onChange={onDateChange}
+                                            maximumDate={new Date()}
+                                        />
                                     )}
                                 </AUIThemedView>
                             )}

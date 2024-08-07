@@ -7,8 +7,9 @@ import { useSelector } from "react-redux";
 import AUIImage from "./AUIImage";
 import { AUIThemedText } from "./AUIThemedText";
 import { AUIThemedView } from "./AUIThemedView";
-import { t } from "i18next";
+// import { t } from "i18next";
 import { Image } from "expo-image";
+import { useTranslation } from "react-i18next";
 
 interface DropdownItem {
     label: string;
@@ -49,6 +50,7 @@ const DropdownComponent = ({
     itemLabelStyle,
     isSearchable = true,
 }: Props) => {
+    const { t } = useTranslation();
     const [isFocus, setIsFocus] = useState(false);
     const theme = useSelector((state: RootState) => state.global.theme) as ThemeType;
 

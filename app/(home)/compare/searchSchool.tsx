@@ -10,8 +10,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { Asset } from "expo-asset";
 import { router } from "expo-router";
-import { t } from "i18next";
+// import { t } from "i18next";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FlatList, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -29,6 +30,7 @@ type RootStackParamList = {
 type SearchSchoolRouteProp = RouteProp<RootStackParamList, "SearchSchool">;
 
 const SearchSchool: React.FC = () => {
+    const { t } = useTranslation();
     const dispatch = useDispatch();
     const route = useRoute<SearchSchoolRouteProp>();
     const { compareSlot } = route.params;
@@ -40,9 +42,10 @@ const SearchSchool: React.FC = () => {
     const schoolsResponse = useLangTransformSelector((state: RootState) => state.api.school || {});
     const recentSearchedSchools =
         useLangTransformSelector((state: RootState) => state.api.recentSearchedSchools) || [];
-    const getfavorite = useLangTransformSelector((state: RootState) => state.api.favorite || {});
     const theme = useSelector((state: RootState) => state.global.theme);
-    const fav = getfavorite?.docs?.[0] || { clients: [] };
+    const fav = useSelector((state: RootState) => state.favorite.items);
+    const compareSchool1 = useLangTransformSelector((state: RootState) => state.api.compareSchool1);
+    const compareSchool2 = useLangTransformSelector((state: RootState) => state.api.compareSchool2);
 
     const setSelectedSchool1 = (school: School) =>
         setResponse({ storeName: "compareSchool1", data: school });
@@ -55,14 +58,19 @@ const SearchSchool: React.FC = () => {
 
     useEffect(() => {
         if (searchQuery) {
-            const filtered = schoolsResponse.docs.filter((school: School) =>
-                school.name.toLowerCase().includes(searchQuery.toLowerCase())
-            );
+            const filtered = schoolsResponse.docs.filter((school: any) => {
+                const schoolExists =
+                    (compareSchool1 && compareSchool1?._id === school?._id) ||
+                    (compareSchool2 && compareSchool2?._id === school?._id);
+                return (
+                    !schoolExists && school.name.toLowerCase().includes(searchQuery.toLowerCase())
+                );
+            });
             setFilteredSchools(filtered);
         } else {
             setFilteredSchools([]);
         }
-    }, [searchQuery, schoolsResponse]);
+    }, [searchQuery, schoolsResponse, compareSchool1, compareSchool2]);
 
     const handleSelectSchool = (school: School) => {
         setSearchQuery(school.name);
@@ -190,15 +198,29 @@ const SearchSchool: React.FC = () => {
 
                 {favoriteDropdownVisible && (
                     <AUIThemedView style={styles.dropdown1}>
-                        <FlatList
-                            data={fav?.clients}
-                            keyExtractor={(item) => item?._id}
-                            renderItem={({ item }) => renderDropdownItem(item)}
-                        />
+                        {fav?.clients?.length !== 0 ? (
+                            <FlatList
+                                data={fav?.clients}
+                                keyExtractor={(item) => item?._id}
+                                renderItem={({ item }) => renderDropdownItem(item)}
+                            />
+                        ) : (
+                            <AUIThemedView
+                                style={{
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    padding: 10,
+                                }}
+                            >
+                                <AUIThemedText>{t("no_favorite_found")}</AUIThemedText>
+                            </AUIThemedView>
+                        )}
                     </AUIThemedView>
                 )}
 
-                <AUIThemedText style={styles.recentText}>{t("recently_searched_schools")}</AUIThemedText>
+                <AUIThemedText style={styles.recentText}>
+                    {t("recently_searched_schools")}
+                </AUIThemedText>
 
                 <FlatList
                     data={recentSearchedSchools}

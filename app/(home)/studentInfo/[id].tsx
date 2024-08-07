@@ -6,13 +6,17 @@ import useApiRequest from "@/customHooks/useApiRequest";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
 import { useLocalSearchParams } from "expo-router";
-import { t } from "i18next";
+// import { t } from "i18next";
 import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, ScrollView, Dimensions } from "react-native";
-
-// const { width } = Dimensions.get("window");
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import Foundation from "@expo/vector-icons/Foundation";
+import Entypo from "@expo/vector-icons/Entypo";
+// import NotificationDrawer from "../notification/notification";
 
 const StudentInfoScreen = () => {
+    const { t } = useTranslation();
     const { id } = useLocalSearchParams();
 
     const { requestFn } = useApiRequest();
@@ -20,6 +24,7 @@ const StudentInfoScreen = () => {
     const studentData = useLangTransformSelector(
         (state: RootState) => state.api.individualPurchaseCourse?.docs?.[0] || {}
     );
+    // console.log("Student Data", studentData);
 
     useEffect(() => {
         requestFn(API_URL.purchaseCourse, "individualPurchaseCourse", { id });
@@ -28,138 +33,253 @@ const StudentInfoScreen = () => {
     return (
         <ScrollView>
             <AUIThemedView style={styles.container}>
-                {/* <AUIThemedText style={styles.header}>Student Info</AUIThemedText> */}
-                <AUIThemedText>{t("student_information")}</AUIThemedText>
+                <AUIThemedText style={styles.header}>Student Info</AUIThemedText>
                 <AUIThemedView style={styles.contactContainerHeader}>
-                    {/* <AUIThemedView style={styles.userImageContainer}>
+                    <AUIThemedView style={styles.userImageContainer}>
                         <AUIThemedText style={styles.userImage}></AUIThemedText>
-                    </AUIThemedView> */}
+                    </AUIThemedView>
 
                     <AUIThemedView style={styles.contactContainer}>
                         <AUIThemedText style={styles.contactText}>
                             {studentData?.user?.name}
                         </AUIThemedText>
                         <AUIThemedText style={styles.contactText}>
-                        {t("student_id")}:
+                            {t("student_id")}:
                             <AUIThemedText style={styles.value}>
-                                {studentData?.user?._id}
+                                {studentData?.user?.studentId}
                             </AUIThemedText>
                         </AUIThemedText>
                         <AUIThemedText style={styles.contactText}>
-                        {t("contact_no")}:
+                            {t("contact_no")}:
                             <AUIThemedText style={styles.value}>
                                 {studentData?.user?.phone}
                             </AUIThemedText>
                         </AUIThemedText>
-                        <AUIThemedText style={styles.contactText}>
-                        {t("mail_id")}:
+                        <AUIThemedText
+                            style={styles.contactText}
+                            numberOfLines={1}
+                            ellipsizeMode="tail"
+                        >
+                            {t("mail_id")}:
                             <AUIThemedText style={styles.value}>
                                 {studentData?.user?.email}
                             </AUIThemedText>
                         </AUIThemedText>
                     </AUIThemedView>
                 </AUIThemedView>
-
                 <AUIThemedView style={styles.section}>
-                    <AUIThemedText>{t("personal_details")}</AUIThemedText>
+                    <AUIThemedText style={{ fontSize: 20, fontWeight: "bold" }}>
+                        {t("personal_details")}
+                    </AUIThemedText>
                     <AUIThemedView style={styles.personalDetailContainer}>
-                        <AUIThemedText style={styles.detailText}>
-                        {t("date_of_birth")}:
-                            <AUIThemedText style={styles.value}>
-                                {new Date(studentData?.user?.dob).toLocaleDateString()}
+                        <AUIThemedView style={styles.row}>
+                            <AUIThemedView style={styles.detailRow}>
+                                <FontAwesome5
+                                    name="birthday-cake"
+                                    size={20}
+                                    color={APP_THEME.light.primary.first}
+                                    style={styles.icon}
+                                />
+                                <AUIThemedText style={styles.value}>
+                                    {new Date(studentData?.user?.dob).toLocaleDateString()}
+                                </AUIThemedText>
+                            </AUIThemedView>
+                            {studentData?.user?.gender && (
+                                <AUIThemedView style={styles.detailRow}>
+                                    <Foundation
+                                        name="male-female"
+                                        size={20}
+                                        color={APP_THEME.light.primary.first}
+                                        style={styles.icon}
+                                    />
+                                    <AUIThemedText style={styles.value}>
+                                        {studentData.user.gender}
+                                    </AUIThemedText>
+                                </AUIThemedView>
+                            )}
+                        </AUIThemedView>
+                        <AUIThemedView style={styles.row}>
+                            <AUIThemedView style={styles.detailRow}>
+                                <Entypo
+                                    name="location-pin"
+                                    size={20}
+                                    color={APP_THEME.light.primary.first}
+                                    style={styles.icon}
+                                />
+                                <AUIThemedText style={styles.value}>
+                                    {studentData?.user?.country}
+                                </AUIThemedText>
+                            </AUIThemedView>
+                            <AUIThemedText style={styles.detailText}>
+                                {t("state")} :
+                                <AUIThemedText style={styles.value}>
+                                    {studentData?.user?.state}
+                                </AUIThemedText>
                             </AUIThemedText>
-                        </AUIThemedText>
-                        <AUIThemedText style={styles.detailText}>
-                        {t("academic_session")}:
-                            <AUIThemedText style={styles.value}>
-                                {studentData?.user?.academicSession}
-                            </AUIThemedText>
-                        </AUIThemedText>
-                        <AUIThemedText style={styles.detailText}>
-                        {t("qualification")}:
-                            <AUIThemedText style={styles.value}>
-                                {studentData?.user?.qualification}
-                            </AUIThemedText>
-                        </AUIThemedText>
+                        </AUIThemedView>
                     </AUIThemedView>
                 </AUIThemedView>
 
-                <AUIThemedView style={styles.section}>
-                    <AUIThemedText>{t("preferences")}</AUIThemedText>
+                {/* <AUIThemedView style={styles.section}>
+                    <AUIThemedText style={{ fontSize: 20, fontWeight: "bold" }}>
+                        {t("personal_details")}
+                    </AUIThemedText>
                     <AUIThemedView style={styles.personalDetailContainer}>
-                        <AUIThemedText style={styles.detailText}>
-                        {t("language")}:
+                        <AUIThemedView style={styles.detailRow}>
+                            <FontAwesome5
+                                name="birthday-cake"
+                                size={20}
+                                color={APP_THEME.light.primary.first}
+                                style={styles.icon}
+                            />
                             <AUIThemedText style={styles.value}>
-                                {studentData?.user?.language}
+                                {new Date(studentData?.user?.dob).toLocaleDateString()}
                             </AUIThemedText>
-                        </AUIThemedText>
+                        </AUIThemedView>
+                        {studentData?.user?.gender && (
+                            <AUIThemedView style={styles.detailRow}>
+                                <Foundation
+                                    name="male-female"
+                                    size={20}
+                                    color={APP_THEME.light.primary.first}
+                                    style={styles.icon}
+                                />
+                                <AUIThemedText style={styles.value}>
+                                    {studentData.user.gender}
+                                </AUIThemedText>
+                            </AUIThemedView>
+                        )}
+                        <AUIThemedView style={styles.detailRow}>
+                            <Entypo
+                                name="location-pin"
+                                size={20}
+                                color={APP_THEME.light.primary.first}
+                                style={styles.icon}
+                            />
+                            <AUIThemedText style={styles.value}>
+                                {studentData?.user?.country}
+                            </AUIThemedText>
+                        </AUIThemedView>
+
                         <AUIThemedText style={styles.detailText}>
-                        {t("state")}:
+                            {t("state")} :
                             <AUIThemedText style={styles.value}>
                                 {studentData?.user?.state}
                             </AUIThemedText>
                         </AUIThemedText>
-                        <AUIThemedText style={styles.detailText}>
-                        {t("country")}:
-                            <AUIThemedText style={styles.value}>
-                                {studentData?.user?.country}
-                            </AUIThemedText>
-                        </AUIThemedText>
-                        <AUIThemedText style={styles.detailText}>
-                        {t("city")}:
-                            <AUIThemedText style={styles.value}>
-                                {studentData?.user?.city}
-                            </AUIThemedText>
-                        </AUIThemedText>
                     </AUIThemedView>
-                </AUIThemedView>
-                <AUIThemedView style={styles.section}>
-                    <AUIThemedText>{t("course_information")}</AUIThemedText>
+                </AUIThemedView> */}
+
+                {/* <AUIThemedView style={styles.section}>
+                    <AUIThemedText style={{ fontSize: 20, fontWeight: "bold" }}>
+                        {t("educationaldetails")}
+                    </AUIThemedText>
                     <AUIThemedView style={styles.personalDetailContainer}>
                         <AUIThemedText style={styles.detailText}>
-                        {t("course_name")} :
+                            {t("qualification")} :
+                            <AUIThemedText style={styles.value}>
+                                {studentData?.user?.qualification}
+                            </AUIThemedText>
+                        </AUIThemedText>
+                        <AUIThemedText style={styles.detailText}>
+                            {t("course")} :
                             <AUIThemedText style={styles.value}>
                                 {studentData?.course?.courseName}
                             </AUIThemedText>
                         </AUIThemedText>
                         <AUIThemedText style={styles.detailText}>
-                        {t("language")} :
+                            {t("academic_session")} :
                             <AUIThemedText style={styles.value}>
-                                {studentData?.course?.language}
+                                {studentData?.user?.academicSession}
                             </AUIThemedText>
                         </AUIThemedText>
-                        <AUIThemedText style={styles.detailText}>
-                        {t("startdate")}:
-                            <AUIThemedText style={styles.value}>
-                                {studentData?.course?.startDate}
+                    </AUIThemedView>
+                </AUIThemedView> */}
+
+                <AUIThemedView style={styles.section}>
+                    <AUIThemedText style={{ fontSize: 20, fontWeight: "bold" }}>
+                        {t("educationaldetails")}
+                    </AUIThemedText>
+                    <AUIThemedView style={styles.personalDetailContainer}>
+                        <AUIThemedView style={styles.row}>
+                            <AUIThemedText style={styles.detailText}>
+                                {t("qualification")}:
                             </AUIThemedText>
-                        </AUIThemedText>
-                        <AUIThemedText style={styles.detailText}>
-                        {t("enddate")}:
                             <AUIThemedText style={styles.value}>
-                                {studentData?.course?.endDate}
+                                {studentData?.user?.qualification}
                             </AUIThemedText>
-                        </AUIThemedText>
+                        </AUIThemedView>
+                        <AUIThemedView style={styles.row}>
+                            <AUIThemedText style={styles.detailText}>{t("course")}:</AUIThemedText>
+                            <AUIThemedText style={styles.value}>
+                                {studentData?.course?.courseName}
+                            </AUIThemedText>
+                        </AUIThemedView>
+                        <AUIThemedView style={styles.row}>
+                            <AUIThemedText style={styles.detailText}>
+                                {t("academic_session")}:
+                            </AUIThemedText>
+                            <AUIThemedText style={styles.value}>
+                                {studentData?.user?.academicSession}
+                            </AUIThemedText>
+                        </AUIThemedView>
                     </AUIThemedView>
                 </AUIThemedView>
 
                 <AUIThemedView style={styles.section}>
-                    <AUIThemedText>{t("course_information")}</AUIThemedText>
+                    <AUIThemedText style={{ fontSize: 20, fontWeight: "bold" }}>
+                        {t("preferences")}
+                    </AUIThemedText>
                     <AUIThemedView style={styles.personalDetailContainer}>
-                        <AUIThemedText style={styles.detailText}>
-                            {t("payment_method")}:
-                            <AUIThemedText style={styles.value}>{t("hyperpay")}</AUIThemedText>
-                        </AUIThemedText>
-                        <AUIThemedText style={styles.detailText}>
-                        {t("transition_id")}:
-                            <AUIThemedText style={styles.value}>{t("not_available")}</AUIThemedText>
-                        </AUIThemedText>
+                        <AUIThemedView style={styles.row}>
+                            <AUIThemedText style={styles.detailText}>
+                                {t("language")}:
+                            </AUIThemedText>
+                            <AUIThemedText style={styles.value}>
+                                {studentData?.user?.language}
+                            </AUIThemedText>
+                        </AUIThemedView>
+                        <AUIThemedView style={styles.row}>
+                            <AUIThemedText style={styles.detailText}>{t("country")}:</AUIThemedText>
+                            <AUIThemedText style={styles.value}>
+                                {studentData?.user?.country}
+                            </AUIThemedText>
+                        </AUIThemedView>
+                        <AUIThemedView style={styles.row}>
+                            <AUIThemedText style={styles.detailText}>{t("city")}:</AUIThemedText>
+                            <AUIThemedText style={styles.value}>
+                                {studentData?.user?.city}
+                            </AUIThemedText>
+                        </AUIThemedView>
                     </AUIThemedView>
+                </AUIThemedView>
+
+                <AUIThemedView style={styles.section}>
+                    <AUIThemedText style={{ fontSize: 20, fontWeight: "bold" }}>
+                        {t("payment_details")}
+                    </AUIThemedText>
+                    <AUIThemedView style={styles.personalDetailContainer}>
+                        <AUIThemedView style={styles.row}>
+                            <AUIThemedText style={styles.detailText}>
+                                {t("payment_method")}:
+                            </AUIThemedText>
+                            <AUIThemedText style={styles.value}>{t("hyperpay")}</AUIThemedText>
+                        </AUIThemedView>
+                        <AUIThemedView style={styles.row}>
+                            <AUIThemedText style={styles.detailText}>
+                                {t("transition_id")}:
+                            </AUIThemedText>
+                            <AUIThemedText style={styles.value}>{t("not_available")}</AUIThemedText>
+                        </AUIThemedView>
+                    </AUIThemedView>
+
                     <AUIThemedView style={styles.paymentContainer}>
                         <AUIThemedView style={styles.paymentColumn}>
-                            <AUIThemedText style={styles.paymentLabel}>{t("total_fees")}</AUIThemedText>
+                            <AUIThemedText style={styles.paymentLabel}>
+                                {t("total_fees")}
+                            </AUIThemedText>
                             <AUIThemedText style={styles.paymentValue}>
-                                {studentData?.plan?.price}
+                                {studentData?.plan?.price} SAR
                             </AUIThemedText>
                         </AUIThemedView>
                         <AUIThemedView style={styles.paymentColumn}>
@@ -167,19 +287,26 @@ const StudentInfoScreen = () => {
                             <AUIThemedText style={styles.paymentValue}>
                                 {studentData?.plan?.type === "buy"
                                     ? studentData?.plan?.price
-                                    : studentData?.plan?.bookYourSeat}
+                                    : studentData?.plan?.bookYourSeat}{" "}
+                                SAR
                             </AUIThemedText>
                         </AUIThemedView>
                         <AUIThemedView style={styles.paymentColumn}>
-                            <AUIThemedText style={styles.paymentLabel}>{t("pending")}</AUIThemedText>
+                            <AUIThemedText style={styles.paymentLabel}>
+                                {t("pending")}
+                            </AUIThemedText>
                             <AUIThemedText style={styles.paymentValue}>
                                 {studentData && studentData?.plan?.type === "buy"
                                     ? studentData?.plan?.bookYourSeat
-                                    : studentData?.plan?.price - studentData?.plan?.bookYourSeat}
+                                    : studentData?.plan?.price -
+                                      studentData?.plan?.bookYourSeat}{" "}
+                                SAR
                             </AUIThemedText>
                         </AUIThemedView>
                         <AUIThemedView style={styles.paymentColumn}>
-                            <AUIThemedText style={styles.paymentLabel}>{t("last_paid_on")}</AUIThemedText>
+                            <AUIThemedText style={styles.paymentLabel}>
+                                {t("last_paid_on")}
+                            </AUIThemedText>
                             <AUIThemedText style={styles.paymentValue}>
                                 {studentData?.plan?.lastPaidOn
                                     ? new Date(studentData?.plan?.lastPaidOn).toLocaleDateString()
@@ -196,12 +323,13 @@ const StudentInfoScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 10,
+        padding: 15,
     },
     userImage: {
         width: 100,
         height: 100,
         borderRadius: 50,
+        // backgroundColor:"F5F5F5",
     },
     contactContainerHeader: {
         flexDirection: "row",
@@ -210,38 +338,50 @@ const styles = StyleSheet.create({
     },
     userImageContainer: {
         marginRight: 10,
+        backgroundColor: "grey",
+        padding: 15,
+        borderRadius: 10,
     },
     header: {
-        fontSize: 28,
+        fontSize: 25,
         fontWeight: "bold",
-        marginTop: 10,
-        marginBottom: 15,
-        textAlign: "left",
-        color: APP_THEME.light.ternary.first,
+        // marginTop: 18,
+        marginBottom: 20,
+        // textAlign: "left",
+        // marginLeft:8,
+        // color: APP_THEME.light.ternary.first,
     },
+
     contactContainer: {
-        padding: 15,
-        backgroundColor: APP_THEME.light.secondary.first,
+        padding: 10,
+        // backgroundColor: APP_THEME.light.secondary.first,
+        backgroundColor: APP_THEME.light.primary.third,
         borderRadius: 10,
-        flex: 1,
+        // flex: 1,
     },
     contactText: {
-        fontSize: 16,
+        fontSize: 18,
         marginBottom: 5,
+        fontWeight: "bold",
         color: APP_THEME.light.ternary.first,
     },
     section: {
         marginBottom: 20,
     },
     personalDetailContainer: {
-        backgroundColor: APP_THEME.light.secondary.first,
+        // backgroundColor: APP_THEME.light.secondary.first,
+        backgroundColor: APP_THEME.light.primary.third,
         padding: 15,
         borderRadius: 10,
     },
     detailText: {
-        fontSize: 16,
+        fontSize: 18,
         marginBottom: 10,
         color: APP_THEME.light.ternary.first,
+        // color: APP_THEME.light.ternary.first,
+        backgroundColor: APP_THEME.light.primary.third,
+        marginLeft: 10,
+        fontWeight: "bold",
     },
     titleHeader: {
         fontSize: 22,
@@ -252,7 +392,7 @@ const styles = StyleSheet.create({
     paymentContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
-        backgroundColor: APP_THEME.light.secondary.first,
+        backgroundColor: APP_THEME.light.primary.third,
         padding: 15,
         borderRadius: 10,
         marginTop: 10,
@@ -260,23 +400,48 @@ const styles = StyleSheet.create({
     paymentColumn: {
         flex: 1,
         alignItems: "center",
-        backgroundColor: APP_THEME.light.secondary.first,
+        // backgroundColor: APP_THEME.light.secondary.first,
+        backgroundColor: APP_THEME.light.primary.third,
     },
     paymentLabel: {
         fontSize: 16,
         fontWeight: "bold",
         color: APP_THEME.light.ternary.first,
-        backgroundColor: APP_THEME.light.secondary.first,
+        // backgroundColor: APP_THEME.light.secondary.first,
+        backgroundColor: APP_THEME.light.primary.third,
     },
     paymentValue: {
         fontSize: 16,
         marginTop: 5,
         color: APP_THEME.light.ternary.first,
-        backgroundColor: APP_THEME.light.secondary.first,
+        // backgroundColor: APP_THEME.light.secondary.first,
     },
     value: {
-        fontWeight: "bold",
-        backgroundColor: APP_THEME.light.secondary.first,
+        // fontWeight: "bold",
+        backgroundColor: APP_THEME.light.primary.third,
+        color: APP_THEME.light.ternary.first,
+        // fontSize:12,
+        // alignItems: "center",
+    },
+
+    detailRow: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginBottom: 10,
+        backgroundColor: APP_THEME.light.primary.third,
+        color: APP_THEME.light.ternary.first,
+        marginLeft: 10,
+    },
+    icon: {
+        marginRight: 15,
+        backgroundColor: APP_THEME.light.primary.third,
+        color: APP_THEME.light.ternary.first,
+    },
+    row: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginBottom: 8,
+        backgroundColor: APP_THEME.light.primary.third,
         color: APP_THEME.light.ternary.first,
     },
 });

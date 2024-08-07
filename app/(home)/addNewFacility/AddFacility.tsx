@@ -7,13 +7,15 @@ import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { API_URL } from "@/constants/urlProperties";
+import useLoading from "@/customHooks/useLoading";
 import { RootState } from "@/redux/store";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as ImageManipulator from "expo-image-manipulator";
 import * as ImagePicker from "expo-image-picker";
-import { t } from "i18next";
+// import { t } from "i18next";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { Image, StyleSheet, TouchableOpacity } from "react-native";
 import { useSelector } from "react-redux";
 
@@ -37,12 +39,14 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
     facility,
     refreshFacilities,
 }) => {
+    const { t } = useTranslation();
     const user = useSelector((state: RootState) => state.global.user);
     const { post, patch, del } = useAxios();
     const { control, handleSubmit, reset, setValue, getValues } = useForm();
     const [image, setImage] = useState<string | null>(facility?.image || null);
     const [initialValues, setInitialValues] = useState<any>({});
     const [showConfirmation, setShowConfirmation] = useState(false);
+    const {loading, setLoading} = useLoading();
 
     useEffect(() => {
         if (facility) {
@@ -82,6 +86,7 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
             description: values.description,
             image: image,
         };
+        setLoading(true);
         post(API_URL.facility, payload)
             .then((res) => {
                 ApiSuccessToast(`${t("new_facility_added_successfully")}`);
@@ -91,13 +96,13 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
             .catch((e) => {
                 ApiErrorToast(`${t("failed_to_add_facility")}`);
                 console.log(e);
-            });
+            }).finally(() => setLoading(false));
     };
 
     const handleEdit = () => {
         const values = getValues();
         const payload: any = { id: facility?._id };
-
+        
         if (values.facilityName !== initialValues.facilityName) {
             payload.name = values.facilityName;
         }
@@ -107,22 +112,25 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
         if (image !== initialValues.image) {
             payload.image = image;
         }
+        setLoading(true);
 
         patch(API_URL.facility, payload)
             .then((res) => {
                 ApiSuccessToast(`${t("facility_updated_successfully")}`);
                 refreshFacilities();
                 reset();
+
             })
             .catch((e) => {
                 ApiErrorToast(`${t("failed_to_update_facility")}`);
                 console.log(e);
-            });
+
+            }).finally(() => setLoading(false));
     };
 
     const handleDelete = () => {
         if (!facility?._id) return;
-        del(API_URL.facility ,{}, {id : facility?._id})
+        del(API_URL.facility, {}, { id: facility?._id })
             .then((res) => {
                 setShowConfirmation(false);
                 ApiSuccessToast(res.message);
@@ -193,16 +201,21 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
                     control={control}
                     name="facilityName"
                     defaultValue=""
-                    render={({ field: { onChange, value } }) => (
-                        <AUIInputField
-                            label={t("enter_facility_name")}
-                            placeholder={t("facility_name")}
-                            value={value}
-                            onChangeText={onChange}
-                            style={styles.input}
-                        />
+                    rules={{ required: "Facility name is required" }}
+                    render={({ field: { onChange, value }, fieldState: { error } }) => (
+                        <>
+                            <AUIInputField
+                                label="Enter Facility name"
+                                placeholder="Facility Name"
+                                value={value}
+                                onChangeText={onChange}
+                                style={[styles.input, error && { borderColor: 'red' }]}
+                            />
+                            {error && <AUIThemedText style={{ color: 'red' , fontSize : 10}}>{error.message}</AUIThemedText>}
+                        </>
                     )}
                 />
+
                 <Controller
                     control={control}
                     name="description"
@@ -234,6 +247,7 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
                             <AUIThemedView style={styles.buttonContainer}>
                                 <AUIButton
                                     title="Clear"
+                                    disabled= {loading ? true : false}
                                     onPress={() => {
                                         reset();
                                         clearFields();
@@ -241,6 +255,7 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
                                     style={{ width: "48%" }}
                                 />
                                 <AUIButton
+                                    disabled= {loading ? true : false}
                                     title="Update"
                                     selected
                                     style={{ width: "48%" }}
@@ -260,7 +275,8 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
                     ) : (
                         <AUIThemedView style={styles.buttonContainer}>
                             <AUIButton
-                                title={t("clear")}
+                                title="Clear"
+                                disabled= {loading ? true : false}
                                 onPress={() => {
                                     reset();
                                     clearFields();
@@ -268,7 +284,8 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
                                 style={{ width: "48%" }}
                             />
                             <AUIButton
-                                title={t("save")}
+                                title="Save"
+                                disabled= {loading ? true : false}
                                 selected
                                 style={{ width: "48%" }}
                                 onPress={handleSubmit(handleSave)}

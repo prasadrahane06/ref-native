@@ -10,9 +10,11 @@ import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector
 import { RootState } from "@/redux/store";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import useDebounce from "@/customHooks/useDebounce";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
+// import { t } from "i18next";
 
 export default function CoursesTab({ schoolCourses }: { schoolCourses: any }) {
+    const { t } = useTranslation();
     const [searchPhrase, setSearchPhrase] = useState("");
     const [clicked, setClicked] = useState(false);
     const schoolCourse = useLangTransformSelector((state: RootState) => state.api.schoolCourse || {});

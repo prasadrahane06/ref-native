@@ -52,7 +52,7 @@ export default function HomeScreen() {
                 })
                     .then((res) => {
                         console.log("school bot updated =>", res);
-                        ApiSuccessToast(res.message);
+                        // ApiSuccessToast(res.message);
                     })
                     .catch((e) => {
                         console.log("Error in update school =>", e);
@@ -95,6 +95,12 @@ export default function HomeScreen() {
     //         });
     // }, []);
 
+    const specificDummyData = {
+        labels: ["month"],
+        pendingData: [0],
+        doneData: [0],
+    };
+
     return (
         <AUIThemedView>
             <ScrollView>
@@ -113,8 +119,13 @@ export default function HomeScreen() {
                                             fontSize: 14,
                                             color: "#777",
                                         }}
-                                        title={formatNumberWithComma(item.title)}
-                                        subtitle={item.subtitle}
+                                        title={formatNumberWithComma(
+                                            item?.title &&
+                                                item?.title.toLowerCase().includes("undefined")
+                                                ? 0
+                                                : item?.title
+                                        )}
+                                        subtitle={item?.subtitle}
                                     />
                                 )}
                                 keyExtractor={(item) => item.id}
@@ -124,16 +135,20 @@ export default function HomeScreen() {
 
                     <ChartComponent
                         title={t(GLOBAL_TEXT.my_earnings)}
-                        labels={MySchoolDetails?.graphData?.labels || []}
-                        pendingData={MySchoolDetails?.graphData?.pendingData || []}
-                        doneData={MySchoolDetails?.graphData?.doneData || []}
+                        labels={MySchoolDetails?.graphData?.labels || specificDummyData.labels}
+                        pendingData={
+                            MySchoolDetails?.graphData?.pendingData || specificDummyData.pendingData
+                        }
+                        doneData={
+                            MySchoolDetails?.graphData?.doneData || specificDummyData.doneData
+                        }
                         yAxisLabel="$"
                         yAxisInterval={10}
                     />
 
                     <AUIThemedView style={styles.section}>
                         <SectionTitle style={{ paddingBottom: 10 }}>
-                           { t("ongoing_courses")}
+                            {t("ongoing_courses")}
                         </SectionTitle>
                         <CourseList
                             data={myCourse?.docs?.slice(0, 4) || []}
