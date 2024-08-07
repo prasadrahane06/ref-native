@@ -7,7 +7,6 @@ import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
 import { languagesData } from "@/constants/dummy data/languagesData";
-import { GLOBAL_TEXT } from "@/constants/Properties";
 import { storeUserData } from "@/constants/RNAsyncStore";
 import { API_URL } from "@/constants/urlProperties";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";

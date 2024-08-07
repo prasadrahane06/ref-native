@@ -1,8 +1,8 @@
 import useAxios from "@/app/services/axiosClient";
+import BlinkingText from "@/components/AUIBlinkingText";
 import AUIImage from "@/components/common/AUIImage";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import { APP_THEME, BACKGROUND_THEME } from "@/constants/Colors";
 import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { API_URL } from "@/constants/urlProperties";
@@ -10,11 +10,33 @@ import useApiRequest from "@/customHooks/useApiRequest";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
 import { Asset } from "expo-asset";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { t } from "i18next";
 import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { useSelector } from "react-redux";
+
+const paymentModes = [
+    {
+        mode: "CardPay",
+        icon: require("@/assets/icons/card.png"),
+        label: GLOBAL_TRANSLATION_LABEL.cardPayment,
+        disable: false,
+    },
+    // can be enabled in future
+    // {
+    //     mode: "Gpay",
+    //     icon: require("@/assets/icons/google-pay.png"),
+    //     label: GLOBAL_TRANSLATION_LABEL.gPay,
+    //     disable: true,
+    // },
+    {
+        mode: "ApplePay",
+        icon: require("@/assets/icons/apple-pay.png"),
+        label: GLOBAL_TRANSLATION_LABEL.applePay,
+        disable: true,
+    },
+];
 
 export default function PurchaseScreen() {
     const { id } = useLocalSearchParams<{ id: any }>();
@@ -26,7 +48,7 @@ export default function PurchaseScreen() {
     const individualPlan = useLangTransformSelector((state: RootState) => state.api.individualPlan);
     const theme = useSelector((state: RootState) => state.global.theme);
 
-    const [paymentMode, setPaymentMode] = useState("");
+    const [paymentMode, setPaymentMode] = useState("CardPay");
     const [planValue, setPlanValue] = useState({
         planId: newid.planId,
         price: newid.type === "buy" ? individualPlan?.price : individualPlan?.bookYourSeat,
@@ -57,19 +79,20 @@ export default function PurchaseScreen() {
         }
     }, [individualPlan, paymentMode, newid.planId]);
 
-    const handlePayment = () => {
-        post(API_URL.purchaseCourse, {
-            course: newid.courseId,
-            type: newid.type,
-            plan: newid.planId,
-        })
-            .then((res: any) => {
-                ApiSuccessToast(res.message);
-            })
-            .catch((e: any) => {
-                ApiErrorToast(e.response?.data?.message);
-                console.log(e);
+    const handlePayment = async () => {
+        const result = await post(API_URL.paymentInitiate, {
+            amount: planValue.total,
+            paymentMode: paymentMode,
+        });
+        if (result?.paymentId) {
+            router.push({
+                pathname: "/payment",
+                params: {
+                    checkoutId: result?.paymentId,
+                    paymentMode: paymentMode,
+                },
             });
+        }
     };
 
     return (
@@ -141,68 +164,34 @@ export default function PurchaseScreen() {
             </AUIThemedText>
 
             <AUIThemedView style={styles.paymentModes}>
-                <TouchableOpacity
-                    style={[
-                        styles.paymentModeButton,
-                        paymentMode === "Razor pay" && [
-                            styles.selectedButton,
-                            {
-                                borderColor: APP_THEME[theme].primary.first,
-                            },
-                        ],
-                    ]}
-                    onPress={() => setPaymentMode("Razor pay")}
-                >
-                    <AUIImage
-                        path={Asset.fromModule(require("@/assets/icons/razorpay.png"))}
-                        style={{ width: 30, height: 30 }}
-                    />
-
-                    <AUIThemedText style={styles.paymentModeText}>
-                        {t(GLOBAL_TRANSLATION_LABEL.hyperPay)}
-                    </AUIThemedText>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[
-                        styles.paymentModeButton,
-                        paymentMode === "Card payment" && [
-                            styles.selectedButton,
-                            {
-                                borderColor: APP_THEME[theme].primary.first,
-                            },
-                        ],
-                    ]}
-                    onPress={() => setPaymentMode("Card payment")}
-                >
-                    <AUIImage
-                        path={Asset.fromModule(require("@/assets/icons/card.png"))}
-                        style={{ width: 30, height: 30 }}
-                    />
-
-                    <AUIThemedText style={styles.paymentModeText}>
-                        {t(GLOBAL_TRANSLATION_LABEL.cardPayment)}
-                    </AUIThemedText>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[
-                        styles.paymentModeButton,
-                        paymentMode === "Net Banking" && [
-                            styles.selectedButton,
-                            {
-                                borderColor: APP_THEME[theme].primary.first,
-                            },
-                        ],
-                    ]}
-                    onPress={() => setPaymentMode("Net Banking")}
-                >
-                    <AUIImage
-                        path={Asset.fromModule(require("@/assets/icons/net_banking.png"))}
-                        style={{ width: 30, height: 30 }}
-                    />
-                    <AUIThemedText style={styles.paymentModeText}>
-                        {t(GLOBAL_TRANSLATION_LABEL.netBanking)}
-                    </AUIThemedText>
-                </TouchableOpacity>
+                {paymentModes.map((payment, index) => (
+                    <TouchableOpacity
+                        key={index}
+                        style={[
+                            styles.paymentModeButton,
+                            payment.disable && styles.disabledBtn,
+                            paymentMode === payment.mode && [
+                                styles.selectedButton,
+                                {
+                                    borderColor: APP_THEME[theme].primary.first,
+                                },
+                            ],
+                        ]}
+                        onPress={() => setPaymentMode(payment.mode)}
+                        disabled={payment.disable}
+                    >
+                        <AUIImage
+                            path={Asset.fromModule(payment.icon)}
+                            style={{ width: 30, height: 30 }}
+                        />
+                        <AUIThemedText style={styles.paymentModeText}>
+                            {t(payment.label)}
+                        </AUIThemedText>
+                        {payment.disable && (
+                            <BlinkingText text="Coming Soon" style={styles.blinkingText} />
+                        )}
+                    </TouchableOpacity>
+                ))}
             </AUIThemedView>
 
             <TouchableOpacity
@@ -262,6 +251,9 @@ const styles = StyleSheet.create({
         alignItems: "center",
         gap: 15,
     },
+    disabledBtn: {
+        opacity: 0.5,
+    },
     paymentModeText: {
         fontSize: 16,
     },
@@ -292,5 +284,11 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         borderTopWidth: 1,
         // borderColor: APP_THEME.primary.first,
+    },
+    blinkingText: {
+        fontSize: 9,
+        textAlign: "right",
+        width:100,
+        color: "red"
     },
 });

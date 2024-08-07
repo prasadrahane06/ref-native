@@ -10,10 +10,10 @@ import { RootState, store } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import { useFonts } from "expo-font";
-import { Link, router, Stack, useFocusEffect, useNavigation } from "expo-router";
+import { Link, router, Stack, useNavigation } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert, Pressable, TouchableOpacity } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -225,6 +225,14 @@ const InitialLayout = () => {
                     headerStyle: {
                         backgroundColor: BACKGROUND_THEME[theme].background,
                     },
+                }}
+            />
+            <Stack.Screen
+                name="payment"
+                options={{
+                    headerTitle: `${t("Payment")}`,
+                    headerTitleStyle: { color: TEXT_THEME[theme].primary },
+                    headerStyle: { backgroundColor: BACKGROUND_THEME[theme].background },
                 }}
             />
             <Stack.Screen
@@ -613,6 +621,6 @@ const RootLayoutNav = () => {
 };
 export {
     // Catch any errors thrown by the Layout component.
-    ErrorBoundary,
+    ErrorBoundary
 } from "expo-router";
 export default RootLayoutNav;
