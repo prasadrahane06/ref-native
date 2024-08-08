@@ -320,6 +320,16 @@ export const en = {
     website: "Website",
     verify: "Verify",
     days_remaining: "Days remaining",
+    faq1: "How can I apply to a foreign school through the app?",
+    ans1: "You can apply by selecting the desired school, filling out the application form, and submitting the required documents directly through the app.",
+    faq2: "What documents are required for admission?",
+    ans2: "Typically, you will need your academic records, a copy of your passport, language proficiency test results, and any other documents specified by the school.",
+    faq3: "How can I track the status of my application?",
+    ans3: 'You can track the status of your application in the "My Applications" section of the app, where updates will be provided regularly.',
+    faq4: "Are there language courses available to prepare before applying?",
+    ans4: 'Yes, the app offers various language courses to help you prepare for studying abroad. You can find them in the "Language Courses" section.',
+    faq5: "Is there support for visa and accommodation arrangements?",
+    ans5: "Yes, the app provides guidance and resources for visa applications and finding suitable accommodation near your chosen school.",
 };
 
 export const ar = {
@@ -634,4 +644,14 @@ export const ar = {
     verify_you_profile_before_making_payment: "تحقق من ملفك الشخصي قبل إجراء الدفع",
     verify: "يؤكد",
     days_remaining: "الأيام المتبقية",
+    faq1: "كيف يمكنني التقديم للالتحاق بمدرسة أجنبية عبر التطبيق؟",
+    ans1: "يمكنك التقديم من خلال اختيار المدرسة المطلوبة، تعبئة نموذج التقديم، وتقديم المستندات المطلوبة مباشرةً عبر التطبيق.",
+    faq2: "ما هي المستندات المطلوبة للتقديم للالتحاق؟",
+    ans2: "عادةً، ستحتاج إلى سجلاتك الأكاديمية، نسخة من جواز السفر، نتائج اختبار الكفاءة اللغوية، وأي مستندات أخرى تحددها المدرسة.",
+    faq3: "كيف يمكنني تتبع حالة طلب التقديم الخاص بي؟",
+    ans3: 'يمكنك تتبع حالة طلب التقديم في قسم "طلباتي" في التطبيق، حيث سيتم توفير التحديثات بشكل منتظم.',
+    faq4: "هل هناك دورات لغوية متاحة للتحضير قبل التقديم؟",
+    ans4: 'نعم، يوفر التطبيق دورات لغوية مختلفة لمساعدتك في التحضير لدراستك في الخارج. يمكنك العثور عليها في قسم "الدورات اللغوية".',
+    faq5: "هل يتوفر دعم لترتيبات التأشيرة والإقامة؟",
+    ans5: "نعم، يوفر التطبيق إرشادات وموارد لتقديم طلبات التأشيرة والعثور على إقامة مناسبة بالقرب من مدرستك المختارة.",
 };
