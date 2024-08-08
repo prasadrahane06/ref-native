@@ -1,14 +1,14 @@
 {
     "expo": {
-        "name": "linguest-mobile",
-        "slug": "linguest-mobile",
+        "name": "Linguist",
+        "slug": "linguist",
         "version": "1.0.0",
         "orientation": "portrait",
-        "icon": "./assets/images/icon.png",
+        "icon": "./assets/images/logo/app_icon.png",
         "scheme": "myapp",
         "userInterfaceStyle": "automatic",
         "splash": {
-            "image": "./assets/images/logo/splash-1.png"
+            "image": "./assets/images/logo/splash_1.png"
         },
         "ios": {
             "supportsTablet": true,
@@ -16,10 +16,11 @@
         },
         "android": {
             "adaptiveIcon": {
-                "foregroundImage": "./assets/images/adaptive-icon.png",
+                "foregroundImage": "./assets/images/logo/app_icon.png",
                 "backgroundColor": "#ffffff"
             },
-            "package": "com.aariyatech.linguestmobile"
+            "package": "com.aariyatech.linguestmobile",
+            "googleServicesFile": "./google-services.json"
         },
         "web": {
             "bundler": "metro",
@@ -31,7 +32,7 @@
             [
                 "expo-asset",
                 {
-                    "assets": ["./assets/images/initialPage"]
+                    "assets": ["./assets/images/local"]
                 }
             ]
         ],
@@ -43,9 +44,15 @@
                 "origin": false
             },
             "eas": {
-                "projectId": "a4f3a3a6-8e68-4888-8f8a-d479d2ee7f4c"
+                "projectId": "9b4c4a14-69b1-494c-89ba-38f3560065f1"
             }
         },
-        "owner": "aariyatech"
+        "owner": "bilal.sheikh",
+        "runtimeVersion": {
+            "policy": "appVersion"
+        },
+        "updates": {
+            "url": "https://u.expo.dev/84904570-ea3c-477b-b0ad-7b61e21c747c"
+        }
     }
 }
