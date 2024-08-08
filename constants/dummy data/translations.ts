@@ -176,7 +176,6 @@ export const en = {
     country: "Country",
     city: "City",
     course_information: "Course Information",
-
     //  course_name:"course Name",
     startdate: "StartDate",
     enddate: "EndDate",
@@ -191,7 +190,6 @@ export const en = {
     last_paid_on: "Last Paid On",
     add_new_event: "Add New Event",
     school_profile: "School Profile",
-
     //  help:"Help",
     // transaction_history:"Transaction history",
     enter_your_name: "Enter Your Name",
@@ -211,7 +209,6 @@ export const en = {
     select_date: "Select Date",
     enter_event_location: "Enter Event Location",
     event_location: "Event Location",
-
     // select_image:"Select image",
     id: " ID",
     no_id_available: "No ID available",

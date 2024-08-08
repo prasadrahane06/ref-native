@@ -4,13 +4,15 @@ import React from "react";
 import { ImageBackground } from "react-native";
 
 const AUIBackgroundImage = ({ path, style, ...props }: any) => {
-    let source = "";
+    let source = null;
 
     if (typeof path === "object") {
         if (path?.uri) {
             source = path?.uri;
         } else if (path?.localUri) {
             source = path?.localUri;
+        } else {
+            source = null;
         }
     } else {
         source = path;

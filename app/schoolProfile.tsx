@@ -30,6 +30,7 @@ import { useTranslation } from "react-i18next";
 import { setLoader, setUser } from "@/redux/globalSlice";
 import { storeUserData } from "@/constants/RNAsyncStore";
 import { setResponse } from "@/redux/apiSlice";
+import AUIImage from "@/components/common/AUIImage";
 
 const SchoolProfile = () => {
     const { patch } = useAxios();
@@ -54,7 +55,7 @@ const SchoolProfile = () => {
         website: Yup.string().required(`${t("website_is_required")}`),
     });
 
-    const { reset, setValue, control, handleSubmit, formState } = useForm({
+    const { reset, control, handleSubmit, formState } = useForm({
         resolver: yupResolver(schema),
         mode: "onChange",
         defaultValues: {
@@ -74,10 +75,10 @@ const SchoolProfile = () => {
 
         if (!result.canceled) {
             if (value === "logo") {
-                setValue(value, result.assets[0].base64);
+                setLogoBase64(result.assets[0].base64);
                 setLogo(result.assets[0]?.uri);
             } else {
-                setValue(value, result.assets[0].base64);
+                setBannerBase64(result.assets[0].base64);
                 setBanner(result.assets[0]?.uri);
             }
         } else {
@@ -96,29 +97,28 @@ const SchoolProfile = () => {
         };
 
         if (bannerBase64) {
-            // payload.banner = `data:image/png;base64,${bannerBase64}`;
-            payload.banner = "hello";
+            payload.banner = `data:image/png;base64,${bannerBase64}`;
         }
 
-        console.log("onSave payload", payload);
+        if (logoBase64) {
+            payload.logo = `data:image/png;base64,${logoBase64}`;
+        }
 
-        // patch(API_URL.school, payload)
-        //     .then((res: any) => {
-        //         console.log("onSave res", res);
-
-        //         storeUserData("@user-data", {
-        //             ...res?.data,
-        //         });
-        //         dispatch(setUser(res?.data));
-        //         dispatch(setResponse({ storeName: "MySchoolDetails", data: res?.data }));
-        //         ApiSuccessToast(res.message);
-        //         dispatch(setLoader(false));
-        //     })
-        //     .catch((error: any) => {
-        //         console.log("error in school profile save", error);
-        //         ApiErrorToast(error);
-        //         console.log("error in schooldetails onSave =>", error);
-        //     });
+        patch(API_URL.school, payload)
+            .then((res: any) => {
+                storeUserData("@user-data", {
+                    ...res?.data,
+                });
+                dispatch(setUser(res?.data));
+                dispatch(setResponse({ storeName: "MySchoolDetails", data: res?.data }));
+                ApiSuccessToast(res.message);
+                dispatch(setLoader(false));
+            })
+            .catch((error: any) => {
+                console.log("error in school profile save", error);
+                ApiErrorToast(error);
+                console.log("error in schooldetails onSave =>", error);
+            });
     };
 
     const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
@@ -131,7 +131,13 @@ const SchoolProfile = () => {
         >
             <ScrollView>
                 <AUIThemedView style={styles.container}>
+                    <TouchableOpacity onPress={() => pickImageAsync("logo")}>
+                        <AUIThemedText style={styles.label}>School Logo</AUIThemedText>
+                        <AUIImage path={logo} style={styles.logo} />
+                    </TouchableOpacity>
+
                     <TouchableOpacity onPress={() => pickImageAsync("banner")}>
+                        <AUIThemedText style={styles.label}>School Banner</AUIThemedText>
                         <AUIBackgroundImage path={banner} style={styles.banner} />
                     </TouchableOpacity>
 
@@ -317,6 +323,11 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
+    logo: {
+        width: 100,
+        height: 100,
+        borderRadius: 50,
+    },
     logoContainer: {
         position: "absolute",
         bottom: -25, // Adjust this value to position the logo over the banner
@@ -329,11 +340,6 @@ const styles = StyleSheet.create({
         backgroundColor: "white", // Add background color to make logo stand out
         justifyContent: "center",
         alignItems: "center",
-    },
-    logo: {
-        width: 50,
-        height: 50,
-        borderRadius: 25,
     },
     label: {
         marginTop: 10,
