@@ -13,6 +13,7 @@ export function AUIThemedText({ style, type = "default", ...rest }: ThemedTextPr
     return (
         <Text
             style={[
+                { color: TEXT_THEME[theme].primary },
                 type === "default" ? styles.default : undefined,
                 type === "title" ? styles.title : undefined,
                 type === "defaultSemiBold" ? styles.defaultSemiBold : undefined,

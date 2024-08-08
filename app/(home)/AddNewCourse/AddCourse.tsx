@@ -547,7 +547,7 @@ const AUIAddNewCourse = () => {
                                             Total Duration
                                         </AUIThemedText>
                                         <AUIThemedText style={styles.label2}>
-                                            {plan?.duration} Days
+                                            {plan?.duration}
                                         </AUIThemedText>
                                     </AUIThemedView>
                                 </AUIThemedView>

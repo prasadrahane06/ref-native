@@ -275,7 +275,7 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                         render={({ field: { onChange, value } }) => (
                             <AUIInputField
                                 label={t("seat_booking_amount")}
-                                placeholder="Please enter amount"
+                                placeholder="£"
                                 value={value}
                                 onChangeText={onChange}
                                 style={styles.input}

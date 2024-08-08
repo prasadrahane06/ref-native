@@ -80,22 +80,22 @@ export default function PurchaseScreen() {
     }, [individualPlan, paymentMode, newid.planId]);
 
     const handlePayment = async () => {
-        // const result = await post(API_URL.paymentInitiate, {
-        //     amount: planValue.total,
-        //     paymentMode: paymentMode,
-        //     plan: newid?.planId,
-        //     type: newid?.type,
-        //     course: newid?.courseId,
-        // });
-        // if (result?.paymentId) {
+        const result = await post(API_URL.paymentInitiate, {
+            amount: planValue?.total,
+            paymentMode: paymentMode,
+            plan: newid?.planId,
+            type: newid?.type,
+            course: newid?.courseId,
+        });
+        if (result?.paymentId) {
             router.push({
                 pathname: "/payment",
                 params: {
-                    checkoutId: 'result?.paymentId',
+                    checkoutId: result?.paymentId,
                     paymentMode: paymentMode,
                 },
             });
-        // }
+        }
     };
 
     return (

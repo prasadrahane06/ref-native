@@ -1,27 +1,25 @@
 {
     "expo": {
-        "name": "Linguist",
-        "slug": "linguist-mobile",
-        "version": "1.0.3",
+        "name": "linguest-mobile",
+        "slug": "linguest-mobile",
+        "version": "1.0.0",
         "orientation": "portrait",
-        "icon": "./assets/images/logo/app_icon.png",
+        "icon": "./assets/images/icon.png",
         "scheme": "myapp",
         "userInterfaceStyle": "automatic",
         "splash": {
-            "image": "./assets/images/logo/splash_1.png"
+            "image": "./assets/images/logo/splash-1.png"
         },
         "ios": {
             "supportsTablet": true,
-            "googleServicesFile": "./GoogleService-Info.plist",
             "bundleIdentifier": "com.aariyatech.linguestmobile"
         },
         "android": {
             "adaptiveIcon": {
-                "foregroundImage": "./assets/images/logo/app_icon.png",
+                "foregroundImage": "./assets/images/adaptive-icon.png",
                 "backgroundColor": "#ffffff"
             },
-            "package": "com.aariyatech.linguestmobile",
-            "googleServicesFile": "./google-services.json"
+            "package": "com.aariyatech.linguestmobile"
         },
         "web": {
             "bundler": "metro",
@@ -30,20 +28,10 @@
         },
         "plugins": [
             "expo-router",
-            "@react-native-firebase/app",
-            "@react-native-firebase/messaging",
             [
                 "expo-asset",
                 {
                     "assets": ["./assets/images/initialPage"]
-                }
-            ],
-            [
-                "expo-build-properties",
-                {
-                    "ios": {
-                        "useFrameworks": "static"
-                    }
                 }
             ]
         ],
@@ -55,15 +43,9 @@
                 "origin": false
             },
             "eas": {
-                "projectId": "9b4c4a14-69b1-494c-89ba-38f3560065f1"
+                "projectId": "a4f3a3a6-8e68-4888-8f8a-d479d2ee7f4c"
             }
         },
-        "owner": "aariyatech",
-        "runtimeVersion": {
-            "policy": "appVersion"
-        },
-        "updates": {
-            "url": "https://u.expo.dev/84904570-ea3c-477b-b0ad-7b61e21c747c"
-        }
+        "owner": "aariyatech"
     }
 }

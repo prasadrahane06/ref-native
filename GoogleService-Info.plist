@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyARYvFLech5O_SoyfV32oMHlNpMfOtGhpw</string>
+	<string>AIzaSyCaqA23FfEg-f-mL2Mxg1V9P_gAEHvDVWM</string>
 	<key>GCM_SENDER_ID</key>
-	<string>741237509257</string>
+	<string>273824152390</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.aariyatech.linguestmobile</string>
 	<key>PROJECT_ID</key>
-	<string>linguist-notification</string>
+	<string>linguist-edu-notifications</string>
 	<key>STORAGE_BUCKET</key>
-	<string>linguist-notification.appspot.com</string>
+	<string>linguist-edu-notifications.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:741237509257:ios:5503fbbd0318021ea84a58</string>
+	<string>1:273824152390:ios:207102bac3b25a10e08347</string>
 </dict>
 </plist>
