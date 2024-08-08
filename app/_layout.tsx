@@ -232,6 +232,7 @@ const InitialLayout = () => {
                 name="payment"
                 options={{
                     headerTitle: `${t("Payment")}`,
+                    headerLeft: () => <TouchableOpacity></TouchableOpacity>,
                     headerTitleStyle: { color: TEXT_THEME[theme].primary },
                     headerStyle: { backgroundColor: BACKGROUND_THEME[theme].background },
                 }}

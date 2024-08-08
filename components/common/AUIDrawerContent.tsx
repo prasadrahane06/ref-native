@@ -43,7 +43,6 @@ const AUIDrawerContent = (props: any) => {
     const { t } = useTranslation();
 
     const globalState = useLangTransformSelector((state: RootState) => state.global);
-    const profile = useLangTransformSelector((state: RootState) => state.global.profile);
     const theme = useSelector((state: RootState) => state.global.theme);
     const isDarkMode = useLangTransformSelector(
         (state: RootState) => state.global.theme === "dark"
@@ -67,8 +66,6 @@ const AUIDrawerContent = (props: any) => {
         router.replace({ pathname: "/" });
     };
 
-    
-    
     return (
         <AUIThemedView style={{ flex: 1 }}>
             <DrawerContentScrollView
@@ -83,21 +80,20 @@ const AUIDrawerContent = (props: any) => {
                         style={[styles.avatarContainer, isRTL && { flexDirection: "row-reverse" }]}
                     >
                         {type === "student" ? (
-                            gender === "Male" ? (
-                                <AUIImage
-                                    path={Asset.fromModule(
-                                        require("@/assets/images/local/user.png")
-                                    )}
-                                    style={styles.avatar}
-                                />
-                            ) : (
-                                <AUIImage
-                                    path={Asset.fromModule(
-                                        require("@/assets/images/local/female.png")
-                                    )}
-                                    style={styles.avatar}
-                                />
-                            )
+                            <AUIImage
+                                path={
+                                    data?.photo
+                                        ? data?.photo
+                                        : gender === "Male"
+                                        ? Asset.fromModule(
+                                              require("@/assets/images/local/user.png")
+                                          )
+                                        : Asset.fromModule(
+                                              require("@/assets/images/local/female.png")
+                                          )
+                                }
+                                style={styles.avatar}
+                            />
                         ) : (
                             <AUIImage
                                 path={Asset.fromModule(require("@/assets/images/local/sclogo.png"))}

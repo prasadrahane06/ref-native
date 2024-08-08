@@ -322,7 +322,7 @@ const CompareSchools: React.FC = () => {
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView> */}
-                                <AUIThemedView style={styles.row}>
+                                <AUIThemedView style={styles.row2}>
                                     <AUIThemedText style={styles.value}>
                                     {t("number_of_seats")}
                                     </AUIThemedText>
@@ -335,19 +335,19 @@ const CompareSchools: React.FC = () => {
                                         </AUIThemedText>
                                     </AUIThemedView>
                                 </AUIThemedView>
-                                <AUIThemedView style={styles.row2}>
+                                {/* <AUIThemedView style={styles.row2}>
                                     <AUIThemedText style={styles.value}>
                                     {t("form_availability")}
                                     </AUIThemedText>
                                     <AUIThemedView style={styles.rowContainer}>
                                         <AUIThemedText style={styles.label}>
-                                            {compareSchool1?.formAvailability || ` ${t("eig")}`}
+                                            {compareSchool1?.formAvailability || `00`}
                                         </AUIThemedText>
                                         <AUIThemedText style={styles.label2}>
-                                            {compareSchool1?.formAvailability ||   ` ${t("nin")}`}
+                                            {compareSchool1?.formAvailability ||   `00`}
                                         </AUIThemedText>
                                     </AUIThemedView>
-                                </AUIThemedView>
+                                </AUIThemedView> */}
                             </AUIThemedView>
                         </AUIAccordion>
                         {/* <AUIAccordion

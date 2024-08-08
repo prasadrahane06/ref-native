@@ -28,11 +28,13 @@ export default function HomeScreen() {
     const width = Dimensions.get("window").width;
 
     const [selectedLanguage, setSelectedLanguage] = useState("English");
+    const [selectedLanguageInEng, setSelectedLanguageInEng] = useState("English");
     const ref = useRef<ICarouselInstance>(null);
 
     const { t } = useTranslation();
 
     const response = useLangTransformSelector((state: RootState) => state.api);
+    const rawResponse = useSelector((state: RootState) => state.api);
     const theme = useSelector((state: RootState) => state.global.theme);
     const user = useLangTransformSelector((state: RootState) => state.global.user);
     const _id = user?._id;
@@ -49,8 +51,16 @@ export default function HomeScreen() {
 
     const fetchCourses = useCallback(() => {
         dispatch(setselectedLanguage(selectedLanguage));
-        requestFn(API_URL.course, "selectedLanguagecourse", { similar: selectedLanguage });
+        requestFn(API_URL.course, "selectedLanguagecourse", { similar: selectedLanguageInEng });
     }, [selectedLanguage]);
+
+    const setSelectedLanguageFun = (lng: any) => {
+        const rawLangObj = rawResponse?.language?.docs?.filter((item: any) =>
+            Object.values(item.name).includes(lng)
+        )[0];
+        setSelectedLanguageInEng(rawLangObj?.name?.en || "English");
+        setSelectedLanguage(lng);
+    };
 
     useEffect(() => {
         fetchCourses();
@@ -132,7 +142,7 @@ export default function HomeScreen() {
                 <LanguageList
                     data={languageData?.docs}
                     selectedLanguage={selectedLanguage}
-                    setSelectedLanguage={setSelectedLanguage}
+                    setSelectedLanguage={setSelectedLanguageFun}
                 />
             </AUIThemedView>
 

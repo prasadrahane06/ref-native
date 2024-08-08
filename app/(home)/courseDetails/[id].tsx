@@ -5,7 +5,6 @@ import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import PlanComponent from "@/components/home/courseDetails/PlanComponent";
 import { APP_THEME } from "@/constants/Colors";
-import { GLOBAL_TEXT } from "@/constants/Properties";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import useIsomorphicLayoutEffect from "@/customHooks/useIsomorphicLayoutEffect";
@@ -125,8 +124,6 @@ export default function CourseDetails() {
     const userData = useSelector((state: RootState) => state.global.user);
 
     const userType = userData?.type;
-
-    console.log("userData", userData.type);
 
     const individualCourse = useLangTransformSelector(
         (state: RootState) => state.api.individualCourse

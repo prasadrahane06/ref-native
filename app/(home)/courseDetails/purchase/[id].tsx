@@ -81,8 +81,11 @@ export default function PurchaseScreen() {
 
     const handlePayment = async () => {
         const result = await post(API_URL.paymentInitiate, {
-            amount: planValue.total,
+            amount: planValue?.total,
             paymentMode: paymentMode,
+            plan: newid?.planId,
+            type: newid?.type,
+            course: newid?.courseId,
         });
         if (result?.paymentId) {
             router.push({

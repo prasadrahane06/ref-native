@@ -64,24 +64,14 @@ function Profile() {
                     </Pressable>
                 </View>
                 <View style={styles.avatarContainer}>
-                    {/* <AUIImage
+                    <AUIImage
                         path={
-                            userProfileData?.photo ||
-                            Asset.fromModule(require("@/assets/images/local/user.png"))
+                            userProfileData?.photo ? userProfileData?.photo : gender === "Male" ? 
+                            Asset.fromModule(require("@/assets/images/local/user.png")) : 
+                            Asset.fromModule(require("@/assets/images/local/female.png"))
                         }
                         style={styles.avatar}
-                    /> */}
-                    {gender === "Male" ? (
-                        <AUIImage
-                            path={Asset.fromModule(require("@/assets/images/local/user.png"))}
-                            style={styles.avatar}
-                        />
-                    ) : (
-                        <AUIImage
-                            path={Asset.fromModule(require("@/assets/images/local/female.png"))}
-                            style={styles.avatar}
-                        />
-                    )}
+                    />
                     <AUIThemedText style={styles.name}>{userProfileData?.name}</AUIThemedText>
                     <AUIThemedText style={styles.email}>{userProfileData?.email}</AUIThemedText>
                 </View>
