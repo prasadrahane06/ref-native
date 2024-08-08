@@ -258,7 +258,7 @@ const Profile: React.FC = () => {
         };
 
         if (profileBase64) {
-            payload["photo"] = `data:image/png;base64,${profileBase64}`;
+            payload.photo = `data:image/png;base64,${profileBase64}`;
         }
 
         patch(API_URL.user, payload)

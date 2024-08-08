@@ -1,29 +1,29 @@
 {
-  "project_info": {
-    "project_number": "741237509257",
-    "project_id": "linguist-notification",
-    "storage_bucket": "linguist-notification.appspot.com"
-  },
-  "client": [
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:741237509257:android:07bb4d8216cc3501a84a58",
-        "android_client_info": {
-          "package_name": "com.aariyatech.linguestmobile"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
+    "project_info": {
+        "project_number": "273824152390",
+        "project_id": "linguist-edu-notifications",
+        "storage_bucket": "linguist-edu-notifications.appspot.com"
+    },
+    "client": [
         {
-          "current_key": "AIzaSyAuZcT65El0pRNf-ajA9YEwm7lFbCfouCg"
+            "client_info": {
+                "mobilesdk_app_id": "1:273824152390:android:0c810b46e7d8f105e08347",
+                "android_client_info": {
+                    "package_name": "com.aariyatech.linguestmobile"
+                }
+            },
+            "oauth_client": [],
+            "api_key": [
+                {
+                    "current_key": "AIzaSyCoHNLWtlb6w_7N9Ej7xJeBF3Ho4C2lwOA"
+                }
+            ],
+            "services": {
+                "appinvite_service": {
+                    "other_platform_oauth_client": []
+                }
+            }
         }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    }
-  ],
-  "configuration_version": "1"
+    ],
+    "configuration_version": "1"
 }

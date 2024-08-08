@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "linguist-edu-notifications",
+  "private_key_id": "d203f54499602fb011d8f0b06eb81281597e7abe",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDVIwS0+Pm/1ho3\n8EDEyTeueaIed2+53kuNlLUu666FqSUBKfHvDz+h+BZ6UAMfcqBXC9zmVtaHoU9Q\nYqxECqJQvNDVQnykYQiPlrzdVSIOWui9ukpzWyq/hJGWV2WuhxuPElxhyrM4OwKd\nxAnFadltQFwBJ9DoSz6y5y/8bT/x3Gya8prWKSRl3FgrOS2nqjmahPwcGNymRmzb\nvtwTeqN0fLYA8utLvUXBLvzRwYqCKVgMut1o4VQOrG9QxdmGfaq4KboRS+bJc5Bd\nOybbAsTMI4JeV7aY4ALQF2iPLp4o5+E1tr51DO6yh1k3lU3OXwOq1bEpfKPixO4/\nhGQTdIYjAgMBAAECggEAN9QE4xyGWtQLqRRi+sjUL30H1KAnYVHTi4Hk1aYBYFx2\nZ3AjwaFGYzg3NxGnR8EAM9zVH3ammf9MZbt68RWx/6D9uKbCPFJ4ahgrX3Rxx73T\nUgMuhjneoCzq76zz4vvb4aWHEkyEllmKrWWQw6eevsnJb7oMtBQll7oL7Tx2r/S5\nESZQ6Ulckrrho3Frg/hLVA7J4gkXtgDYWnYi8HLB+FLx2IGx5pwDFgtptZkZ43uT\njDkqLdLMePsI2wu4dmGokvf2WHJAXGKCk1+5pLoPuFkptmzmo1joUhofyJkdcQ1+\nGJJb0iSQ/sMRQV7lQw3qiy4rrFcqRxF9/h/FIHQ4YQKBgQDtMU1fxpSqXJzXHCEI\nuhQhcaEDjmyUhG5IDzKAQVSdG66V0zAz072EfQzxkbRHjQWT+LhlNligYqLGteNl\nf8YB0sN/o4LU5+kASVNLc+NkM1Enn0rc8QAyeMq+VrgH8k9Ab7EUfseGphCnZBoK\nVNDG3YLzj4OGeH6/JQdiOznT4QKBgQDmCWpDxLTVAKyEtxfcjPRUxl4ZkqlikEt9\nGbMagHBE623DqwrKnLkYaHXjHqo539wWVwgq62w8hbY5YH/9107UxH5nlB/st2Rq\noi8UhPmRGiHNJAuTALlOewJIIOcO6ilr2sgH8x5maSzmB3cUHNU0td6jtIzRDuwH\nKGudfGBagwKBgQC7eqG210aA1c0eddxignoQ6Tikj/mg9oAYsvJuz7Sqrcu0HwZV\noMKGqzUE5+8AMyY6jHhrf6ZTt0MEH5aKjpEatdXS2JI76MaRdGPDGumcNLerwsuw\nkUlfm3xdMDwsA8nCm8Xy9jaNZkt5k7TFf765wTKVg1Upf6pnOUR5z2ho4QKBgQDi\nlTmHgPUBrcVAgDxPsMNl0XKUy+JuRGUm1y6Ulxh+uksG5a4efprPEO21hdn0Ya0e\nkCFqbTPStX4VLBlGRlLOvrEngz6i4s1VP2USWByesVfEAZIo/RiJ1h4cP9R322xr\nYTeQpQc3prdj6MyBEhlr7wxawZfGwGT6c/T0TbN20wKBgFSnjvkWoIxgj2U4xZIM\nFYM7MgheOEcIhbaOMXZWf1kpmtV5RmZqwJk3mzFLoLkiiTCU/Da7Ak6muDCyPvpJ\nWiDKNcDOxLt+tR+0EpEf1N2PH2GXuiFy/JZjuN+A5p3sdCppb8Na7yXRm1lpTqed\nil7OqdFjltaL144ppwmrDxGb\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-q0b81@linguist-edu-notifications.iam.gserviceaccount.com",
+  "client_id": "113444157696043253438",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-q0b81%40linguist-edu-notifications.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
