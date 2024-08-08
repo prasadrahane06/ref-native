@@ -48,9 +48,11 @@ const IncreaseChance = ({
                 <AUIImage path={image} style={{ width: 60, height: 60 }} />
 
                 <AUIThemedView style={{ backgroundColor: APP_THEME[theme].primary.first }}>
-                    <Text style={[styles.courseName]}>{courseName}</Text>
-                    <Text style={[styles.schoolName]}>{schoolName}</Text>
-                    <Text style={[styles.daysRemaining]}>{daysLeft} Days remaining</Text>
+                    <Text style={[styles.courseName, styles.textWrap]}>{courseName}</Text>
+                    <Text style={[styles.schoolName, styles.textWrap]}>{schoolName}</Text>
+                    <Text style={[styles.daysRemaining, styles.textWrap]}>
+                        {daysLeft}
+                    </Text>
                 </AUIThemedView>
             </AUIThemedView>
         </TouchableOpacity>
@@ -84,6 +86,10 @@ const styles = StyleSheet.create({
     daysRemaining: {
         color: "#fff",
         fontSize: 12,
+    },
+    textWrap: {
+        flexWrap: 'wrap',
+        width: '100%',
     },
 });
 

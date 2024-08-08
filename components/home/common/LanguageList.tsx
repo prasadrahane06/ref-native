@@ -14,11 +14,17 @@ const LanguageList: React.FC<LanguageListProps> = ({
     selectedLanguage,
     setSelectedLanguage,
 }) => {
+    const sortedData = data.filter((item) => item.name !== selectedLanguage);
+    const modifiedData = [
+        { name: selectedLanguage, ...data.find((item) => item.name === selectedLanguage) },
+        ...sortedData,
+    ];
+
     return (
         <AUIThemedView style={styles.container}>
             <FlatList
                 horizontal
-                data={data}
+                data={modifiedData}
                 renderItem={({ item }) => {
                     return (
                         <Flag

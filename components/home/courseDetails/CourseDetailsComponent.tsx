@@ -42,7 +42,7 @@ export default function CourseDetailsComponent({ plan }: any) {
                     <AUIThemedText
                         style={[styles.primaryText, { color: APP_THEME[theme].primary.first }]}
                     >
-                        ${plan.price}
+                        {plan.price} SAR
                     </AUIThemedText>
                 </AUIThemedView>
 
@@ -51,7 +51,7 @@ export default function CourseDetailsComponent({ plan }: any) {
                     <AUIThemedText
                         style={[styles.primaryText, { color: APP_THEME[theme].primary.first }]}
                     >
-                        ${plan.bookYourSeat}
+                        {plan.bookYourSeat} SAR
                     </AUIThemedText>
                 </AUIThemedView>
                 <AUIThemedView style={styles.detailsHeader}>

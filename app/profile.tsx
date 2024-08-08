@@ -7,7 +7,6 @@ import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
 import { languagesData } from "@/constants/dummy data/languagesData";
-import { GLOBAL_TEXT } from "@/constants/Properties";
 import { storeUserData } from "@/constants/RNAsyncStore";
 import { API_URL } from "@/constants/urlProperties";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
@@ -21,7 +20,7 @@ import { City, Country, State } from "country-state-city";
 import { Asset } from "expo-asset";
 import * as ImagePicker from "expo-image-picker";
 import { router, useLocalSearchParams } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
@@ -129,10 +128,6 @@ const Profile: React.FC = () => {
         courseId: string;
     }>();
 
-    if (from === "buyButton" || from === "bookYourSeatButton") {
-        ApiSuccessToast(`${t("check_you_profile_before_making_payment")}`);
-    }
-
     const theme = useSelector((state: RootState) => state.global.theme);
     const [dateOfBirth, setDateOfBirth] = useState(
         userProfileData?.dob ? new Date(userProfileData?.dob) : new Date()
@@ -155,6 +150,7 @@ const Profile: React.FC = () => {
     const [selectedCountry, setSelectedCountry] = useState<any>(null);
     const [selectedState, setSelectedState] = useState<any>(null);
     const [selectedCity, setSelectedCity] = useState<any>(null); // DONT REMOVE IT, IT IS USED IN COUNTRY AND STATE
+    const [canSkip, setCanSkip] = useState(true);
 
     const country = userProfileData?.country;
     const state = userProfileData?.state;
@@ -182,9 +178,20 @@ const Profile: React.FC = () => {
         academicSession: Yup.string().required(`${t("academic_session_is_required")}`),
         country: Yup.string().required(`${t("country_is_required")}`),
         city: Yup.string().required(`${t("city_is_required")}`),
-        state: Yup.string().required(`${t("state_is_required ")}`),
+        state: Yup.string().required(`${t("state_is_required")}`),
     });
 
+    const formData = {
+        name: userProfileData?.name,
+        language: userProfileData?.language,
+        dateOfBirth: dateOfBirth && dateOfBirth?.toISOString(),
+        gender: userProfileData?.gender || "",
+        qualification: userProfileData?.qualification,
+        academicSession: userProfileData?.academicSession,
+        country: countryCode,
+        state: stateCode,
+        city: userProfileData?.city,
+    };
     const { reset, setValue, control, handleSubmit, formState } = useForm({
         resolver: yupResolver(schema),
         mode: "onChange",
@@ -203,11 +210,37 @@ const Profile: React.FC = () => {
         },
     });
 
+    useEffect(() => {
+        setCanSkip(!formState.isDirty);
+    }, [formState.isDirty]);
+
+    useEffect(() => {
+        if (from === "buyButton" || from === "bookYourSeatButton") {
+            if (isAnyFieldEmpty(formData) || formState.isDirty) {
+                ApiErrorToast(t("check_you_profile_before_making_payment"));
+            } else {
+                ApiSuccessToast(t("verify_you_profile_before_making_payment"));
+            }
+            setCanSkip(!formState.isDirty);
+        }
+    }, []);
+
+    const isAnyFieldEmpty = (formData: any) => {
+        for (let key in formData) {
+            if (!formData[key]) {
+                return true;
+            }
+        }
+        return false;
+    };
+
+
     const onDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
         const currentDate = selectedDate || dateOfBirth;
         setShowDatePicker(Platform.OS === "ios");
         setDateOfBirth(currentDate);
         setValue("dateOfBirth", currentDate.toISOString());
+        setCanSkip(false);
     };
 
     const formatDate = (dateString: string) => {
@@ -683,9 +716,39 @@ const Profile: React.FC = () => {
                             style={{ width: "48%" }}
                         />
                         <AUIButton
-                            title={t("save")}
+                            title={!canSkip ? t("save") : t("verify")}
                             selected
-                            onPress={handleSubmit(onSave)}
+                            onPress={
+                                !canSkip
+                                    ? handleSubmit(onSave)
+                                    : () => {
+                                          if (from === "buyButton") {
+                                              router.push({
+                                                  //@ts-ignore
+                                                  pathname: `/(home)/courseDetails/purchase/${JSON.stringify(
+                                                      {
+                                                          type: type,
+                                                          planId: planId,
+                                                          courseId: courseId,
+                                                      }
+                                                  )}`,
+                                              });
+                                          }
+
+                                          if (from === "bookYourSeatButton") {
+                                              router.push({
+                                                  //@ts-ignore
+                                                  pathname: `/(home)/courseDetails/purchase/${JSON.stringify(
+                                                      {
+                                                          type: type,
+                                                          planId: planId,
+                                                          courseId: courseId,
+                                                      }
+                                                  )}`,
+                                              });
+                                          }
+                                      }
+                            }
                             disabled={!formState.isValid}
                             style={{ width: "48%" }}
                         />

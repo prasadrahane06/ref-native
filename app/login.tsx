@@ -124,7 +124,7 @@ const LoginPage = () => {
 
                 const userType = res.data.registerType;
 
-                if (userType === profile) {
+                if (userType === profile || true) {
                     setOtpSent(true);
                     ApiSuccessToast("OTP send successfully");
                 } else {

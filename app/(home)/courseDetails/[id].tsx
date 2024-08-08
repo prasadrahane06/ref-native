@@ -125,8 +125,6 @@ export default function CourseDetails() {
 
     const userType = userData?.type;
 
-    console.log("userData", userData.type);
-
     const individualCourse = useLangTransformSelector(
         (state: RootState) => state.api.individualCourse
     );
