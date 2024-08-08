@@ -1,58 +1,71 @@
 {
-    "expo": {
-        "name": "Linguist",
-        "slug": "linguist",
-        "version": "1.0.0",
-        "orientation": "portrait",
-        "icon": "./assets/images/logo/app_icon.png",
-        "scheme": "myapp",
-        "userInterfaceStyle": "automatic",
-        "splash": {
-            "image": "./assets/images/logo/splash_1.png"
-        },
-        "ios": {
-            "supportsTablet": true,
-            "bundleIdentifier": "com.aariyatech.linguestmobile"
-        },
-        "android": {
-            "adaptiveIcon": {
-                "foregroundImage": "./assets/images/logo/app_icon.png",
-                "backgroundColor": "#ffffff"
-            },
-            "package": "com.aariyatech.linguestmobile",
-            "googleServicesFile": "./google-services.json"
-        },
-        "web": {
-            "bundler": "metro",
-            "output": "static",
-            "favicon": "./assets/images/favicon.png"
-        },
-        "plugins": [
-            "expo-router",
-            [
-                "expo-asset",
-                {
-                    "assets": ["./assets/images/local"]
-                }
-            ]
-        ],
-        "experiments": {
-            "typedRoutes": true
-        },
-        "extra": {
-            "router": {
-                "origin": false
-            },
-            "eas": {
-                "projectId": "9b4c4a14-69b1-494c-89ba-38f3560065f1"
-            }
-        },
-        "owner": "bilal.sheikh",
-        "runtimeVersion": {
-            "policy": "appVersion"
-        },
-        "updates": {
-            "url": "https://u.expo.dev/84904570-ea3c-477b-b0ad-7b61e21c747c"
+  "expo": {
+    "name": "Linguist",
+    "slug": "linguist-mobile",
+    "version": "1.0.3",
+    "orientation": "portrait",
+    "icon": "./assets/images/logo/app_icon.png",
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/images/logo/splash_1.png"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "bundleIdentifier": "com.aariyatech.linguestmobile"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/logo/app_icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.aariyatech.linguestmobile",
+      "googleServicesFile": "./google-services.json"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "@react-native-firebase/app",
+      "@react-native-firebase/messaging",
+      [
+        "expo-asset",
+        {
+          "assets": [
+            "./assets/images/local"
+          ]
         }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "6cb64fee-7dc5-4426-9bd7-07d1a5e0f5cd"
+      }
+    },
+    "owner": "aariyatech",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/84904570-ea3c-477b-b0ad-7b61e21c747c"
     }
+  }
 }

@@ -3,6 +3,7 @@
         "version": ">= 9.1.0"
     },
     "build": {
+        
         "development": {
             "developmentClient": true,
             "distribution": "internal",
@@ -29,7 +30,8 @@
             "android": {
                 "buildType": "apk"
             },
-            "channel": "production"
+            "channel": "production",
+            "releaseChannel": "production"
         }
     },
     "submit": {

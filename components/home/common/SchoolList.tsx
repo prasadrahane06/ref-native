@@ -1,6 +1,5 @@
 import School from "@/components/School";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { Asset } from "expo-asset";
 import React from "react";
 import { FlatList, StyleSheet } from "react-native";
 

@@ -42,6 +42,7 @@ export default function PurchaseScreen() {
     const { id } = useLocalSearchParams<{ id: any }>();
     const { requestFn } = useApiRequest();
     const { post } = useAxios();
+    const [isLoading, setLoading] = useState(false);
 
     const newid = JSON.parse(id);
 
@@ -80,6 +81,7 @@ export default function PurchaseScreen() {
     }, [individualPlan, paymentMode, newid.planId]);
 
     const handlePayment = async () => {
+        setLoading(true);
         const result = await post(API_URL.paymentInitiate, {
             amount: planValue?.total,
             paymentMode: paymentMode,
@@ -88,6 +90,7 @@ export default function PurchaseScreen() {
             course: newid?.courseId,
         });
         if (result?.paymentId) {
+            setLoading(false);
             router.push({
                 pathname: "/payment",
                 params: {
@@ -127,7 +130,7 @@ export default function PurchaseScreen() {
                                 : t(GLOBAL_TRANSLATION_LABEL.bookYourSeat)}
                         </AUIThemedText>
                         <AUIThemedText style={styles.planDetailValue}>
-                            ${planValue.price}
+                            {planValue.price} SAR
                         </AUIThemedText>
                     </AUIThemedView>
 
@@ -136,7 +139,7 @@ export default function PurchaseScreen() {
                             {t(GLOBAL_TRANSLATION_LABEL.taxes)}
                         </AUIThemedText>
                         <AUIThemedText style={styles.planDetailValue}>
-                            ${planValue.tax.toFixed(2)}
+                            {planValue.tax.toFixed(2)} SAR
                         </AUIThemedText>
                     </AUIThemedView>
                 </AUIThemedView>
@@ -156,7 +159,7 @@ export default function PurchaseScreen() {
                             {t(GLOBAL_TRANSLATION_LABEL.total)}
                         </AUIThemedText>
                         <AUIThemedText style={styles.totalValue}>
-                            ${planValue.total.toFixed(2)}
+                            {planValue.total.toFixed(2)} SAR
                         </AUIThemedText>
                     </AUIThemedView>
                 </AUIThemedView>
@@ -198,8 +201,15 @@ export default function PurchaseScreen() {
             </AUIThemedView>
 
             <TouchableOpacity
-                style={[styles.confirmButton, { backgroundColor: APP_THEME[theme].primary.first }]}
+                style={[
+                    styles.confirmButton,
+                    {
+                        backgroundColor: APP_THEME[theme].primary.first,
+                        opacity: isLoading ? 0.5 : 1,
+                    },
+                ]}
                 onPress={() => handlePayment()}
+                disabled={isLoading}
             >
                 <AUIThemedText style={styles.confirmButtonText}>
                     {t(GLOBAL_TRANSLATION_LABEL.confirmYourPayment)}
