@@ -10,11 +10,11 @@ const Help = () => {
     const { t } = useTranslation();
     const isRTL = useSelector((state: RootState) => state.global.isRTL);
     const faqData = [
-        { question: t("faq1"), answer: t("ans1") },
-        { question: t("faq2"), answer: t("ans2") },
-        { question: t("faq3"), answer: t("ans3") },
-        { question: t("faq4"), answer: t("ans4") },
-        { question: t("faq5"), answer: t("ans5") },
+        { question: t("faq1"), answer: t("faq_ans1") },
+        { question: t("faq2"), answer: t("faq_ans2") },
+        { question: t("faq3"), answer: t("faq_ans3") },
+        { question: t("faq4"), answer: t("faq_ans4") },
+        { question: t("faq5"), answer: t("faq_ans5") },
     ];
 
     return (

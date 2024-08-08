@@ -253,6 +253,7 @@ const Profile: React.FC = () => {
     };
 
     const pickImageAsync = async (value: any) => {
+        setCanSkip(false);
         let result = await ImagePicker.launchImageLibraryAsync({
             base64: true,
             allowsEditing: true,
@@ -335,7 +336,6 @@ const Profile: React.FC = () => {
     };
 
     const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
-
     return (
         <KeyboardAvoidingView
             style={{ flex: 1, backgroundColor: BACKGROUND_THEME[theme].background }}

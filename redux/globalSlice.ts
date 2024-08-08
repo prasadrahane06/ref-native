@@ -20,6 +20,7 @@ export interface UserState {
     type: string;
     updatedAt: string;
     gender?: string;
+    photo?: string;
 }
 
 export interface GlobalState {
