@@ -219,6 +219,14 @@ export const inputFieldStyle = StyleSheet.create({
         borderRadius: 5,
         paddingHorizontal: 10,
     },
+    multilineInput: {
+        height: 100,
+        borderColor: "#ccc",
+        borderWidth: 2,
+        borderRadius: 5,
+        padding: 10,
+        textAlignVertical: "top",
+    },
     error: {
         marginTop: 5,
         fontSize: 14,

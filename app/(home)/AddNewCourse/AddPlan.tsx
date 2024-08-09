@@ -99,8 +99,6 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
     const [initialValues, setInitialValues] = useState<any>({});
     const [newFacility, setNewFacility] = useState<string[]>([]);
 
-    console.log("plan", plan);
-
     // const facilitySchema = facilities.reduce((acc: any, _id: any) => {
     //     acc[`facility_${_id}`] = Yup.boolean().optional();
     //     return acc;
@@ -185,7 +183,7 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
 
             // setInitialValues(initialPlanValues);
 
-            setSelectedFacilities(plan.facilities);
+            setSelectedFacilities(plan?.facilities);
 
             setValue("planName", plan?.name);
             setValue("durationInNumber", durationArray[0]);
@@ -221,8 +219,6 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
             lessonsHour: duration, //  change in backend
         };
 
-        console.log("payload", payload);
-
         post(API_URL.plan, payload)
             .then((res) => {
                 dispatch(setLoader(true));
@@ -239,7 +235,9 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
     };
 
     const handleEdit = (data: any) => {
-        console.log("handleEdit data", data);
+        dispatch(setLoader(true));
+        onClose();
+        reset();
 
         // const payload: any = { id: plan?._id };
 
@@ -256,6 +254,7 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
         const duration = `${data.durationInNumber} ${data.durationInUnit}`.trim();
 
         const payload = {
+            id: plan?._id,
             name: data.planName,
             duration: duration,
             schedule: data.schedule,
@@ -266,19 +265,18 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
             lessonsHour: duration, //  change in backend
         };
 
-        console.log("handleEdit payload", payload);
-
-        // patch(API_URL.plan, payload)
-        //     .then((res) => {
-        //         ApiSuccessToast(`${t("plan_updated_successfully")}`);
-        //         onClose();
-        //         refreshPlans();
-        //         reset();
-        //     })
-        //     .catch((e) => {
-        //         ApiErrorToast(`${t("failed_to_update_plan")}`);
-        //         console.log(e);
-        //     });
+        patch(API_URL.plan, payload)
+            .then((res) => {
+                refreshPlans();
+                ApiSuccessToast(`${t("plan_updated_successfully")}`);
+                dispatch(setLoader(false));
+            })
+            .catch((error) => {
+                refreshPlans();
+                dispatch(setLoader(false));
+                ApiErrorToast(`${t("failed_to_update_plan")}`);
+                console.log(error);
+            });
     };
 
     const handleDelete = () => {
@@ -315,7 +313,11 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
         <>
             <AUIModal
                 visible={visible}
-                onClose={onClose}
+                onClose={() => {
+                    onClose();
+                    reset();
+                    setSelectedFacilities([]);
+                }}
                 title={plan ? "Edit Plan" : `${t("add_your_plan")}`}
                 style={styles.modalContainerStyle}
             >

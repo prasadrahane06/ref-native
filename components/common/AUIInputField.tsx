@@ -34,6 +34,8 @@ const AUIInputField: React.FC<CustomInputProps> = ({
     inputStyle,
     autoFocus,
     keyboardType,
+    multiline,
+    numberOfLines,
     ...props
 }) => {
     const theme = useSelector((state: RootState) => state.global.theme);
@@ -49,7 +51,9 @@ const AUIInputField: React.FC<CustomInputProps> = ({
             )}
             <TextInput
                 style={[
-                    inputFieldStyle.input,
+                    multiline || numberOfLines
+                        ? inputFieldStyle.multilineInput
+                        : inputFieldStyle.input,
                     // @ts-ignore
                     error && { borderWidth: 1, borderColor: "red" },
                     inputStyle,

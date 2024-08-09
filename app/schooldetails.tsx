@@ -23,28 +23,51 @@ import useAxios from "./services/axiosClient";
 import { useDispatch } from "react-redux";
 import { setLoader, setUser } from "@/redux/globalSlice";
 import { storeUserData } from "@/constants/RNAsyncStore";
+import { City, Country, State } from "country-state-city";
+import { DETAILS_FIELDS } from "@/constants/Properties";
+import CustomTooltip from "@/components/common/AUIToolTip";
+import { Ionicons } from "@expo/vector-icons";
+import { APP_THEME } from "@/constants/Colors";
 
 const schema = Yup.object().shape({
     remark: Yup.string().required("Remark is required"),
     website: Yup.string().required("Website is required"),
-    location: Yup.string().required("Location is required"),
+    description: Yup.string().required("Description is required"),
+    // location: Yup.string().required("Location is required"),
+    country: Yup.string().required("Country is required"),
+    city: Yup.string().required("City is required"),
+    state: Yup.string().required("State is required"),
+    zip: Yup.string().required("Zip is required"),
+    street: Yup.string().required("Street is required"),
     logo: Yup.string().required("Logo is required"),
     banner: Yup.string().required("Banner is required"),
-    description: Yup.string().required("Description is required"),
 });
+
+interface LocationData {
+    _id: string;
+    location: string;
+}
 
 export default function SchoolDetails() {
     const { requestFn } = useApiRequest();
     const { patch } = useAxios();
     const dispatch = useDispatch();
+    const router = useRouter();
 
     // const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
     const userData = useLangTransformSelector((state: RootState) => state.global.user);
 
-    const router = useRouter();
-    const [locationData, setLocationData] = useState([]);
+    const [locationData, setLocationData] = useState<LocationData[]>([]);
     const [selectedLogo, setSelectedLogo] = useState("");
     const [selectedBanner, setSelectedBanner] = useState("");
+
+    const [selectedCountry, setSelectedCountry] = useState<any>(null);
+    const [selectedState, setSelectedState] = useState<any>(null);
+    const [selectedCity, setSelectedCity] = useState<any>(null); // DONT REMOVE IT, IT IS USED IN COUNTRY AND STATE
+
+    const allCountries = Country.getAllCountries();
+    const states = selectedCountry ? State.getStatesOfCountry(selectedCountry) : [];
+    const cities = selectedState ? City.getCitiesOfState(selectedCountry, selectedState) : [];
 
     const { setValue, control, handleSubmit } = useForm({
         resolver: yupResolver(schema),
@@ -52,8 +75,13 @@ export default function SchoolDetails() {
         defaultValues: {
             remark: "",
             website: "",
-            location: "",
             description: "",
+            // location: "",
+            country: "",
+            city: "",
+            state: "",
+            zip: "",
+            street: "",
             logo: "",
             banner: "",
         },
@@ -80,20 +108,39 @@ export default function SchoolDetails() {
 
     const onSave = async (data: any) => {
         dispatch(setLoader(true));
+
+        const country = data.country;
+        const state = data.state;
+
+        const countryName = Country.getCountryByCode(country)?.name;
+        const stateName = State.getStateByCodeAndCountry(state, country)?.name;
+
         const logoBase64 = `data:image/png;base64,${data.logo}`;
         const bannerBase64 = `data:image/png;base64,${data.banner}`;
 
+        const locationId = locationData.find((loc: any) => loc.location === countryName)?._id;
+
         const payload = {
+            id: userData?.client,
             remark: data.remark,
             website: data.website,
-            location: data.location,
             description: data.description,
             logo: logoBase64,
             banner: bannerBase64,
+            location: locationId || "",
+            country: countryName,
+            state: stateName,
+            city: data.city,
+            zip: data.zip,
+            street: data.street,
         };
+
+        console.log("payload", payload);
 
         patch(API_URL.school, payload)
             .then((res: any) => {
+                console.log("res", res);
+
                 dispatch(setLoader(false));
 
                 if (res.statusCode === 200) {
@@ -149,23 +196,41 @@ export default function SchoolDetails() {
                                 control={control}
                                 render={({ field: { onChange, value }, fieldState: { error } }) => (
                                     <AUIThemedView style={styles.fieldSpacing}>
-                                    <AUIInputField
-                                        value={value}
-                                        onChangeText={onChange}
-                                        placeholder="Enter your remark"
-                                        label="Remark"
-                                    />
-                                    <AUIThemedView>
-                                        {error && (
-                                            <AUIThemedText
-                                                style={styles.fieldError}
-                                                type="subtitle"
+                                        <AUIThemedView
+                                            style={{
+                                                flexDirection: "row",
+                                                alignItems: "center",
+                                                gap: 5,
+                                            }}
+                                        >
+                                            <AUIThemedText>Remark</AUIThemedText>
+                                            <CustomTooltip
+                                                text={`A remark is a short description of your school`}
+                                                tooltipStyle={{ padding: 15 }}
                                             >
-                                                {error.message}
-                                            </AUIThemedText>
-                                        )}
+                                                <Ionicons
+                                                    name="information-circle-outline"
+                                                    size={20}
+                                                    color={APP_THEME.light.primary.first}
+                                                />
+                                            </CustomTooltip>
+                                        </AUIThemedView>
+                                        <AUIInputField
+                                            value={value}
+                                            onChangeText={onChange}
+                                            placeholder="Enter your remark"
+                                        />
+                                        <AUIThemedView>
+                                            {error && (
+                                                <AUIThemedText
+                                                    style={styles.fieldError}
+                                                    type="subtitle"
+                                                >
+                                                    {error.message}
+                                                </AUIThemedText>
+                                            )}
+                                        </AUIThemedView>
                                     </AUIThemedView>
-                                </AUIThemedView>
                                 )}
                             />
 
@@ -199,54 +264,249 @@ export default function SchoolDetails() {
                                 control={control}
                                 render={({ field: { onChange, value }, fieldState: { error } }) => (
                                     <AUIThemedView style={styles.fieldSpacing}>
-                                    <AUIInputField
-                                        value={value}
-                                        onChangeText={onChange}
-                                        placeholder="Enter your description"
-                                        label="Description"
-                                    />
-                                    <AUIThemedView>
-                                        {error && (
-                                            <AUIThemedText
-                                                style={styles.fieldError}
-                                                type="subtitle"
+                                        <AUIThemedView
+                                            style={{
+                                                flexDirection: "row",
+                                                alignItems: "center",
+                                                gap: 5,
+                                            }}
+                                        >
+                                            <AUIThemedText>Description</AUIThemedText>
+                                            <CustomTooltip
+                                                text={`A brief description of your school`}
+                                                tooltipStyle={{ padding: 15 }}
                                             >
-                                                {error.message}
-                                            </AUIThemedText>
-                                        )}
+                                                <Ionicons
+                                                    name="information-circle-outline"
+                                                    size={20}
+                                                    color={APP_THEME.light.primary.first}
+                                                />
+                                            </CustomTooltip>
+                                        </AUIThemedView>
+
+                                        <AUIInputField
+                                            value={value}
+                                            onChangeText={onChange}
+                                            placeholder="Enter your description"
+                                            multiline
+                                            numberOfLines={3}
+                                            blurOnSubmit={false}
+                                            returnKeyType="default"
+                                        />
+                                        <AUIThemedView>
+                                            {error && (
+                                                <AUIThemedText
+                                                    style={styles.fieldError}
+                                                    type="subtitle"
+                                                >
+                                                    {error.message}
+                                                </AUIThemedText>
+                                            )}
+                                        </AUIThemedView>
                                     </AUIThemedView>
-                                </AUIThemedView>
                                 )}
                             />
 
-                            <Controller
+                            {/* <Controller
                                 name="location"
                                 control={control}
                                 render={({ field: { onChange, value }, fieldState: { error } }) => (
                                     <AUIThemedView style={styles.fieldSpacing}>
-                                    <DropdownComponent
-                                        list={locationData}
-                                        value={value}
-                                        setValue={({ _id }: { _id: string }) => onChange(_id)}
-                                        label="Select your location"
-                                        labelField="location"
-                                        valueField="_id"
-                                        placeholder="Select your location"
-                                        position="top"
-                                        listWithIcon
-                                    />
+                                        <DropdownComponent
+                                            list={locationData}
+                                            value={value}
+                                            setValue={({ _id }: { _id: string }) => onChange(_id)}
+                                            label="Select your location"
+                                            labelField="location"
+                                            valueField="_id"
+                                            placeholder="Select your location"
+                                            position="top"
+                                            listWithIcon
+                                        />
 
-                                    <AUIThemedView>
-                                        {error && (
-                                            <AUIThemedText
-                                                style={styles.fieldError}
-                                                type="subtitle"
-                                            >
-                                                {error.message}
-                                            </AUIThemedText>
-                                        )}
+                                        <AUIThemedView>
+                                            {error && (
+                                                <AUIThemedText
+                                                    style={styles.fieldError}
+                                                    type="subtitle"
+                                                >
+                                                    {error.message}
+                                                </AUIThemedText>
+                                            )}
+                                        </AUIThemedView>
                                     </AUIThemedView>
-                                </AUIThemedView>
+                                )}
+                            /> */}
+
+                            <Controller
+                                name="country"
+                                control={control}
+                                render={({ field: { onChange, value }, fieldState: { error } }) => (
+                                    <AUIThemedView>
+                                        <DropdownComponent
+                                            label={DETAILS_FIELDS.country.label}
+                                            list={allCountries.map((country) => ({
+                                                label: country.name,
+                                                value: country.isoCode,
+                                            }))}
+                                            //@ts-ignore
+                                            value={value}
+                                            //@ts-ignore
+                                            setValue={({ value }) => {
+                                                onChange(value);
+                                                setSelectedCountry(value);
+
+                                                // Automatically map the country to the corresponding location ID
+                                                // const selectedCountryName =
+                                                //     Country.getCountryByCode(value)?.name;
+                                                // const locationId = locationData.find(
+                                                //     (loc) => loc.location === selectedCountryName
+                                                // )?._id;
+                                                // setValue("location", locationId); // Set the location ID in the form
+                                            }}
+                                            labelField="label"
+                                            valueField="value"
+                                            listWithIcon
+                                            placeholder={"Select your country"}
+                                            position="top"
+                                        />
+
+                                        <AUIThemedView>
+                                            {error && (
+                                                <AUIThemedText
+                                                    style={styles.fieldError}
+                                                    type="subtitle"
+                                                >
+                                                    {error.message}
+                                                </AUIThemedText>
+                                            )}
+                                        </AUIThemedView>
+                                    </AUIThemedView>
+                                )}
+                            />
+
+                            <Controller
+                                name="state"
+                                control={control}
+                                render={({ field: { onChange, value }, fieldState: { error } }) => (
+                                    <AUIThemedView>
+                                        <DropdownComponent
+                                            label={DETAILS_FIELDS.state.label}
+                                            //@ts-ignore
+                                            list={states?.map((state) => ({
+                                                label: state.name,
+                                                value: state.isoCode,
+                                            }))}
+                                            value={value}
+                                            //@ts-ignore
+                                            setValue={({ value }) => {
+                                                onChange(value);
+                                                setSelectedState(value);
+                                            }}
+                                            labelField="label"
+                                            valueField="value"
+                                            placeholder={"Select your state"}
+                                            listWithIcon
+                                            position="top"
+                                        />
+                                        <AUIThemedView>
+                                            {error && (
+                                                <AUIThemedText
+                                                    style={styles.fieldError}
+                                                    type="subtitle"
+                                                >
+                                                    {error.message}
+                                                </AUIThemedText>
+                                            )}
+                                        </AUIThemedView>
+                                    </AUIThemedView>
+                                )}
+                            />
+
+                            <Controller
+                                name="city"
+                                control={control}
+                                render={({ field: { onChange, value }, fieldState: { error } }) => (
+                                    <AUIThemedView>
+                                        <DropdownComponent
+                                            label={DETAILS_FIELDS.city.label}
+                                            list={cities.map((city) => ({
+                                                label: city.name,
+                                                value: city.name,
+                                            }))}
+                                            value={value}
+                                            //@ts-ignore
+                                            setValue={({ value }) => {
+                                                onChange(value);
+                                                setSelectedCity(value);
+                                            }}
+                                            labelField="label"
+                                            valueField="value"
+                                            listWithIcon
+                                            placeholder={"Select your city"}
+                                            position="top"
+                                        />
+                                        <AUIThemedView>
+                                            {error && (
+                                                <AUIThemedText
+                                                    style={styles.fieldError}
+                                                    type="subtitle"
+                                                >
+                                                    {error.message}
+                                                </AUIThemedText>
+                                            )}
+                                        </AUIThemedView>
+                                    </AUIThemedView>
+                                )}
+                            />
+
+                            <Controller
+                                name="zip"
+                                control={control}
+                                render={({ field: { onChange, value }, fieldState: { error } }) => (
+                                    <AUIThemedView style={styles.fieldSpacing}>
+                                        <AUIInputField
+                                            value={value}
+                                            onChangeText={onChange}
+                                            placeholder="Enter your zipcode"
+                                            label="Zipcode"
+                                        />
+                                        <AUIThemedView>
+                                            {error && (
+                                                <AUIThemedText
+                                                    style={styles.fieldError}
+                                                    type="subtitle"
+                                                >
+                                                    {error.message}
+                                                </AUIThemedText>
+                                            )}
+                                        </AUIThemedView>
+                                    </AUIThemedView>
+                                )}
+                            />
+
+                            <Controller
+                                name="street"
+                                control={control}
+                                render={({ field: { onChange, value }, fieldState: { error } }) => (
+                                    <AUIThemedView style={styles.fieldSpacing}>
+                                        <AUIInputField
+                                            value={value}
+                                            onChangeText={onChange}
+                                            placeholder="Enter your street name"
+                                            label="Street Name"
+                                        />
+                                        <AUIThemedView>
+                                            {error && (
+                                                <AUIThemedText
+                                                    style={styles.fieldError}
+                                                    type="subtitle"
+                                                >
+                                                    {error.message}
+                                                </AUIThemedText>
+                                            )}
+                                        </AUIThemedView>
+                                    </AUIThemedView>
                                 )}
                             />
 
@@ -255,23 +515,23 @@ export default function SchoolDetails() {
                                 control={control}
                                 render={({ field: { onChange, value }, fieldState: { error } }) => (
                                     <AUIThemedView style={styles.fieldSpacing}>
-                                    <AUIThemedText style={inputFieldStyle.label}>
-                                        Pick your school logo
-                                    </AUIThemedText>
+                                        <AUIThemedText style={inputFieldStyle.label}>
+                                            Pick your school logo
+                                        </AUIThemedText>
 
-                                    <AUIThemedView>
-                                        {error && (
-                                            <AUIThemedText
-                                                style={{
-                                                    color: "red",
-                                                    fontSize: 12,
-                                                }}
-                                                type="subtitle"
-                                            >
-                                                {error.message}
-                                            </AUIThemedText>
-                                        )}
-                                    </AUIThemedView>
+                                        <AUIThemedView>
+                                            {error && (
+                                                <AUIThemedText
+                                                    style={{
+                                                        color: "red",
+                                                        fontSize: 12,
+                                                    }}
+                                                    type="subtitle"
+                                                >
+                                                    {error.message}
+                                                </AUIThemedText>
+                                            )}
+                                        </AUIThemedView>
 
                                         <AUIThemedView style={styles.imageContainer}>
                                             <ImageViewer
@@ -284,6 +544,11 @@ export default function SchoolDetails() {
                                             <AUIButton
                                                 title="Choose a photo"
                                                 onPress={() => pickImageAsync("logo")}
+                                                borderColor={APP_THEME.light.primary.first}
+                                                style={{
+                                                    borderWidth: 1,
+                                                    borderColor: APP_THEME.light.primary.first,
+                                                }}
                                             />
                                         </AUIThemedView>
                                     </AUIThemedView>
@@ -295,22 +560,22 @@ export default function SchoolDetails() {
                                 control={control}
                                 render={({ field: { onChange, value }, fieldState: { error } }) => (
                                     <AUIThemedView style={styles.fieldSpacing}>
-                                    <AUIThemedText style={inputFieldStyle.label}>
-                                        School Banner
-                                    </AUIThemedText>
-                                    <AUIThemedView>
-                                        {error && (
-                                            <AUIThemedText
-                                                style={{
-                                                    color: "red",
-                                                    fontSize: 12,
-                                                }}
-                                                type="subtitle"
-                                            >
-                                                {error.message}
-                                            </AUIThemedText>
-                                        )}
-                                    </AUIThemedView>
+                                        <AUIThemedText style={inputFieldStyle.label}>
+                                            School Banner
+                                        </AUIThemedText>
+                                        <AUIThemedView>
+                                            {error && (
+                                                <AUIThemedText
+                                                    style={{
+                                                        color: "red",
+                                                        fontSize: 12,
+                                                    }}
+                                                    type="subtitle"
+                                                >
+                                                    {error.message}
+                                                </AUIThemedText>
+                                            )}
+                                        </AUIThemedView>
 
                                         <AUIThemedView style={styles.imageContainer}>
                                             <ImageViewer
@@ -326,6 +591,11 @@ export default function SchoolDetails() {
                                             <AUIButton
                                                 title="Choose a photo"
                                                 onPress={() => pickImageAsync("banner")}
+                                                borderColor={APP_THEME.light.primary.first}
+                                                style={{
+                                                    borderWidth: 1,
+                                                    borderColor: APP_THEME.light.primary.first,
+                                                }}
                                             />
                                         </AUIThemedView>
                                     </AUIThemedView>

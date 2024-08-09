@@ -33,6 +33,8 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 
     const isDataEmpty = labels.length === 0 || pendingData.length === 0 || doneData.length === 0;
 
+    console.log("isDataEmpty", isDataEmpty);
+
     const chartConfig = {
         backgroundGradientFrom: APP_THEME[theme].background,
         backgroundGradientFromOpacity: 0.2,
@@ -58,58 +60,55 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
                 style={[styles.container, { backgroundColor: APP_THEME[theme].background }]}
             >
                 <AUIThemedText style={[styles.title]}>{title}</AUIThemedText>
-                    <>
-                        <AUIThemedView style={styles.legendContainer}>
-                            <AUIThemedView style={styles.legendItem}>
-                                <AUIThemedView
-                                    style={[
-                                        styles.legendColorBox,
-                                        { backgroundColor: "rgba(144, 238, 144, 1)" }, // Faint green
-                                    ]}
-                                />
-                                <AUIThemedText style={[styles.legendText]}>
-                                    Pending Payments
-                                </AUIThemedText>
-                            </AUIThemedView>
-                            <AUIThemedView style={styles.legendItem}>
-                                <AUIThemedView
-                                    style={[
-                                        styles.legendColorBox,
-                                        { backgroundColor: "rgba(0, 100, 0, 1)" }, // Dark green
-                                    ]}
-                                />
-                                <AUIThemedText style={[styles.legendText]}>
-                                    Done Payments
-                                </AUIThemedText>
-                            </AUIThemedView>
+                <>
+                    <AUIThemedView style={styles.legendContainer}>
+                        <AUIThemedView style={styles.legendItem}>
+                            <AUIThemedView
+                                style={[
+                                    styles.legendColorBox,
+                                    { backgroundColor: "rgba(144, 238, 144, 1)" }, // Faint green
+                                ]}
+                            />
+                            <AUIThemedText style={[styles.legendText]}>
+                                Pending Payments
+                            </AUIThemedText>
                         </AUIThemedView>
-                        <LineChart
-                            data={{
-                                labels: labels,
-                                datasets: [
-                                    {
-                                        data: pendingData,
-                                        color: (opacity = 1) => `rgba(144, 238, 144, ${opacity})`, // Faint green for pending payments
-                                        strokeWidth: 2,
-                                    },
-                                    {
-                                        data: doneData,
-                                        color: (opacity = 1) => `rgba(0, 100, 0, ${opacity})`, // Dark green for done payments
-                                        strokeWidth: 2,
-                                    },
-                                ],
-                            }}
-                            width={Dimensions.get("window").width * 0.9}
-                            height={220}
-                            yAxisLabel={yAxisLabel }
-                            yAxisSuffix={yAxisSuffix}
-                            yAxisInterval={yAxisInterval}
-                            chartConfig={chartConfig}
-                            bezier={false} // Set to false to get straight lines
-                            style={styles.chart}
-                        />
-                    </>
-      
+                        <AUIThemedView style={styles.legendItem}>
+                            <AUIThemedView
+                                style={[
+                                    styles.legendColorBox,
+                                    { backgroundColor: "rgba(0, 100, 0, 1)" }, // Dark green
+                                ]}
+                            />
+                            <AUIThemedText style={[styles.legendText]}>Done Payments</AUIThemedText>
+                        </AUIThemedView>
+                    </AUIThemedView>
+                    <LineChart
+                        data={{
+                            labels: labels,
+                            datasets: [
+                                {
+                                    data: pendingData,
+                                    color: (opacity = 1) => `rgba(144, 238, 144, ${opacity})`, // Faint green for pending payments
+                                    strokeWidth: 2,
+                                },
+                                {
+                                    data: doneData,
+                                    color: (opacity = 1) => `rgba(0, 100, 0, ${opacity})`, // Dark green for done payments
+                                    strokeWidth: 2,
+                                },
+                            ],
+                        }}
+                        width={Dimensions.get("window").width * 0.9}
+                        height={220}
+                        yAxisLabel={yAxisLabel}
+                        yAxisSuffix={yAxisSuffix}
+                        yAxisInterval={yAxisInterval}
+                        chartConfig={chartConfig}
+                        bezier={false} // Set to false to get straight lines
+                        style={styles.chart}
+                    />
+                </>
             </AUIThemedView>
         </AUIThemedView>
     );

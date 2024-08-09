@@ -25,10 +25,12 @@ export default function HomeScreen() {
     const { t } = useTranslation();
 
     const user = useLangTransformSelector((state: RootState) => state.global.user);
-    const MySchoolDetails = useLangTransformSelector(
+    const myCourse = useLangTransformSelector((state: RootState) => state.api.myCourse);
+    const mySchoolDetails = useLangTransformSelector(
         (state: RootState) => state.api.MySchoolDetails
     );
-    const myCourse = useLangTransformSelector((state: RootState) => state.api.myCourse);
+
+    console.log("mySchoolDetails", JSON.stringify(mySchoolDetails));
 
     useEffect(() => {
         requestFn(API_URL.schoolAnalytics, "MySchoolDetails", { client: true });
@@ -105,12 +107,12 @@ export default function HomeScreen() {
         <AUIThemedView>
             <ScrollView>
                 <AUIThemedView style={styles.section}>
-                    <SectionTitle>{MySchoolDetails?.name}</SectionTitle>
+                    <SectionTitle>{mySchoolDetails?.name}</SectionTitle>
                     <AUIThemedView style={{ alignItems: "center", marginTop: 15 }}>
-                        {MySchoolDetails?.schoolInfoData && (
+                        {mySchoolDetails?.schoolInfoData && (
                             <FlatList
                                 scrollEnabled={false}
-                                data={MySchoolDetails?.schoolInfoData}
+                                data={mySchoolDetails?.schoolInfoData}
                                 numColumns={2}
                                 renderItem={({ item }) => (
                                     <AUIInfoCard
@@ -135,12 +137,12 @@ export default function HomeScreen() {
 
                     <ChartComponent
                         title={t(GLOBAL_TEXT.my_earnings)}
-                        labels={MySchoolDetails?.graphData?.labels || specificDummyData.labels}
+                        labels={mySchoolDetails?.graphData?.labels || specificDummyData.labels}
                         pendingData={
-                            MySchoolDetails?.graphData?.pendingData || specificDummyData.pendingData
+                            mySchoolDetails?.graphData?.pendingData || specificDummyData.pendingData
                         }
                         doneData={
-                            MySchoolDetails?.graphData?.doneData || specificDummyData.doneData
+                            mySchoolDetails?.graphData?.doneData || specificDummyData.doneData
                         }
                         yAxisLabel="$"
                         yAxisInterval={10}
