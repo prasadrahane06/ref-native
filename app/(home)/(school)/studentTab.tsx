@@ -64,6 +64,7 @@ export default function TabTwoScreen() {
     }, [page, schoolPurchaseCourse.totalPages]);
 
     const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
+    console.log("schoolPurchaseCourse.docs ", JSON.stringify(schoolPurchaseCourse.docs));
 
     return (
         // <KeyboardAvoidingView
@@ -150,7 +151,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        backgroundColor: APP_THEME.light.primary.second,
+        backgroundColor: APP_THEME.light.primary.first,
         padding: 10,
         margin: 8,
         borderRadius: 10,

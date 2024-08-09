@@ -141,9 +141,9 @@ export const en = {
     faq_ans2:
         "Typically, you will need your academic records, a copy of your passport, language proficiency test results, and any other documents specified by the school.",
     faq_ans3:
-        "You can track the status of your application in the &quot;My Applications&quot; section of the app, where updates will be provided regularly.",
+        "You can track the status of your application in the My Applications section of the app, where updates will be provided regularly.",
     faq_ans4:
-        "Yes, the app offers various language courses to help you prepare for studying abroad. You can find them in the &quot;Language Courses&quot; section.",
+        "Yes, the app offers various language courses to help you prepare for studying abroad. You can find them in the Language Courses section.",
     faq_ans5:
         "Yes, the app provides guidance and resources for visa applications and finding suitable accommodation near your chosen school.",
     fav_countries: "Countries",
@@ -295,11 +295,11 @@ export const en = {
     start_date_is_required: "Start date is required",
     startdate: "StartDate",
     starting_from: "Starting from",
-    state: " State",
+    state: " state",
     state_is_required: "State is required",
     student_id: "Student ID",
     student_information: "Student Information",
-    students_admitted_through_app: "Students Admitted through App",
+    students_admitted_through_app: "Students Admitted Through App",
     subTitle: "SubTitle",
     taxes: "Taxes",
     termsPolicy: "Terms Policy",
@@ -330,7 +330,7 @@ export const en = {
     when_you_want_to_start_course: "When you want to start course?",
     which_school_are_you_looking: "Which school are you looking?",
     why_study_in: "Why study in",
-    you_are_caught_up: "You are Caught Up",
+    you_are_caught_up: "You are caught Up",
     you_did_not_select_any_image: "You did not select any image.",
     your_cart_is_empty: "Your Cart Is Empty",
     your_favourite_is_empty: "Your Favourite Is Empty",
@@ -479,9 +479,9 @@ export const ar = {
     faq_ans2:
         "عادةً، ستحتاج إلى سجلاتك الأكاديمية، نسخة من جواز السفر، نتائج اختبار الكفاءة اللغوية، وأي مستندات أخرى تحددها المدرسة.",
     faq_ans3:
-        "يمكنك تتبع حالة طلب التقديم في قسم &quot;طلباتي&quot; في التطبيق، حيث سيتم توفير التحديثات بشكل منتظم.",
+        "يمكنك تتبع حالة طلب التقديم في قسم طلباتي في التطبيق، حيث سيتم توفير التحديثات بشكل منتظم.",
     faq_ans4:
-        "نعم، يوفر التطبيق دورات لغوية مختلفة لمساعدتك في التحضير لدراستك في الخارج. يمكنك العثور عليها في قسم &quot;الدورات اللغوية&quot;.",
+        "نعم، يوفر التطبيق دورات لغوية مختلفة لمساعدتك في التحضير لدراستك في الخارج. يمكنك العثور عليها في قسم الدورات اللغوية.",
     faq_ans5:
         "نعم، يوفر التطبيق إرشادات وموارد لتقديم طلبات التأشيرة والعثور على إقامة مناسبة بالقرب من مدرستك المختارة.",
     fav_countries: "البلدان المفضلة",

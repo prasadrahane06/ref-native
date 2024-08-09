@@ -226,7 +226,7 @@ export default function CityDetails() {
                         ]}
                     >
                         <AUIThemedText style={styles.name}>
-                           {t("why_study_in")} {country?.name}
+                            {t("why_study_in")} {country?.name}
                         </AUIThemedText>
                         <AUIThemedView
                             style={[
@@ -269,7 +269,9 @@ export default function CityDetails() {
                                     contentFit="cover"
                                 />
                                 <AUIThemedView style={styles.iconTextContainer}>
-                                    <AUIThemedText style={styles.iconText}>{t("capital")}</AUIThemedText>
+                                    <AUIThemedText style={styles.iconText}>
+                                        {t("capital")}
+                                    </AUIThemedText>
                                     <AUIThemedText style={styles.iconSubText} numberOfLines={1}>
                                         {country?.capital}
                                     </AUIThemedText>
@@ -284,7 +286,7 @@ export default function CityDetails() {
                                 />
                                 <AUIThemedView style={styles.iconTextContainer}>
                                     <AUIThemedText style={styles.iconText}>
-                                    {t("population")}
+                                        {t("population")}
                                     </AUIThemedText>
                                     <AUIThemedText style={styles.iconSubText}>
                                         {formattedPopulation}
@@ -298,7 +300,9 @@ export default function CityDetails() {
                                     contentFit="cover"
                                 />
                                 <AUIThemedView style={styles.iconTextContainer}>
-                                    <AUIThemedText style={styles.iconText}>{t("language")}</AUIThemedText>
+                                    <AUIThemedText style={styles.iconText}>
+                                        {t("language")}
+                                    </AUIThemedText>
                                     <AUIThemedText style={styles.iconSubText}>
                                         {country?.nativeLanguage}
                                     </AUIThemedText>
@@ -319,11 +323,14 @@ export default function CityDetails() {
                             <AUIThemedText style={styles.aboutDescription}>
                                 {readMore ? aboutText : truncatedText}
                                 {isTruncated && (
-                                    <AUIThemedText
-                                        onPress={() => setReadMore(!readMore)}
-                                        style={styles.readMoreText}
-                                    >
-                                        {readMore ? "Read Less" : "Read More"}
+                                    <AUIThemedText onPress={() => setReadMore(!readMore)}>
+                                        {`  `}
+                                        <AUIThemedText
+                                            onPress={() => setReadMore(!readMore)}
+                                            style={styles.readMoreText}
+                                        >
+                                            {readMore ? "Read Less" : "Read More"}
+                                        </AUIThemedText>
                                     </AUIThemedText>
                                 )}
                             </AUIThemedText>
@@ -338,7 +345,7 @@ export default function CityDetails() {
                             ]}
                         >
                             <AUIThemedText style={styles.photoGalleryText}>
-                              {/* {GLOBAL_TEXT.photo_gallery} */}
+                                {/* {GLOBAL_TEXT.photo_gallery} */}
                                 {t("photo_gallery")}
                             </AUIThemedText>
                         </AUIThemedView>

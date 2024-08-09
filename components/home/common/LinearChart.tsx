@@ -2,12 +2,12 @@ import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { RootState } from "@/redux/store";
-// import { t } from "i18next";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Dimensions, StyleSheet, Text, View } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import { useSelector } from "react-redux";
+import { BlurView } from "expo-blur"; // Import BlurView from expo-blur
 
 interface ChartComponentProps {
     title: string;
@@ -60,55 +60,70 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
                 style={[styles.container, { backgroundColor: APP_THEME[theme].background }]}
             >
                 <AUIThemedText style={[styles.title]}>{title}</AUIThemedText>
-                <>
-                    <AUIThemedView style={styles.legendContainer}>
-                        <AUIThemedView style={styles.legendItem}>
-                            <AUIThemedView
-                                style={[
-                                    styles.legendColorBox,
-                                    { backgroundColor: "rgba(144, 238, 144, 1)" }, // Faint green
-                                ]}
-                            />
-                            <AUIThemedText style={[styles.legendText]}>
-                                Pending Payments
-                            </AUIThemedText>
+                <AUIThemedText style={[styles.subTitle]}>
+                    Payments are in $ Currency
+                </AUIThemedText>
+                {isDataEmpty ? (
+                    <BlurView intensity={90} style={styles.blurContainer}>
+                        <AUIThemedText style={styles.noDataText}>
+                            No Chart Data Available!!
+                        </AUIThemedText>
+                    </BlurView>
+                ) : (
+                    <>
+                        <AUIThemedView style={styles.legendContainer}>
+                            <AUIThemedView style={styles.legendItem}>
+                                <AUIThemedView
+                                    style={[
+                                        styles.legendColorBox,
+                                        { backgroundColor: "rgba(144, 238, 144, 1)" }, // Faint green
+                                    ]}
+                                />
+                                <AUIThemedText style={[styles.legendText]}>
+                                    Pending Payments
+                                </AUIThemedText>
+                            </AUIThemedView>
+                            <AUIThemedView style={styles.legendItem}>
+                                <AUIThemedView
+                                    style={[
+                                        styles.legendColorBox,
+                                        { backgroundColor: "rgba(0, 100, 0, 1)" }, // Dark green
+                                    ]}
+                                />
+                                <AUIThemedText style={[styles.legendText]}>
+                                    Done Payments
+                                </AUIThemedText>
+                            </AUIThemedView>
                         </AUIThemedView>
-                        <AUIThemedView style={styles.legendItem}>
-                            <AUIThemedView
-                                style={[
-                                    styles.legendColorBox,
-                                    { backgroundColor: "rgba(0, 100, 0, 1)" }, // Dark green
-                                ]}
-                            />
-                            <AUIThemedText style={[styles.legendText]}>Done Payments</AUIThemedText>
-                        </AUIThemedView>
-                    </AUIThemedView>
-                    <LineChart
-                        data={{
-                            labels: labels,
-                            datasets: [
-                                {
-                                    data: pendingData,
-                                    color: (opacity = 1) => `rgba(144, 238, 144, ${opacity})`, // Faint green for pending payments
-                                    strokeWidth: 2,
-                                },
-                                {
-                                    data: doneData,
-                                    color: (opacity = 1) => `rgba(0, 100, 0, ${opacity})`, // Dark green for done payments
-                                    strokeWidth: 2,
-                                },
-                            ],
-                        }}
-                        width={Dimensions.get("window").width * 0.9}
-                        height={220}
-                        yAxisLabel={yAxisLabel}
-                        yAxisSuffix={yAxisSuffix}
-                        yAxisInterval={yAxisInterval}
-                        chartConfig={chartConfig}
-                        bezier={false} // Set to false to get straight lines
-                        style={styles.chart}
-                    />
-                </>
+                        <LineChart
+                            data={{
+                                labels: labels,
+                                datasets: [
+                                    {
+                                        data: pendingData,
+                                        color: (opacity = 1) => `rgba(144, 238, 144, ${opacity})`, // Faint green for pending payments
+                                        strokeWidth: 2,
+                                    },
+                                    {
+                                        data: doneData,
+                                        color: (opacity = 1) => `rgba(0, 100, 0, ${opacity})`, // Dark green for done payments
+                                        strokeWidth: 2,
+                                    },
+                                ],
+                            }}
+                            width={Dimensions.get("window").width * 0.9}
+                            height={220}
+                            yAxisLabel={yAxisLabel}
+                            yAxisSuffix={yAxisSuffix}
+                            yAxisInterval={yAxisInterval}
+                            chartConfig={chartConfig}
+                            bezier={false} // Set to false to get straight lines
+                            style={styles.chart}
+                            // fromZero // Ensure chart starts from zero
+                            // verticalLabelRotation={30} // Rotate labels to prevent overlap
+                        />
+                    </>
+                )}
             </AUIThemedView>
         </AUIThemedView>
     );
@@ -129,6 +144,11 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 20,
+        fontWeight: "bold",
+        marginBottom: 16,
+    },
+    subTitle: {
+        fontSize: 10,
         fontWeight: "bold",
         marginBottom: 16,
     },
@@ -154,11 +174,21 @@ const styles = StyleSheet.create({
     legendText: {
         fontSize: 14,
     },
+    blurContainer: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#D3FFE7",
+    },
     noDataText: {
-        fontSize: 18,
-        // color: APP_THEME[theme].ternary.first,
+        fontSize: 12,
+        color: "black",
         textAlign: "center",
-        marginTop: 20,
+        position: "absolute",
     },
 });
 

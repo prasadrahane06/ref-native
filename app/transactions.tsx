@@ -11,13 +11,6 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 const screenWidth = Dimensions.get('window').width;
 
-const transactions = [
-    { id: '1', name: 'Joseph', date: 'Aug 13', amount: '+ $10.65', note: 'Boiling', image: 'https://example.com/joseph.jpg', status: 'success' },
-    { id: '2', name: 'Jane Larson', date: 'Aug 11', amount: '+ $150', note: 'Drank', image: 'https://example.com/jane.jpg', status: 'success' },
-    { id: '3', name: 'Jullie', date: 'Aug 5', amount: '+ $20', note: 'Meds', image: 'https://example.com/jullie.jpg', status: 'success' },
-    { id: '4', name: 'Maggie', date: 'Jul 13', amount: '+ $34', note: 'Party ✌️', image: 'https://example.com/maggie.jpg', status: 'failure' },
-    { id: '5', name: 'Simon', date: 'Jul 30', amount: '+ $32', note: 'ENJOY', image: 'https://example.com/simon.jpg', status: 'pending' },
-];
 
 const Transactions = () => {
     const [selectedTab, setSelectedTab] = useState<string>('all');

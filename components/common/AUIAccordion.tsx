@@ -70,11 +70,12 @@ const AUIAccordion: React.FC<AccordionProps> = ({
 const styles = StyleSheet.create({
     accordionContainer: {
         borderWidth: 1,
-        // borderColor: "#5BD894",
+        borderColor: "#5BD894",
         borderRadius: 10,
         marginBottom: 12,
         overflow: "hidden",
         // backgroundColor: APP_THEME.background,
+        // backgroundColor: "#f9f9f9", 
     },
     accordionHeader: {
         flexDirection: "row",
@@ -89,16 +90,17 @@ const styles = StyleSheet.create({
     accordionTitle: {
         flexDirection: "row",
         alignItems: "center",
-        // backgroundColor: APP_THEME.background,
+        // backgroundColor: APP_THEME.light,
     },
     accordionTitleText: {
-        marginLeft: 10,
+        width: "90%",
+        padding: 10,
         fontSize: 16,
         fontWeight: "600",
     },
     accordionContent: {
-        paddingBottom: 10,
         // backgroundColor: "#f9f9f9",
+        padding: 10,
     },
     iconContainer: { flexDirection: "row", gap: 20 },
     icon: {

@@ -44,7 +44,7 @@ const generateHtml = (brands: string): string => `
 </head>
 
 <body>
-    <form action="https://vqhqpfx4-3000.inc1.devtunnels.ms/payment-status" class="paymentWidgets" data-brands="${brands}"></form>
+    <form action="https://vqhqpfx4-3001.inc1.devtunnels.ms/payment-status" class="paymentWidgets" data-brands="${brands}"></form>
 </body>
 </html>`;
 

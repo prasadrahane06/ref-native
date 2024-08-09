@@ -2,7 +2,7 @@
     "expo": {
         "name": "Linguist",
         "slug": "linguist",
-        "version": "1.0.0",
+        "version": "1.0.3",
         "orientation": "portrait",
         "icon": "./assets/images/logo/app_icon.png",
         "scheme": "myapp",

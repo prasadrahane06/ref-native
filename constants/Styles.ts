@@ -214,8 +214,8 @@ export const inputFieldStyle = StyleSheet.create({
     },
     input: {
         height: 50,
-        borderColor: "#ccc",
-        borderWidth: 2,
+        borderColor: "#5BD894",
+        borderWidth: 1,
         borderRadius: 5,
         paddingHorizontal: 10,
     },

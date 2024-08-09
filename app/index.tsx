@@ -8,6 +8,7 @@ import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
 import { getUserData } from "@/constants/RNAsyncStore";
 import { initialPageStyles } from "@/constants/Styles";
+import useApiRequest from "@/customHooks/useApiRequest";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { setProfile, setSignInType, setToken, setUser } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
@@ -16,12 +17,23 @@ import { router } from "expo-router";
 import { useEffect } from "react";
 import { I18nManager, Platform, Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import { API_URL } from "@/constants/urlProperties";
 
 const InitialPage = () => {
     const dispatch = useDispatch();
     const profile = useLangTransformSelector((state: RootState) => state.global.profile);
+    const userData = useLangTransformSelector((state: RootState) => state.global.user);
     const theme = useSelector((state: RootState) => state.global.theme);
     const isRTL = useSelector((state: RootState) => state.global.isRTL);
+
+    const { requestFn } = useApiRequest();
+
+    useEffect(() => {
+        // This is to update transactions details on my courses
+        if (profile === "student" && userData && userData?._id) {
+            requestFn(API_URL.paymentDetails, "paymentDetails", { user: userData?._id });
+        }
+    }, [userData, profile]);
 
     useEffect(() => {
         getUserData("@user-data").then((data) => {

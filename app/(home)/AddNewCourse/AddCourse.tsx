@@ -22,7 +22,7 @@ import * as ImagePicker from "expo-image-picker";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { Platform, Pressable, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import { Platform, Pressable, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import AddPlan from "./AddPlan";
 import { useTranslation } from "react-i18next";
@@ -32,7 +32,6 @@ import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import CustomTooltip from "@/components/common/AUIToolTip";
 import ImageViewer from "@/components/ImageViewer";
-
 interface Plan {
     _id: string;
     name: any | { en: string; ar?: string };
@@ -331,8 +330,19 @@ const AUIAddNewCourse = () => {
         setCurrentPlan(undefined);
     };
 
-    const truncateFileName = (fileName: string, maxLength: number) => {
-        if (fileName.length <= maxLength) return fileName;
+    const generateRandomId = (): string => {
+        return Math.floor(1000 + Math.random() * 9000).toString(); // Generate a random 4-digit number
+    };
+    
+    const truncateFileName = (fileName: string | null, maxLength: number): string => {
+        if (fileName === null) {
+            return `Img${generateRandomId()}`;
+        }
+    
+        if (fileName.length <= maxLength) {
+            return fileName;
+        }
+    
         return fileName.substring(0, maxLength - 3) + "...";
     };
 
@@ -685,7 +695,7 @@ const AUIAddNewCourse = () => {
             </AUIThemedView>
 
             <AUIThemedView style={styles.buttonContainer}>
-                {editCourse ? (
+                {edit ? (
                     <AUIThemedView style={styles.buttonMainContainer}>
                         <AUIThemedView style={styles.buttonContainer}>
                             <AUIButton
@@ -706,8 +716,12 @@ const AUIAddNewCourse = () => {
                         <AUIButton
                             title={t("delete")}
                             selected
-                            background={TEXT_THEME.light.danger}
-                            style={{ width: "100%" }}
+                            background={"#ff7e57"}
+                            style={{
+                                width: "100%",
+                                borderColor: TEXT_THEME.light.danger,
+                                borderWidth: 1,
+                            }}
                             onPress={() => {
                                 setShowConfirmation(true);
                             }}
@@ -748,8 +762,12 @@ const AUIAddNewCourse = () => {
                     <AUIButton
                         title={t("delete")}
                         selected
-                        background={TEXT_THEME.light.danger}
-                        style={{ width: "48%" }}
+                        background={"#ff7e57"}
+                        style={{
+                            width: "48%",
+                            borderColor: TEXT_THEME.light.danger,
+                            borderWidth: 1,
+                        }}
                         onPress={handleDelete}
                     />
                 </AUIThemedView>
@@ -946,5 +964,17 @@ const styles = StyleSheet.create({
     screenTitle: {
         fontSize: 18,
         fontWeight: "bold",
+    },
+    pressableContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        borderBottomWidth: 1,
+        borderBottomColor: "#ccc",
+        paddingBottom: 5,
+        marginBottom: 5,
+    },
+
+    dateWrapper: {
+        marginBottom: 20, // Adjust spacing between date pickers
     },
 });

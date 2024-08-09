@@ -321,106 +321,114 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                 title={plan ? "Edit Plan" : `${t("add_your_plan")}`}
                 style={styles.modalContainerStyle}
             >
-                <ScrollView>
-                    <Controller
-                        control={control}
-                        name="planName"
-                        render={({ field: { onChange, value }, fieldState: { error } }) => (
-                            <AUIThemedView>
-                                <AUIInputField
-                                    label={t("plan_name")}
-                                    placeholder={t("name")}
-                                    value={value}
-                                    onChangeText={onChange}
-                                />
-                                <AUIThemedView>
-                                    {error && (
-                                        <AUIThemedText style={styles.fieldError}>
-                                            {error.message}
-                                        </AUIThemedText>
-                                    )}
-                                </AUIThemedView>
-                            </AUIThemedView>
-                        )}
-                    />
-                    {/* <Controller
-                        control={control}
-                        name="lessonsHour"
-                        defaultValue=""
-                        render={({ field: { onChange, value } }) => (
+                {/* <ScrollView> */}
+                <Controller
+                    control={control}
+                    name="planName"
+                    render={({ field: { onChange, value }, fieldState: { error } }) => (
+                        <AUIThemedView>
                             <AUIInputField
-                                label={t("enter_lessons_hour")}
-                                placeholder={t("lessons_hour")}
+                                label={t("plan_name")}
+                                placeholder={t("name")}
                                 value={value}
                                 onChangeText={onChange}
-                                style={styles.input}
                             />
-                        )}
-                    /> */}
-
-                    {/* <Controller
-                            control={control}
-                            name="duration"
-                            defaultValue=""
-                            render={({ field: { onChange, value } }) => (
-                                <AUIInputField
-                                    label={t("enter_total_duration")}
-                                    placeholder={t("duration")}
-                                    value={value}
-                                    onChangeText={onChange}
-                                    style={styles.input}
-                                />
-                            )}
-                        /> */}
-
-                    <AUIThemedView style={{ marginVertical: 25 }}>
-                        <AUIThemedView
-                            style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
-                        >
-                            <AUIThemedText style={inputFieldStyle.label}>
-                                {t("enter_total_duration")}
-                            </AUIThemedText>
-
-                            <CustomTooltip
-                                text="Total Duration is duration of your whole course for that plan"
-                                tooltipStyle={{ padding: 15 }}
-                            >
-                                <Ionicons
-                                    name="information-circle-outline"
-                                    size={20}
-                                    color={APP_THEME.light.primary.first}
-                                />
-                            </CustomTooltip>
+                            <AUIThemedView>
+                                {error && (
+                                    <AUIThemedText style={styles.fieldError}>
+                                        {error.message}
+                                    </AUIThemedText>
+                                )}
+                            </AUIThemedView>
                         </AUIThemedView>
+                    )}
+                />
 
-                        <AUIThemedView style={styles.durationContainer}>
-                            <Controller
-                                name="durationInNumber"
-                                control={control}
-                                render={({ field: { value, onChange }, fieldState: { error } }) => (
-                                    <AUIThemedView style={{ flex: 1 }}>
-                                        <AUIThemedView
+                <AUIThemedView style={{ marginVertical: 25 }}>
+                    <AUIThemedView style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+                        <AUIThemedText style={inputFieldStyle.label}>
+                            {t("enter_total_duration")}
+                        </AUIThemedText>
+
+                        <CustomTooltip
+                            text="Total Duration is duration of your whole course for that plan"
+                            tooltipStyle={{ padding: 15 }}
+                        >
+                            <Ionicons
+                                name="information-circle-outline"
+                                size={20}
+                                color={APP_THEME.light.primary.first}
+                            />
+                        </CustomTooltip>
+                    </AUIThemedView>
+
+                    <AUIThemedView style={styles.durationContainer}>
+                        <Controller
+                            name="durationInNumber"
+                            control={control}
+                            render={({ field: { value, onChange }, fieldState: { error } }) => (
+                                <AUIThemedView style={{ flex: 1 }}>
+                                    <AUIThemedView
+                                        style={{
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                            borderWidth: 2,
+                                            borderColor: "#ccc",
+                                            borderRadius: 6,
+                                        }}
+                                    >
+                                        <TextInput
                                             style={{
-                                                flexDirection: "row",
-                                                alignItems: "center",
-                                                borderWidth: 2,
-                                                borderColor: "#ccc",
-                                                borderRadius: 6,
+                                                flex: 1,
+                                                paddingVertical: 10,
+                                                color: TEXT_THEME[theme].primary,
+                                                padding: 20,
                                             }}
-                                        >
-                                            <TextInput
-                                                style={{
-                                                    flex: 1,
-                                                    paddingVertical: 10,
-                                                    color: TEXT_THEME[theme].primary,
-                                                    padding: 20,
-                                                }}
-                                                value={value}
-                                                onChangeText={onChange}
-                                                keyboardType="numeric"
-                                                placeholder="Enter in numbers"
-                                            />
-                                        </AUIThemedView>
+                                            value={value}
+                                            onChangeText={onChange}
+                                            keyboardType="numeric"
+                                            placeholder="Enter in numbers"
+                                        />
+                                    </AUIThemedView>
+                                    <AUIThemedView>
+                                        {error && (
+                                            <AUIThemedText style={styles.fieldError}>
+                                                {error.message}
+                                            </AUIThemedText>
+                                        )}
+                                    </AUIThemedView>
+                                </AUIThemedView>
+                            )}
+                        />
+                        <Controller
+                            name="durationInUnit"
+                            control={control}
+                            render={({ field: { value, onChange }, fieldState: { error } }) => (
+                                <AUIThemedView style={{ flex: 1 }}>
+                                    <AUIThemedView>
+                                        <DropdownComponent
+                                            //@ts-ignore
+                                            list={durationUnits}
+                                            value={value}
+                                            setValue={({ unit }: { unit: string }) =>
+                                                onChange(unit)
+                                            }
+                                            labelField="unit"
+                                            // label="Select your unit"
+                                            labelStyles={{
+                                                marginTop: 10,
+                                                marginBottom: 5,
+                                                fontSize: 13,
+                                                fontWeight: "bold",
+                                                fontStyle: "normal",
+                                                color: "#333",
+                                            }}
+                                            valueField="unit"
+                                            placeholder={"Select Duration"}
+                                            listWithIcon
+                                            isSearchable={false}
+                                        />
+
                                         <AUIThemedView>
                                             {error && (
                                                 <AUIThemedText style={styles.fieldError}>
@@ -429,355 +437,317 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                                             )}
                                         </AUIThemedView>
                                     </AUIThemedView>
-                                )}
-                            />
-                            <Controller
-                                name="durationInUnit"
-                                control={control}
-                                render={({ field: { value, onChange }, fieldState: { error } }) => (
-                                    <AUIThemedView style={{ flex: 1 }}>
-                                        <AUIThemedView>
-                                            <DropdownComponent
-                                                //@ts-ignore
-                                                list={durationUnits}
-                                                value={value}
-                                                setValue={({ unit }: { unit: string }) =>
-                                                    onChange(unit)
-                                                }
-                                                labelField="unit"
-                                                // label="Select your unit"
-                                                labelStyles={{
-                                                    marginTop: 10,
-                                                    marginBottom: 5,
-                                                    fontSize: 13,
-                                                    fontWeight: "bold",
-                                                    fontStyle: "normal",
-                                                    color: "#333",
-                                                }}
-                                                valueField="unit"
-                                                placeholder={"Select Duration"}
-                                                listWithIcon
-                                                isSearchable={false}
-                                            />
-
-                                            <AUIThemedView>
-                                                {error && (
-                                                    <AUIThemedText style={styles.fieldError}>
-                                                        {error.message}
-                                                    </AUIThemedText>
-                                                )}
-                                            </AUIThemedView>
-                                        </AUIThemedView>
-                                    </AUIThemedView>
-                                )}
-                            />
-                        </AUIThemedView>
+                                </AUIThemedView>
+                            )}
+                        />
                     </AUIThemedView>
+                </AUIThemedView>
 
-                    <Controller
-                        control={control}
-                        name="schedule"
-                        render={({ field: { onChange, value }, fieldState: { error } }) => (
-                            <AUIThemedView>
-                                <AUIThemedView
-                                    style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
+                <Controller
+                    control={control}
+                    name="schedule"
+                    render={({ field: { onChange, value }, fieldState: { error } }) => (
+                        <AUIThemedView>
+                            <AUIThemedView
+                                style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
+                            >
+                                <AUIThemedText style={inputFieldStyle.label}>
+                                    {t("total_schedule")}
+                                </AUIThemedText>
+
+                                <CustomTooltip
+                                    text={`You can add multiple schedules for a plan \n\nFor Example:\n10:00 AM to 11:00 AM\n11:00 AM to 12:00 PM\n`}
+                                    tooltipStyle={{ padding: 15 }}
                                 >
-                                    <AUIThemedText style={inputFieldStyle.label}>
-                                        {t("total_schedule")}
-                                    </AUIThemedText>
-
-                                    <CustomTooltip
-                                        text={`You can add multiple schedules for a plan \n\nFor Example:\n10:00 AM to 11:00 AM\n11:00 AM to 12:00 PM\n`}
-                                        tooltipStyle={{ padding: 15 }}
-                                    >
-                                        <Ionicons
-                                            name="information-circle-outline"
-                                            size={20}
-                                            color={APP_THEME.light.primary.first}
-                                        />
-                                    </CustomTooltip>
-                                </AUIThemedView>
-
-                                <AUIInputField
-                                    placeholder={t("schedule")}
-                                    value={value}
-                                    onChangeText={onChange}
-                                    style={styles.input}
-                                />
-
-                                <AUIThemedView>
-                                    {error && (
-                                        <AUIThemedText style={styles.fieldError}>
-                                            {error.message}
-                                        </AUIThemedText>
-                                    )}
-                                </AUIThemedView>
+                                    <Ionicons
+                                        name="information-circle-outline"
+                                        size={20}
+                                        color={APP_THEME.light.primary.first}
+                                    />
+                                </CustomTooltip>
                             </AUIThemedView>
-                        )}
-                    />
 
-                    <Controller
-                        control={control}
-                        name="price"
-                        render={({ field: { onChange, value }, fieldState: { error } }) => (
-                            <AUIThemedView style={{ marginVertical: 25 }}>
-                                <AUIInputField
-                                    label={`${t("plan_fee")} (in SAR only)`}
-                                    placeholder={t("enter_SAR_only")}
-                                    value={value}
-                                    onChangeText={onChange}
-                                    style={styles.input}
-                                    keyboardType="numeric"
-                                />
-                                <AUIThemedView>
-                                    {error && (
-                                        <AUIThemedText style={styles.fieldError}>
-                                            {error.message}
-                                        </AUIThemedText>
-                                    )}
-                                </AUIThemedView>
-                            </AUIThemedView>
-                        )}
-                    />
-                    <Controller
-                        control={control}
-                        name="bookYourSeat"
-                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <AUIInputField
+                                placeholder={t("schedule")}
+                                value={value}
+                                onChangeText={onChange}
+                                style={styles.input}
+                            />
+
                             <AUIThemedView>
-                                <AUIInputField
-                                    label={`${t("seat_booking_amount")} (in SAR only)`}
-                                    placeholder={t("enter_SAR_only")}
-                                    value={value}
-                                    onChangeText={onChange}
-                                    style={styles.input}
-                                    keyboardType="numeric"
-                                />
-                                <AUIThemedView>
-                                    {error && (
-                                        <AUIThemedText style={styles.fieldError}>
-                                            {error.message}
-                                        </AUIThemedText>
-                                    )}
-                                </AUIThemedView>
-                            </AUIThemedView>
-                        )}
-                    />
-                    <AUIThemedView style={styles.courseDetailsContainer}>
-                        <AUIThemedView style={styles.courseDetails}>
-                            <AUIThemedText>{`${t("plan_info")} (${t("optional")})`}</AUIThemedText>
-
-                            <CustomTooltip
-                                text={`You can add maximum 5 most important topics for you plan\n\nFor Example:\nTopic 1\nTopic 1 Description\n\nTopic 2\nTopic 2 Description`}
-                                tooltipStyle={{ padding: 15 }}
-                            >
-                                <Ionicons
-                                    name="information-circle-outline"
-                                    size={20}
-                                    color={APP_THEME.light.primary.first}
-                                />
-                            </CustomTooltip>
-                        </AUIThemedView>
-
-                        <AUIThemedView style={styles.courseDetailsItems}>
-                            <AUIThemedView style={{ paddingTop: 10 }}>
-                                {fields.map((item, index) => (
-                                    <AUIThemedView key={item.id} style={styles.courseDetailsItem}>
-                                        <Controller
-                                            control={control}
-                                            name={`courses.${index}.title` as const}
-                                            render={({ field: { onChange, value } }) => (
-                                                <AUIThemedView>
-                                                    <AUIThemedView style={{ flexDirection: "row" }}>
-                                                        <AUIThemedText style={styles.label}>
-                                                            {t("title")}
-                                                        </AUIThemedText>
-                                                        <TouchableOpacity
-                                                            onPress={() => remove(index)}
-                                                        >
-                                                            <Ionicons
-                                                                name="trash-outline"
-                                                                size={20}
-                                                                color={"red"}
-                                                            />
-                                                        </TouchableOpacity>
-                                                    </AUIThemedView>
-                                                    <AUIInputField
-                                                        placeholder={t("title")}
-                                                        value={value}
-                                                        onChangeText={onChange}
-                                                        style={styles.input}
-                                                    />
-                                                </AUIThemedView>
-                                            )}
-                                        />
-                                        <Controller
-                                            control={control}
-                                            name={`courses.${index}.subtitle` as const}
-                                            render={({ field: { onChange, value } }) => (
-                                                <AUIThemedView>
-                                                    <AUIInputField
-                                                        label={t("subTitle")}
-                                                        placeholder={t("subTitle")}
-                                                        value={value}
-                                                        onChangeText={onChange}
-                                                        style={styles.input}
-                                                    />
-                                                </AUIThemedView>
-                                            )}
-                                        />
-                                    </AUIThemedView>
-                                ))}
-                                {fields.length < 5 && (
-                                    <TouchableOpacity
-                                        style={buttonStyle.container}
-                                        onPress={addFields}
-                                    >
-                                        <AUIThemedView style={[buttonStyle.buttonInner]}>
-                                            <Ionicons
-                                                name="add-circle"
-                                                size={24}
-                                                color={APP_THEME.light.primary.first}
-                                            />
-                                            <AUIThemedText style={[buttonStyle.buttonText]}>
-                                                {t("add_information")}
-                                            </AUIThemedText>
-                                        </AUIThemedView>
-                                    </TouchableOpacity>
+                                {error && (
+                                    <AUIThemedText style={styles.fieldError}>
+                                        {error.message}
+                                    </AUIThemedText>
                                 )}
                             </AUIThemedView>
                         </AUIThemedView>
+                    )}
+                />
+
+                <Controller
+                    control={control}
+                    name="price"
+                    render={({ field: { onChange, value }, fieldState: { error } }) => (
+                        <AUIThemedView style={{ marginVertical: 25 }}>
+                            <AUIInputField
+                                label={`${t("plan_fee")} (in SAR only)`}
+                                placeholder={t("enter_SAR_only")}
+                                value={value}
+                                onChangeText={onChange}
+                                style={styles.input}
+                                keyboardType="numeric"
+                            />
+                            <AUIThemedView>
+                                {error && (
+                                    <AUIThemedText style={styles.fieldError}>
+                                        {error.message}
+                                    </AUIThemedText>
+                                )}
+                            </AUIThemedView>
+                        </AUIThemedView>
+                    )}
+                />
+                <Controller
+                    control={control}
+                    name="bookYourSeat"
+                    render={({ field: { onChange, value }, fieldState: { error } }) => (
+                        <AUIThemedView>
+                            <AUIInputField
+                                label={`${t("seat_booking_amount")} (in SAR only)`}
+                                placeholder={t("enter_SAR_only")}
+                                value={value}
+                                onChangeText={onChange}
+                                style={styles.input}
+                                keyboardType="numeric"
+                            />
+                            <AUIThemedView>
+                                {error && (
+                                    <AUIThemedText style={styles.fieldError}>
+                                        {error.message}
+                                    </AUIThemedText>
+                                )}
+                            </AUIThemedView>
+                        </AUIThemedView>
+                    )}
+                />
+                <AUIThemedView style={styles.courseDetailsContainer}>
+                    <AUIThemedView style={styles.courseDetails}>
+                        <AUIThemedText>{`${t("plan_info")} (${t("optional")})`}</AUIThemedText>
+
+                        <CustomTooltip
+                            text={`You can add maximum 5 most important topics for you plan\n\nFor Example:\nTopic 1\nTopic 1 Description\n\nTopic 2\nTopic 2 Description`}
+                            tooltipStyle={{ padding: 15 }}
+                        >
+                            <Ionicons
+                                name="information-circle-outline"
+                                size={20}
+                                color={APP_THEME.light.primary.first}
+                            />
+                        </CustomTooltip>
                     </AUIThemedView>
 
-                    <AUIThemedView>
-                        <AUIThemedView
-                            style={{
-                                flexDirection: "row",
-                                alignItems: "center",
-                            }}
-                        >
-                            <AUIThemedText style={styles.createYourPlanTitle}>
-                                {t("select_facilities")} ({t("optional")})
-                            </AUIThemedText>
-
-                            <CustomTooltip
-                                text={`Facilities are optional. You have to first add facilities in the facilities tab before you select them. You can select already added facilities for your plans here\n\n For Example:\n Hostel, Library, etc.`}
-                                tooltipStyle={{ padding: 15 }}
-                            >
-                                <Ionicons
-                                    name="information-circle-outline"
-                                    size={20}
-                                    color={APP_THEME.light.primary.first}
-                                />
-                            </CustomTooltip>
-                        </AUIThemedView>
-
-                        <AUIAccordion
-                            style={styles.AUIAccordion}
-                            innerStyle={styles.AUIAccordionInnerStyle}
-                            title={t("add_facilities_for_your_plan")}
-                        >
-                            {facilities?.map((facility: Facility) => (
-                                <AUIThemedView key={facility?._id} style={styles.facilitiesRow}>
-                                    <AUIThemedView style={styles.CheckboxContainer}>
-                                        <Controller
-                                            control={control}
-                                            name={`facility_${facility?._id}`}
-                                            defaultValue={selectedFacilities.includes(facility._id)}
-                                            render={({ field: { onChange, value } }) => (
-                                                <>
-                                                    <Checkbox
-                                                        style={styles.checkbox}
-                                                        value={value}
-                                                        onValueChange={(checked) => {
-                                                            onChange(checked);
-                                                            handleCheckboxChange(
-                                                                facility?._id,
-                                                                checked
-                                                            );
-                                                        }}
-                                                        color={value ? "#5BD894" : undefined}
-                                                    />
-                                                    <AUIThemedText style={styles.facilitiesLabel}>
-                                                        {facility.name}
+                    <AUIThemedView style={styles.courseDetailsItems}>
+                        <AUIThemedView style={{ paddingTop: 10 }}>
+                            {fields.map((item, index) => (
+                                <AUIThemedView key={item.id} style={styles.courseDetailsItem}>
+                                    <Controller
+                                        control={control}
+                                        name={`courses.${index}.title` as const}
+                                        render={({ field: { onChange, value } }) => (
+                                            <AUIThemedView>
+                                                <AUIThemedView style={{ flexDirection: "row" }}>
+                                                    <AUIThemedText style={styles.label}>
+                                                        {t("title")}
                                                     </AUIThemedText>
-                                                </>
-                                            )}
-                                        />
-                                    </AUIThemedView>
+                                                    <TouchableOpacity onPress={() => remove(index)}>
+                                                        <Ionicons
+                                                            name="trash-outline"
+                                                            size={20}
+                                                            color={"red"}
+                                                        />
+                                                    </TouchableOpacity>
+                                                </AUIThemedView>
+                                                <AUIInputField
+                                                    placeholder={t("title")}
+                                                    value={value}
+                                                    onChangeText={onChange}
+                                                    style={styles.input}
+                                                />
+                                            </AUIThemedView>
+                                        )}
+                                    />
+                                    <Controller
+                                        control={control}
+                                        name={`courses.${index}.subtitle` as const}
+                                        render={({ field: { onChange, value } }) => (
+                                            <AUIThemedView>
+                                                <AUIInputField
+                                                    label={t("subTitle")}
+                                                    placeholder={t("subTitle")}
+                                                    value={value}
+                                                    onChangeText={onChange}
+                                                    style={styles.input}
+                                                />
+                                            </AUIThemedView>
+                                        )}
+                                    />
                                 </AUIThemedView>
                             ))}
-                        </AUIAccordion>
+                            {fields.length < 5 && (
+                                <TouchableOpacity style={buttonStyle.container} onPress={addFields}>
+                                    <AUIThemedView style={[buttonStyle.buttonInner]}>
+                                        <Ionicons
+                                            name="add-circle"
+                                            size={24}
+                                            color={APP_THEME.light.primary.first}
+                                        />
+                                        <AUIThemedText style={[buttonStyle.buttonText]}>
+                                            {t("add_information")}
+                                        </AUIThemedText>
+                                    </AUIThemedView>
+                                </TouchableOpacity>
+                            )}
+                        </AUIThemedView>
                     </AUIThemedView>
-                    <AUIThemedView style={styles.buttonContainer}>
-                        {plan ? (
-                            <AUIThemedView style={styles.buttonMainContainer}>
-                                <AUIThemedView style={styles.buttonContainer}>
-                                    <AUIButton
-                                        title="Clear"
-                                        onPress={() => {
-                                            reset();
-                                        }}
-                                        style={{ width: "48%" }}
-                                    />
-                                    <AUIButton
-                                        title="Update"
-                                        selected
-                                        style={{ width: "48%" }}
-                                        onPress={handleSubmit(handleEdit)}
+                </AUIThemedView>
+
+                <AUIThemedView>
+                    <AUIThemedView
+                        style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                        }}
+                    >
+                        <AUIThemedText style={styles.createYourPlanTitle}>
+                            {t("select_facilities")} ({t("optional")})
+                        </AUIThemedText>
+
+                        <CustomTooltip
+                            text={`Facilities are optional. You have to first add facilities in the facilities tab before you select them. You can select already added facilities for your plans here\n\n For Example:\n Hostel, Library, etc.`}
+                            tooltipStyle={{ padding: 15 }}
+                        >
+                            <Ionicons
+                                name="information-circle-outline"
+                                size={20}
+                                color={APP_THEME.light.primary.first}
+                            />
+                        </CustomTooltip>
+                    </AUIThemedView>
+
+                    <AUIAccordion
+                        style={styles.AUIAccordion}
+                        innerStyle={styles.AUIAccordionInnerStyle}
+                        title={t("add_facilities_for_your_plan")}
+                    >
+                        {facilities?.map((facility: Facility) => (
+                            <AUIThemedView key={facility?._id} style={styles.facilitiesRow}>
+                                <AUIThemedView style={styles.CheckboxContainer}>
+                                    <Controller
+                                        control={control}
+                                        name={`facility_${facility?._id}`}
+                                        defaultValue={selectedFacilities.includes(facility._id)}
+                                        render={({ field: { onChange, value } }) => (
+                                            <>
+                                                <Checkbox
+                                                    style={styles.checkbox}
+                                                    value={value}
+                                                    onValueChange={(checked) => {
+                                                        onChange(checked);
+                                                        handleCheckboxChange(
+                                                            facility?._id,
+                                                            checked
+                                                        );
+                                                    }}
+                                                    color={value ? "#5BD894" : undefined}
+                                                />
+                                                <AUIThemedText style={styles.facilitiesLabel}>
+                                                    {facility.name}
+                                                </AUIThemedText>
+                                            </>
+                                        )}
                                     />
                                 </AUIThemedView>
-                                <AUIButton
-                                    title="Delete"
-                                    selected
-                                    background={TEXT_THEME.light.danger}
-                                    style={{ width: "100%" }}
-                                    onPress={() => {
-                                        setShowConfirmation(true);
-                                    }}
-                                />
                             </AUIThemedView>
-                        ) : (
+                        ))}
+                    </AUIAccordion>
+                </AUIThemedView>
+                <AUIThemedView style={styles.buttonContainer}>
+                    {plan ? (
+                        <AUIThemedView style={styles.buttonMainContainer}>
                             <AUIThemedView style={styles.buttonContainer}>
                                 <AUIButton
-                                    title={t("clear")}
+                                    title="Clear"
                                     onPress={() => {
                                         reset();
                                     }}
                                     style={{ width: "48%" }}
                                 />
                                 <AUIButton
-                                    title={t("save")}
+                                    title="Update"
                                     selected
                                     style={{ width: "48%" }}
-                                    onPress={handleSubmit(onSave)}
+                                    onPress={handleSubmit(handleEdit)}
                                 />
                             </AUIThemedView>
-                        )}
-                    </AUIThemedView>
-                    <AUIModal
-                        visible={showConfirmation}
-                        onClose={() => setShowConfirmation(false)}
-                        title="Confirm Delete"
-                    >
-                        <AUIThemedText>
-                            Are you sure you want to delete this facility?
-                        </AUIThemedText>
-                        <AUIThemedView style={styles.buttonContainer}>
-                            <AUIButton
-                                title="Cancel"
-                                onPress={() => setShowConfirmation(false)}
-                                style={{ width: "48%" }}
-                            />
                             <AUIButton
                                 title="Delete"
                                 selected
-                                background={TEXT_THEME.light.danger}
-                                style={{ width: "48%" }}
-                                onPress={handleDelete}
+                                background={"#ff7e57"}
+                                style={{
+                                    width: "100%",
+                                    borderColor: TEXT_THEME.light.danger,
+                                    borderWidth: 1,
+                                }}
+                                onPress={() => {
+                                    setShowConfirmation(true);
+                                }}
                             />
                         </AUIThemedView>
-                    </AUIModal>
-                </ScrollView>
+                    ) : (
+                        <AUIThemedView style={styles.buttonContainer}>
+                            <AUIButton
+                                title={t("clear")}
+                                onPress={() => {
+                                    reset();
+                                }}
+                                style={{ width: "48%" }}
+                            />
+                            <AUIButton
+                                title={t("save")}
+                                selected
+                                style={{ width: "48%" }}
+                                onPress={handleSubmit(onSave)}
+                            />
+                        </AUIThemedView>
+                    )}
+                </AUIThemedView>
+                <AUIModal
+                    visible={showConfirmation}
+                    onClose={() => setShowConfirmation(false)}
+                    title="Confirm Delete"
+                >
+                    <AUIThemedText>Are you sure you want to delete this facility?</AUIThemedText>
+                    <AUIThemedView style={styles.buttonContainer}>
+                        <AUIButton
+                            title="Cancel"
+                            onPress={() => setShowConfirmation(false)}
+                            style={{ width: "48%" }}
+                        />
+                        <AUIButton
+                            title="Delete"
+                            selected
+                            background={"#ff7e57"}
+                            style={{
+                                width: "48%",
+                                borderColor: TEXT_THEME.light.danger,
+                                borderWidth: 1,
+                            }}
+                            onPress={handleDelete}
+                        />
+                    </AUIThemedView>
+                </AUIModal>
+                {/* </ScrollView> */}
             </AUIModal>
         </>
     );

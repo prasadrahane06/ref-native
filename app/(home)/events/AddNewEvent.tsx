@@ -41,8 +41,8 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
     const [image, setImage] = useState<string | null>(null);
     const user = useSelector((state: RootState) => state.global.user);
     const { post, patch, del } = useAxios();
-    const {loading  , setLoading } = useLoading();
-    const { control, handleSubmit, reset, setValue, getValues  } = useForm({
+    const { loading, setLoading } = useLoading();
+    const { control, handleSubmit, reset, setValue, getValues } = useForm({
         defaultValues: {
             eventName: "",
             description: "",
@@ -97,19 +97,20 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
             .catch((e) => {
                 ApiErrorToast(`${t("failed_to_add_event")}`);
                 console.log(e);
-            }).finally(() => setLoading(false));
+            })
+            .finally(() => setLoading(false));
     };
 
     const handleEdit = () => {
         const values = getValues();
         const payload: any = { id: event?._id };
-        
+
         if (values.eventName !== event?.eventName) payload.eventName = values.eventName;
         if (values.description !== event?.description) payload.description = values.description;
         if (selectedDate?.toISOString() !== event?.date) payload.date = selectedDate?.toISOString();
         if (values.location !== event?.location) payload.location = values.location;
         if (image !== event?.eventImage) payload.eventImage = image;
-        
+
         setLoading(true);
         patch(API_URL.event, payload)
             .then((res) => {
@@ -121,7 +122,8 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
             .catch((e) => {
                 ApiErrorToast(`${t("failed_to_update_event")}`);
                 console.log(e);
-            }).finally(() => setLoading(false));
+            })
+            .finally(() => setLoading(false));
     };
 
     const handleDelete = () => {
@@ -198,8 +200,19 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
         });
     };
 
-    const truncateFileName = (fileName: string, maxLength: number) => {
-        if (fileName.length <= maxLength) return fileName;
+    const generateRandomId = (): string => {
+        return Math.floor(1000 + Math.random() * 9000).toString(); // Generate a random 4-digit number
+    };
+    
+    const truncateFileName = (fileName: string | null, maxLength: number): string => {
+        if (fileName === null) {
+            return `Img${generateRandomId()}`;
+        }
+    
+        if (fileName.length <= maxLength) {
+            return fileName;
+        }
+    
         return fileName.substring(0, maxLength - 3) + "...";
     };
 
@@ -208,23 +221,27 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
             <AUIModal
                 visible={visible}
                 onClose={onClose}
-                title={event ? "Edit Event" : `${(t("add_your_events"))}`}
+                title={event ? "Edit Event" : `${t("add_your_events")}`}
             >
                 <Controller
                     control={control}
                     name="eventName"
                     defaultValue=""
                     rules={{ required: "Event name is required" }}
-                    render={({ field: { onChange, value }  , fieldState: { error }}) => (
+                    render={({ field: { onChange, value }, fieldState: { error } }) => (
                         <>
-                        <AUIInputField
-                            label={t("enter_event_name")}
-                            placeholder={t("event_name")}
-                            value={value}
-                            onChangeText={onChange}
-                            style={styles.input}
-                        />
-                        {error && <AUIThemedText style={{ color: 'red' , fontSize : 10}}>{error.message}</AUIThemedText>}
+                            <AUIInputField
+                                label={t("enter_event_name")}
+                                placeholder={t("event_name")}
+                                value={value}
+                                onChangeText={onChange}
+                                style={styles.input}
+                            />
+                            {error && (
+                                <AUIThemedText style={{ color: "red", fontSize: 10 }}>
+                                    {error.message}
+                                </AUIThemedText>
+                            )}
                         </>
                     )}
                 />
@@ -286,10 +303,14 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                 <AUIThemedView style={styles.imagePickerContainer}>
                     <TouchableOpacity onPress={pickImage} style={styles.uploadButton}>
                         <MaterialIcons name="cloud-upload" size={24} color="#5BD894" />
-                        <AUIThemedText style={styles.uploadButtonText}>{t("upload_file")}</AUIThemedText>
+                        <AUIThemedText style={styles.uploadButtonText}>
+                            {t("upload_file")}
+                        </AUIThemedText>
                     </TouchableOpacity>
                     <AUIThemedText style={styles.fileName}>
-                        {image ? truncateFileName(image.split("/").pop()!, 18) : `${t("no_file_chosen")}`}
+                        {image
+                            ? truncateFileName(image.split("/").pop()!, 18)
+                            : `${t("no_file_chosen")}`}
                     </AUIThemedText>
                 </AUIThemedView>
                 {image && <Image source={{ uri: image }} style={styles.image} />}
@@ -299,7 +320,7 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                             <AUIThemedView style={styles.buttonContainer}>
                                 <AUIButton
                                     title="Clear"
-                                    disabled={loading ? true : false }
+                                    disabled={loading ? true : false}
                                     onPress={() => {
                                         reset();
                                         clearFields();
@@ -308,7 +329,7 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                                 />
                                 <AUIButton
                                     title="Update"
-                                    disabled={loading ? true : false }
+                                    disabled={loading ? true : false}
                                     selected
                                     style={{ width: "48%" }}
                                     onPress={handleSubmit(handleEdit)}
@@ -328,7 +349,7 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                         <AUIThemedView style={styles.buttonContainer}>
                             <AUIButton
                                 title="Clear"
-                                disabled={loading ? true : false }
+                                disabled={loading ? true : false}
                                 onPress={() => {
                                     reset();
                                     clearFields();
@@ -337,7 +358,7 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                             />
                             <AUIButton
                                 title="Save"
-                                disabled={loading ? true : false }
+                                disabled={loading ? true : false}
                                 selected
                                 style={{ width: "48%" }}
                                 onPress={handleSubmit(handleSave)}

@@ -31,22 +31,30 @@ import { setLoader, setUser } from "@/redux/globalSlice";
 import { storeUserData } from "@/constants/RNAsyncStore";
 import { setResponse } from "@/redux/apiSlice";
 import AUIImage from "@/components/common/AUIImage";
+import useApiRequest from "@/customHooks/useApiRequest";
 
 const SchoolProfile = () => {
     const { patch } = useAxios();
     const { t } = useTranslation();
     const dispatch = useDispatch();
+    const { requestFn } = useApiRequest();
 
     const theme = useSelector((state: RootState) => state.global.theme);
-    const mySchoolDetails = useLangTransformSelector(
-        (state: RootState) => state.api.MySchoolDetails
+    // const mySchoolDetails = useLangTransformSelector(
+    //     (state: RootState) => state.api.MySchoolDetails
+    // );
+    
+    const userProfileData = useLangTransformSelector(
+        (state: RootState) => state.api.userProfileData
     );
+    const [banner, setBanner] = useState<string>(userProfileData?.banner);
+    const [logo, setLogo] = useState<string>(userProfileData?.logo);
 
-    const [banner, setBanner] = useState<string>(mySchoolDetails?.banner);
-    const [logo, setLogo] = useState<string>(mySchoolDetails?.logo);
 
     const [bannerBase64, setBannerBase64] = useState<any>(null);
     const [logoBase64, setLogoBase64] = useState<any>(null);
+    const user = useLangTransformSelector((state: RootState) => state.global.user);
+    const _id = user?.client;
 
     const schema = Yup.object().shape({
         name: Yup.string().required(`${t("name_is_required")}`),
@@ -59,12 +67,32 @@ const SchoolProfile = () => {
         resolver: yupResolver(schema),
         mode: "onChange",
         defaultValues: {
-            name: mySchoolDetails?.name,
-            description: mySchoolDetails?.description,
-            remark: mySchoolDetails?.remark,
-            website: mySchoolDetails?.website,
+            name: userProfileData?.name,
+            description: userProfileData?.description,
+            remark: userProfileData?.remark,
+            website: userProfileData?.website,
         },
     });
+
+    useEffect(() => {
+        if (_id) {
+            requestFn(API_URL.school, "userProfileData", { id: _id });
+        }
+    }, []);
+
+    useEffect(() => {
+        if (userProfileData && reset) {
+            reset({
+                name: userProfileData?.name,
+                description: userProfileData?.description,
+                remark: userProfileData?.remark,
+                website: userProfileData?.website,
+            });
+            setLogo(userProfileData?.logo);
+            setBanner(userProfileData?.banner);
+        }
+    }, [userProfileData, reset]);
+
 
     const pickImageAsync = async (value: any) => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -110,7 +138,7 @@ const SchoolProfile = () => {
                     ...res?.data,
                 });
                 dispatch(setUser(res?.data));
-                dispatch(setResponse({ storeName: "MySchoolDetails", data: res?.data }));
+                dispatch(setResponse({ storeName: "api.MySchoolDetails", data: res?.data }));
                 ApiSuccessToast(res.message);
                 dispatch(setLoader(false));
             })
@@ -180,7 +208,7 @@ const SchoolProfile = () => {
                         <AUIInputField
                             style={styles.disabledInput}
                             editable={false}
-                            value={mySchoolDetails?.phone}
+                            value={userProfileData?.phone}
                         />
                     </AUIThemedView>
 
@@ -203,7 +231,7 @@ const SchoolProfile = () => {
                         <AUIInputField
                             style={styles.disabledInput}
                             editable={false}
-                            value={mySchoolDetails?.email}
+                            value={userProfileData?.email}
                         />
                     </AUIThemedView>
 

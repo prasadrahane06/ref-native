@@ -1,7 +1,6 @@
 import useAxios from "@/app/services/axiosClient";
 import AUIInfoCard from "@/components/AUIInfoCard";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { ApiSuccessToast } from "@/components/common/AUIToast";
 import CourseList from "@/components/home/common/CourseList";
 import ChartComponent from "@/components/home/common/LinearChart";
 import SectionTitle from "@/components/home/common/SectionTitle";
@@ -10,13 +9,13 @@ import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
-import formatNumberWithComma from "@/utils/numberFomatter";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FlatList, ScrollView, StyleSheet } from "react-native";
 import "react-native-gesture-handler";
 
 import { useAxiosClient as useBotAxios } from "at-chatbot-native";
+import formatNumberWithComma from "@/utils/numberFomatter";
 
 export default function HomeScreen() {
     const { requestFn } = useApiRequest();
@@ -29,8 +28,6 @@ export default function HomeScreen() {
     const mySchoolDetails = useLangTransformSelector(
         (state: RootState) => state.api.MySchoolDetails
     );
-
-    console.log("mySchoolDetails", JSON.stringify(mySchoolDetails));
 
     useEffect(() => {
         requestFn(API_URL.schoolAnalytics, "MySchoolDetails", { client: true });
@@ -103,6 +100,10 @@ export default function HomeScreen() {
         doneData: [0],
     };
 
+    const validateData = (data: any) => {
+        return data.map((value: any) => (isNaN(value) || !isFinite(value) ? 0 : value));
+    };
+
     return (
         <AUIThemedView>
             <ScrollView>
@@ -144,7 +145,7 @@ export default function HomeScreen() {
                         doneData={
                             mySchoolDetails?.graphData?.doneData || specificDummyData.doneData
                         }
-                        yAxisLabel="$"
+                        // yAxisLabel="$"
                         yAxisInterval={10}
                     />
 
