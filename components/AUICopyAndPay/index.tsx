@@ -47,6 +47,7 @@ const AUICopyAndPay = ({ checkoutId, paymentMode }: any) => {
 
     const handleWebViewMessage = (event: any) => {
         const { status } = JSON.parse(event.nativeEvent.data);
+        console.log("JSON.parse(event.nativeEvent.data) ", JSON.parse(event.nativeEvent.data));
         if (status === "success") {
             ApiSuccessToast(status);
         } else if (status === "GoToHome") {
@@ -64,6 +65,7 @@ const AUICopyAndPay = ({ checkoutId, paymentMode }: any) => {
             originWhitelist={["*"]}
             source={{
                 html: htmlContent,
+                // uri: "https://linguistedu.com/",
             }}
             onLoad={() => setLoading(false)}
             onNavigationStateChange={handleWebViewNavigationStateChange}

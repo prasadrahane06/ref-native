@@ -131,6 +131,7 @@ export default function SchoolDetails() {
 
     // chatbot
     const [config, setConfig] = useState({});
+    const [readMore, setReadMore] = useState(false);
 
     const user = useLangTransformSelector((state: RootState) => state.global.user);
     const favorite = useLangTransformSelector((state: RootState) => state.favorite.items);
@@ -347,6 +348,10 @@ export default function SchoolDetails() {
     //         });
     // }, []);
 
+    const wordsLimit = 50;
+    const truncatedText = schoolsResponse?.description?.split(" ").slice(0, wordsLimit).join(" ");
+    const isTruncated = schoolsResponse?.description?.split(" ").length > wordsLimit;
+
     return (
         <AUIThemedView style={{ flex: 1 }}>
             <ChatBot consumerId={consumerId} config={config} user={user} />
@@ -402,7 +407,18 @@ export default function SchoolDetails() {
                         <AUIThemedView style={styles.contactsContainer}>
                             <AUIThemedText>
                                 <AUIThemedText style={styles.description}>
-                                    {schoolsResponse?.description}
+                                    {readMore ? schoolsResponse?.description : truncatedText}
+                                    {isTruncated && (
+                                        <AUIThemedText onPress={() => setReadMore(!readMore)}>
+                                            {`  `}
+                                            <AUIThemedText
+                                                onPress={() => setReadMore(!readMore)}
+                                                style={styles.readMoreText}
+                                            >
+                                                {readMore ? "Read Less" : "Read More"}
+                                            </AUIThemedText>
+                                        </AUIThemedText>
+                                    )}
                                 </AUIThemedText>
                             </AUIThemedText>
                         </AUIThemedView>
@@ -422,7 +438,6 @@ const tabStyles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        // borderBottomColor: APP_THEME.primary.first,
         borderBottomWidth: 1,
     },
     tab: {
@@ -434,14 +449,11 @@ const tabStyles = StyleSheet.create({
     activeTab: {
         borderTopLeftRadius: 7,
         borderBottomWidth: 5,
-        // borderBottomColor: APP_THEME.primary.first,
-        // backgroundColor: "#D3FFE7",
     },
     inactiveTab: {
         borderTopRightRadius: 7,
         borderBottomWidth: 0,
         borderBottomColor: "#000",
-        // backgroundColor: "#fff",
     },
     tabLabel: {
         fontSize: 17,
@@ -452,10 +464,8 @@ const tabStyles = StyleSheet.create({
 
 const styles = StyleSheet.create({
     screenHeader: {
-        // backgroundColor: APP_THEME.primary.first,
         height: 100,
         borderBottomWidth: StyleSheet.hairlineWidth,
-        // borderColor: APP_THEME.gray,
     },
     screenTitle: {
         fontSize: 18,
@@ -516,5 +526,12 @@ const styles = StyleSheet.create({
         fontSize: 16,
         textDecorationLine: "underline",
         color: "#9DA1AC",
+    },
+    readMoreText: {
+        color: "green",
+        fontSize: 14,
+        textDecorationLine: "underline",
+        lineHeight: 20,
+        paddingTop: 10,
     },
 });

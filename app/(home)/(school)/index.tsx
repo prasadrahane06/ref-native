@@ -1,7 +1,6 @@
 import useAxios from "@/app/services/axiosClient";
 import AUIInfoCard from "@/components/AUIInfoCard";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { ApiSuccessToast } from "@/components/common/AUIToast";
 import CourseList from "@/components/home/common/CourseList";
 import ChartComponent from "@/components/home/common/LinearChart";
 import SectionTitle from "@/components/home/common/SectionTitle";
@@ -10,13 +9,13 @@ import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
-import formatNumberWithComma from "@/utils/numberFomatter";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FlatList, ScrollView, StyleSheet } from "react-native";
 import "react-native-gesture-handler";
 
 import { useAxiosClient as useBotAxios } from "at-chatbot-native";
+import formatNumberWithComma from "@/utils/numberFomatter";
 
 export default function HomeScreen() {
     const { requestFn } = useApiRequest();
@@ -25,10 +24,10 @@ export default function HomeScreen() {
     const { t } = useTranslation();
 
     const user = useLangTransformSelector((state: RootState) => state.global.user);
-    const MySchoolDetails = useLangTransformSelector(
+    const myCourse = useLangTransformSelector((state: RootState) => state.api.myCourse);
+    const mySchoolDetails = useLangTransformSelector(
         (state: RootState) => state.api.MySchoolDetails
     );
-    const myCourse = useLangTransformSelector((state: RootState) => state.api.myCourse);
 
     useEffect(() => {
         requestFn(API_URL.schoolAnalytics, "MySchoolDetails", { client: true });
@@ -101,16 +100,20 @@ export default function HomeScreen() {
         doneData: [0],
     };
 
+    const validateData = (data: any) => {
+        return data.map((value: any) => (isNaN(value) || !isFinite(value) ? 0 : value));
+    };
+
     return (
         <AUIThemedView>
             <ScrollView>
                 <AUIThemedView style={styles.section}>
-                    <SectionTitle>{MySchoolDetails?.name}</SectionTitle>
+                    <SectionTitle>{mySchoolDetails?.name}</SectionTitle>
                     <AUIThemedView style={{ alignItems: "center", marginTop: 15 }}>
-                        {MySchoolDetails?.schoolInfoData && (
+                        {mySchoolDetails?.schoolInfoData && (
                             <FlatList
                                 scrollEnabled={false}
-                                data={MySchoolDetails?.schoolInfoData}
+                                data={mySchoolDetails?.schoolInfoData}
                                 numColumns={2}
                                 renderItem={({ item }) => (
                                     <AUIInfoCard
@@ -135,14 +138,14 @@ export default function HomeScreen() {
 
                     <ChartComponent
                         title={t(GLOBAL_TEXT.my_earnings)}
-                        labels={MySchoolDetails?.graphData?.labels || specificDummyData.labels}
+                        labels={mySchoolDetails?.graphData?.labels || specificDummyData.labels}
                         pendingData={
-                            MySchoolDetails?.graphData?.pendingData || specificDummyData.pendingData
+                            mySchoolDetails?.graphData?.pendingData || specificDummyData.pendingData
                         }
                         doneData={
-                            MySchoolDetails?.graphData?.doneData || specificDummyData.doneData
+                            mySchoolDetails?.graphData?.doneData || specificDummyData.doneData
                         }
-                        yAxisLabel="$"
+                        // yAxisLabel="$"
                         yAxisInterval={10}
                     />
 

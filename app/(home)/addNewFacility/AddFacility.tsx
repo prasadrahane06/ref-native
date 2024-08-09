@@ -185,8 +185,19 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
         });
     };
 
-    const truncateFileName = (fileName: string, maxLength: number) => {
-        if (fileName.length <= maxLength) return fileName;
+    const generateRandomId = (): string => {
+        return Math.floor(1000 + Math.random() * 9000).toString(); // Generate a random 4-digit number
+    };
+    
+    const truncateFileName = (fileName: string | null, maxLength: number): string => {
+        if (fileName === null) {
+            return `Img${generateRandomId()}`;
+        }
+    
+        if (fileName.length <= maxLength) {
+            return fileName;
+        }
+    
         return fileName.substring(0, maxLength - 3) + "...";
     };
 

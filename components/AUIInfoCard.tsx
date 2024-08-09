@@ -27,7 +27,7 @@ const AUIInfoCard: React.FC<AUIInfoCardProps> = ({
 
     const handlePress = () => {
         if (navigation) {
-            nav.navigate(navigation);
+            // nav.navigate(navigation);
         }
     };
 

@@ -15,6 +15,7 @@ const OTPScreen = ({
     onResendOtp,
     changeLabel,
     disabled,
+    autoFocus,
 }: any) => {
     const theme = useSelector((state: RootState) => state.global.theme);
     // const [otp, setOtp] = useState(Array(length).fill(""));
@@ -54,7 +55,12 @@ const OTPScreen = ({
                 {`Change ${changeLabel || ""}`}
             </AUIThemedText>
             <AUIThemedView style={styles.AUIOTPInput}>
-                <AUIOTPInput length={length} onChange={onChange} disabled={disabled} />
+                <AUIOTPInput
+                    length={length}
+                    onChange={onChange}
+                    disabled={disabled}
+                    autoFocus={autoFocus}
+                />
             </AUIThemedView>
 
             {canResend ? (

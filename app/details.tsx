@@ -193,7 +193,7 @@ const DetailsPage = () => {
                                             }) => onChange(qualification)}
                                             labelField="qualification"
                                             valueField="qualification"
-                                            placeholder={"Select your qualificatioN"}
+                                            placeholder={"Select your qualification"}
                                             listWithIcon
                                         />
                                     </AUIThemedView>
@@ -242,6 +242,7 @@ const DetailsPage = () => {
                                             labelField="label"
                                             valueField="value"
                                             listWithIcon
+                                            placeholder={"Select your language"}
                                             position="top"
                                         />
                                     </AUIThemedView>
@@ -269,6 +270,7 @@ const DetailsPage = () => {
                                             labelField="label"
                                             valueField="value"
                                             listWithIcon
+                                            placeholder={"Select your country"}
                                             position="top"
                                         />
                                     </AUIThemedView>
@@ -295,6 +297,7 @@ const DetailsPage = () => {
                                             }}
                                             labelField="label"
                                             valueField="value"
+                                            placeholder={"Select your state"}
                                             listWithIcon
                                             position="top"
                                         />
@@ -321,6 +324,7 @@ const DetailsPage = () => {
                                             labelField="label"
                                             valueField="value"
                                             listWithIcon
+                                            placeholder={"Select your city"}
                                             position="top"
                                         />
                                     </AUIThemedView>

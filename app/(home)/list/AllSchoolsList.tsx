@@ -9,7 +9,6 @@ interface SchoolData {
     image: any;
     caption?: string;
     favorite?: boolean;
-    approvalStatus?: string;
 }
 
 interface SchoolListProps {
@@ -33,12 +32,10 @@ const AllSchoolsList: React.FC<SchoolListProps> = ({ data, style }) => {
         );
     };
 
-    const approvedSchools = data?.filter((school: any) => school?.approvalStatus === "approved");
-
     return (
         <AUIThemedView style={styles.schoolContainer}>
             <FlatList
-                data={approvedSchools}
+                data={data}
                 renderItem={renderItem}
                 keyExtractor={(item) => item?.id}
                 numColumns={2}
@@ -58,8 +55,9 @@ const styles = StyleSheet.create({
         backgroundColor: "transparent",
         alignItems: "center",
         marginVertical: 5,
+        gap: 20,
     },
     schoolItem: {
-        width: "48%",
+        // width: "48%",
     },
 });

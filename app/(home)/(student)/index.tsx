@@ -40,10 +40,6 @@ export default function HomeScreen() {
     const _id = user?._id;
 
     let schoolsResponse = response?.school;
-    const approvedSchools = schoolsResponse?.docs?.filter(
-        (school: any) => school?.approvalStatus === "approved"
-    );
-
     const courseResponse = response?.selectedLanguagecourse;
     const countryResponse = response?.country;
     let lastChanceResponse = response?.lastDateToApply;
@@ -67,7 +63,7 @@ export default function HomeScreen() {
     }, [fetchCourses]);
 
     useEffect(() => {
-        requestFn(API_URL.school, "school");
+        requestFn(API_URL.school, "school", { status: 2 });
         requestFn(API_URL.country, "country");
         requestFn(API_URL.favorite, "favorite", { user: true });
         requestFn(API_URL.language, "language");
@@ -132,7 +128,7 @@ export default function HomeScreen() {
                 >
                     {t(GLOBAL_TRANSLATION_LABEL.popular_school)}
                 </SectionTitle>
-                <SchoolList data={approvedSchools?.slice(0, 4)} />
+                <SchoolList data={schoolsResponse?.docs.slice(0, 4)} />
             </AUIThemedView>
 
             <AUIThemedView>

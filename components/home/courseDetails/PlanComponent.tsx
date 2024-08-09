@@ -599,6 +599,7 @@ export default function PlanComponent({
     const isPurchased = useLangTransformSelector((state: RootState) => state.api.isPurchased);
 
     useEffect(() => {
+        console.log("clientId in planComponent ", clientId);
         requestFn(API_URL.purchaseCourse, "isPurchased", { user: true, course: courseId });
     }, []);
 
@@ -657,20 +658,21 @@ export default function PlanComponent({
                             {
                                 backgroundColor: BACKGROUND_THEME[theme].background,
                                 borderColor: TEXT_THEME[theme].primary,
-                                opacity:
-                                    (isPurchased &&
-                                        isPurchased?.docs &&
-                                        isPurchased?.docs[0]?.type === "bookYourSeat") ||
-                                    isPurchased?.docs[0]?.type === "buy"
-                                        ? 0.5
-                                        : 1,
+                                // opacity:
+                                //     (isPurchased &&
+                                //         isPurchased?.docs &&
+                                //         isPurchased?.docs[0]?.type === "bookYourSeat") ||
+                                //     isPurchased?.docs[0]?.type === "buy"
+                                //         ? 0.5
+                                //         : 1,
                             },
                         ]}
-                        disabled={
-                            isPurchased &&
-                            (isPurchased?.docs[0]?.type === "bookYourSeat" ||
-                                isPurchased?.docs[0]?.type === "buy")
-                        }
+                        // Kept commented for now, we'll block user on next page
+                        // disabled={
+                        //     isPurchased &&
+                        //     (isPurchased?.docs[0]?.type === "bookYourSeat" ||
+                        //         isPurchased?.docs[0]?.type === "buy")
+                        // }
                         onPress={() =>
                             router.push({
                                 pathname: "/profile",
@@ -679,6 +681,7 @@ export default function PlanComponent({
                                     type: "bookYourSeat",
                                     planId: planId,
                                     courseId: courseId,
+                                    clientId: clientId,
                                 },
                             })
                         }
@@ -694,17 +697,17 @@ export default function PlanComponent({
                             styles.buyContainer,
                             {
                                 backgroundColor: APP_THEME[theme].primary.first,
-                                opacity:
-                                    isPurchased &&
-                                    isPurchased?.docs &&
-                                    isPurchased?.docs[0]?.type === "buy"
-                                        ? 0.5
-                                        : 1,
+                                // opacity:
+                                //     isPurchased &&
+                                //     isPurchased?.docs &&
+                                //     isPurchased?.docs[0]?.type === "buy"
+                                //         ? 0.5
+                                //         : 1,
                             },
                         ]}
-                        disabled={
-                            isPurchased && isPurchased?.docs && isPurchased?.docs[0]?.type === "buy"
-                        }
+                        // disabled={
+                        //     isPurchased && isPurchased?.docs && isPurchased?.docs[0]?.type === "buy"
+                        // }
                         onPress={() =>
                             router.push({
                                 pathname: "/profile",
@@ -713,14 +716,13 @@ export default function PlanComponent({
                                     type: "buy",
                                     planId: planId,
                                     courseId: courseId,
+                                    clientId: clientId,
                                 },
                             })
                         }
                     >
                         <Ionicons name="bag-handle-outline" size={24} color="black" />
-                        <AUIThemedText style={styles.whiteBoldText}>
-                        {t("buy_now")}
-                        </AUIThemedText>
+                        <AUIThemedText style={styles.whiteBoldText}>{t("buy_now")}</AUIThemedText>
                     </Pressable>
                 </AUIThemedView>
             )}

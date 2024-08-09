@@ -121,11 +121,12 @@ const Profile: React.FC = () => {
         (state: RootState) => state.api.userProfileData
     );
 
-    const { from, type, planId, courseId } = useLocalSearchParams<{
+    const { from, type, planId, courseId, clientId } = useLocalSearchParams<{
         from: string;
         type: string;
         planId: string;
         courseId: string;
+        clientId: string;
     }>();
 
     const theme = useSelector((state: RootState) => state.global.theme);
@@ -313,6 +314,7 @@ const Profile: React.FC = () => {
                             type: type,
                             planId: planId,
                             courseId: courseId,
+                            clientId: clientId,
                         })}`,
                     });
                 }
@@ -324,6 +326,7 @@ const Profile: React.FC = () => {
                             type: type,
                             planId: planId,
                             courseId: courseId,
+                            clientId: clientId,
                         })}`,
                     });
                 }
@@ -342,7 +345,7 @@ const Profile: React.FC = () => {
             behavior="padding"
             keyboardVerticalOffset={keyboardVerticalOffset}
         >
-            <ScrollView>
+            <ScrollView automaticallyAdjustKeyboardInsets={true}>
                 <AUIThemedView style={styles.container}>
                     <TouchableOpacity style={styles.profileImageContainer} onPress={pickImageAsync}>
                         <AUIImage icon path={profileImage} style={[styles.profileImage]} />
@@ -433,8 +436,9 @@ const Profile: React.FC = () => {
                                         flex: 1,
                                         flexDirection: "row",
                                         alignItems: "center",
-                                        borderWidth: 2,
-                                        borderColor: "#ccc",
+                                        height: 50,
+                                        borderWidth: 1,
+                                        borderColor: "#5BD894",
                                         borderRadius: 6,
                                     }}
                                 >
@@ -614,6 +618,7 @@ const Profile: React.FC = () => {
                                     labelField="label"
                                     valueField="value"
                                     listWithIcon
+                                    placeholder={t("select_your_language")}
                                     position="top"
                                 />
                             </AUIThemedView>
@@ -643,6 +648,7 @@ const Profile: React.FC = () => {
                                     }}
                                     labelField="label"
                                     valueField="value"
+                                    placeholder={t("select_your_country")}
                                     listWithIcon
                                     position="top"
                                 />
@@ -671,6 +677,7 @@ const Profile: React.FC = () => {
                                     }}
                                     labelField="label"
                                     valueField="value"
+                                    placeholder={t("select_your_state")}
                                     listWithIcon
                                     position="top"
                                 />
@@ -697,6 +704,7 @@ const Profile: React.FC = () => {
                                     }}
                                     labelField="label"
                                     valueField="value"
+                                    placeholder={t("select_your_city")}
                                     listWithIcon
                                     position="top"
                                 />
@@ -730,6 +738,7 @@ const Profile: React.FC = () => {
                                                           type: type,
                                                           planId: planId,
                                                           courseId: courseId,
+                                                          clientId: clientId,
                                                       }
                                                   )}`,
                                               });
@@ -743,6 +752,7 @@ const Profile: React.FC = () => {
                                                           type: type,
                                                           planId: planId,
                                                           courseId: courseId,
+                                                          clientId: clientId,
                                                       }
                                                   )}`,
                                               });
@@ -828,6 +838,9 @@ const styles = StyleSheet.create({
         position: "relative",
         alignItems: "flex-start",
         marginBottom: 20,
+        height: 100,
+        width: 100,
+        borderRadius: 100,
     },
     profileImage: {
         height: 100,
@@ -841,6 +854,9 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         fontStyle: "normal",
         // color: "#333",
+    },
+    dateInputStyle: {
+        borderColor: "#5BD894",
     },
     input: {
         borderWidth: 1,

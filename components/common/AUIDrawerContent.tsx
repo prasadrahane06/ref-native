@@ -16,8 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import AUIImage from "./AUIImage";
 import AUILangToggle from "./AUILangToggle";
 import { AUIThemedView } from "./AUIThemedView";
-import Profile from "@/app/profile";
-import schoolProfile from "../screenComponents/schoolProfile";
+import appJson from "@/app.json";
 
 //interface
 export interface DrawerItem {
@@ -96,7 +95,13 @@ const AUIDrawerContent = (props: any) => {
                             />
                         ) : (
                             <AUIImage
-                                path={Asset.fromModule(require("@/assets/images/local/sclogo.png"))}
+                                path={
+                                    data?.photo
+                                        ? data?.photo
+                                        : Asset.fromModule(
+                                              require("@/assets/images/local/sclogo.png")
+                                          )
+                                }
                                 style={styles.avatar}
                             />
                         )}
@@ -124,6 +129,11 @@ const AUIDrawerContent = (props: any) => {
                     <DrawerItemList {...props} />
                 </View>
             </DrawerContentScrollView>
+            <AUIThemedText
+                style={[styles.versionText, { color: isDarkMode ? "#f4f3f4" : "black" }]}
+            >
+                v {appJson.expo.version}
+            </AUIThemedText>
             <View
                 style={{
                     borderTopWidth: 1,
@@ -150,6 +160,7 @@ const AUIDrawerContent = (props: any) => {
                     </AUIThemedText>
                 </AUIThemedView>
             </View>
+
             <View
                 style={{
                     borderTopWidth: 1,
@@ -184,7 +195,6 @@ const AUIDrawerContent = (props: any) => {
 const styles = StyleSheet.create({
     drawerContent: {
         flex: 1,
-        // paddingTop: 18,
     },
     closeButton: {
         alignSelf: "flex-end",
@@ -212,7 +222,6 @@ const styles = StyleSheet.create({
         width: 100,
         height: 100,
         borderRadius: 50,
-        // marginBottom: 10,
     },
     nameContainer: {
         paddingTop: 10,
@@ -257,8 +266,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         paddingVertical: 15,
         paddingHorizontal: 20,
-        // backgroundColor: APP_THEME.primary.first,
-        // marginHorizontal: 20,
         borderRadius: 15,
     },
     logOutIcon: {
@@ -269,6 +276,12 @@ const styles = StyleSheet.create({
     logoutText: {
         fontSize: 16,
         color: "white",
+    },
+    versionText: {
+        fontSize: 12,
+        color: "black",
+        padding: 20,
+        textAlign: "right",
     },
     signUpLiginButtonContainer: {
         flexDirection: "row",

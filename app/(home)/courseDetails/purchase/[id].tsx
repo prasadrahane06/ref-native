@@ -47,6 +47,9 @@ export default function PurchaseScreen() {
     const newid = JSON.parse(id);
 
     const individualPlan = useLangTransformSelector((state: RootState) => state.api.individualPlan);
+    const paymentDetialsForThisCourse = useLangTransformSelector(
+        (state: RootState) => state.api.paymentIsPurchasedCourse || {}
+    );
     const theme = useSelector((state: RootState) => state.global.theme);
 
     const [paymentMode, setPaymentMode] = useState("CardPay");
@@ -62,6 +65,26 @@ export default function PurchaseScreen() {
     useEffect(() => {
         requestFn(API_URL.plan, "individualPlan", { id: newid.planId });
     }, [newid.planId]);
+
+    useEffect(() => {
+        if (newid.clientId && newid?.courseId && newid?.type && newid?.planId) {
+            requestFn(API_URL.paymentIsPurchasedCourse, "paymentIsPurchasedCourse", {
+                plan: newid?.planId,
+                type: newid?.type,
+                course: newid?.courseId,
+                client: newid?.clientId,
+            });
+        }
+    }, [newid.clientId,newid?.courseId,newid?.type,newid?.planId]);
+
+    useEffect(() => {
+        console.log("paymentDetialsForThisCourse ", paymentDetialsForThisCourse);
+        if (paymentDetialsForThisCourse) {
+
+        }
+    }, [paymentDetialsForThisCourse]);
+
+   
 
     useEffect(() => {
         if (individualPlan) {
@@ -88,13 +111,14 @@ export default function PurchaseScreen() {
             plan: newid?.planId,
             type: newid?.type,
             course: newid?.courseId,
+            client: newid?.clientId,
         });
-        if (result?.paymentId) {
+        if (result?.data?.paymentDetails?.paymentId) {
             setLoading(false);
             router.push({
                 pathname: "/payment",
                 params: {
-                    checkoutId: result?.paymentId,
+                    checkoutId: result?.data?.paymentDetails?.paymentId,
                     paymentMode: paymentMode,
                 },
             });
@@ -199,22 +223,28 @@ export default function PurchaseScreen() {
                     </TouchableOpacity>
                 ))}
             </AUIThemedView>
-
-            <TouchableOpacity
-                style={[
-                    styles.confirmButton,
-                    {
-                        backgroundColor: APP_THEME[theme].primary.first,
-                        opacity: isLoading ? 0.5 : 1,
-                    },
-                ]}
-                onPress={() => handlePayment()}
-                disabled={isLoading}
-            >
-                <AUIThemedText style={styles.confirmButtonText}>
-                    {t(GLOBAL_TRANSLATION_LABEL.confirmYourPayment)}
+            {paymentDetialsForThisCourse && paymentDetialsForThisCourse?.isPurchased === "Yes" ? (
+                <AUIThemedText> You Already Purchased This Course</AUIThemedText>
+            ) : paymentDetialsForThisCourse &&
+              paymentDetialsForThisCourse?.isPurchased === "MayBe" ? (
+                <AUIThemedText>
+                    {" "}
+                    Your Transaction Is Pending !! Please Contact Admin For Mor details
                 </AUIThemedText>
-            </TouchableOpacity>
+            ) : (
+                <TouchableOpacity
+                    style={[
+                        styles.confirmButton,
+                        { backgroundColor: APP_THEME[theme].primary.first, opacity: isLoading ? 0.5 : 1, },
+                    ]}
+                    onPress={() => handlePayment()}
+                    disabled={isLoading}
+                >
+                    <AUIThemedText style={styles.confirmButtonText}>
+                        {t(GLOBAL_TRANSLATION_LABEL.confirmYourPayment)}
+                    </AUIThemedText>
+                </TouchableOpacity>
+            )}
         </ScrollView>
     );
 }

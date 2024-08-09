@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { StyleSheet, TextStyle } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import { useSelector } from "react-redux";
-import AUIImage from "./AUIImage";
 import { AUIThemedText } from "./AUIThemedText";
 import { AUIThemedView } from "./AUIThemedView";
 // import { t } from "i18next";
@@ -79,18 +78,17 @@ const DropdownComponent = ({
                 inputSearchStyle={[
                     styles.inputSearchStyle,
                     {
-                        backgroundColor: BACKGROUND_THEME[theme].background,
+                        // backgroundColor: BACKGROUND_THEME[theme].background,
                         color: TEXT_THEME[theme].primary,
                     },
                 ]}
-                // itemTextStyle={{ borderWidth: 1, width: "100%" }}
                 iconStyle={styles.iconStyle}
                 data={list}
                 search={isSearchable}
-                maxHeight={300}
+                maxHeight={200}
                 labelField={labelField || "label"}
                 valueField={valueField || "value"}
-                placeholder={!isFocus ? placeholder ||` ${t("select_item")}` : "..."}
+                placeholder={!isFocus ? placeholder || ` ${t("select_item")}` : "..."}
                 searchPlaceholder="Search..."
                 value={value}
                 onFocus={() => setIsFocus(true)}
@@ -99,7 +97,9 @@ const DropdownComponent = ({
                     setValue(item);
                     setIsFocus(false);
                 }}
-                dropdownPosition={position}
+                mode="modal"
+                keyboardAvoiding={true}
+                // dropdownPosition={position}
                 renderLeftIcon={
                     renderLeftIcon
                         ? () => (
@@ -133,7 +133,13 @@ const DropdownComponent = ({
                         <RenderDefaultItem item={item} labelField={labelField} />
                     )
                 }
-                containerStyle={{ backgroundColor: BACKGROUND_THEME[theme].background }}
+                containerStyle={{
+                    backgroundColor: BACKGROUND_THEME[theme].background,
+                    height: 300,
+                    borderWidth: 1,
+                    borderColor: "black",
+                    // borderRadius: 10,
+                }}
             />
         </AUIThemedView>
     );
@@ -185,7 +191,7 @@ const RenderDefaultItem = ({ item, labelField }: any) => (
 const styles = StyleSheet.create({
     dropdown: {
         height: 50,
-        borderColor: "#ccc",
+        borderColor: "#5BD894",
         borderWidth: 1,
         borderRadius: 4,
         paddingHorizontal: 5,
@@ -211,8 +217,10 @@ const styles = StyleSheet.create({
         height: 20,
     },
     inputSearchStyle: {
-        height: 40,
+        height: 50,
         fontSize: 16,
+        borderColor: "#5BD894",
+        // borderWidth: 1,
     },
     renderDefaultItem: {
         paddingVertical: 12,

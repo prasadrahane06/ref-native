@@ -1,7 +1,7 @@
 import AUISearchBar from "@/components/common/AUISearchBar";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
-import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
+import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import useDebounce from "@/customHooks/useDebounce";
@@ -11,7 +11,14 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { t } from "i18next";
 import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import {
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    TouchableOpacity,
+} from "react-native";
+import { useSelector } from "react-redux";
 
 export default function TabTwoScreen() {
     const { requestFn } = useApiRequest();
@@ -20,6 +27,8 @@ export default function TabTwoScreen() {
     const [clicked, setClicked] = useState(false);
     const [showMessage, setShowMessage] = useState(true);
     const debouncedSearchPhrase = useDebounce(searchPhrase, 500);
+
+    const theme = useSelector((state: RootState) => state.global.theme);
     const schoolPurchaseCourse = useLangTransformSelector(
         (state: RootState) => state.api.schoolPurchaseCourse || {}
     );
@@ -54,7 +63,15 @@ export default function TabTwoScreen() {
         }
     }, [page, schoolPurchaseCourse.totalPages]);
 
+    const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
+    console.log("schoolPurchaseCourse.docs ", JSON.stringify(schoolPurchaseCourse.docs));
+
     return (
+        // <KeyboardAvoidingView
+        //     style={{ flex: 1, backgroundColor: BACKGROUND_THEME[theme].background }}
+        //     behavior="padding"
+        //     // keyboardVerticalOffset={keyboardVerticalOffset}
+        // >
         <AUIThemedView style={styles.root}>
             <AUIThemedView style={{ paddingBottom: 20 }}>
                 <AUISearchBar
@@ -68,7 +85,7 @@ export default function TabTwoScreen() {
             <ScrollView>
                 <AUIThemedView>
                     <AUIThemedText style={styles.title}>
-                      {t("students_admitted_through_app")}
+                        {t("students_admitted_through_app")}
                     </AUIThemedText>
                     <AUIThemedView>
                         {schoolPurchaseCourse.docs && Array.isArray(schoolPurchaseCourse.docs) ? (
@@ -88,7 +105,8 @@ export default function TabTwoScreen() {
                                         {item.user?.name || "No name available"}
                                     </AUIThemedText>
                                     <AUIThemedText style={styles.id}>
-                                        {t("id")}: {item.user?.studentId || `${t("no_id_available")}`}
+                                        {t("id")}:{" "}
+                                        {item.user?.studentId || `${t("no_id_available")}`}
                                     </AUIThemedText>
                                     <MaterialIcons
                                         name="keyboard-arrow-right"
@@ -127,13 +145,13 @@ const styles = StyleSheet.create({
         fontSize: 17,
         letterSpacing: 1,
         fontWeight: "bold",
-        marginLeft:10
+        marginLeft: 10,
     },
     layout: {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        backgroundColor: APP_THEME.light.primary.second,
+        backgroundColor: APP_THEME.light.primary.first,
         padding: 10,
         margin: 8,
         borderRadius: 10,

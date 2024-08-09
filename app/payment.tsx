@@ -8,7 +8,6 @@ const Payment = () => {
         checkoutId: string;
         paymentMode: string;
     }>();
-
     return <AUICopyAndPay paymentMode={paymentMode} checkoutId={checkoutId} />;
 };
 

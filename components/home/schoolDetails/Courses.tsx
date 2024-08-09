@@ -85,9 +85,9 @@ export default function CoursesTab({ schoolCourses }: { schoolCourses: any }) {
                 />
 
                 {/* Filter Button */}
-                <TouchableOpacity onPress={() => setIsFilterModalVisible(true)}>
+                {/* <TouchableOpacity onPress={() => setIsFilterModalVisible(true)}>
                     <AUIFilter />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
             </AUIThemedView>
 
             {/* Filter Modal */}
@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
     },
     loadMoreButton: {
         flex: 1,
-        alignContent: "center",
+        alignItems: "center",
         justifyContent: "center",
         marginVertical: 10,
         padding: 10,

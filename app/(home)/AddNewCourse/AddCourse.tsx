@@ -13,22 +13,25 @@ import useApiRequest from "@/customHooks/useApiRequest";
 import useIsomorphicLayoutEffect from "@/customHooks/useIsomorphicLayoutEffect";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
-import { MaterialIcons } from "@expo/vector-icons";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import { useNavigation } from "@react-navigation/native";
 import Checkbox from "expo-checkbox";
 import { Image } from "expo-image";
-import * as ImageManipulator from "expo-image-manipulator";
 import * as ImagePicker from "expo-image-picker";
-import { useFocusEffect, useLocalSearchParams } from "expo-router";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { Platform, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
-import { useSelector } from "react-redux";
+import { Platform, Pressable, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 import AddPlan from "./AddPlan";
 import { useTranslation } from "react-i18next";
-// import { t } from "i18next";
-
+import { languagesData } from "@/constants/dummy data/languagesData";
+import { setLoader } from "@/redux/globalSlice";
+import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import CustomTooltip from "@/components/common/AUIToolTip";
+import ImageViewer from "@/components/ImageViewer";
 interface Plan {
     _id: string;
     name: any | { en: string; ar?: string };
@@ -48,7 +51,7 @@ interface FormValues {
     totalSeats: any;
     scheduleFrom: Date;
     scheduleTo: Date;
-    currentType: any;
+    // currentType: any;
     category: any;
     image: any;
     plans: any;
@@ -61,78 +64,73 @@ interface FormValues {
 const AUIAddNewCourse = () => {
     const { t } = useTranslation();
     const params = useLocalSearchParams();
-    const id = params.id;
-    const edit = params.edit;
-    const EditCourseResponse = useLangTransformSelector((state: RootState) => state.api.editCourse);
-    const user = useSelector((state: RootState) => state.global.user);
-    const theme = useSelector((state: RootState) => state.global.theme);
-    const plans = useLangTransformSelector((state: RootState) => state.api.coursePlans)?.docs || [];
-    const [showFromDatePicker, setShowFromDatePicker] = useState(false);
-    const [showToDatePicker, setShowToDatePicker] = useState(false);
-    const [isAddPlanVisible, setAddPlanVisible] = useState(false);
-
-    const [editCourse, setEditCourse] = useState<any>(() => {
-        if (edit && EditCourseResponse?.docs[0]) {
-            return EditCourseResponse?.docs[0];
-        }
-    });
-    const [selectedPlan, setSelectedPlan] = useState<string[]>(() => {
-        if (edit && editCourse && editCourse.plan && editCourse.plan.length > 0) {
-            return editCourse?.plan.map((item: any) => {
-                return item._id;
-            });
-        }
-        return [];
-    });
-    const [renderSelectedPlan, setRenderSelectedPlan] = useState<Plan[]>(() => {
-        if (edit && editCourse && editCourse.plan && editCourse.plan.length > 0) {
-            return editCourse.plan;
-        }
-        return [];
-    });
-
-    const [currentPlan, setCurrentPlan] = useState<Plan | undefined>(undefined);
-    const [isImageEdited, setIsImageEdited] = useState(false);
-    const [image, setImage] = useState<string | any>(() => {
-        if (edit && editCourse && editCourse.image) {
-            return editCourse.image;
-        }
-        return "";
-    });
-    const [showImage, setShowImage] = useState<any>("");
-    const [showConfirmation, setShowConfirmation] = useState(false);
+    const dispatch = useDispatch();
     const { post, patch, del } = useAxios();
     const { requestFn } = useApiRequest();
     const navigation = useNavigation();
     const effect = useIsomorphicLayoutEffect();
-    const hasMounted = useRef(false);
-    const { control, handleSubmit, reset, setValue, watch } = useForm<FormValues>({
+
+    const id = params.id;
+    const edit = params.edit;
+
+    const editCourseResponse = useLangTransformSelector((state: RootState) => state.api.editCourse);
+    const user = useSelector((state: RootState) => state.global.user);
+    const theme = useSelector((state: RootState) => state.global.theme);
+    const plans = useLangTransformSelector((state: RootState) => state.api.coursePlans)?.docs || [];
+
+    const [showImage, setShowImage] = useState<any>("");
+    const [imageName, setImageName] = useState<any>("");
+    const [showConfirmation, setShowConfirmation] = useState(false);
+    const [showFromDatePicker, setShowFromDatePicker] = useState(false);
+    const [showToDatePicker, setShowToDatePicker] = useState(false);
+    const [isAddPlanVisible, setAddPlanVisible] = useState(false);
+    const [editCourse, setEditCourse] = useState<any>({});
+    const [currentPlan, setCurrentPlan] = useState<Plan | undefined>(undefined);
+    const [imageBase64, setImageBase64] = useState<string | any>("");
+    const [selectedPlan, setSelectedPlan] = useState<string[]>([]);
+    const [renderSelectedPlan, setRenderSelectedPlan] = useState<Plan[]>([]);
+    const [startDate, setStartDate] = useState(
+        editCourse?.startDate ? new Date(editCourse?.startDate) : new Date()
+    );
+    const [endDate, setEndDate] = useState(
+        editCourse?.endDate ? new Date(editCourse?.endDate) : new Date()
+    );
+
+    const schema = Yup.object().shape({
+        courseName: Yup.string().required("Course name is required"),
+        description: Yup.string().required("Description is required"),
+        language: Yup.string().required("Language is required"),
+        totalSeats: Yup.string().required("Total Seats is required"),
+        scheduleFrom: Yup.string().required("Schedule from date is required"),
+        scheduleTo: Yup.string().required("Schedule to date is required"),
+        image: Yup.string().required("Image is required"),
+        // plans: Yup.array()
+        //     .min(1, "Select at least one plan")
+        //     .max(3, "Select a maximum of 3 plans")
+        //     .required("Plans are required"),
+    });
+
+    const { control, handleSubmit, reset, setValue } = useForm({
+        resolver: yupResolver(schema),
         mode: "onChange",
-        defaultValues: editCourse
-            ? {
-                  courseName: editCourse.courseName,
-                  description: editCourse.description,
-                  language: editCourse.language,
-                  totalSeats: editCourse.numberOfSeats,
-                  scheduleFrom: new Date(editCourse.startDate),
-                  scheduleTo: new Date(editCourse.endDate),
-                  currentType: editCourse.currencyType,
-                  category: editCourse.category,
-                  image: editCourse.image,
-                  plans: [],
-              }
-            : {
-                  courseName: "",
-                  description: "",
-                  language: "",
-                  totalSeats: "",
-                  scheduleFrom: new Date(),
-                  scheduleTo: new Date(),
-                  currentType: "",
-                  category: "",
-                  image: "",
-                  plans: [],
-              },
+        defaultValues: {
+            // courseName: editCourse?.courseName || "",
+            // description: editCourse?.description || "",
+            // language: editCourse?.language || "",
+            // totalSeats: editCourse?.numberOfSeats || "",
+            // scheduleFrom: startDate && startDate?.toISOString(),
+            // scheduleTo: endDate && endDate?.toISOString(),
+            // image: editCourse?.image || "",
+            // plans: [],
+
+            courseName: "",
+            description: "",
+            language: "",
+            totalSeats: "",
+            scheduleFrom: startDate && startDate?.toISOString(),
+            scheduleTo: endDate && endDate?.toISOString(),
+            image: "",
+        },
     });
 
     useEffect(() => {
@@ -140,6 +138,26 @@ const AUIAddNewCourse = () => {
             requestFn(API_URL.course, "editCourse", { id: id });
         }
     }, [id]);
+
+    useEffect(() => {
+        if (edit && editCourseResponse?.docs[0]) {
+            const editCourse = editCourseResponse?.docs[0];
+            setEditCourse(editCourse);
+
+            setValue("courseName", editCourse?.courseName);
+            setValue("description", editCourse?.description);
+            setValue("language", editCourse?.language);
+            setValue("totalSeats", editCourse?.numberOfSeats.toString());
+            setValue("scheduleFrom", editCourse?.startDate);
+            setValue("scheduleTo", editCourse?.endDate);
+            setValue("image", editCourse?.image);
+            setShowImage(editCourse?.image);
+            setSelectedPlan(editCourse?.plan.map((item: any) => item._id));
+            setRenderSelectedPlan(editCourse?.plan);
+        } else {
+            reset();
+        }
+    }, [editCourseResponse, edit, setValue, reset]);
 
     effect(() => {
         navigation.setOptions({
@@ -155,109 +173,103 @@ const AUIAddNewCourse = () => {
         });
     }, [edit, navigation]);
 
-    const languageList = [
-        { label: "English (Default)", value: "english" },
-        { label: "Spanish", value: "spanish" },
-        { label: "French", value: "french" },
-    ];
-    const categoryList = [
-        { label: "Science", value: "science" },
-        { label: "Arts", value: "arts" },
-        { label: "Commerce", value: "commerce" },
-    ];
-
     const refreshPlans = async () => {
         await requestFn(API_URL.plan, "coursePlans", { client: true });
     };
+
     useFocusEffect(
         useCallback(() => {
             refreshPlans();
         }, [isAddPlanVisible])
     );
-    const { fields, append } = useFieldArray({
-        control,
-        name: "courses",
-    });
 
-    useEffect(() => {
-        if (fields.length === 0) {
-            append({ title: "", subtitle: "" });
-        }
-    }, [fields.length, append]);
-
-    const scheduleFrom = watch("scheduleFrom");
-    const onChangeFrom = (event: any, selectedDate?: Date) => {
+    const onChangeFrom = (event: DateTimePickerEvent, selectedDate?: Date) => {
+        const currentDate = selectedDate || startDate;
         setShowFromDatePicker(Platform.OS === "ios");
-        setValue("scheduleFrom", selectedDate || new Date());
-        if (selectedDate) {
-            // Ensure scheduleTo is not earlier than scheduleFrom
-            const scheduleTo = watch("scheduleTo");
-            if (scheduleTo && selectedDate > scheduleTo) {
-                setValue("scheduleTo", selectedDate);
-            }
-        }
+        setStartDate(currentDate);
+        setValue("scheduleFrom", currentDate.toISOString());
     };
 
-    const onChangeTo = (event: any, selectedDate?: Date) => {
+    const onChangeTo = (event: DateTimePickerEvent, selectedDate?: Date) => {
+        const currentDate = selectedDate || endDate;
         setShowToDatePicker(Platform.OS === "ios");
-        if (selectedDate && selectedDate < scheduleFrom) {
-            // Optionally show an error message
-            alert("End date cannot be before the start date.");
-            setShowToDatePicker(true);
-            return;
-        }
-        setValue("scheduleTo", selectedDate || new Date());
+        setEndDate(currentDate);
+        setValue("scheduleTo", currentDate.toISOString());
+    };
+
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString);
+        const day = date.getDate().toString().padStart(2, "0");
+        const month = (date.getMonth() + 1).toString().padStart(2, "0");
+        const year = date.getFullYear().toString().slice(-2);
+
+        return `${day}/${month}/${year}`;
     };
 
     const onSave = async (data: any) => {
-        try {
-            const payload = {
-                client: user?.client,
-                courseName: data.courseName,
-                description: data.description,
-                language: data.language.value,
-                numberOfSeats: data.totalSeats,
-                startDate: data.scheduleFrom.toISOString(),
-                endDate: data.scheduleTo.toISOString(),
-                currencyType: data.currentType,
-                category: data.category.value,
-                courses: data.courses,
-                image: `data:image/png;base64,${image}`,
-                status: 1,
-                plan: selectedPlan,
-            };
-            post(API_URL.course, payload);
-            ApiSuccessToast(`${t("new_course_added_successfully")}`);
-            navigation.goBack();
-            reset();
-        } catch (error) {
-            ApiErrorToast(`${t("new_course_added_successfully")}`);
-        }
-    };
+        dispatch(setLoader(true));
 
-    const handleEdit = (data: any) => {
-        const payload: any = {
-            ...data,
-            id: editCourse?._id,
+        const payload = {
+            client: user?.client,
+            courseName: data.courseName,
+            description: data.description,
+            language: data.language,
+            numberOfSeats: data.totalSeats,
+            startDate: data.scheduleFrom,
+            endDate: data.scheduleTo,
+            image: `data:image/png;base64,${imageBase64}`,
+            status: 1,
             plan: selectedPlan,
         };
-        console.log("image", image);
-        if (isImageEdited) {
-            payload.image = `data:image/png;base64,${image}`;
-        } else {
-            delete payload.image;
-        }
-        patch(API_URL.course, payload)
+
+        post(API_URL.course, payload)
             .then((res) => {
                 ApiSuccessToast(res.message);
                 navigation.goBack();
                 reset();
+
+                dispatch(setLoader(false));
             })
-            .catch((e) => {
-                ApiErrorToast(`${t("failed_to_update_plan")}`);
-                console.log(e);
+            .catch((error) => {
+                ApiErrorToast(error.message);
+                console.log(error);
+
+                dispatch(setLoader(false));
             });
     };
+
+    const handleEdit = (data: any) => {
+        // dispatch(setLoader(true));
+
+        const payload: any = {
+            id: editCourse?._id,
+            courseName: data.courseName,
+            description: data.description,
+            language: data.language,
+            numberOfSeats: data.totalSeats,
+            startDate: data.scheduleFrom,
+            endDate: data.scheduleTo,
+            plan: selectedPlan,
+        };
+
+        if (imageBase64) {
+            payload.image = `data:image/png;base64,${imageBase64}`;
+        }
+
+        patch(API_URL.course, payload)
+            .then((res) => {
+                ApiSuccessToast(res.message);
+                router.back();
+                reset();
+                dispatch(setLoader(false));
+            })
+            .catch((error) => {
+                ApiErrorToast(error.message);
+                console.log(error);
+                dispatch(setLoader(false));
+            });
+    };
+
     const handleDelete = () => {
         if (!editCourse?._id) return;
         del(API_URL.course, {}, { id: editCourse?._id })
@@ -267,9 +279,9 @@ const AUIAddNewCourse = () => {
                 setShowConfirmation(false);
                 refreshPlans();
             })
-            .catch((e) => {
+            .catch((error) => {
                 ApiErrorToast(`${t("failed_to_delete_course")}`);
-                console.log(e);
+                console.log(error);
             });
     };
 
@@ -281,13 +293,17 @@ const AUIAddNewCourse = () => {
         });
 
         if (!result.canceled) {
-            setImage(result.assets[0].base64);
+            setImageBase64(result.assets[0].base64);
             setShowImage(result.assets[0].uri);
-            setIsImageEdited(true);
+            // @ts-ignore
+            setValue("image", result.assets[0].base64);
+            setImageName(result.assets[0].fileName);
+            // setIsImageEdited(true);
         } else {
             alert("You did not select any image.");
         }
     };
+
     const handleCheckboxChange = (planId: string, isChecked: boolean, plan: Plan) => {
         setSelectedPlan((prev) => {
             const updatedSelectedPlan = isChecked
@@ -301,18 +317,32 @@ const AUIAddNewCourse = () => {
             return updatedSelectedPlan;
         });
     };
+
     const handleEditPlan = (plan: Plan) => {
         setSelectedPlan([plan?._id]);
         setAddPlanVisible(true);
         setCurrentPlan(plan);
     };
+
     const handleAddPlanClick = () => {
         setSelectedPlan([]);
         setAddPlanVisible(true);
         setCurrentPlan(undefined);
     };
-    const truncateFileName = (fileName: string, maxLength: number) => {
-        if (fileName.length <= maxLength) return fileName;
+
+    const generateRandomId = (): string => {
+        return Math.floor(1000 + Math.random() * 9000).toString(); // Generate a random 4-digit number
+    };
+    
+    const truncateFileName = (fileName: string | null, maxLength: number): string => {
+        if (fileName === null) {
+            return `Img${generateRandomId()}`;
+        }
+    
+        if (fileName.length <= maxLength) {
+            return fileName;
+        }
+    
         return fileName.substring(0, maxLength - 3) + "...";
     };
 
@@ -326,104 +356,127 @@ const AUIAddNewCourse = () => {
             <Controller
                 control={control}
                 name="courseName"
-                render={({ field: { onChange, value } }) => (
-                    <AUIInputField
-                        label={t("enter_your_course_name")}
-                        placeholder={t("course_name")}
-                        value={value}
-                        onChangeText={onChange}
-                        style={styles.input}
-                    />
+                render={({ field: { onChange, value }, fieldState: { error } }) => (
+                    <AUIThemedView>
+                        <AUIInputField
+                            label={t("course_name")}
+                            placeholder={t("course_name")}
+                            value={value}
+                            onChangeText={onChange}
+                            style={styles.input}
+                        />
+                        <AUIThemedView>
+                            {error && (
+                                <AUIThemedText style={styles.fieldError}>
+                                    {error.message}
+                                </AUIThemedText>
+                            )}
+                        </AUIThemedView>
+                    </AUIThemedView>
                 )}
             />
+
             <Controller
                 control={control}
                 name="description"
-                render={({ field: { onChange, value } }) => (
-                    <AUIInputField
-                        label={t("enter_course_description")}
-                        placeholder={t("description")}
-                        value={value}
-                        onChangeText={onChange}
-                        style={styles.input}
-                    />
+                render={({ field: { onChange, value }, fieldState: { error } }) => (
+                    <AUIThemedView style={{ marginVertical: 20 }}>
+                        <AUIInputField
+                            label={t("course_description")}
+                            placeholder={t("course_description")}
+                            value={value}
+                            onChangeText={onChange}
+                            style={styles.input}
+                        />
+                        <AUIThemedView>
+                            {error && (
+                                <AUIThemedText style={styles.fieldError}>
+                                    {error.message}
+                                </AUIThemedText>
+                            )}
+                        </AUIThemedView>
+                    </AUIThemedView>
                 )}
             />
             <Controller
                 control={control}
                 name="totalSeats"
-                render={({ field: { onChange, value } }) => (
-                    <AUIInputField
-                        label={t("total_number_of_seats")}
-                        placeholder={t("seats")}
-                        value={value}
-                        onChangeText={onChange}
-                        keyboardType="numeric"
-                        style={styles.input}
-                    />
+                render={({ field: { onChange, value }, fieldState: { error } }) => (
+                    <AUIThemedView>
+                        <AUIInputField
+                            label={t("total_number_of_seats")}
+                            placeholder={t("seats")}
+                            value={value}
+                            onChangeText={onChange}
+                            keyboardType="numeric"
+                            style={styles.input}
+                        />
+                        <AUIThemedView>
+                            {error && (
+                                <AUIThemedText style={styles.fieldError}>
+                                    {error.message}
+                                </AUIThemedText>
+                            )}
+                        </AUIThemedView>
+                    </AUIThemedView>
                 )}
             />
+
             <Controller
-                control={control}
                 name="language"
-                defaultValue=""
-                render={({ field: { onChange, value } }) => (
-                    <DropdownComponent
-                        label={t("select_language")}
-                        list={languageList}
-                        value={value}
-                        setValue={onChange}
-                        placeholder={t("select_language")}
-                        style={styles.input}
-                    />
-                )}
-            />
-            <Controller
                 control={control}
-                name="category"
-                defaultValue=""
-                render={({ field: { onChange, value } }) => (
-                    <DropdownComponent
-                        label={t("select_category")}
-                        list={categoryList}
-                        value={value}
-                        setValue={onChange}
-                        placeholder={t("select_category")}
-                        style={styles.input}
-                    />
+                render={({ field: { onChange, value }, fieldState: { error } }) => (
+                    <AUIThemedView style={{ marginVertical: 20 }}>
+                        <DropdownComponent
+                            label={t("select_language")}
+                            list={languagesData.map((language) => ({
+                                label: language.name,
+                                value: language.name,
+                            }))}
+                            //@ts-ignore
+                            value={value}
+                            //@ts-ignore
+                            setValue={({ value }) => onChange(value)}
+                            labelField="label"
+                            valueField="value"
+                            placeholder={t("select_language")}
+                        />
+                        <AUIThemedView>
+                            {error && (
+                                <AUIThemedText style={styles.fieldError}>
+                                    {error.message}
+                                </AUIThemedText>
+                            )}
+                        </AUIThemedView>
+                    </AUIThemedView>
                 )}
             />
-            <Controller
-                control={control}
-                name="currentType"
-                defaultValue=""
-                render={({ field: { onChange, value } }) => (
-                    <AUIInputField
-                        label={t("enter_currency_type")}
-                        placeholder={t("currency_type")}
-                        value={value}
-                        onChangeText={onChange}
-                        style={styles.input}
-                    />
-                )}
-            />
+
             <AUIThemedView style={styles.dateContainer}>
                 <Controller
                     control={control}
                     name="scheduleFrom"
-                    defaultValue={new Date()}
-                    render={({ field: { onChange, value } }) => (
-                        <>
+                    render={({ field: { onChange, value }, fieldState: { error } }) => (
+                        <Pressable
+                            onPress={() => setShowFromDatePicker(true)}
+                            style={{
+                                flex: 1,
+                                flexDirection: "row",
+                                alignItems: "center",
+                            }}
+                        >
                             <AUIInputField
                                 label={t("from")}
-                                placeholder="DD/MM/YY"
-                                value={value.toLocaleDateString()}
-                                onFocus={() => setShowFromDatePicker(true)}
+                                // placeholder="DD/MM/YY"
+                                value={formatDate(value)}
+                                // onFocus={() => setShowFromDatePicker(true)}
                                 style={styles.dateInput}
+                                editable={false}
+                                onChangeText={onChange}
                             />
                             {showFromDatePicker && (
                                 <DateTimePicker
-                                    value={value}
+                                    value={startDate}
                                     mode="date"
                                     display="default"
                                     onChange={(e, date) => {
@@ -432,25 +485,24 @@ const AUIAddNewCourse = () => {
                                     }}
                                 />
                             )}
-                        </>
+                        </Pressable>
                     )}
                 />
                 <Controller
                     control={control}
                     name="scheduleTo"
-                    defaultValue={new Date()}
                     render={({ field: { onChange, value } }) => (
                         <>
                             <AUIInputField
                                 label={t("to")}
                                 placeholder="DD/MM/YY"
-                                value={value.toLocaleDateString()}
+                                value={formatDate(value)}
                                 onFocus={() => setShowToDatePicker(true)}
                                 style={styles.dateInput}
                             />
                             {showToDatePicker && (
                                 <DateTimePicker
-                                    value={value}
+                                    value={endDate}
                                     mode="date"
                                     display="default"
                                     onChange={(e, date) => {
@@ -463,31 +515,70 @@ const AUIAddNewCourse = () => {
                     )}
                 />
             </AUIThemedView>
-            <AUIThemedText style={styles.selectBannerLabel}>{t("select_banner")}</AUIThemedText>
-            <AUIThemedView style={styles.imagePickerContainer}>
-                <TouchableOpacity onPress={pickImage} style={styles.uploadButton}>
-                    <MaterialIcons name="cloud-upload" size={24} color="#5BD894" />
-                    <AUIThemedText style={styles.uploadButtonText}>
-                        {t("upload_file")}
-                    </AUIThemedText>
-                </TouchableOpacity>
-                <AUIThemedText style={styles.fileName}>
-                    {image
-                        ? truncateFileName(image.split("/").pop()!, 18)
-                        : ` ${t("no_file_chosen")}`}
-                </AUIThemedText>
-            </AUIThemedView>
-            {showImage ? (
-                <Image source={{ uri: showImage }} style={styles.image} />
-            ) : (
-                image && <Image source={{ uri: image }} style={styles.image} />
-            )}
+
+            <Controller
+                name="image"
+                control={control}
+                render={({ field: { onChange, value }, fieldState: { error } }) => (
+                    <AUIThemedView>
+                        <AUIThemedText style={styles.selectBannerLabel}>
+                            {t("select_banner")}
+                        </AUIThemedText>
+                        <AUIThemedView>
+                            {error && (
+                                <AUIThemedText
+                                    style={{
+                                        color: "red",
+                                        fontSize: 12,
+                                    }}
+                                    type="subtitle"
+                                >
+                                    {error.message}
+                                </AUIThemedText>
+                            )}
+                        </AUIThemedView>
+
+                        <AUIThemedView style={styles.imagePickerContainer}>
+                            <TouchableOpacity onPress={pickImage} style={styles.uploadButton}>
+                                <MaterialIcons name="cloud-upload" size={24} color="#5BD894" />
+                                <AUIThemedText style={styles.uploadButtonText}>
+                                    {t("upload_file")}
+                                </AUIThemedText>
+                            </TouchableOpacity>
+                            <AUIThemedText style={styles.fileName}>
+                                {imageBase64
+                                    ? truncateFileName(imageName, 20)
+                                    : ` ${t("no_file_chosen")}`}
+                            </AUIThemedText>
+                        </AUIThemedView>
+
+                        {showImage && (
+                            <ImageViewer selectedImage={showImage} style={styles.image} />
+                        )}
+                    </AUIThemedView>
+                )}
+            />
 
             <AUIThemedView>
                 <AUIThemedView style={styles.planContainer}>
-                    <AUIThemedText style={styles.createYourPlanTitle}>
-                        {t("select_plan")}
-                    </AUIThemedText>
+                    <AUIThemedView style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+                        <AUIThemedText style={styles.createYourPlanTitle}>
+                            {t("select_plan")}
+                        </AUIThemedText>
+                        <CustomTooltip
+                            text={
+                                "You can select maximum 3 plans for a course. However, you can add as much as plans as you want."
+                            }
+                            tooltipStyle={{ padding: 15 }}
+                        >
+                            <Ionicons
+                                name="information-circle-outline"
+                                size={20}
+                                color={APP_THEME.light.primary.first}
+                            />
+                        </CustomTooltip>
+                    </AUIThemedView>
+
                     <AUIAccordion
                         style={styles.AUIAccordion}
                         innerStyle={styles.AUIAccordionInnerStyle}
@@ -504,12 +595,18 @@ const AUIAddNewCourse = () => {
                                 <AUIThemedView style={styles.CheckboxContainer}>
                                     <Controller
                                         control={control}
-                                        name={`plans.${plan?._id}`}
+                                        // @ts-ignore
+                                        name={`plans.${index}`}
+                                        // @ts-ignore
                                         defaultValue={selectedPlan.includes(plan?._id)}
-                                        render={({ field: { onChange, value } }) => (
+                                        render={({
+                                            field: { onChange, value },
+                                            fieldState: { error },
+                                        }) => (
                                             <>
                                                 <Checkbox
                                                     style={styles.checkbox}
+                                                    // @ts-ignore
                                                     value={value}
                                                     onValueChange={(checked) => {
                                                         onChange(checked);
@@ -519,11 +616,19 @@ const AUIAddNewCourse = () => {
                                                             plan
                                                         );
                                                     }}
+                                                    disabled={!value && selectedPlan.length > 2}
                                                     color={value ? "#5BD894" : undefined}
                                                 />
                                                 <AUIThemedText style={styles.facilitiesLabel}>
                                                     {plan?.name}
                                                 </AUIThemedText>
+                                                <AUIThemedView>
+                                                    {error && (
+                                                        <AUIThemedText style={styles.fieldError}>
+                                                            {error.message}
+                                                        </AUIThemedText>
+                                                    )}
+                                                </AUIThemedView>
                                             </>
                                         )}
                                     />
@@ -537,7 +642,7 @@ const AUIAddNewCourse = () => {
                                 key={plan?._id}
                                 style={styles.AUIAccordion}
                                 innerStyle={styles.AUIAccordionInnerStyle}
-                                title={`Plan ${plan.name}`}
+                                title={`Plan ${index + 1} :  ${plan.name}`}
                                 showEditIcon={true}
                                 onEditClick={() => handleEditPlan(plan)}
                             >
@@ -579,17 +684,18 @@ const AUIAddNewCourse = () => {
                     {t("create_your_plan_for_fees")}
                 </AUIThemedText>
             </AUIThemedView>
+
             <AUIThemedView style={styles.buttonContainer}>
                 <AUIButton
                     title={t("add_plan")}
                     selected
                     onPress={handleAddPlanClick}
                     style={{ width: "100%" }}
-                    // disabled={plans.length > 2}
                 />
             </AUIThemedView>
+
             <AUIThemedView style={styles.buttonContainer}>
-                {editCourse ? (
+                {edit ? (
                     <AUIThemedView style={styles.buttonMainContainer}>
                         <AUIThemedView style={styles.buttonContainer}>
                             <AUIButton
@@ -604,13 +710,18 @@ const AUIAddNewCourse = () => {
                                 selected
                                 style={{ width: "48%" }}
                                 onPress={handleSubmit(handleEdit)}
+                                disabled={selectedPlan.length < 1 || selectedPlan.length > 3}
                             />
                         </AUIThemedView>
                         <AUIButton
                             title={t("delete")}
                             selected
-                            background={TEXT_THEME.light.danger}
-                            style={{ width: "100%" }}
+                            background={"#ff7e57"}
+                            style={{
+                                width: "100%",
+                                borderColor: TEXT_THEME.light.danger,
+                                borderWidth: 1,
+                            }}
                             onPress={() => {
                                 setShowConfirmation(true);
                             }}
@@ -630,10 +741,12 @@ const AUIAddNewCourse = () => {
                             selected
                             style={{ width: "48%" }}
                             onPress={handleSubmit(onSave)}
+                            disabled={selectedPlan.length < 1 || selectedPlan.length > 3}
                         />
                     </AUIThemedView>
                 )}
             </AUIThemedView>
+
             <AUIModal
                 visible={showConfirmation}
                 onClose={() => setShowConfirmation(false)}
@@ -649,15 +762,25 @@ const AUIAddNewCourse = () => {
                     <AUIButton
                         title={t("delete")}
                         selected
-                        background={TEXT_THEME.light.danger}
-                        style={{ width: "48%" }}
+                        background={"#ff7e57"}
+                        style={{
+                            width: "48%",
+                            borderColor: TEXT_THEME.light.danger,
+                            borderWidth: 1,
+                        }}
                         onPress={handleDelete}
                     />
                 </AUIThemedView>
             </AUIModal>
+
             <AddPlan
                 visible={isAddPlanVisible}
-                onClose={() => setAddPlanVisible(false)}
+                onClose={() => {
+                    setAddPlanVisible(false);
+                    setCurrentPlan(undefined);
+                    setSelectedPlan([]);
+                    setRenderSelectedPlan([]);
+                }}
                 plan={currentPlan}
                 isEditMode={currentPlan !== undefined}
                 refreshPlans={refreshPlans}
@@ -668,6 +791,11 @@ const AUIAddNewCourse = () => {
 export default AUIAddNewCourse;
 
 const styles = StyleSheet.create({
+    fieldError: {
+        position: "absolute",
+        color: "red",
+        fontSize: 13,
+    },
     container: {
         padding: 16,
     },
@@ -828,12 +956,25 @@ const styles = StyleSheet.create({
     },
     fileName: {},
     image: {
-        width: 60,
-        height: 60,
+        width: 250,
+        height: 150,
         marginTop: 10,
+        borderRadius: 0,
     },
     screenTitle: {
         fontSize: 18,
         fontWeight: "bold",
+    },
+    pressableContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        borderBottomWidth: 1,
+        borderBottomColor: "#ccc",
+        paddingBottom: 5,
+        marginBottom: 5,
+    },
+
+    dateWrapper: {
+        marginBottom: 20, // Adjust spacing between date pickers
     },
 });
