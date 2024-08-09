@@ -224,10 +224,13 @@ export default function PurchaseScreen() {
                 ))}
             </AUIThemedView>
             {paymentDetialsForThisCourse && paymentDetialsForThisCourse?.isPurchased === "Yes" ? (
-                <AUIThemedText> You Already Purchased This Course</AUIThemedText>
+                <AUIThemedText style={styles.messageText}>
+                    {" "}
+                    You Already Purchased This Course
+                </AUIThemedText>
             ) : paymentDetialsForThisCourse &&
               paymentDetialsForThisCourse?.isPurchased === "MayBe" ? (
-                <AUIThemedText>
+                <AUIThemedText style={styles.messageText}>
                     {" "}
                     Your Transaction Is Pending !! Please Contact Admin For Mor details
                 </AUIThemedText>
@@ -235,7 +238,10 @@ export default function PurchaseScreen() {
                 <TouchableOpacity
                     style={[
                         styles.confirmButton,
-                        { backgroundColor: APP_THEME[theme].primary.first, opacity: isLoading ? 0.5 : 1, },
+                        {
+                            backgroundColor: APP_THEME[theme].primary.first,
+                            opacity: isLoading ? 0.5 : 1,
+                        },
                     ]}
                     onPress={() => handlePayment()}
                     disabled={isLoading}
@@ -331,7 +337,13 @@ const styles = StyleSheet.create({
     blinkingText: {
         fontSize: 9,
         textAlign: "right",
-        width:100,
-        color: "red"
+        width: 100,
+        color: "red",
+    },
+    messageText: {
+        fontSize: 12,
+        textAlign: "center",
+        width: 100,
+        color: "orange",
     },
 });
