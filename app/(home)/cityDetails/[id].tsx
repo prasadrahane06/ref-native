@@ -300,7 +300,7 @@ export default function CityDetails() {
                                 <AUIThemedView style={styles.iconTextContainer}>
                                     <AUIThemedText style={styles.iconText}>{t("language")}</AUIThemedText>
                                     <AUIThemedText style={styles.iconSubText}>
-                                        {country?.language?.name}
+                                        {country?.nativeLanguage}
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </View>

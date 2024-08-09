@@ -3,7 +3,7 @@ import { RootState } from "@/redux/store";
 import axios from "axios";
 import { useSelector } from "react-redux";
 
-export const baseURL = "https://vi6pxwh9w7.execute-api.ap-south-1.amazonaws.com/dev/";
+export const baseURL = "https://zz22vf7g-4000.inc1.devtunnels.ms/dev/";
 
 const useAxios = () => {
     const token = useSelector((state: RootState) => state.global.token);

@@ -330,7 +330,7 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                         <AUIAccordion
                             style={styles.AUIAccordion}
                             innerStyle={styles.AUIAccordionInnerStyle}
-                            title={t("enter_plan_name")}
+                            title={"select facilities"}
                         >
                             {facilities?.map((facility: Facility) => (
                                 <AUIThemedView key={facility?._id} style={styles.facilitiesRow}>

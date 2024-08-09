@@ -321,6 +321,7 @@ export const en = {
     your_cart_is_empty: "Your Cart Is Empty",
     your_favourite_is_empty: "Your Favourite Is Empty",
     yourSelectedPlanIs: "Your selected plan is",
+    zsample:""
 };
 
 export const ar = {

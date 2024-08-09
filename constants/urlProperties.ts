@@ -29,4 +29,5 @@ export const API_URL = {
     notification: "notification",
     changeContact: "auth/changeContact",
     verifyChangeDetails: "auth/verifyChangeDetails",
+    paymentDetails : "/payment/getPaymentDetails"
 };

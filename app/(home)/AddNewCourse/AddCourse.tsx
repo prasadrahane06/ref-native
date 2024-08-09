@@ -537,7 +537,7 @@ const AUIAddNewCourse = () => {
                                 key={plan?._id}
                                 style={styles.AUIAccordion}
                                 innerStyle={styles.AUIAccordionInnerStyle}
-                                title={`Plan ${plan.name}`}
+                                title={`Plan ${index + 1} :  ${plan.name}`}
                                 showEditIcon={true}
                                 onEditClick={() => handleEditPlan(plan)}
                             >
