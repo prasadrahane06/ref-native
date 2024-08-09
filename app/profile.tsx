@@ -614,6 +614,7 @@ const Profile: React.FC = () => {
                                     labelField="label"
                                     valueField="value"
                                     listWithIcon
+                                    placeholder={t("select_your_language")}
                                     position="top"
                                 />
                             </AUIThemedView>
@@ -643,6 +644,7 @@ const Profile: React.FC = () => {
                                     }}
                                     labelField="label"
                                     valueField="value"
+                                    placeholder={t("select_your_country")}
                                     listWithIcon
                                     position="top"
                                 />
@@ -671,6 +673,7 @@ const Profile: React.FC = () => {
                                     }}
                                     labelField="label"
                                     valueField="value"
+                                    placeholder={t("select_your_state")}
                                     listWithIcon
                                     position="top"
                                 />
@@ -697,6 +700,7 @@ const Profile: React.FC = () => {
                                     }}
                                     labelField="label"
                                     valueField="value"
+                                    placeholder={t("select_your_city")}
                                     listWithIcon
                                     position="top"
                                 />

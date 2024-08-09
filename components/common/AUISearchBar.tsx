@@ -1,4 +1,4 @@
-import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
+import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
 import { Entypo, Feather } from "@expo/vector-icons";
 import React from "react";
 import {
@@ -10,6 +10,8 @@ import {
     TouchableOpacity,
     Text,
     ViewStyle,
+    KeyboardAvoidingView,
+    Platform,
 } from "react-native";
 import { AUIThemedText } from "./AUIThemedText";
 import { AUIThemedView } from "./AUIThemedView";
@@ -73,7 +75,14 @@ const AUISearchBar: React.FC<SearchBarProps> = ({
         </TouchableOpacity>
     );
 
+    const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
+
     return (
+        // <KeyboardAvoidingView
+        //     // style={{ flex: 1, backgroundColor: BACKGROUND_THEME[theme].background }}
+        //     behavior="padding"
+        //     keyboardVerticalOffset={keyboardVerticalOffset}
+        // >
         <AUIThemedView style={{ justifyContent: "center", alignItems: "center" }}>
             <AUIThemedView
                 style={[

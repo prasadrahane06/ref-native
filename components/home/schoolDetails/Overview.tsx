@@ -61,11 +61,9 @@ interface OverviewTabProps {
     clientId: string;
 }
 
-
-
 function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: EnquireNowModalProps) {
-     const { t } = useTranslation();
-    
+    const { t } = useTranslation();
+
     const [showStartDatePicker, setShowStartDatePicker] = useState(false);
     const [showEndDatePicker, setShowEndDatePicker] = useState(false);
     const { post } = useAxios();
@@ -81,14 +79,15 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
     const theme = useSelector((state: RootState) => state.global.theme);
 
     const schema = Yup.object().shape({
-   
         name: Yup.string().required(`${t("name_is_required")}`),
         nationality: Yup.string().required(`${t("nationality_is_required")}`),
         phoneCode: Yup.string().required(`${t("phone_code_is_required")}`),
         phoneNumber: Yup.string()
             .matches(/^[0-9]{10}$/, `${t("enter_valid_mobile_number")}`)
             .required("Enter valid mobile number"),
-        email: Yup.string().email(GLOBAL_TEXT.validate_email).required(`${t("please_provide_valid_email")}`),
+        email: Yup.string()
+            .email(GLOBAL_TEXT.validate_email)
+            .required(`${t("please_provide_valid_email")}`),
         language: Yup.string().required(`${t("language_is_required")}`),
         startDate: Yup.string().required(`${t("start_date_is_required")}`),
         endDate: Yup.string().required(`${t("end_date_is_required")}`),
@@ -351,7 +350,7 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
                                         <AUIInputField
                                             value={value}
                                             onChangeText={onChange}
-                                            placeholder= {t("enter_your_email")}
+                                            placeholder={t("enter_your_email")}
                                         />
                                         <AUIThemedView>
                                             {error && (
@@ -394,11 +393,11 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
                             <AUIThemedView style={{ paddingBottom: 30 }}>
                                 <AUIThemedText style={inputFieldStyle.label}>
                                     {/* {ENQUIRY_FIELDS.date.label} */}
-                                  {t("when_you_want_to_start_course")}
+                                    {t("when_you_want_to_start_course")}
                                 </AUIThemedText>
                                 <AUIThemedView style={enquiryFormStyles.dateContainer}>
                                     <AUIThemedText style={inputFieldStyle.label}>
-                                    {t("from")}
+                                        {t("from")}
                                     </AUIThemedText>
                                     <Controller
                                         name="startDate"
@@ -461,7 +460,9 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
                                             </AUIThemedView>
                                         )}
                                     />
-                                    <AUIThemedText style={inputFieldStyle.label}>{t("to")}</AUIThemedText>
+                                    <AUIThemedText style={inputFieldStyle.label}>
+                                        {t("to")}
+                                    </AUIThemedText>
                                     <Controller
                                         name="endDate"
                                         control={control}
@@ -566,7 +567,7 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
                                             numberOfLines={4}
                                             value={value}
                                             onChangeText={onChange}
-                                            placeholder= {t("enter_your_message")}
+                                            placeholder={t("enter_your_message")}
                                         />
                                         <AUIThemedView>
                                             {error && (
@@ -616,16 +617,18 @@ export default function OverviewTab({ schoolOverView, courseId, clientId }: Over
     const reviewOfTheSchool = useLangTransformSelector(
         (state: RootState) => state.api.ratingsOfTheSchool || {}
     );
+    console.log("reviewOfTheSchool", JSON.stringify(schoolOverView));
+
     const handlePhonePress = (number: string) => {
-        Linking.openURL("tel:${number}");
+        Linking.openURL(`tel:${number}`);
     };
 
     const handleEmailPress = (email: string) => {
-        Linking.openURL("mailto:${email}");
+        Linking.openURL(`mailto:${email}`);
     };
 
     const handleWebPress = (website: string) => {
-        Linking.openURL("https://${website}");
+        Linking.openURL(`https://${website}`);
     };
 
     useEffect(() => {

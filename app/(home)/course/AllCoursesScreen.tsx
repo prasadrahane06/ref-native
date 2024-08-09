@@ -9,7 +9,7 @@ import { RootState } from "@/redux/store";
 // import { t } from "i18next";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
+import { Dimensions, FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 
@@ -65,7 +65,9 @@ const AllCoursesScreen = () => {
                     onPress={() => setPage(page + 1)}
                 >
                     <AUIThemedText>
-                        {page === courseResponse?.totalPages ? `${t("you_are_caught_up")}` :`${t("load_more")}`}
+                        {page === courseResponse?.totalPages
+                            ? `${t("you_are_caught_up")}`
+                            : `${t("load_more")}`}
                     </AUIThemedText>
                 </TouchableOpacity>
             </ScrollView>
@@ -74,6 +76,8 @@ const AllCoursesScreen = () => {
 };
 
 export default AllCoursesScreen;
+
+const width = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
     container: {
@@ -87,12 +91,14 @@ const styles = StyleSheet.create({
         backgroundColor: "transparent",
     },
     column: {
-        justifyContent: "space-between",
+        // justifyContent: "space-between",
         // marginBottom: 10,
+        gap: 10,
     },
     course: {
         marginVertical: 5,
-        width: "48%",
+        // width: "48%",
+        width: width / 2 - 20,
     },
     loadMoreButton: {
         padding: 10,

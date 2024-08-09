@@ -48,7 +48,7 @@ interface FormValues {
     totalSeats: any;
     scheduleFrom: Date;
     scheduleTo: Date;
-    currentType: any;
+    // currentType: any;
     category: any;
     image: any;
     plans: any;
@@ -116,7 +116,7 @@ const AUIAddNewCourse = () => {
                   totalSeats: editCourse.numberOfSeats,
                   scheduleFrom: new Date(editCourse.startDate),
                   scheduleTo: new Date(editCourse.endDate),
-                  currentType: editCourse.currencyType,
+                  //   currentType: editCourse.currencyType,
                   category: editCourse.category,
                   image: editCourse.image,
                   plans: [],
@@ -128,7 +128,7 @@ const AUIAddNewCourse = () => {
                   totalSeats: "",
                   scheduleFrom: new Date(),
                   scheduleTo: new Date(),
-                  currentType: "",
+                  //   currentType: "",
                   category: "",
                   image: "",
                   plans: [],
@@ -219,7 +219,7 @@ const AUIAddNewCourse = () => {
                 numberOfSeats: data.totalSeats,
                 startDate: data.scheduleFrom.toISOString(),
                 endDate: data.scheduleTo.toISOString(),
-                currencyType: data.currentType,
+                // currencyType: data.currentType,
                 category: data.category.value,
                 courses: data.courses,
                 image: `data:image/png;base64,${image}`,
@@ -393,7 +393,7 @@ const AUIAddNewCourse = () => {
                     />
                 )}
             />
-            <Controller
+            {/* <Controller
                 control={control}
                 name="currentType"
                 defaultValue=""
@@ -406,7 +406,7 @@ const AUIAddNewCourse = () => {
                         style={styles.input}
                     />
                 )}
-            />
+            /> */}
             <AUIThemedView style={styles.dateContainer}>
                 <Controller
                     control={control}

@@ -92,7 +92,11 @@ function SearchModal({ isVisible, onClose }: any) {
             animationType="slide"
             transparent={true}
             visible={isVisible}
-            onRequestClose={onClose}
+            onRequestClose={() => {
+                setSearchPhrase("");
+                setClicked(false);
+                onClose();
+            }}
         >
             <AUIThemedView
                 style={

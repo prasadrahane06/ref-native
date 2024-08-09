@@ -1,23 +1,64 @@
 import useAxios from "@/app/services/axiosClient";
 import AUIAccordion from "@/components/common/AUIAccordion";
 import AUIButton from "@/components/common/AUIButton";
+import DropdownComponent from "@/components/common/AUIDropdown";
 import AUIInputField from "@/components/common/AUIInputField";
 import AUIModal from "@/components/common/AUIModal";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
-import { TEXT_THEME } from "@/constants/Colors";
+import CustomTooltip from "@/components/common/AUIToolTip";
+import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
+import { inputFieldStyle } from "@/constants/Styles";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { RootState } from "@/redux/store";
+import { Ionicons } from "@expo/vector-icons";
 import Checkbox from "expo-checkbox";
 // import { t } from "i18next";
 import React, { useEffect, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { ScrollView, StyleSheet } from "react-native";
-import { useSelector } from "react-redux";
+import { Button, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { setLoader } from "@/redux/globalSlice";
+
+const durationUnits = [
+    {
+        unit: "Hours",
+    },
+    {
+        unit: "Days",
+    },
+    {
+        unit: "Weeks",
+    },
+    {
+        unit: "Months",
+    },
+    {
+        unit: "Years",
+    },
+];
+
+type Course = {
+    title: string;
+    subtitle: string;
+};
+
+type FormValues = {
+    planName: string;
+    durationInNumber: string;
+    durationInUnit: string;
+    schedule: string;
+    price: string;
+    bookYourSeat: string;
+    courses: Course[];
+    [key: `facility_${string}`]: boolean;
+};
 
 interface AddPlanProps {
     visible: boolean;
@@ -33,7 +74,7 @@ interface Plan {
     price: any | { en: string; ar?: string };
     bookYourSeat: any | { en: string; ar?: string };
     rating: any | { en: string; ar?: string };
-    lessonsHour: any | { en: string; ar?: string };
+    // lessonsHour: any | { en: string; ar?: string };
     schedule: any | { en: string; ar?: string };
     facilities: string[];
     courseDetails: any;
@@ -48,16 +89,60 @@ interface Facility {
 }
 const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans }) => {
     const { t } = useTranslation();
-    const user = useSelector((state: RootState) => state.global.user);
-    const { control, handleSubmit, reset, setValue, getValues } = useForm();
     const { post, patch, del } = useAxios();
-    const [selectedFacilities, setSelectedFacilities] = useState<string[]>([]);
     const { requestFn } = useApiRequest();
-    const facility = useLangTransformSelector((state: RootState) => state.api.myFacilitys || {});
+    const dispatch = useDispatch();
+
+    const [selectedFacilities, setSelectedFacilities] = useState<string[]>([]);
     const [facilities, setFacilities] = useState<Facility[]>([]);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [initialValues, setInitialValues] = useState<any>({});
     const [newFacility, setNewFacility] = useState<string[]>([]);
+
+    console.log("plan", plan);
+
+    // const facilitySchema = facilities.reduce((acc: any, _id: any) => {
+    //     acc[`facility_${_id}`] = Yup.boolean().optional();
+    //     return acc;
+    // }, {});
+
+    const schema = Yup.object().shape({
+        planName: Yup.string().required(`${t("name_is_required")}`),
+        durationInNumber: Yup.string().required(`${t("duration_is_required")}`),
+        durationInUnit: Yup.string().required(`${t("duration_is_required")}`),
+        schedule: Yup.string().required(`${t("schedule_is_required")}`),
+        price: Yup.string().required(`${t("price_is_required")}`),
+        bookYourSeat: Yup.string().required(`${t("price_is_required")}`),
+        // courses: Yup.array()
+        //     .of(
+        //         Yup.object().shape({
+        //             title: Yup.string().required(),
+        //             subtitle: Yup.string().required(),
+        //         })
+        //     )
+        //     .optional(),
+        // ...facilitySchema,
+        // [`facility_${}`]: Yup.boolean().optional(),
+    });
+
+    const { control, handleSubmit, reset, setValue, getValues } = useForm<FormValues>({
+        // @ts-ignore
+        resolver: yupResolver(schema),
+        mode: "onChange",
+        defaultValues: {
+            planName: "",
+            durationInNumber: "",
+            durationInUnit: "",
+            schedule: "",
+            price: "",
+            bookYourSeat: "",
+            courses: [{ title: "", subtitle: "" }],
+        },
+    });
+
+    const theme = useSelector((state: RootState) => state.global.theme);
+    const user = useSelector((state: RootState) => state.global.user);
+    const facility = useLangTransformSelector((state: RootState) => state.api.myFacilitys || {});
 
     useEffect(() => {
         requestFn(API_URL.facility, "myFacilitys", { client: true });
@@ -82,25 +167,33 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
 
     useEffect(() => {
         if (plan) {
-            const initialPlanValues = {
-                name: plan.name,
-                duration: plan.duration,
-                price: plan.price,
-                bookYourSeat: plan.bookYourSeat,
-                lessonsHour: plan.lessonsHour,
-                schedule: plan.schedule,
-                facilities: plan.facilities,
-                courses: plan.courseDetails,
-            };
-            setInitialValues(initialPlanValues);
-            setValue("name", plan.name);
-            setValue("duration", plan.duration);
-            setValue("price", plan.price);
-            setValue("bookYourSeat", plan.bookYourSeat);
-            setValue("lessonsHour", plan.lessonsHour);
-            setValue("schedule", plan.schedule);
+            // const durationInNumber = plan?.duration.split(" ")[0];
+            // const durationInUnit = plan?.duration.split(" ")[1];
+
+            const durationArray = plan?.duration.split(" ");
+
+            // const initialPlanValues = {
+            //     name: plan.name,
+            //     duration: plan.duration,
+            //     price: plan.price,
+            //     bookYourSeat: plan.bookYourSeat,
+            //     // lessonsHour: plan.lessonsHour,
+            //     schedule: plan.schedule,
+            //     facilities: plan.facilities,
+            //     courses: plan.courseDetails,
+            // };
+
+            // setInitialValues(initialPlanValues);
+
             setSelectedFacilities(plan.facilities);
-            setValue("courses", plan.courseDetails);
+
+            setValue("planName", plan?.name);
+            setValue("durationInNumber", durationArray[0]);
+            setValue("durationInUnit", durationArray[1]);
+            setValue("price", plan?.price.toString());
+            setValue("bookYourSeat", plan?.bookYourSeat.toString());
+            setValue("schedule", plan?.schedule);
+            setValue("courses", plan?.courseDetails);
         } else {
             reset();
         }
@@ -111,52 +204,81 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
             isChecked ? [...prev, facilityId] : prev.filter((item) => item !== facilityId)
         );
     };
-
     const onSave = (data: any) => {
+        dispatch(setLoader(true));
+
+        const duration = `${data.durationInNumber} ${data.durationInUnit}`.trim();
+
         const payload = {
             client: user?.client,
-            lessonsHour: data.lessonsHour,
-            duration: data.duration,
-            bookYourSeat: data.bookingAmount,
+            name: data.planName,
+            duration: duration,
             schedule: data.schedule,
             price: data.price,
-            name: data.name,
-            facilities: selectedFacilities,
+            bookYourSeat: data.bookYourSeat,
             courseDetails: data.courses,
+            facilities: selectedFacilities,
+            lessonsHour: duration, //  change in backend
         };
+
+        console.log("payload", payload);
+
         post(API_URL.plan, payload)
             .then((res) => {
-                ApiSuccessToast(`${t("new_plan_added_successfully")}`);
+                dispatch(setLoader(true));
+
+                ApiSuccessToast(res.message);
                 reset();
                 onClose();
             })
-            .catch((e) => {
-                console.log(e);
+            .catch((error) => {
+                dispatch(setLoader(true));
+                ApiErrorToast(error.message);
+                console.log(error);
             });
     };
 
     const handleEdit = (data: any) => {
-        const values = getValues();
-        const payload: any = { id: plan?._id };
-        Object.keys(values).forEach((key) => {
-            if (values[key] !== initialValues[key]) {
-                payload[key] = values[key];
-            }
-        });
-        if (selectedFacilities !== initialValues.facilities) {
-            payload.facilities = selectedFacilities;
-        }
-        patch(API_URL.plan, payload)
-            .then((res) => {
-                ApiSuccessToast(`${t("plan_updated_successfully")}`);
-                onClose();
-                refreshPlans();
-                reset();
-            })
-            .catch((e) => {
-                ApiErrorToast(`${t("failed_to_update_plan")}`);
-                console.log(e);
-            });
+        console.log("handleEdit data", data);
+
+        // const payload: any = { id: plan?._id };
+
+        // Object.keys(values).forEach((key) => {
+        //     if (values[key] !== initialValues[key]) {
+        //         payload[key] = values[key];
+        //     }
+        // });
+
+        // if (selectedFacilities !== initialValues.facilities) {
+        //     payload.facilities = selectedFacilities;
+        // }
+
+        const duration = `${data.durationInNumber} ${data.durationInUnit}`.trim();
+
+        const payload = {
+            name: data.planName,
+            duration: duration,
+            schedule: data.schedule,
+            price: data.price,
+            bookYourSeat: data.bookYourSeat,
+            courseDetails: data.courses,
+            facilities: selectedFacilities,
+            lessonsHour: duration, //  change in backend
+        };
+
+        console.log("handleEdit payload", payload);
+
+        // patch(API_URL.plan, payload)
+        //     .then((res) => {
+        //         ApiSuccessToast(`${t("plan_updated_successfully")}`);
+        //         onClose();
+        //         refreshPlans();
+        //         reset();
+        //     })
+        //     .catch((e) => {
+        //         ApiErrorToast(`${t("failed_to_update_plan")}`);
+        //         console.log(e);
+        //     });
     };
 
     const handleDelete = () => {
@@ -174,8 +296,8 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
             });
     };
 
-    const { fields, append } = useFieldArray({
-        control,
+    const { fields, append, remove } = useFieldArray({
+        control: control,
         name: "courses",
     });
 
@@ -200,19 +322,26 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                 <ScrollView>
                     <Controller
                         control={control}
-                        name="name"
-                        defaultValue=""
-                        render={({ field: { onChange, value } }) => (
-                            <AUIInputField
-                                label={t("enter_plan_name")}
-                                placeholder={t("name")}
-                                value={value}
-                                onChangeText={onChange}
-                                style={styles.input}
-                            />
+                        name="planName"
+                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <AUIThemedView>
+                                <AUIInputField
+                                    label={t("plan_name")}
+                                    placeholder={t("name")}
+                                    value={value}
+                                    onChangeText={onChange}
+                                />
+                                <AUIThemedView>
+                                    {error && (
+                                        <AUIThemedText style={styles.fieldError}>
+                                            {error.message}
+                                        </AUIThemedText>
+                                    )}
+                                </AUIThemedView>
+                            </AUIThemedView>
                         )}
                     />
-                    <Controller
+                    {/* <Controller
                         control={control}
                         name="lessonsHour"
                         defaultValue=""
@@ -225,112 +354,325 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                                 style={styles.input}
                             />
                         )}
-                    />
-                    <Controller
-                        control={control}
-                        name="duration"
-                        defaultValue=""
-                        render={({ field: { onChange, value } }) => (
-                            <AUIInputField
-                                label={t("enter_total_duration")}
-                                placeholder={t("duration")}
-                                value={value}
-                                onChangeText={onChange}
-                                style={styles.input}
+                    /> */}
+
+                    {/* <Controller
+                            control={control}
+                            name="duration"
+                            defaultValue=""
+                            render={({ field: { onChange, value } }) => (
+                                <AUIInputField
+                                    label={t("enter_total_duration")}
+                                    placeholder={t("duration")}
+                                    value={value}
+                                    onChangeText={onChange}
+                                    style={styles.input}
+                                />
+                            )}
+                        /> */}
+
+                    <AUIThemedView style={{ marginVertical: 25 }}>
+                        <AUIThemedView
+                            style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
+                        >
+                            <AUIThemedText style={inputFieldStyle.label}>
+                                {t("enter_total_duration")}
+                            </AUIThemedText>
+
+                            <CustomTooltip
+                                text="Total Duration is duration of your whole course for that plan"
+                                tooltipStyle={{ padding: 15 }}
+                            >
+                                <Ionicons
+                                    name="information-circle-outline"
+                                    size={20}
+                                    color={APP_THEME.light.primary.first}
+                                />
+                            </CustomTooltip>
+                        </AUIThemedView>
+
+                        <AUIThemedView style={styles.durationContainer}>
+                            <Controller
+                                name="durationInNumber"
+                                control={control}
+                                render={({ field: { value, onChange }, fieldState: { error } }) => (
+                                    <AUIThemedView style={{ flex: 1 }}>
+                                        <AUIThemedView
+                                            style={{
+                                                flexDirection: "row",
+                                                alignItems: "center",
+                                                borderWidth: 2,
+                                                borderColor: "#ccc",
+                                                borderRadius: 6,
+                                            }}
+                                        >
+                                            <TextInput
+                                                style={{
+                                                    flex: 1,
+                                                    paddingVertical: 10,
+                                                    color: TEXT_THEME[theme].primary,
+                                                    padding: 20,
+                                                }}
+                                                value={value}
+                                                onChangeText={onChange}
+                                                keyboardType="numeric"
+                                                placeholder="Enter in numbers"
+                                            />
+                                        </AUIThemedView>
+                                        <AUIThemedView>
+                                            {error && (
+                                                <AUIThemedText style={styles.fieldError}>
+                                                    {error.message}
+                                                </AUIThemedText>
+                                            )}
+                                        </AUIThemedView>
+                                    </AUIThemedView>
+                                )}
                             />
-                        )}
-                    />
+                            <Controller
+                                name="durationInUnit"
+                                control={control}
+                                render={({ field: { value, onChange }, fieldState: { error } }) => (
+                                    <AUIThemedView style={{ flex: 1 }}>
+                                        <AUIThemedView>
+                                            <DropdownComponent
+                                                //@ts-ignore
+                                                list={durationUnits}
+                                                value={value}
+                                                setValue={({ unit }: { unit: string }) =>
+                                                    onChange(unit)
+                                                }
+                                                labelField="unit"
+                                                // label="Select your unit"
+                                                labelStyles={{
+                                                    marginTop: 10,
+                                                    marginBottom: 5,
+                                                    fontSize: 13,
+                                                    fontWeight: "bold",
+                                                    fontStyle: "normal",
+                                                    color: "#333",
+                                                }}
+                                                valueField="unit"
+                                                placeholder={"Select Duration"}
+                                                listWithIcon
+                                                isSearchable={false}
+                                            />
+
+                                            <AUIThemedView>
+                                                {error && (
+                                                    <AUIThemedText style={styles.fieldError}>
+                                                        {error.message}
+                                                    </AUIThemedText>
+                                                )}
+                                            </AUIThemedView>
+                                        </AUIThemedView>
+                                    </AUIThemedView>
+                                )}
+                            />
+                        </AUIThemedView>
+                    </AUIThemedView>
+
                     <Controller
                         control={control}
                         name="schedule"
-                        defaultValue=""
-                        render={({ field: { onChange, value } }) => (
-                            <AUIInputField
-                                label={t("enter_total_schedule")}
-                                placeholder={t("schedule")}
-                                value={value}
-                                onChangeText={onChange}
-                                style={styles.input}
-                            />
+                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <AUIThemedView>
+                                <AUIThemedView
+                                    style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
+                                >
+                                    <AUIThemedText style={inputFieldStyle.label}>
+                                        {t("total_schedule")}
+                                    </AUIThemedText>
+
+                                    <CustomTooltip
+                                        text={`You can add multiple schedules for a plan \n\nFor Example:\n10:00 AM to 11:00 AM\n11:00 AM to 12:00 PM\n`}
+                                        tooltipStyle={{ padding: 15 }}
+                                    >
+                                        <Ionicons
+                                            name="information-circle-outline"
+                                            size={20}
+                                            color={APP_THEME.light.primary.first}
+                                        />
+                                    </CustomTooltip>
+                                </AUIThemedView>
+
+                                <AUIInputField
+                                    placeholder={t("schedule")}
+                                    value={value}
+                                    onChangeText={onChange}
+                                    style={styles.input}
+                                />
+
+                                <AUIThemedView>
+                                    {error && (
+                                        <AUIThemedText style={styles.fieldError}>
+                                            {error.message}
+                                        </AUIThemedText>
+                                    )}
+                                </AUIThemedView>
+                            </AUIThemedView>
                         )}
                     />
+
                     <Controller
                         control={control}
                         name="price"
-                        defaultValue=""
-                        render={({ field: { onChange, value } }) => (
-                            <AUIInputField
-                                label={t("enter_total_fee")}
-                                placeholder={t("totalFee")}
-                                value={value}
-                                onChangeText={onChange}
-                                style={styles.input}
-                            />
+                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <AUIThemedView style={{ marginVertical: 25 }}>
+                                <AUIInputField
+                                    label={`${t("plan_fee")} (in SAR only)`}
+                                    placeholder={t("enter_SAR_only")}
+                                    value={value}
+                                    onChangeText={onChange}
+                                    style={styles.input}
+                                    keyboardType="numeric"
+                                />
+                                <AUIThemedView>
+                                    {error && (
+                                        <AUIThemedText style={styles.fieldError}>
+                                            {error.message}
+                                        </AUIThemedText>
+                                    )}
+                                </AUIThemedView>
+                            </AUIThemedView>
                         )}
                     />
                     <Controller
                         control={control}
-                        name="bookingAmount"
-                        defaultValue=""
-                        render={({ field: { onChange, value } }) => (
-                            <AUIInputField
-                                label={t("seat_booking_amount")}
-                                placeholder="£"
-                                value={value}
-                                onChangeText={onChange}
-                                style={styles.input}
-                            />
+                        name="bookYourSeat"
+                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <AUIThemedView>
+                                <AUIInputField
+                                    label={`${t("seat_booking_amount")} (in SAR only)`}
+                                    placeholder={t("enter_SAR_only")}
+                                    value={value}
+                                    onChangeText={onChange}
+                                    style={styles.input}
+                                    keyboardType="numeric"
+                                />
+                                <AUIThemedView>
+                                    {error && (
+                                        <AUIThemedText style={styles.fieldError}>
+                                            {error.message}
+                                        </AUIThemedText>
+                                    )}
+                                </AUIThemedView>
+                            </AUIThemedView>
                         )}
                     />
                     <AUIThemedView style={styles.courseDetailsContainer}>
-                        <AUIThemedText>{t("course_details")}</AUIThemedText>
-                        {fields.map((item, index) => (
-                            <AUIThemedView key={item.id}>
-                                <Controller
-                                    control={control}
-                                    name={`courses[${index}].title`}
-                                    render={({ field: { onChange, value } }) => (
-                                        <AUIInputField
-                                            label={t("title")}
-                                            placeholder={t("title")}
-                                            value={value}
-                                            onChangeText={onChange}
-                                            style={styles.input}
-                                        />
-                                    )}
+                        <AUIThemedView style={styles.courseDetails}>
+                            <AUIThemedText>{`${t("plan_info")} (${t("optional")})`}</AUIThemedText>
+
+                            <CustomTooltip
+                                text={`You can add maximum 5 most important topics for you plan\n\nFor Example:\nTopic 1\nTopic 1 Description\n\nTopic 2\nTopic 2 Description`}
+                                tooltipStyle={{ padding: 15 }}
+                            >
+                                <Ionicons
+                                    name="information-circle-outline"
+                                    size={20}
+                                    color={APP_THEME.light.primary.first}
                                 />
-                                <Controller
-                                    control={control}
-                                    name={`courses[${index}].subtitle`}
-                                    defaultValue=""
-                                    render={({ field: { onChange, value } }) => (
-                                        <AUIInputField
-                                            label={t("subTitle")}
-                                            placeholder={t("subTitle")}
-                                            value={value}
-                                            onChangeText={onChange}
-                                            style={styles.input}
+                            </CustomTooltip>
+                        </AUIThemedView>
+
+                        <AUIThemedView style={styles.courseDetailsItems}>
+                            <AUIThemedView style={{ paddingTop: 10 }}>
+                                {fields.map((item, index) => (
+                                    <AUIThemedView key={item.id} style={styles.courseDetailsItem}>
+                                        <Controller
+                                            control={control}
+                                            name={`courses.${index}.title` as const}
+                                            render={({ field: { onChange, value } }) => (
+                                                <AUIThemedView>
+                                                    <AUIThemedView style={{ flexDirection: "row" }}>
+                                                        <AUIThemedText style={styles.label}>
+                                                            {t("title")}
+                                                        </AUIThemedText>
+                                                        <TouchableOpacity
+                                                            onPress={() => remove(index)}
+                                                        >
+                                                            <Ionicons
+                                                                name="trash-outline"
+                                                                size={20}
+                                                                color={"red"}
+                                                            />
+                                                        </TouchableOpacity>
+                                                    </AUIThemedView>
+                                                    <AUIInputField
+                                                        placeholder={t("title")}
+                                                        value={value}
+                                                        onChangeText={onChange}
+                                                        style={styles.input}
+                                                    />
+                                                </AUIThemedView>
+                                            )}
                                         />
-                                    )}
-                                />
+                                        <Controller
+                                            control={control}
+                                            name={`courses.${index}.subtitle` as const}
+                                            render={({ field: { onChange, value } }) => (
+                                                <AUIThemedView>
+                                                    <AUIInputField
+                                                        label={t("subTitle")}
+                                                        placeholder={t("subTitle")}
+                                                        value={value}
+                                                        onChangeText={onChange}
+                                                        style={styles.input}
+                                                    />
+                                                </AUIThemedView>
+                                            )}
+                                        />
+                                    </AUIThemedView>
+                                ))}
+                                {fields.length < 5 && (
+                                    <TouchableOpacity
+                                        style={buttonStyle.container}
+                                        onPress={addFields}
+                                    >
+                                        <AUIThemedView style={[buttonStyle.buttonInner]}>
+                                            <Ionicons
+                                                name="add-circle"
+                                                size={24}
+                                                color={APP_THEME.light.primary.first}
+                                            />
+                                            <AUIThemedText style={[buttonStyle.buttonText]}>
+                                                {t("add_information")}
+                                            </AUIThemedText>
+                                        </AUIThemedView>
+                                    </TouchableOpacity>
+                                )}
                             </AUIThemedView>
-                        ))}
-                        {fields.length < 5 && (
-                            <AUIButton
-                                title={t("add_more_course_details")}
-                                selected
-                                onPress={addFields}
-                            />
-                        )}
+                        </AUIThemedView>
                     </AUIThemedView>
-                    <AUIThemedView style={styles.planContainer}>
-                        <AUIThemedText style={styles.createYourPlanTitle}>
-                            {t("select_facilities")}
-                        </AUIThemedText>
+
+                    <AUIThemedView>
+                        <AUIThemedView
+                            style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                            }}
+                        >
+                            <AUIThemedText style={styles.createYourPlanTitle}>
+                                {t("select_facilities")} ({t("optional")})
+                            </AUIThemedText>
+
+                            <CustomTooltip
+                                text={`Facilities are optional. You have to first add facilities in the facilities tab before you select them. You can select already added facilities for your plans here\n\n For Example:\n Hostel, Library, etc.`}
+                                tooltipStyle={{ padding: 15 }}
+                            >
+                                <Ionicons
+                                    name="information-circle-outline"
+                                    size={20}
+                                    color={APP_THEME.light.primary.first}
+                                />
+                            </CustomTooltip>
+                        </AUIThemedView>
+
                         <AUIAccordion
                             style={styles.AUIAccordion}
                             innerStyle={styles.AUIAccordionInnerStyle}
-                            title={"select facilities"}
+                            title={t("add_facilities_for_your_plan")}
                         >
                             {facilities?.map((facility: Facility) => (
                                 <AUIThemedView key={facility?._id} style={styles.facilitiesRow}>
@@ -438,9 +780,33 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
         </>
     );
 };
+
 export default AddPlan;
 
 const styles = StyleSheet.create({
+    fieldError: {
+        position: "absolute",
+        color: "red",
+        fontSize: 13,
+    },
+    courseDetailsItem: {
+        borderWidth: 1,
+        padding: 10,
+        borderRadius: 10,
+        borderColor: APP_THEME.light.primary.first,
+        marginVertical: 5,
+    },
+    courseDetailsItems: {
+        paddingTop: 5,
+    },
+    courseDetails: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 10,
+        paddingBottom: 5,
+        borderBottomWidth: 1,
+        borderColor: APP_THEME.light.primary.first,
+    },
     modalContainerStyle: { width: "100%", height: "100%" },
     container: {
         padding: 16,
@@ -451,7 +817,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center",
     },
-    input: { marginBottom: 10 },
+    input: {},
     commentInput: {
         height: 100,
     },
@@ -484,7 +850,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         gap: 10,
         paddingLeft: 10,
-        alignItems:"center"
+        alignItems: "center",
     },
     CheckboxContainer1: {
         flexDirection: "column",
@@ -541,10 +907,15 @@ const styles = StyleSheet.create({
         paddingVertical: 3,
     },
     dateContainer: { flexDirection: "row", justifyContent: "space-between" },
+    durationContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 20,
+    },
     dateInput: { width: 160 },
-    courseDetailsContainer: { marginTop: 12 },
+    courseDetailsContainer: { marginTop: 25 },
     planContainer: {},
-    createYourPlanTitle: { marginTop: 20, marginBottom: 5 },
+    createYourPlanTitle: { marginBottom: 5 },
     AUIAccordion: {
         borderWidth: 1,
         borderColor: "#ddd",
@@ -577,5 +948,36 @@ const styles = StyleSheet.create({
     header: {
         fontSize: 20,
         fontWeight: "bold",
+    },
+});
+const buttonStyle = StyleSheet.create({
+    container: {
+        marginVertical: 20,
+        backgroundColor: "transparent",
+        borderColor: APP_THEME.light.primary.first,
+    },
+    button: {
+        borderRadius: 5,
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "row",
+    },
+    buttonInner: {
+        flex: 1,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 10,
+        borderRadius: 5,
+        height: 40,
+        paddingHorizontal: 10,
+        borderWidth: 1,
+        borderColor: APP_THEME.light.primary.first,
+    },
+    buttonText: {
+        fontSize: 16,
+        fontWeight: "bold",
+        textAlign: "center",
+        justifyContent: "center",
     },
 });

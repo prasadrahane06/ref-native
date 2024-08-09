@@ -51,7 +51,7 @@ const AUIAccordion: React.FC<AccordionProps> = ({
                             <FontAwesome
                                 name="edit"
                                 size={23}
-                                color={APP_THEME.light.primary.third}
+                                color={APP_THEME.light.primary.first}
                             />
                         </TouchableOpacity>
                     )}

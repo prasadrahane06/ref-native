@@ -7,12 +7,11 @@ import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector
 import { RootState } from "@/redux/store";
 // import { t } from "i18next";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { Dimensions, StyleSheet, TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 import AllSchoolsList from "../list/AllSchoolsList";
 import { useTranslation } from "react-i18next";
-
 
 import { ApiSuccessToast } from "@/components/common/AUIToast";
 
@@ -33,7 +32,7 @@ const AllSchoolsScreen: React.FC<SchoolListProps> = ({ data }) => {
     const theme = useSelector((state: RootState) => state.global.theme);
 
     useEffect(() => {
-        requestFn(API_URL.school, "AllSchool", { page: `${page}` });
+        requestFn(API_URL.school, "AllSchool", { page: `${page}`, status: 2 });
     }, [page]);
 
     return (
@@ -51,7 +50,6 @@ const AllSchoolsScreen: React.FC<SchoolListProps> = ({ data }) => {
                         image: school?.banner,
                         caption: school?.description,
                         favorite: false,
-                        approvalStatus: school?.approvalStatus,
                     }))}
                 />
                 {page !== schoolsResponse.totalPages && (
@@ -73,6 +71,8 @@ const AllSchoolsScreen: React.FC<SchoolListProps> = ({ data }) => {
 };
 
 export default AllSchoolsScreen;
+
+const width = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
     scrollContainer: {
@@ -97,11 +97,12 @@ const styles = StyleSheet.create({
         backgroundColor: "transparent",
     },
     column: {
-        justifyContent: "space-between",
+        // justifyContent: "space-between",
         // marginBottom: 10,
     },
     course: {
         marginVertical: 5,
-        width: "48%",
+        // width: "48%",
+        width: width / 2 - 20,
     },
 });

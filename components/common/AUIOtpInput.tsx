@@ -5,7 +5,7 @@ import { StyleSheet, TextInput, View } from "react-native";
 import { useSelector } from "react-redux";
 import { AUIThemedView } from "./AUIThemedView";
 
-const AUIOTPInput = ({ length, onChange, disabled }: any) => {
+const AUIOTPInput = ({ length, onChange, disabled, autoFocus }: any) => {
     const theme = useSelector((state: RootState) => state.global.theme);
     const [otp, setOtp] = useState(Array(length).fill(""));
     const inputs = useRef([]);
@@ -43,7 +43,7 @@ const AUIOTPInput = ({ length, onChange, disabled }: any) => {
                 {otp?.map((digit, index) => (
                     <TextInput
                         key={index}
-                        autoFocus={index === 0}
+                        autoFocus={index === 0 && autoFocus}
                         // @ts-ignore
                         ref={(ref) => (inputs.current[index] = ref)}
                         style={[

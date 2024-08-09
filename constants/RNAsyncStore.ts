@@ -4,11 +4,9 @@ import * as Device from "expo-device";
 export const storeUserData = async (key: string, value: object) => {
     try {
         const existingData = await getUserData(key);
-        console.log("existingData", existingData);
-
+        
         const updatedData = { ...existingData, ...value };
         const jsonValue = JSON.stringify(updatedData);
-        console.log("jsonValue", jsonValue);
 
         await AsyncStorage.setItem(key, jsonValue);
     } catch (e) {

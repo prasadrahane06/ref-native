@@ -299,10 +299,11 @@ const LoginPage = () => {
                             }
                             disabled={otpVerified.signUpEmail}
                             inputValue={signupDetails?.email}
+                            autoFocus={true}
                         />
                         {otpVerified.signUpEmail && <OTPVerified label={"Email verified"} />}
-                        {/* )} */}
                     </AUIThemedView>
+
                     <AUIThemedView style={[loginPageStyles.otpViewContainer, { marginTop: 50 }]}>
                         <OTPScreen
                             changeLabel={"mobile number"}
@@ -314,6 +315,7 @@ const LoginPage = () => {
                             }
                             disabled={otpVerified.signUpPhone}
                             inputValue={signupDetails?.phone}
+                            autoFocus={false}
                         />
                         {otpVerified.signUpPhone && (
                             <OTPVerified label={"Mobile number verified"} />
@@ -417,6 +419,7 @@ const LoginPage = () => {
                                     }
                                     disabled={otpVerified.login}
                                     inputValue={inputValue}
+                                    autoFocus={true}
                                 />
                                 {otpVerified.login && <OTPVerified label={"OTP verified"} />}
                             </AUIThemedView>
