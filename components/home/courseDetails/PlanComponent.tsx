@@ -658,21 +658,21 @@ export default function PlanComponent({
                             {
                                 backgroundColor: BACKGROUND_THEME[theme].background,
                                 borderColor: TEXT_THEME[theme].primary,
-                                // opacity:
-                                //     (isPurchased &&
-                                //         isPurchased?.docs &&
-                                //         isPurchased?.docs[0]?.type === "bookYourSeat") ||
-                                //     isPurchased?.docs[0]?.type === "buy"
-                                //         ? 0.5
-                                //         : 1,
+                                opacity:
+                                    (isPurchased &&
+                                        isPurchased?.docs &&
+                                        isPurchased?.docs[0]?.type === "bookYourSeat") ||
+                                    isPurchased?.docs[0]?.type === "buy"
+                                        ? 0.5
+                                        : 1,
                             },
                         ]}
                         // Kept commented for now, we'll block user on next page
-                        // disabled={
-                        //     isPurchased &&
-                        //     (isPurchased?.docs[0]?.type === "bookYourSeat" ||
-                        //         isPurchased?.docs[0]?.type === "buy")
-                        // }
+                        disabled={
+                            isPurchased &&
+                            (isPurchased?.docs[0]?.type === "bookYourSeat" ||
+                                isPurchased?.docs[0]?.type === "buy")
+                        }
                         onPress={() =>
                             router.push({
                                 pathname: "/profile",
@@ -696,18 +696,23 @@ export default function PlanComponent({
                         style={[
                             styles.buyContainer,
                             {
-                                backgroundColor: APP_THEME[theme].primary.first,
-                                // opacity:
-                                //     isPurchased &&
-                                //     isPurchased?.docs &&
-                                //     isPurchased?.docs[0]?.type === "buy"
-                                //         ? 0.5
-                                //         : 1,
+                                backgroundColor:
+                                    isPurchased &&
+                                    isPurchased?.docs &&
+                                    isPurchased?.docs[0]?.type === "buy"
+                                        ? "gray"
+                                        : APP_THEME[theme].primary.first,
+                                opacity:
+                                    isPurchased &&
+                                    isPurchased?.docs &&
+                                    isPurchased?.docs[0]?.type === "buy"
+                                        ? 0.5
+                                        : 1,
                             },
                         ]}
-                        // disabled={
-                        //     isPurchased && isPurchased?.docs && isPurchased?.docs[0]?.type === "buy"
-                        // }
+                        disabled={
+                            isPurchased && isPurchased?.docs && isPurchased?.docs[0]?.type === "buy"
+                        }
                         onPress={() =>
                             router.push({
                                 pathname: "/profile",

@@ -64,10 +64,10 @@ export default function MyCourses() {
                 name={t("seat_booking")}
                 component={() => <PurchaseCoursesList data={bookMySeatData} seatBooking />}
             />
-            <Tab.Screen
+            {/* <Tab.Screen
                 name={t("completed_courses")}
                 component={() => <PurchaseCoursesList data={[]} completedCourse />}
-            />
+            /> */}
         </Tab.Navigator>
     );
 }

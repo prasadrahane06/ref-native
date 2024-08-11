@@ -345,6 +345,7 @@ export default function CourseDetails() {
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
+
                             {userType !== "school" && (
                                 <TouchableOpacity onPress={handleAddToCart}>
                                     <AUIThemedView
@@ -362,6 +363,10 @@ export default function CourseDetails() {
                                 </TouchableOpacity>
                             )}
                         </AUIThemedView>
+                        <AUIThemedText style={styles.schoolTitle}>
+                            {t("by")} {` `}
+                            {course?.client?.name}
+                        </AUIThemedText>
                     </AUIThemedView>
                     {/* <AUIThemedView style={{ paddingHorizontal: 15, marginBottom: 10 }}>
                         <AUIThemedText
@@ -482,5 +487,10 @@ const styles = StyleSheet.create({
     planText: {
         fontWeight: "bold",
         marginHorizontal: 12,
+    },
+    schoolTitle: {
+        color: "#6c757d",
+        padding: 10,
+        paddingLeft: 0,
     },
 });

@@ -58,7 +58,7 @@ function PurchaseCourses({
                     <AUIThemedText style={{ color: "#fff", width: 150, fontSize: 20 }}>
                         {schoolName}
                     </AUIThemedText>
-                    <AUIButton
+                    {/* <AUIButton
                         title={
                             type === "BOOKED"
                                 ? "Starting from:01-08-2024"
@@ -69,7 +69,7 @@ function PurchaseCourses({
                         selected
                         style={{ width: "40%" }}
                         regularText
-                    />
+                    /> */}
                 </View>
             </AUIBackgroundImage>
         </TouchableOpacity>

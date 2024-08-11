@@ -226,7 +226,7 @@ export default function PurchaseScreen() {
             {paymentDetialsForThisCourse && paymentDetialsForThisCourse?.isPurchased === "Yes" ? (
                 <AUIThemedText style={styles.messageText}>
                     {" "}
-                    You Already Purchased This Course
+                    Already Purchased Course !!
                 </AUIThemedText>
             ) : paymentDetialsForThisCourse &&
               paymentDetialsForThisCourse?.isPurchased === "MayBe" ? (
@@ -341,9 +341,10 @@ const styles = StyleSheet.create({
         color: "red",
     },
     messageText: {
-        fontSize: 12,
+        fontSize: 15,
         textAlign: "center",
-        width: 100,
+        // width: 100,
+        paddingTop: 50,
         color: "orange",
     },
 });

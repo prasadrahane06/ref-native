@@ -91,10 +91,11 @@ const similarCoursesStyle = StyleSheet.create({
     container: { marginTop: 5 },
     item: {
         width: 270,
-        height: 120,
+        height: 150,
         borderRadius: 10,
         overflow: "hidden",
         marginRight: 18,
+        marginBottom: 10,
     },
     title: {
         fontSize: 17,
@@ -120,5 +121,6 @@ const similarCoursesStyle = StyleSheet.create({
     image: {
         width: "auto",
         height: "100%",
+        padding:10
     },
 });
