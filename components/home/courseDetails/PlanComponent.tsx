@@ -10,7 +10,7 @@ import SectionTitle from "@/components/home/common/SectionTitle";
 import CourseDetailsComponent from "@/components/home/courseDetails/CourseDetailsComponent";
 import SimilarCoursesList from "@/components/home/courseDetails/SimilarCourses";
 import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
-import { ENQUIRY_FIELDS, GLOBAL_TEXT, GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
+import { GLOBAL_TEXT, GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { inputFieldStyle } from "@/constants/Styles";
 import { accommodationData } from "@/constants/dummy data/accommodationData";
 import { countriesData } from "@/constants/dummy data/countriesData";
@@ -599,7 +599,6 @@ export default function PlanComponent({
     const isPurchased = useLangTransformSelector((state: RootState) => state.api.isPurchased);
 
     useEffect(() => {
-        console.log("clientId in planComponent ", clientId);
         requestFn(API_URL.purchaseCourse, "isPurchased", { user: true, course: courseId });
     }, []);
 

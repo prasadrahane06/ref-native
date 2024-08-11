@@ -88,7 +88,7 @@ function CoursePlanTabs({ courseId, clientId }: CoursePlanTabsProps) {
             </AUIThemedView>
             <AUIThemedView>
                 {plans.map(
-                    (plan: any) =>
+                    (plan: any, i: any) =>
                         selectedPlan === plan.name && (
                             <PlanComponent
                                 clientId={clientId}

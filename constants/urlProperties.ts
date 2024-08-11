@@ -31,4 +31,5 @@ export const API_URL = {
     verifyChangeDetails: "auth/verifyChangeDetails",
     paymentDetails: "/payment/getPaymentDetails",
     paymentIsPurchasedCourse: "/payment/IsPurchased",
+    paymentCheckoutStatus: "/payment/status",
 };
