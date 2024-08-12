@@ -1,14 +1,18 @@
+import useAxios from "@/app/services/axiosClient";
 import AUIAccordion from "@/components/common/AUIAccordion";
 import AUIImage from "@/components/common/AUIImage";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { APP_THEME } from "@/constants/Colors";
+import { API_URL } from "@/constants/urlProperties";
+import useApiRequest from "@/customHooks/useApiRequest";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
-import { setSelectedSchool1, setSelectedSchool2 } from "@/redux/apiSlice";
+import { setResponse, setSelectedSchool1, setSelectedSchool2 } from "@/redux/apiSlice";
 import { RootState } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
 import { router } from "expo-router";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 // import { t } from "i18next";
 import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
@@ -22,15 +26,19 @@ const CompareSchools: React.FC = () => {
     // const [show2, setShow2] = useState<boolean>(false);
     const compareSchool1 = useLangTransformSelector((state: RootState) => state.api.compareSchool1);
     const compareSchool2 = useLangTransformSelector((state: RootState) => state.api.compareSchool2);
+
     const dispatch = useDispatch();
 
     const handleResetcompareSchool1 = () => {
         dispatch(setSelectedSchool1(null));
+        // setCompareSchoolFirst([])
     };
 
     const handleResetcompareSchool2 = () => {
         dispatch(setSelectedSchool2(null));
+        // setCompareSchoolSecond([])
     };
+    const { post } = useAxios()
 
     // const onChange1 = (event: any, selectedDate: Date | undefined) => {
     //     const currentDate = selectedDate || date1;
@@ -42,6 +50,35 @@ const CompareSchools: React.FC = () => {
     //     setShow2(Platform.OS === "ios");
     //     setDate2(currentDate);
     // };
+    //    const [compareSchoolFirst , setCompareSchoolFirst] = useState([])
+
+    // const [compareSchoolSecond , setCompareSchoolSecond] = useState([])
+
+    const compareSchoolFirst = useLangTransformSelector((state: RootState) => state.api.firstSchool);
+
+    const compareSchoolSecond = useLangTransformSelector((state: RootState) => state.api.secondSchool);
+
+
+
+    useEffect(() => {
+        if (compareSchool1 && compareSchool2) {
+            post(API_URL.schoolComparison, {
+                schoolId1: compareSchool1?._id,
+                schoolId2: compareSchool2?._id
+            }).then((res) => {
+                
+                dispatch(setResponse({ "storeName": "firstSchool", data: res.docs[0] }));
+                dispatch(setResponse({ "storeName": "secondSchool", data: res.docs[1] }));
+
+            }).catch((e) => {
+                console.log("e", e)
+            })
+        }
+    }, [compareSchool1, compareSchool2])
+
+
+
+
     return (
         <AUIThemedView style={styles.outerContainer}>
             <ScrollView>
@@ -153,7 +190,7 @@ const CompareSchools: React.FC = () => {
                             )}
                         >
                             <AUIThemedView>
-                                <AUIThemedView style={styles.row}>
+                                <AUIThemedView style={styles.row2}>
                                     <AUIThemedText style={styles.value}>{t("information")}</AUIThemedText>
                                     <AUIThemedView style={styles.rowContainer}>
                                         <AUIThemedText style={styles.label}>
@@ -163,16 +200,16 @@ const CompareSchools: React.FC = () => {
                                             {compareSchool2?.description || "--"}
                                         </AUIThemedText>
                                     </AUIThemedView>
-                                </AUIThemedView>
+                                {/* </AUIThemedView>
                                 <AUIThemedView style={styles.row}>
                                     <AUIThemedText style={styles.value}>
-                                    {t("have_mail_support")}{" "}
+                                        {t("have_mail_support")}{" "}
                                     </AUIThemedText>
                                     <AUIThemedView style={styles.rowContainer}>
                                         <AUIThemedText style={styles.label}>
                                             {compareSchool1?.mailSupport === true
-                                                ?`${t("true")}`
-                                                : `${t("false")}`|| "--"}
+                                                ? `${t("true")}`
+                                                : `${t("false")}` || "--"}
                                         </AUIThemedText>
                                         <AUIThemedText style={styles.label2}>
                                             {compareSchool2?.mailSupport === true
@@ -181,8 +218,8 @@ const CompareSchools: React.FC = () => {
                                         </AUIThemedText>
                                     </AUIThemedView>
                                 </AUIThemedView>
-                                <AUIThemedView style={styles.row2}>
-                                    <AUIThemedText style={styles.value}>{t("callSupport")}</AUIThemedText>
+                                <AUIThemedView style={styles.row2}> */}
+                                    {/* <AUIThemedText style={styles.value}>{t("callSupport")}</AUIThemedText>
                                     <AUIThemedView style={styles.rowContainer}>
                                         <AUIThemedText style={styles.label}>
                                             {compareSchool1?.callSupport === true
@@ -190,11 +227,11 @@ const CompareSchools: React.FC = () => {
                                                 : `${t("false")}` || "--"}
                                         </AUIThemedText>
                                         <AUIThemedText style={styles.label2}>
-                                            {compareSchool2?.callSupport === true
+                                            {compareSchoolSecond?.callSupport === true
                                                 ? `${t("true")}`
                                                 : `${t("false")}` || "--"}
                                         </AUIThemedText>
-                                    </AUIThemedView>
+                                    </AUIThemedView> */}
                                 </AUIThemedView>
                             </AUIThemedView>
                         </AUIAccordion>
@@ -206,14 +243,19 @@ const CompareSchools: React.FC = () => {
                             <AUIThemedView>
                                 <AUIThemedView style={styles.row2}>
                                     <AUIThemedText style={styles.value}>
-                                    {t("language_to_learn")}
+                                        {t("language_to_learn")}
                                     </AUIThemedText>
                                     <AUIThemedView style={styles.rowContainer}>
                                         <AUIThemedText style={styles.label}>
-                                            {compareSchool1?.location?.language || "--"}
+                                            {compareSchoolFirst && compareSchoolFirst.languages && compareSchoolFirst.languages.length > 0
+                                                ? compareSchoolFirst.languages.join(", ")
+                                                : "--"}
                                         </AUIThemedText>
+
                                         <AUIThemedText style={styles.label2}>
-                                            {compareSchool2?.location?.language || "--"}
+                                            {compareSchoolSecond && compareSchoolSecond.languages && compareSchoolFirst.languages.length > 0
+                                                ? compareSchoolSecond.languages.join(", ")
+                                                : "--"}
                                         </AUIThemedText>
                                     </AUIThemedView>
                                 </AUIThemedView>
@@ -242,10 +284,10 @@ const CompareSchools: React.FC = () => {
                                 <AUIThemedText style={styles.value}>{t("school_location")}</AUIThemedText>
                                 <AUIThemedView style={styles.rowContainer}>
                                     <AUIThemedText style={styles.label}>
-                                        {compareSchool1?.location?.capital || "--"}
+                                        {compareSchool1?.location?.name || "--"}
                                     </AUIThemedText>
                                     <AUIThemedText style={styles.label2}>
-                                        {compareSchool2?.location?.capital || "--"}
+                                        {compareSchool2?.location?.name || "--"}
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </AUIThemedView>
@@ -260,10 +302,10 @@ const CompareSchools: React.FC = () => {
                                     <AUIThemedText style={styles.value}>{t("minimum_fee")}</AUIThemedText>
                                     <AUIThemedView style={styles.rowContainer}>
                                         <AUIThemedText style={styles.label}>
-                                            {compareSchool1?.minPrice || "--"}
+                                            {compareSchoolFirst?.minPrice || "--"}
                                         </AUIThemedText>
                                         <AUIThemedText style={styles.label2}>
-                                            {compareSchool2?.minPrice || "--"}
+                                            {compareSchoolSecond?.minPrice || "--"}
                                         </AUIThemedText>
                                     </AUIThemedView>
                                 </AUIThemedView>
@@ -272,10 +314,10 @@ const CompareSchools: React.FC = () => {
                                     <AUIThemedText style={styles.value}>{t("maximum_fee")}</AUIThemedText>
                                     <AUIThemedView style={styles.rowContainer}>
                                         <AUIThemedText style={styles.label}>
-                                            {compareSchool1?.maxPrice || "--"}
+                                            {compareSchoolFirst?.maxPrice || "--"}
                                         </AUIThemedText>
                                         <AUIThemedText style={styles.label2}>
-                                            {compareSchool2?.maxPrice || "--"}
+                                            {compareSchoolSecond?.maxPrice || "--"}
                                         </AUIThemedText>
                                     </AUIThemedView>
                                 </AUIThemedView>
@@ -300,14 +342,14 @@ const CompareSchools: React.FC = () => {
                             </AUIThemedView> */}
                                 <AUIThemedView style={styles.row}>
                                     <AUIThemedText style={styles.value}>
-                                    {t("total_facilities")}
+                                        {t("total_facilities")}
                                     </AUIThemedText>
                                     <AUIThemedView style={styles.rowContainer}>
                                         <AUIThemedText style={styles.label}>
-                                            {compareSchool1?.facilitiesDetails || "--"}
+                                            {compareSchoolFirst?.facilitiesDetails.length || "--"}
                                         </AUIThemedText>
                                         <AUIThemedText style={styles.label2}>
-                                            {compareSchool2?.facilitiesDetails || "--"}
+                                            {compareSchoolSecond?.facilitiesDetails.length || "--"}
                                         </AUIThemedText>
                                     </AUIThemedView>
                                 </AUIThemedView>
@@ -324,14 +366,14 @@ const CompareSchools: React.FC = () => {
                             </AUIThemedView> */}
                                 <AUIThemedView style={styles.row2}>
                                     <AUIThemedText style={styles.value}>
-                                    {t("number_of_seats")}
+                                        {t("number_of_seats")}
                                     </AUIThemedText>
                                     <AUIThemedView style={styles.rowContainer}>
                                         <AUIThemedText style={styles.label}>
-                                            {compareSchool1?.NumberOfSeats || "--"}
+                                            {compareSchoolFirst?.totalNumberOfSeats || "--"}
                                         </AUIThemedText>
                                         <AUIThemedText style={styles.label2}>
-                                            {compareSchool2?.NumberOfSeats || "--"}
+                                            {compareSchoolSecond?.totalNumberOfSeats || "--"}
                                         </AUIThemedText>
                                     </AUIThemedView>
                                 </AUIThemedView>

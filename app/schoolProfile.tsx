@@ -37,8 +37,10 @@ const SchoolProfile = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
+    const user = useLangTransformSelector((state: RootState) => state.global.user);
+    console.log("user =>", user);
     const theme = useSelector((state: RootState) => state.global.theme);
-    const mySchoolDetails = useLangTransformSelector(
+    const mySchoolDetails = useLangTransformSelector(   
         (state: RootState) => state.api.MySchoolDetails
     );
     const countryDataForSchool = useLangTransformSelector(
@@ -99,6 +101,8 @@ const SchoolProfile = () => {
             street: mySchoolDetails?.street,
         },
     });
+
+
 
     useEffect(() => {
         if (countryDataForSchool && countryDataForSchool.docs) {

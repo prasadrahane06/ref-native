@@ -600,6 +600,7 @@ export default function PlanComponent({
     const theme = useSelector((state: RootState) => state.global.theme);
     const userData = useSelector((state: RootState) => state.global.user);
 
+
     const [isModalVisible, setIsModalVisible] = useState(false);
 
     const userId = userData?._id;
@@ -675,7 +676,7 @@ export default function PlanComponent({
                                     (isPurchased &&
                                         isPurchased?.docs &&
                                         isPurchased?.docs[0]?.type === "bookYourSeat") ||
-                                    isPurchased?.docs[0]?.type === "buy"
+                                        isPurchased?.docs[0]?.type === "buy"
                                         ? 0.5
                                         : 1,
                             },
@@ -711,14 +712,14 @@ export default function PlanComponent({
                             {
                                 backgroundColor:
                                     isPurchased &&
-                                    isPurchased?.docs &&
-                                    isPurchased?.docs[0]?.type === "buy"
+                                        isPurchased?.docs &&
+                                        isPurchased?.docs[0]?.type === "buy"
                                         ? "gray"
                                         : APP_THEME[theme].primary.first,
                                 opacity:
                                     isPurchased &&
-                                    isPurchased?.docs &&
-                                    isPurchased?.docs[0]?.type === "buy"
+                                        isPurchased?.docs &&
+                                        isPurchased?.docs[0]?.type === "buy"
                                         ? 0.5
                                         : 1,
                             },
@@ -770,7 +771,7 @@ export default function PlanComponent({
                 />
             </AUIThemedView>
 
-            {similarCourses?.length > 0 && (
+            {userType !== "school" && similarCourses?.length > 0 && (
                 <AUIThemedView style={styles.similarCourseContainer}>
                     <AUIThemedView>
                         <AUIThemedText style={{ fontWeight: "bold" }}>
@@ -782,6 +783,7 @@ export default function PlanComponent({
                     </AUIThemedView>
                 </AUIThemedView>
             )}
+
 
             <EnquireNowModal
                 isVisible={isModalVisible}

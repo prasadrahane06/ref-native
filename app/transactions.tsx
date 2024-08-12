@@ -6,7 +6,7 @@ import { useLangTransformSelector } from '@/customHooks/useLangTransformSelector
 import { RootState } from '@/redux/store';
 import { AntDesign } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
-import { Dimensions, FlatList, Image, StyleSheet, View, ViewStyle } from 'react-native';
+import { Dimensions, FlatList, Image, ScrollView, StyleSheet, View, ViewStyle } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 const screenWidth = Dimensions.get('window').width;
@@ -26,22 +26,25 @@ const Transactions = () => {
         // Define colors for different statuses
         const statusColors: { [key: string]: string } = {
             success: '#4CAF50',  // Green
-            failure: '#F44336',  // Red
+            error: '#F44336',  // Red
+            cancelled: '#F44336',  // Gray
             pending: '#FFC107'   // Yellow
         };
 
         // Define colors for payment statuses
         const paymentStatusColors: { [key: string]: string } = {
             success: '#4CAF50',  // Green
-            failure: '#F44336',  // Red
-            pending: '#FFC107'   // Yellow
+            error: '#F44336',  // Red
+            pending: '#FFC107' ,  // Yellow
+            cancelled: '#F44336',  // Gray
+            
         };
 
         // Determine the color for status
         const circleStyle: ViewStyle = {
             backgroundColor: statusColors[item.status as keyof typeof statusColors] || '#E0E0E0',
-            width: screenWidth * 0.12,
-            height: screenWidth * 0.12,
+            // width: screenWidth * 0.12,
+            // height: screenWidth * 0.12,
             borderRadius: (screenWidth * 0.12) / 2,
             justifyContent: 'center',
             alignItems: 'center',
@@ -105,7 +108,9 @@ const Transactions = () => {
         { key: 'all', label: 'all' },
         { key: 'success', label: 'Success' },
         { key: 'pending', label: 'Pending' },
-        { key: 'failure', label: 'Failure' },
+        { key: 'unknown', label: 'unknown' },
+        { key: "cancelled", label: "cancelled" },
+        { key: "error", label: "error" },
     ];
 
     return (
@@ -117,18 +122,20 @@ const Transactions = () => {
                /> */}
             </AUIThemedView>
             <AUIThemedView style={styles.filterRow}>
-                {tabs.map(tab => (
-                    <TouchableOpacity key={tab.key} onPress={() => setSelectedTab(tab.key)}>
-                        <AUIThemedView style={selectedTab.includes(tab.key) ? styles.filterButton : styles.filterButtonInactive}>
-                            <AUIThemedText style={styles.filterText}>{tab.label}</AUIThemedText>
-                        </AUIThemedView>
-                    </TouchableOpacity>
-                ))}
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                    {tabs.map(tab => (
+                        <TouchableOpacity key={tab.key} onPress={() => setSelectedTab(tab.key)}>
+                            <AUIThemedView style={selectedTab.includes(tab.key) ? styles.filterButton : styles.filterButtonInactive}>
+                                <AUIThemedText style={styles.filterText}>{tab.label}</AUIThemedText>
+                            </AUIThemedView>
+                        </TouchableOpacity>
+                    ))}
+                </ScrollView>
             </AUIThemedView>
             <FlatList
                 data={Array.isArray(paymentDetials) ? paymentDetials.filter((item: any) => {
                     if (selectedTab === 'all') {
-                        return item.paymentStatus === 'success' || item.status === 'pending' || item.status === 'failure';
+                        return item.paymentStatus === 'success' || item.paymentStatus === 'pending' || item.paymentStatus === 'unknown' || item.paymentStatus === 'cancelled' || item.paymentStatus === 'error';
                     }
                     return item.paymentStatus === selectedTab;
                 }) : []}  // If paymentDetials is not an array, default to an empty array
