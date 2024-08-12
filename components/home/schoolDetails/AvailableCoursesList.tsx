@@ -21,29 +21,27 @@ interface AvailableCoursesProps {
 }
 
 export const AvailableCoursesList: React.FC<AvailableCoursesProps> = ({ courses }) => {
-   
     return (
         <AUIThemedView>
-        <FlatList
-            scrollEnabled={false}
-            data={courses}
-            renderItem={({ item, index }) => {
-                console.log("course = ", item);
-                return (
-                    <AvailableCourses
-                        index={index}
-                        courseDesciption={item.description}
-                        _id={item._id}
-                        courseName={item.courseName} 
-                        startDate={item.startDate}
-                        numberOfLines={3}
-                        image={item.image}
-                        ellipsizeMode={"tail"}
-                    />
-                );
-            }}
-            keyExtractor={(item) => item._id}
-        />
-    </AUIThemedView>
+            <FlatList
+                scrollEnabled={false}
+                data={courses}
+                renderItem={({ item, index }) => {
+                    return (
+                        <AvailableCourses
+                            index={index}
+                            courseDesciption={item.description}
+                            _id={item._id}
+                            courseName={item.courseName}
+                            startDate={item.startDate}
+                            numberOfLines={3}
+                            image={item.image}
+                            ellipsizeMode={"tail"}
+                        />
+                    );
+                }}
+                keyExtractor={(item) => item._id}
+            />
+        </AUIThemedView>
     );
 };

@@ -13,6 +13,7 @@ import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector
 import { addToFavorite, removeFromFavorite } from "@/redux/favoriteSlice";
 import { RootState } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";
+import { ChatBot } from "at-chatbot-native";
 import { Asset } from "expo-asset";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -28,7 +29,6 @@ import { StarRatingDisplay } from "react-native-star-rating-widget";
 import { useDispatch, useSelector } from "react-redux";
 
 import { setResponse } from "@/redux/apiSlice";
-import { ChatBot } from "at-chatbot-native";
 
 interface TabProps {
     courseId: string;
@@ -220,9 +220,9 @@ export default function SchoolDetails() {
                     dispatch(removeFromFavorite({ id, type: "clients" }));
                     ApiSuccessToast(res.message);
                 })
-                .catch((e: any) => {
-                    ApiErrorToast(e.response?.data?.message);
-                    console.log(e);
+                .catch((error: any) => {
+                    ApiErrorToast(error.response?.data?.message);
+                    console.log("error in delete favorite", error);
                 });
         } else {
             // Add to favorites
@@ -233,9 +233,9 @@ export default function SchoolDetails() {
                     );
                     ApiSuccessToast(res.message);
                 })
-                .catch((e: any) => {
-                    ApiErrorToast(e.response?.data?.message);
-                    console.log(e);
+                .catch((error: any) => {
+                    ApiErrorToast(error.response?.data?.message);
+                    console.log("error in add favorite", error);
                 });
         }
     };

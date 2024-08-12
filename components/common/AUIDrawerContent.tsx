@@ -47,10 +47,13 @@ const AUIDrawerContent = (props: any) => {
         (state: RootState) => state.global.theme === "dark"
     );
     const data = useLangTransformSelector((state: RootState) => state.global.user);
+    const mySchoolDetails = useLangTransformSelector(
+        (state: RootState) => state.api.MySchoolDetails
+    );
+
     const name = data?.name;
     const gender = data?.gender;
     const type = data?.type;
-
     const isRTL = globalState.isRTL;
 
     const toggleSwitch = async () => {
@@ -96,8 +99,8 @@ const AUIDrawerContent = (props: any) => {
                         ) : (
                             <AUIImage
                                 path={
-                                    data?.photo
-                                        ? data?.photo
+                                    mySchoolDetails?.logo
+                                        ? mySchoolDetails?.logo
                                         : Asset.fromModule(
                                               require("@/assets/images/local/sclogo.png")
                                           )

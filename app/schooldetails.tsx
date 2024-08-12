@@ -33,9 +33,8 @@ const schema = Yup.object().shape({
     remark: Yup.string().required("Remark is required"),
     website: Yup.string().required("Website is required"),
     description: Yup.string().required("Description is required"),
-    // location: Yup.string().required("Location is required"),
     country: Yup.string().required("Country is required"),
-    city: Yup.string().required("City is required"),
+    city: Yup.string().optional(),
     state: Yup.string().required("State is required"),
     zip: Yup.string().required("Zip is required"),
     street: Yup.string().required("Street is required"),
@@ -76,7 +75,6 @@ export default function SchoolDetails() {
             remark: "",
             website: "",
             description: "",
-            // location: "",
             country: "",
             city: "",
             state: "",
@@ -111,6 +109,7 @@ export default function SchoolDetails() {
 
         const country = data.country;
         const state = data.state;
+        const city = data.city;
 
         const countryName = Country.getCountryByCode(country)?.name;
         const stateName = State.getStateByCodeAndCountry(state, country)?.name;
@@ -120,27 +119,29 @@ export default function SchoolDetails() {
 
         const locationId = locationData.find((loc: any) => loc.location === countryName)?._id;
 
-        const payload = {
+        const payload: any = {
             id: userData?.client,
             remark: data.remark,
             website: data.website,
             description: data.description,
             logo: logoBase64,
             banner: bannerBase64,
-            location: locationId || "",
             country: countryName,
             state: stateName,
-            city: data.city,
             zip: data.zip,
             street: data.street,
         };
 
-        console.log("payload", payload);
+        if (city) {
+            payload.city = city;
+        }
+
+        if (locationId) {
+            payload.location = locationId;
+        }
 
         patch(API_URL.school, payload)
             .then((res: any) => {
-                console.log("res", res);
-
                 dispatch(setLoader(false));
 
                 if (res.statusCode === 200) {
@@ -429,7 +430,7 @@ export default function SchoolDetails() {
                                 render={({ field: { onChange, value }, fieldState: { error } }) => (
                                     <AUIThemedView>
                                         <DropdownComponent
-                                            label={DETAILS_FIELDS.city.label}
+                                            label={`${DETAILS_FIELDS.city.label} (optional)`}
                                             list={cities.map((city) => ({
                                                 label: city.name,
                                                 value: city.name,

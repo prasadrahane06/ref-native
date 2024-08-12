@@ -2,12 +2,12 @@ import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { RootState } from "@/redux/store";
+import { BlurView } from "expo-blur"; // Import BlurView from expo-blur
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Dimensions, StyleSheet } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import { useSelector } from "react-redux";
-import { BlurView } from "expo-blur"; // Import BlurView from expo-blur
 
 interface ChartComponentProps {
     title: string;
@@ -32,8 +32,6 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     const theme = useSelector((state: RootState) => state.global.theme);
 
     const isDataEmpty = labels.length === 0 || pendingData.length === 0 || doneData.length === 0;
-
-    console.log("isDataEmpty", isDataEmpty);
 
     const chartConfig = {
         backgroundGradientFrom: APP_THEME[theme].background,
@@ -60,9 +58,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
                 style={[styles.container, { backgroundColor: APP_THEME[theme].background }]}
             >
                 <AUIThemedText style={[styles.title]}>{title}</AUIThemedText>
-                <AUIThemedText style={[styles.subTitle]}>
-                    Payments are in $ Currency
-                </AUIThemedText>
+                <AUIThemedText style={[styles.subTitle]}>Payments are in $ Currency</AUIThemedText>
                 {isDataEmpty ? (
                     <BlurView intensity={90} style={styles.blurContainer}>
                         <AUIThemedText style={styles.noDataText}>

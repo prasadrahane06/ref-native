@@ -167,7 +167,7 @@ export default function ChangeNumberEmail() {
                 setOtpSent(true);
             })
             .catch((error) => {
-                console.log("error in verifyOtp", error);
+                console.log("error in verifyOtp", error.message);
                 ApiErrorToast(error);
                 dispatch(setLoader(false));
             });

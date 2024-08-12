@@ -110,9 +110,9 @@ export default function CityDetails() {
                     dispatch(removeFromFavorite({ id, type: "countries" }));
                     ApiSuccessToast(res.message);
                 })
-                .catch((e: any) => {
-                    ApiErrorToast(e.response?.data?.message);
-                    console.log(e);
+                .catch((error: any) => {
+                    ApiErrorToast(error.response?.data?.message);
+                    console.log("error in delete favorite", error);
                 });
         } else {
             // Add to favorites
@@ -121,9 +121,9 @@ export default function CityDetails() {
                     dispatch(addToFavorite({ countries: [country], courses: [], clients: [] }));
                     ApiSuccessToast(res.message);
                 })
-                .catch((e: any) => {
-                    ApiErrorToast(e.response?.data?.message);
-                    console.log(e);
+                .catch((error: any) => {
+                    ApiErrorToast(error.response?.data?.message);
+                    console.log("error in add favorite", error);
                 });
         }
     };
@@ -293,21 +293,24 @@ export default function CityDetails() {
                                     </AUIThemedText>
                                 </AUIThemedView>
                             </View>
-                            <View style={styles.iconWrapper}>
-                                <AUIImage
-                                    path={photoGallary[0]}
-                                    style={styles.iconImage}
-                                    contentFit="cover"
-                                />
-                                <AUIThemedView style={styles.iconTextContainer}>
-                                    <AUIThemedText style={styles.iconText}>
-                                        {t("language")}
-                                    </AUIThemedText>
-                                    <AUIThemedText style={styles.iconSubText}>
-                                        {country?.nativeLanguage}
-                                    </AUIThemedText>
-                                </AUIThemedView>
-                            </View>
+
+                            {country?.nativeLanguage && (
+                                <View style={styles.iconWrapper}>
+                                    <AUIImage
+                                        path={photoGallary[0]}
+                                        style={styles.iconImage}
+                                        contentFit="cover"
+                                    />
+                                    <AUIThemedView style={styles.iconTextContainer}>
+                                        <AUIThemedText style={styles.iconText}>
+                                            {t("language")}
+                                        </AUIThemedText>
+                                        <AUIThemedText style={styles.iconSubText}>
+                                            {country?.nativeLanguage}
+                                        </AUIThemedText>
+                                    </AUIThemedView>
+                                </View>
+                            )}
                         </AUIThemedView>
 
                         <AUIThemedView
@@ -337,13 +340,8 @@ export default function CityDetails() {
                         </AUIThemedView>
                     </AUIThemedView>
 
-                    <AUIThemedView style={{ backgroundColor: APP_THEME[theme].background }}>
-                        <AUIThemedView
-                            style={[
-                                styles.photoGalleryheader,
-                                { backgroundColor: APP_THEME[theme].background },
-                            ]}
-                        >
+                    <AUIThemedView>
+                        <AUIThemedView style={[styles.photoGalleryheader]}>
                             <AUIThemedText style={styles.photoGalleryText}>
                                 {/* {GLOBAL_TEXT.photo_gallery} */}
                                 {t("photo_gallery")}
@@ -424,8 +422,9 @@ const styles = StyleSheet.create({
     },
     iconContainer: {
         flexDirection: "row",
-        justifyContent: "space-between",
+        justifyContent: "center",
         marginTop: 20,
+        gap: 20,
     },
     iconWrapper: {
         alignItems: "center",
@@ -449,11 +448,13 @@ const styles = StyleSheet.create({
         marginTop: 5,
         textAlign: "center",
         fontSize: 12,
+        color: "#000",
     },
     iconSubText: {
         textAlign: "center",
         fontSize: 16,
         fontWeight: "bold",
+        color: "#000",
     },
     aboutContainer: {
         marginTop: 15,

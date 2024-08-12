@@ -4,7 +4,7 @@ import * as Device from "expo-device";
 export const storeUserData = async (key: string, value: object) => {
     try {
         const existingData = await getUserData(key);
-        
+
         const updatedData = { ...existingData, ...value };
         const jsonValue = JSON.stringify(updatedData);
 

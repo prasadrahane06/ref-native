@@ -617,7 +617,6 @@ export default function OverviewTab({ schoolOverView, courseId, clientId }: Over
     const reviewOfTheSchool = useLangTransformSelector(
         (state: RootState) => state.api.ratingsOfTheSchool || {}
     );
-    console.log("reviewOfTheSchool", JSON.stringify(schoolOverView));
 
     const handlePhonePress = (number: string) => {
         Linking.openURL(`tel:${number}`);

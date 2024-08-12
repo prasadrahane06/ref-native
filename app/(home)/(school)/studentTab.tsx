@@ -64,7 +64,6 @@ export default function TabTwoScreen() {
     }, [page, schoolPurchaseCourse.totalPages]);
 
     const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
-    console.log("schoolPurchaseCourse.docs ", JSON.stringify(schoolPurchaseCourse.docs));
 
     return (
         // <KeyboardAvoidingView

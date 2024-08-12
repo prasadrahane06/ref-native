@@ -33,8 +33,6 @@ export const AvailableCourses: React.FC<AvailableCoursesProps> = ({
     const isEven = index % 2 === 0;
     const theme = useSelector((state: RootState) => state.global.theme);
 
-    console.log("_id=", _id)
-
     return (
         <AUIThemedView style={styles.container} key={_id}>
             <AUIThemedView
@@ -49,11 +47,13 @@ export const AvailableCourses: React.FC<AvailableCoursesProps> = ({
             >
                 <AUIThemedView style={styles.textContainer}>
                     <AUIThemedText style={styles.title}>{courseName}</AUIThemedText>
-                    <AUIThemedText style={styles.description}
-               numberOfLines={numberOfLines}
-               ellipsizeMode={ellipsizeMode}
-                    
-                    >{courseDesciption}</AUIThemedText>
+                    <AUIThemedText
+                        style={styles.description}
+                        numberOfLines={numberOfLines}
+                        ellipsizeMode={ellipsizeMode}
+                    >
+                        {courseDesciption}
+                    </AUIThemedText>
                     <AUIThemedText
                         style={{
                             fontSize: 13,

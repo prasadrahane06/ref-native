@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, TouchableOpacity, Modal, View, Text, Pressable, FlatList } from "react-native";
+import {
+    StyleSheet,
+    TouchableOpacity,
+    Modal,
+    View,
+    Text,
+    Pressable,
+    FlatList,
+    KeyboardAvoidingView,
+    Platform,
+} from "react-native";
 import AUIFilter from "@/components/common/AUIFilter";
 import AUISearchBar from "@/components/common/AUISearchBar";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
@@ -11,13 +21,19 @@ import { RootState } from "@/redux/store";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import useDebounce from "@/customHooks/useDebounce";
 import { useTranslation } from "react-i18next";
+import { BACKGROUND_THEME } from "@/constants/Colors";
+import { useSelector } from "react-redux";
 // import { t } from "i18next";
 
 export default function CoursesTab({ schoolCourses }: { schoolCourses: any }) {
     const { t } = useTranslation();
     const [searchPhrase, setSearchPhrase] = useState("");
     const [clicked, setClicked] = useState(false);
-    const schoolCourse = useLangTransformSelector((state: RootState) => state.api.schoolCourse || {});
+
+    const theme = useSelector((state: RootState) => state.global.theme);
+    const schoolCourse = useLangTransformSelector(
+        (state: RootState) => state.api.schoolCourse || {}
+    );
     const [page, setPage] = useState<number>(1);
     const [isFilterModalVisible, setIsFilterModalVisible] = useState<boolean>(false);
     const [selectedFilters, setSelectedFilters] = useState({
@@ -25,8 +41,6 @@ export default function CoursesTab({ schoolCourses }: { schoolCourses: any }) {
         lastChance: false,
         rating: false,
     });
-
-    console.log("schoolCourses ===", schoolCourse._id);
 
     const { requestFn } = useApiRequest();
     const debouncedSearchPhrase = useDebounce(searchPhrase, 1000);
@@ -38,7 +52,10 @@ export default function CoursesTab({ schoolCourses }: { schoolCourses: any }) {
                 courseName: debouncedSearchPhrase,
             });
         } else {
-            requestFn(API_URL.course, "schoolCourse", { client: schoolCourses?._id, page: `${page}` });
+            requestFn(API_URL.course, "schoolCourse", {
+                client: schoolCourses?._id,
+                page: `${page}`,
+            });
         }
     }, [debouncedSearchPhrase, page]);
 
@@ -47,15 +64,13 @@ export default function CoursesTab({ schoolCourses }: { schoolCourses: any }) {
         requestFn(API_URL.schoolSearch, "schoolCourse", {
             client: schoolCourses?._id,
             courseName: debouncedSearchPhrase,
-            view : selectedFilters.view,
-            rating : selectedFilters.rating,
-            lastChance : selectedFilters.lastChance 
-        })
-        
-        console.log('Filters applied:', selectedFilters);
-        setIsFilterModalVisible(false); 
-    };
+            view: selectedFilters.view,
+            rating: selectedFilters.rating,
+            lastChance: selectedFilters.lastChance,
+        });
 
+        setIsFilterModalVisible(false);
+    };
 
     const resetFilters = () => {
         setSelectedFilters({
@@ -63,101 +78,120 @@ export default function CoursesTab({ schoolCourses }: { schoolCourses: any }) {
             lastChance: false,
             rating: false,
         });
-        setIsFilterModalVisible(false); 
+        setIsFilterModalVisible(false);
     };
 
     const toggleFilter = (filterName: string) => {
-        setSelectedFilters((prevState : any ) => ({
+        setSelectedFilters((prevState: any) => ({
             ...prevState,
             [filterName]: !prevState[filterName],
         }));
     };
 
-    return (
-        <AUIThemedView>
-            <AUIThemedView style={styles.container}>
-                <AUISearchBar
-                    searchPhrase={searchPhrase}
-                    setSearchPhrase={setSearchPhrase}
-                    clicked={clicked}
-                    setClicked={setClicked}
-                    containerStyle={{ width: "100%" }}
-                />
+    const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
 
-                {/* Filter Button */}
-                {/* <TouchableOpacity onPress={() => setIsFilterModalVisible(true)}>
+    return (
+        <KeyboardAvoidingView
+            style={{ flex: 1, backgroundColor: BACKGROUND_THEME[theme].background }}
+            behavior="padding"
+            // keyboardVerticalOffset={keyboardVerticalOffset}
+        >
+            <AUIThemedView>
+                <AUIThemedView style={styles.container}>
+                    <AUISearchBar
+                        searchPhrase={searchPhrase}
+                        setSearchPhrase={setSearchPhrase}
+                        clicked={clicked}
+                        setClicked={setClicked}
+                        containerStyle={{ width: "100%" }}
+                    />
+
+                    {/* Filter Button */}
+                    {/* <TouchableOpacity onPress={() => setIsFilterModalVisible(true)}>
                     <AUIFilter />
                 </TouchableOpacity> */}
-            </AUIThemedView>
+                </AUIThemedView>
 
-            {/* Filter Modal */}
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={isFilterModalVisible}
-                onRequestClose={() => setIsFilterModalVisible(false)}
-            >
-                <View style={styles.modalContainer}>
-                    <View style={styles.modalContent}>
-                        <Text style={styles.modalTitle}>Filter Options</Text>
+                {/* Filter Modal */}
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={isFilterModalVisible}
+                    onRequestClose={() => setIsFilterModalVisible(false)}
+                >
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modalContent}>
+                            <Text style={styles.modalTitle}>Filter Options</Text>
 
-                        {/* Filter Options */}
-                        <TouchableOpacity style={styles.filterOption} onPress={() => toggleFilter('view')}>
-                            <Text style={styles.filterText}>Sort by View</Text>
-                            <Text style={styles.filterCheckbox}>
-                                {selectedFilters.view ? '✓' : ''}
-                            </Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity style={styles.filterOption} onPress={() => toggleFilter('lastChance')}>
-                            <Text style={styles.filterText}>Last Chance</Text>
-                            <Text style={styles.filterCheckbox}>
-                                {selectedFilters.lastChance ? '✓' : ''}
-                            </Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity style={styles.filterOption} onPress={() => toggleFilter('rating')}>
-                            <Text style={styles.filterText}>By Rating</Text>
-                            <Text style={styles.filterCheckbox}>
-                                {selectedFilters.rating ? '✓' : ''}
-                            </Text>
-                        </TouchableOpacity>
-
-                        {/* Apply and Reset Buttons */}
-                        <View style={styles.buttonContainer}>
-                            <Pressable
-                                style={[styles.button, styles.applyButton]}
-                                onPress={applyFilters}
+                            {/* Filter Options */}
+                            <TouchableOpacity
+                                style={styles.filterOption}
+                                onPress={() => toggleFilter("view")}
                             >
-                                <Text style={styles.buttonText}>Apply</Text>
-                            </Pressable>
-                            <Pressable
-                                style={[styles.button, styles.resetButton]}
-                                onPress={resetFilters}
+                                <Text style={styles.filterText}>Sort by View</Text>
+                                <Text style={styles.filterCheckbox}>
+                                    {selectedFilters.view ? "✓" : ""}
+                                </Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={styles.filterOption}
+                                onPress={() => toggleFilter("lastChance")}
                             >
-                                <Text style={styles.buttonText}>Reset</Text>
-                            </Pressable>
+                                <Text style={styles.filterText}>Last Chance</Text>
+                                <Text style={styles.filterCheckbox}>
+                                    {selectedFilters.lastChance ? "✓" : ""}
+                                </Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={styles.filterOption}
+                                onPress={() => toggleFilter("rating")}
+                            >
+                                <Text style={styles.filterText}>By Rating</Text>
+                                <Text style={styles.filterCheckbox}>
+                                    {selectedFilters.rating ? "✓" : ""}
+                                </Text>
+                            </TouchableOpacity>
+
+                            {/* Apply and Reset Buttons */}
+                            <View style={styles.buttonContainer}>
+                                <Pressable
+                                    style={[styles.button, styles.applyButton]}
+                                    onPress={applyFilters}
+                                >
+                                    <Text style={styles.buttonText}>Apply</Text>
+                                </Pressable>
+                                <Pressable
+                                    style={[styles.button, styles.resetButton]}
+                                    onPress={resetFilters}
+                                >
+                                    <Text style={styles.buttonText}>Reset</Text>
+                                </Pressable>
+                            </View>
                         </View>
                     </View>
-                </View>
-            </Modal>
+                </Modal>
 
-            {schoolCourses && (
-                <AUIThemedView>
-                    <AvailableCoursesList courses={schoolCourse?.docs || schoolCourse} />
-                </AUIThemedView>
-            )}
+                {schoolCourses && (
+                    <AUIThemedView>
+                        <AvailableCoursesList courses={schoolCourse?.docs || schoolCourse} />
+                    </AUIThemedView>
+                )}
 
-            <TouchableOpacity
-                style={styles.loadMoreButton}
-                disabled={page === schoolCourse?.totalPages}
-                onPress={() => setPage(page + 1)}
-            >
-                <AUIThemedText>
-                    {page === schoolCourse?.totalPages ? `${t("you_are_caught_up")}` :`${t("load_more")}`}
-                </AUIThemedText>
-            </TouchableOpacity>
-        </AUIThemedView>
+                <TouchableOpacity
+                    style={styles.loadMoreButton}
+                    disabled={page === schoolCourse?.totalPages}
+                    onPress={() => setPage(page + 1)}
+                >
+                    <AUIThemedText>
+                        {page === schoolCourse?.totalPages
+                            ? `${t("you_are_caught_up")}`
+                            : `${t("load_more")}`}
+                    </AUIThemedText>
+                </TouchableOpacity>
+            </AUIThemedView>
+        </KeyboardAvoidingView>
     );
 }
 

@@ -63,8 +63,6 @@ interface EnquireNowModalProps {
     planId: string;
 }
 
-
-
 function EnquireNowModal({
     isVisible,
     onClose,
@@ -95,7 +93,9 @@ function EnquireNowModal({
         phoneNumber: Yup.string()
             .matches(/^[0-9]{10}$/, `${t("enter_valid_mobile_number")}`)
             .required("Enter valid mobile number"),
-        email: Yup.string().email(GLOBAL_TEXT.validate_email).required(`${t("please_provide_valid_email")}`),
+        email: Yup.string()
+            .email(GLOBAL_TEXT.validate_email)
+            .required(`${t("please_provide_valid_email")}`),
         language: Yup.string().required(`${t("language_is_required")}`),
         startDate: Yup.string().required(`${t("start_date_is_required")}`),
         endDate: Yup.string().required(`${t("end_date_is_required")}`),
@@ -185,7 +185,12 @@ function EnquireNowModal({
     const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
 
     return (
-        <Modal animationType="slide" transparent={true} visible={isVisible} onRequestClose={onClose}>
+        <Modal
+            animationType="slide"
+            transparent={true}
+            visible={isVisible}
+            onRequestClose={onClose}
+        >
             <AUIThemedView
                 style={
                     Platform.OS === "ios"
@@ -332,7 +337,7 @@ function EnquireNowModal({
                                     <AUIInputField
                                         value={value}
                                         onChangeText={onChange}
-                                        placeholder= {t("enter_your_email")}
+                                        placeholder={t("enter_your_email")}
                                     />
                                     <AUIThemedView>
                                         {error && (
@@ -378,7 +383,10 @@ function EnquireNowModal({
                                 {t("when_you_want_to_start_course")}
                             </AUIThemedText>
                             <AUIThemedView style={enquiryFormStyles.dateContainer}>
-                                <AUIThemedText style={inputFieldStyle.label}> {t("from")}</AUIThemedText>
+                                <AUIThemedText style={inputFieldStyle.label}>
+                                    {" "}
+                                    {t("from")}
+                                </AUIThemedText>
                                 <Controller
                                     name="startDate"
                                     control={control}
@@ -438,7 +446,9 @@ function EnquireNowModal({
                                         </AUIThemedView>
                                     )}
                                 />
-                                <AUIThemedText style={inputFieldStyle.label}>{t("to")}</AUIThemedText>
+                                <AUIThemedText style={inputFieldStyle.label}>
+                                    {t("to")}
+                                </AUIThemedText>
                                 <Controller
                                     name="endDate"
                                     control={control}
@@ -541,7 +551,7 @@ function EnquireNowModal({
                                         numberOfLines={4}
                                         value={value}
                                         onChangeText={onChange}
-                                        placeholder= {t("enter_your_message")}
+                                        placeholder={t("enter_your_message")}
                                     />
                                     <AUIThemedView>
                                         {error && (
@@ -558,7 +568,11 @@ function EnquireNowModal({
 
                 <AUIThemedView style={enquireNowStyles.footerContainer}>
                     <AUIThemedView style={enquireNowStyles.buttonContainer}>
-                        <AUIButton title={t("clear")} onPress={() => reset()} style={{ width: "48%" }} />
+                        <AUIButton
+                            title={t("clear")}
+                            onPress={() => reset()}
+                            style={{ width: "48%" }}
+                        />
                         <AUIButton
                             title={t("save")}
                             selected

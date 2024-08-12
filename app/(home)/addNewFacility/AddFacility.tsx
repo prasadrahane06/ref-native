@@ -46,7 +46,7 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
     const [image, setImage] = useState<string | null>(facility?.image || null);
     const [initialValues, setInitialValues] = useState<any>({});
     const [showConfirmation, setShowConfirmation] = useState(false);
-    const {loading, setLoading} = useLoading();
+    const { loading, setLoading } = useLoading();
 
     useEffect(() => {
         if (facility) {
@@ -93,16 +93,17 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
                 refreshFacilities();
                 reset();
             })
-            .catch((e) => {
+            .catch((error) => {
                 ApiErrorToast(`${t("failed_to_add_facility")}`);
-                console.log(e);
-            }).finally(() => setLoading(false));
+                console.log("error in add facility", error);
+            })
+            .finally(() => setLoading(false));
     };
 
     const handleEdit = () => {
         const values = getValues();
         const payload: any = { id: facility?._id };
-        
+
         if (values.facilityName !== initialValues.facilityName) {
             payload.name = values.facilityName;
         }
@@ -119,13 +120,12 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
                 ApiSuccessToast(`${t("facility_updated_successfully")}`);
                 refreshFacilities();
                 reset();
-
             })
-            .catch((e) => {
+            .catch((error) => {
                 ApiErrorToast(`${t("failed_to_update_facility")}`);
-                console.log(e);
-
-            }).finally(() => setLoading(false));
+                console.log("error in edit facility", error);
+            })
+            .finally(() => setLoading(false));
     };
 
     const handleDelete = () => {
@@ -136,9 +136,9 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
                 ApiSuccessToast(res.message);
                 refreshFacilities();
             })
-            .catch((e) => {
-                // ApiErrorToast(error.message);
-                console.log(e);
+            .catch((error) => {
+                ApiErrorToast(error.message);
+                console.log("error in delete facility", error);
             });
     };
 
@@ -188,16 +188,16 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
     const generateRandomId = (): string => {
         return Math.floor(1000 + Math.random() * 9000).toString(); // Generate a random 4-digit number
     };
-    
+
     const truncateFileName = (fileName: string | null, maxLength: number): string => {
         if (fileName === null) {
             return `Img${generateRandomId()}`;
         }
-    
+
         if (fileName.length <= maxLength) {
             return fileName;
         }
-    
+
         return fileName.substring(0, maxLength - 3) + "...";
     };
 
@@ -220,9 +220,13 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
                                 placeholder="Facility Name"
                                 value={value}
                                 onChangeText={onChange}
-                                style={[styles.input, error && { borderColor: 'red' }]}
+                                style={[styles.input, error && { borderColor: "red" }]}
                             />
-                            {error && <AUIThemedText style={{ color: 'red' , fontSize : 10}}>{error.message}</AUIThemedText>}
+                            {error && (
+                                <AUIThemedText style={{ color: "red", fontSize: 10 }}>
+                                    {error.message}
+                                </AUIThemedText>
+                            )}
                         </>
                     )}
                 />
@@ -245,10 +249,14 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
                 <AUIThemedView style={styles.imagePickerContainer}>
                     <TouchableOpacity onPress={pickImage} style={styles.uploadButton}>
                         <MaterialIcons name="cloud-upload" size={24} color="#5BD894" />
-                        <AUIThemedText style={styles.uploadButtonText}>{t("upload_file")}</AUIThemedText>
+                        <AUIThemedText style={styles.uploadButtonText}>
+                            {t("upload_file")}
+                        </AUIThemedText>
                     </TouchableOpacity>
                     <AUIThemedText style={styles.fileName}>
-                        {image ? truncateFileName(image.split("/").pop()!, 18) :` ${t("no_file_chosen")}`}
+                        {image
+                            ? truncateFileName(image.split("/").pop()!, 18)
+                            : ` ${t("no_file_chosen")}`}
                     </AUIThemedText>
                 </AUIThemedView>
                 {image && <Image source={{ uri: image }} style={styles.image} />}
@@ -258,7 +266,7 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
                             <AUIThemedView style={styles.buttonContainer}>
                                 <AUIButton
                                     title="Clear"
-                                    disabled= {loading ? true : false}
+                                    disabled={loading ? true : false}
                                     onPress={() => {
                                         reset();
                                         clearFields();
@@ -266,7 +274,7 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
                                     style={{ width: "48%" }}
                                 />
                                 <AUIButton
-                                    disabled= {loading ? true : false}
+                                    disabled={loading ? true : false}
                                     title="Update"
                                     selected
                                     style={{ width: "48%" }}
@@ -287,7 +295,7 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
                         <AUIThemedView style={styles.buttonContainer}>
                             <AUIButton
                                 title="Clear"
-                                disabled= {loading ? true : false}
+                                disabled={loading ? true : false}
                                 onPress={() => {
                                     reset();
                                     clearFields();
@@ -296,7 +304,7 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
                             />
                             <AUIButton
                                 title="Save"
-                                disabled= {loading ? true : false}
+                                disabled={loading ? true : false}
                                 selected
                                 style={{ width: "48%" }}
                                 onPress={handleSubmit(handleSave)}

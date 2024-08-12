@@ -4,6 +4,7 @@ import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import CourseList from "@/components/home/common/CourseList";
 import SectionTitle from "@/components/home/common/SectionTitle";
+import { BACKGROUND_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT } from "@/constants/Properties";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
@@ -86,7 +87,7 @@ export default function TabThreeScreen() {
             </AUIThemedView>
 
             {/* Scrollable Content */}
-            <ScrollView style={styles.scrollViewContent}>
+            <ScrollView style={{ backgroundColor: BACKGROUND_THEME[theme].background }}>
                 <AUIThemedView style={styles.root}>
                     <AUIThemedView>
                         <AUIThemedView style={styles.headerContainer}>
@@ -134,16 +135,7 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     searchBarContainer: {
-        flexDirection: "row",
-        position: "absolute",
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 1,
-        backgroundColor: "white",
-        width: "100%",
-        alignItems: "center",
-        justifyContent: "center",
+        marginHorizontal: 15,
     },
     scrollViewContent: {
         marginTop: 70,

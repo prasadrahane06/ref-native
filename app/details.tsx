@@ -91,7 +91,7 @@ const schema = Yup.object().shape({
     academicSession: Yup.string().required("Academic session is required"),
     language: Yup.string().required("Language is required"),
     country: Yup.string().required("Country is required"),
-    city: Yup.string().required("City is required"),
+    city: Yup.string().optional(),
     state: Yup.string().required("State is required"),
 });
 
@@ -127,18 +127,22 @@ const DetailsPage = () => {
 
         const country = data.country;
         const state = data.state;
+        const city = data.city;
 
         const countryName = Country.getCountryByCode(country)?.name;
         const stateName = State.getStateByCodeAndCountry(state, country)?.name;
 
-        const payload = {
+        const payload: any = {
             qualification: data.qualification,
             academicSession: data.academicSession,
             language: data.language,
             country: countryName,
             state: stateName,
-            city: data.city,
         };
+
+        if (city) {
+            payload.city = city;
+        }
 
         patch(API_URL.user, payload)
             .then((res: any) => {
@@ -310,7 +314,7 @@ const DetailsPage = () => {
                                 render={({ field: { onChange, value }, fieldState: { error } }) => (
                                     <AUIThemedView>
                                         <DropdownComponent
-                                            label={DETAILS_FIELDS.city.label}
+                                            label={`${DETAILS_FIELDS.city.label} (optional)`}
                                             list={cities.map((city) => ({
                                                 label: city.name,
                                                 value: city.name,

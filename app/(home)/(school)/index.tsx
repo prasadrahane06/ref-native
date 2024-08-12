@@ -16,6 +16,8 @@ import "react-native-gesture-handler";
 
 import { useAxiosClient as useBotAxios } from "at-chatbot-native";
 import formatNumberWithComma from "@/utils/numberFomatter";
+import { BACKGROUND_THEME } from "@/constants/Colors";
+import { useSelector } from "react-redux";
 
 export default function HomeScreen() {
     const { requestFn } = useApiRequest();
@@ -23,6 +25,7 @@ export default function HomeScreen() {
     const { botPost } = useBotAxios();
     const { t } = useTranslation();
 
+    const theme = useSelector((state: RootState) => state.global.theme);
     const user = useLangTransformSelector((state: RootState) => state.global.user);
     const myCourse = useLangTransformSelector((state: RootState) => state.api.myCourse);
     const mySchoolDetails = useLangTransformSelector(
@@ -32,6 +35,7 @@ export default function HomeScreen() {
     useEffect(() => {
         requestFn(API_URL.schoolAnalytics, "MySchoolDetails", { client: true });
         requestFn(API_URL.course, "myCourse", { client: true });
+        requestFn(API_URL.country, "countryDataForSchool");
     }, []);
 
     useEffect(() => {
@@ -106,7 +110,7 @@ export default function HomeScreen() {
 
     return (
         <AUIThemedView>
-            <ScrollView>
+            <ScrollView style={{ backgroundColor: BACKGROUND_THEME[theme].background }}>
                 <AUIThemedView style={styles.section}>
                     <SectionTitle>{mySchoolDetails?.name}</SectionTitle>
                     <AUIThemedView style={{ alignItems: "center", marginTop: 15 }}>
@@ -153,12 +157,7 @@ export default function HomeScreen() {
                         <SectionTitle style={{ paddingBottom: 10 }}>
                             {t("ongoing_courses")}
                         </SectionTitle>
-                        <CourseList
-                            data={myCourse?.docs?.slice(0, 4) || []}
-                            onEdit={() => {
-                                console.log("edit called");
-                            }}
-                        />
+                        <CourseList data={myCourse?.docs?.slice(0, 4) || []} />
                     </AUIThemedView>
                 </AUIThemedView>
             </ScrollView>

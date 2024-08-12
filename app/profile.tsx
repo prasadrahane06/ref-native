@@ -150,7 +150,7 @@ const Profile: React.FC = () => {
     const [profileBase64, setProfileBase64] = useState<any>(null);
     const [selectedCountry, setSelectedCountry] = useState<any>(null);
     const [selectedState, setSelectedState] = useState<any>(null);
-    const [selectedCity, setSelectedCity] = useState<any>(null); // DONT REMOVE IT, IT IS USED IN COUNTRY AND STATE
+    const [selectedCity, setSelectedCity] = useState<any>(userProfileData?.city); // DONT REMOVE IT, IT IS USED IN COUNTRY AND STATE
     const [canSkip, setCanSkip] = useState(true);
 
     const country = userProfileData?.country;
@@ -178,7 +178,7 @@ const Profile: React.FC = () => {
         qualification: Yup.string().required(`${t("qualification_is_required")}`),
         academicSession: Yup.string().required(`${t("academic_session_is_required")}`),
         country: Yup.string().required(`${t("country_is_required")}`),
-        city: Yup.string().required(`${t("city_is_required")}`),
+        city: Yup.string().optional(),
         state: Yup.string().required(`${t("state_is_required")}`),
     });
 
@@ -235,7 +235,6 @@ const Profile: React.FC = () => {
         return false;
     };
 
-
     const onDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
         const currentDate = selectedDate || dateOfBirth;
         setShowDatePicker(Platform.OS === "ios");
@@ -274,15 +273,28 @@ const Profile: React.FC = () => {
 
         const country = data.country;
         const state = data.state;
+        const city = data.city;
 
         const countryName = Country.getCountryByCode(country)?.name;
         const stateName = State.getStateByCodeAndCountry(state, country)?.name;
 
+        let updatedCity = city;
+
+        if (
+            country === userProfileData?.countryCode &&
+            state === userProfileData?.stateCode &&
+            city === userProfileData?.city
+        ) {
+            updatedCity = userProfileData?.city;
+        }
+
+        if (!selectedCity) {
+            updatedCity = stateName;
+        }
+
         const payload: any = {
             id: userProfileData?._id,
             name: data.name,
-            // phone: data.phoneNumber,
-            // email: data.email,
             language: data.language,
             dob: data.dateOfBirth,
             gender: data.gender,
@@ -290,7 +302,7 @@ const Profile: React.FC = () => {
             academicSession: data.academicSession,
             country: countryName,
             state: stateName,
-            city: data.city,
+            city: updatedCity,
         };
 
         if (profileBase64) {
@@ -396,7 +408,10 @@ const Profile: React.FC = () => {
                             </TouchableOpacity>
                         </AUIThemedView>
                         <AUIInputField
-                            style={styles.disabledInput}
+                            style={[
+                                styles.disabledInput,
+                                { backgroundColor: theme === "light" ? "#f0f0f0" : "#777777" },
+                            ]}
                             editable={false}
                             value={userProfileData?.phone}
                         />
@@ -419,7 +434,10 @@ const Profile: React.FC = () => {
                             </TouchableOpacity>
                         </AUIThemedView>
                         <AUIInputField
-                            style={styles.disabledInput}
+                            style={[
+                                styles.disabledInput,
+                                { backgroundColor: theme === "light" ? "#f0f0f0" : "#777777" },
+                            ]}
                             editable={false}
                             value={userProfileData?.email}
                         />
@@ -674,6 +692,7 @@ const Profile: React.FC = () => {
                                     setValue={({ value }) => {
                                         onChange(value);
                                         setSelectedState(value);
+                                        setSelectedCity(null);
                                     }}
                                     labelField="label"
                                     valueField="value"
@@ -689,7 +708,9 @@ const Profile: React.FC = () => {
                         control={control}
                         render={({ field: { onChange, value }, fieldState: { error } }) => (
                             <AUIThemedView>
-                                <AUIThemedText style={styles.label}> {t("my_city")}</AUIThemedText>
+                                <AUIThemedText style={styles.label}>
+                                    {t("my_city")} (optional)
+                                </AUIThemedText>
                                 {/* @ts-ignore */}
                                 <DropdownComponent
                                     list={cities.map((city) => ({
@@ -771,7 +792,6 @@ const Profile: React.FC = () => {
 
 const styles = StyleSheet.create({
     disabledInput: {
-        backgroundColor: "#f0f0f0",
         opacity: 0.5,
         borderWidth: 0,
         borderRadius: 10,
@@ -853,7 +873,6 @@ const styles = StyleSheet.create({
         fontSize: 13,
         fontWeight: "bold",
         fontStyle: "normal",
-        // color: "#333",
     },
     dateInputStyle: {
         borderColor: "#5BD894",

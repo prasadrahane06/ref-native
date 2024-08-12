@@ -231,7 +231,7 @@ export function TabLayout() {
     );
 
     return (
-        <View style={{ flex: 1 }}>
+        <AUIThemedView style={{ flex: 1 }}>
             <ChatBot
                 consumerId={user?.client}
                 config={config}
@@ -315,7 +315,7 @@ export function TabLayout() {
                     }}
                 />
             </Tabs>
-        </View>
+        </AUIThemedView>
     );
 }
 

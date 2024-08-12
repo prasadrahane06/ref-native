@@ -5,7 +5,7 @@ import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import OTPScreen from "@/components/screenComponents/OTPScreen";
-import { APP_THEME, BACKGROUND_THEME } from "@/constants/Colors";
+import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
 import { GLOBAL_TEXT, SIGNUP_FIELDS } from "@/constants/Properties";
 import { storeUserData } from "@/constants/RNAsyncStore";
 import { loginPageStyles, secondaryButtonStyle } from "@/constants/Styles";
@@ -268,11 +268,11 @@ const LoginPage = () => {
 
         post(API_URL.resendOTP, payload)
             .then((res) => {
-                console.log("res", res);
                 ApiSuccessToast(res.message);
             })
-            .catch((e: any) => {
-                console.log("e", e);
+            .catch((error: any) => {
+                console.log("error in handleOnResendOtp", error);
+                ApiErrorToast(error.message);
             });
     };
 

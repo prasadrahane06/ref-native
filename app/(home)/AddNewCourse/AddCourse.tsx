@@ -7,31 +7,31 @@ import AUIModal from "@/components/common/AUIModal";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
+import CustomTooltip from "@/components/common/AUIToolTip";
+import ImageViewer from "@/components/ImageViewer";
 import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
+import { languagesData } from "@/constants/dummy data/languagesData";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import useIsomorphicLayoutEffect from "@/customHooks/useIsomorphicLayoutEffect";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
+import { setLoader } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import { useNavigation } from "@react-navigation/native";
 import Checkbox from "expo-checkbox";
-import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { Platform, Pressable, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import AddPlan from "./AddPlan";
+import React, { useCallback, useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { languagesData } from "@/constants/dummy data/languagesData";
-import { setLoader } from "@/redux/globalSlice";
+import { Platform, Pressable, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import CustomTooltip from "@/components/common/AUIToolTip";
-import ImageViewer from "@/components/ImageViewer";
+import AddPlan from "./AddPlan";
+
 interface Plan {
     _id: string;
     name: any | { en: string; ar?: string };
@@ -232,7 +232,7 @@ const AUIAddNewCourse = () => {
             })
             .catch((error) => {
                 ApiErrorToast(error.message);
-                console.log(error);
+                console.log("error in add course", error);
 
                 dispatch(setLoader(false));
             });
@@ -265,7 +265,7 @@ const AUIAddNewCourse = () => {
             })
             .catch((error) => {
                 ApiErrorToast(error.message);
-                console.log(error);
+                console.log("error in edit course", error);
                 dispatch(setLoader(false));
             });
     };
@@ -281,7 +281,7 @@ const AUIAddNewCourse = () => {
             })
             .catch((error) => {
                 ApiErrorToast(`${t("failed_to_delete_course")}`);
-                console.log(error);
+                console.log("error in delete course", error);
             });
     };
 
@@ -333,16 +333,16 @@ const AUIAddNewCourse = () => {
     const generateRandomId = (): string => {
         return Math.floor(1000 + Math.random() * 9000).toString(); // Generate a random 4-digit number
     };
-    
+
     const truncateFileName = (fileName: string | null, maxLength: number): string => {
         if (fileName === null) {
             return `Img${generateRandomId()}`;
         }
-    
+
         if (fileName.length <= maxLength) {
             return fileName;
         }
-    
+
         return fileName.substring(0, maxLength - 3) + "...";
     };
 
@@ -483,6 +483,7 @@ const AUIAddNewCourse = () => {
                                         onChangeFrom(e, date);
                                         onChange(date);
                                     }}
+                                    minimumDate={new Date()}
                                 />
                             )}
                         </Pressable>
@@ -509,6 +510,7 @@ const AUIAddNewCourse = () => {
                                         onChangeTo(e, date);
                                         onChange(date);
                                     }}
+                                    minimumDate={new Date()}
                                 />
                             )}
                         </>

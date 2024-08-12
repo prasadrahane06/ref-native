@@ -35,8 +35,8 @@ const styles = StyleSheet.create({
         overflow: "hidden",
     },
     image: {
-        width: 270,
-        height: 160,
+        width: 330,
+        height: 230,
         borderRadius: 7,
     },
     gradient: {

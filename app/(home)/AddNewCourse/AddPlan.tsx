@@ -230,7 +230,7 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
             .catch((error) => {
                 dispatch(setLoader(true));
                 ApiErrorToast(error.message);
-                console.log(error);
+                console.log("error in add plan", error);
             });
     };
 
@@ -275,7 +275,7 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                 refreshPlans();
                 dispatch(setLoader(false));
                 ApiErrorToast(`${t("failed_to_update_plan")}`);
-                console.log(error);
+                console.log("error in edit plan", error);
             });
     };
 
@@ -288,9 +288,9 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                 setShowConfirmation(false);
                 refreshPlans();
             })
-            .catch((e) => {
+            .catch((error) => {
                 ApiErrorToast(`${t("failed_to_delete_plan")}`);
-                console.log(e);
+                console.log("error in delete plan", error);
             });
     };
 

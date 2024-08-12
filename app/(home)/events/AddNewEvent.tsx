@@ -94,9 +94,9 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                 onClose();
                 refreshEvents();
             })
-            .catch((e) => {
+            .catch((error) => {
                 ApiErrorToast(`${t("failed_to_add_event")}`);
-                console.log(e);
+                console.log("error in add event", error);
             })
             .finally(() => setLoading(false));
     };
@@ -119,9 +119,9 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                 onClose();
                 refreshEvents();
             })
-            .catch((e) => {
+            .catch((error) => {
                 ApiErrorToast(`${t("failed_to_update_event")}`);
-                console.log(e);
+                console.log("error in update event", error);
             })
             .finally(() => setLoading(false));
     };
@@ -135,9 +135,9 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                     setShowConfirmation(false);
                     refreshEvents();
                 })
-                .catch((e) => {
+                .catch((error) => {
                     ApiErrorToast(`${t("failed_to_delete_event")}`);
-                    console.log(e);
+                    console.log("error in delete event", error);
                 });
         }
     };
@@ -203,16 +203,16 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
     const generateRandomId = (): string => {
         return Math.floor(1000 + Math.random() * 9000).toString(); // Generate a random 4-digit number
     };
-    
+
     const truncateFileName = (fileName: string | null, maxLength: number): string => {
         if (fileName === null) {
             return `Img${generateRandomId()}`;
         }
-    
+
         if (fileName.length <= maxLength) {
             return fileName;
         }
-    
+
         return fileName.substring(0, maxLength - 3) + "...";
     };
 

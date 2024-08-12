@@ -16,6 +16,7 @@ import AUIImage from "./common/AUIImage";
 import { AUIThemedText } from "./common/AUIThemedText";
 import { AUIThemedView } from "./common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "./common/AUIToast";
+import { TouchableOpacityProps } from "react-native-gesture-handler";
 
 interface CourseProps {
     title: string;
@@ -59,9 +60,9 @@ const Course: React.FC<CourseProps> = ({
                 ApiSuccessToast(res.message);
                 dispatch(setLoader(false));
             })
-            .catch((e: any) => {
-                ApiErrorToast(e.response?.data?.message);
-                console.log(e);
+            .catch((error: any) => {
+                ApiErrorToast(error.response?.data?.message);
+                console.log("error in remove from cart", error);
             });
     };
     // @ts-ignore
@@ -90,9 +91,9 @@ const Course: React.FC<CourseProps> = ({
                                 ApiSuccessToast(res.message);
                                 dispatch(removeFromFavorite({ id, type: "courses" }));
                             })
-                            .catch((e: any) => {
-                                ApiErrorToast(e.response?.data?.message);
-                                console.log(e);
+                            .catch((error: any) => {
+                                ApiErrorToast(error.response?.data?.message);
+                                console.log("error in remove favorite", error);
                             })
                             .finally(() => dispatch(setLoader(false)));
                     },

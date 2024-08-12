@@ -42,9 +42,9 @@ const Destination = ({ title, image, countryWidth, countryHeight, favorite, id }
                                 ApiSuccessToast(res.message);
                                 dispatch(removeFromFavorite({ id, type: "countries" }));
                             })
-                            .catch((e: any) => {
-                                ApiErrorToast(e.response?.data?.message);
-                                console.log(e);
+                            .catch((error: any) => {
+                                ApiErrorToast(error.response?.data?.message);
+                                console.log("error in delete favorite", error);
                             })
                             .finally(() => dispatch(setLoader(false)));
                     },

@@ -64,13 +64,12 @@ export default function SimilarCoursesList({ data }: SimilarCoursesListProps) {
                 data={data}
                 renderItem={({ item }) => (
                     <TouchableOpacity
-                    onPress={()=>{
-                        router.push({
-                            pathname: `/(home)/courseDetails/${item?._id}`,
-                        })
-                        
-                    }}
-                    
+                        onPress={() => {
+                            router.push({
+                                // @ts-ignore
+                                pathname: `/(home)/courseDetails/${item?._id}`,
+                            });
+                        }}
                     >
                         <SimilarCourses
                             image={item.image}
@@ -121,6 +120,5 @@ const similarCoursesStyle = StyleSheet.create({
     image: {
         width: "auto",
         height: "100%",
-        padding:10
     },
 });

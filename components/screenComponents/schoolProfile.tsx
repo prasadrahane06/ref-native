@@ -34,16 +34,12 @@ const array = [
 ];
 function SchoolProfile() {
     const { t } = useTranslation();
-    // const userProfileData = useLangTransformSelector(
-    //     (state: RootState) => state.api.userProfileData
-    // );
-
-    const MySchoolDetails = useLangTransformSelector(
-        (state: RootState) => state.api.MySchoolDetails
-    );
+    const navigation = useNavigation();
 
     const theme = useSelector((state: RootState) => state.global.theme);
-    const navigation = useNavigation();
+    const mySchoolDetails = useLangTransformSelector(
+        (state: RootState) => state.api.MySchoolDetails
+    );
 
     return (
         <AUIThemedView style={styles.root}>
@@ -70,9 +66,12 @@ function SchoolProfile() {
                     </Pressable>
                 </View>
                 <View style={styles.avatarContainer}>
-                    <AUIImage path={MySchoolDetails?.logo} style={styles.avatar} />
-                    <AUIThemedText style={styles.name}>{MySchoolDetails?.name}</AUIThemedText>
-                    <AUIThemedText style={styles.email}>{MySchoolDetails?.email}</AUIThemedText>
+                    <AUIImage path={mySchoolDetails?.logo} style={styles.avatar} />
+                    <AUIThemedText style={styles.name}>{mySchoolDetails?.name}</AUIThemedText>
+                    <AUIThemedText style={styles.email}>{mySchoolDetails?.email}</AUIThemedText>
+                    <AUIThemedText style={styles.email}>
+                        Unique School ID: {mySchoolDetails?.schoolId}
+                    </AUIThemedText>
                 </View>
             </AUIThemedView>
 
