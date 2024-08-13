@@ -38,7 +38,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
         backgroundGradientFromOpacity: 0.2,
         backgroundGradientTo: APP_THEME[theme].background,
         backgroundGradientToOpacity: 0.4,
-        color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+        color: (opacity = 1) => (theme === "light" ? `#000` : `rgba(26, 255, 146, ${opacity})`),
         strokeWidth: 4,
         barPercentage: 0.5,
         useShadowColorFromDataset: false,

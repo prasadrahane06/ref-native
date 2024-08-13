@@ -15,6 +15,7 @@ import {
     Pressable,
     ScrollView,
     StyleSheet,
+    Text,
     TouchableOpacity,
 } from "react-native";
 import { useSelector } from "react-redux";
@@ -214,8 +215,11 @@ function SearchModal({ isVisible, onClose }: any) {
 const HeaderIcons: React.FC<HeaderIconsProps> = ({ onNotificationPress }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
 
+    const notificationData = useSelector((state: RootState) => state.api.notification);
     const userData = useSelector((state: RootState) => state.global.user);
+
     const isClient = userData?.client;
+    const notificationsCount = notificationData?.length > 9 ? "9+" : notificationData?.length;
 
     return (
         <AUIThemedView
@@ -238,7 +242,18 @@ const HeaderIcons: React.FC<HeaderIconsProps> = ({ onNotificationPress }) => {
             )}
 
             <TouchableOpacity onPress={onNotificationPress}>
-                <Ionicons name="notifications" size={25} color={APP_THEME.light.primary.first} />
+                <AUIThemedView style={notificationStyles.notificationIconContainer}>
+                    <Ionicons
+                        name="notifications"
+                        size={25}
+                        color={APP_THEME.light.primary.first}
+                    />
+                    {notificationData?.length > 0 && (
+                        <Text style={notificationStyles.notificationCount}>
+                            {notificationsCount}
+                        </Text>
+                    )}
+                </AUIThemedView>
             </TouchableOpacity>
 
             <SearchModal
@@ -252,6 +267,27 @@ const HeaderIcons: React.FC<HeaderIconsProps> = ({ onNotificationPress }) => {
 };
 
 export default HeaderIcons;
+
+const notificationStyles = StyleSheet.create({
+    notificationIconContainer: {
+        position: "relative",
+    },
+    notificationCount: {
+        position: "absolute",
+        top: -4,
+        right: -4,
+        minWidth: 14,
+        height: 14,
+        borderRadius: 7,
+        backgroundColor: "red",
+        textAlign: "center",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: 10,
+        fontWeight: "bold",
+        color: "white",
+    },
+});
 
 const searchStyles = StyleSheet.create({
     sectionContainer: {

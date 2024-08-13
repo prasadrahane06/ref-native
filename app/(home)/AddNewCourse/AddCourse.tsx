@@ -27,7 +27,7 @@ import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { Platform, Pressable, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import { Modal, Platform, Pressable, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import AddPlan from "./AddPlan";
@@ -293,6 +293,13 @@ const AUIAddNewCourse = () => {
         });
 
         if (!result.canceled) {
+            const fileSize = result.assets[0].fileSize;
+
+            if (fileSize && fileSize > 20000000) {
+                alert("File size should be less than 20 MB.");
+                return;
+            }
+
             setImageBase64(result.assets[0].base64);
             setShowImage(result.assets[0].uri);
             // @ts-ignore
@@ -457,36 +464,97 @@ const AUIAddNewCourse = () => {
                     control={control}
                     name="scheduleFrom"
                     render={({ field: { onChange, value }, fieldState: { error } }) => (
-                        <Pressable
-                            onPress={() => setShowFromDatePicker(true)}
-                            style={{
-                                flex: 1,
-                                flexDirection: "row",
-                                alignItems: "center",
-                            }}
-                        >
-                            <AUIInputField
-                                label={t("from")}
-                                // placeholder="DD/MM/YY"
-                                value={formatDate(value)}
-                                // onFocus={() => setShowFromDatePicker(true)}
-                                style={styles.dateInput}
-                                editable={false}
-                                onChangeText={onChange}
-                            />
-                            {showFromDatePicker && (
-                                <DateTimePicker
-                                    value={startDate}
-                                    mode="date"
-                                    display="default"
-                                    onChange={(e, date) => {
-                                        onChangeFrom(e, date);
-                                        onChange(date);
-                                    }}
-                                    minimumDate={new Date()}
-                                />
+                        <>
+                            {Platform.OS === "ios" ? (
+                                <>
+                                    <AUIButton
+                                        title={`From :  ${formatDate(startDate?.toISOString())}`}
+                                        style={{ borderWidth: 0, width: "48%" }}
+                                        onPress={() => setShowFromDatePicker(!showFromDatePicker)}
+                                        borderColor={APP_THEME.light.primary.first}
+                                    />
+
+                                    {showFromDatePicker && (
+                                        <Modal
+                                            animationType="slide"
+                                            transparent={true}
+                                            visible={showFromDatePicker}
+                                            onRequestClose={() => {
+                                                setShowFromDatePicker(false);
+                                            }}
+                                        >
+                                            <AUIThemedView
+                                                style={
+                                                    Platform.OS === "ios"
+                                                        ? styles.iosModalContent
+                                                        : styles.andoridModalContent
+                                                }
+                                            >
+                                                <AUIThemedView style={styles.titleContainer}>
+                                                    <AUIThemedText style={styles.dateTitle}>
+                                                        Pick From Date
+                                                    </AUIThemedText>
+                                                </AUIThemedView>
+                                                <DateTimePicker
+                                                    value={startDate}
+                                                    mode="date"
+                                                    display={
+                                                        Platform.OS === "ios"
+                                                            ? "spinner"
+                                                            : "default"
+                                                    }
+                                                    onChange={(e, date) => {
+                                                        console.log("date -->", date);
+                                                        onChangeFrom(e, date);
+                                                        onChange(date);
+                                                    }}
+                                                    minimumDate={new Date()}
+                                                />
+                                                <AUIThemedView style={styles.dateBtnContainer}>
+                                                    <AUIButton
+                                                        title={`Cancel`}
+                                                        style={{ borderWidth: 0, width: "48%" }}
+                                                        onPress={() => setShowFromDatePicker(false)}
+                                                        borderColor="#5BD894"
+                                                    />
+                                                    <AUIButton
+                                                        title={`Select`}
+                                                        style={{ borderWidth: 0, width: "48%" }}
+                                                        onPress={() => setShowFromDatePicker(false)}
+                                                        borderColor="#5BD894"
+                                                        selected
+                                                    />
+                                                </AUIThemedView>
+                                            </AUIThemedView>
+                                        </Modal>
+                                    )}
+                                </>
+                            ) : (
+                                <>
+                                    <Pressable onPress={() => setShowFromDatePicker(true)}>
+                                        <AUIInputField
+                                            label={t("from")}
+                                            value={formatDate(value)}
+                                            style={styles.dateInput}
+                                            editable={false}
+                                            onChangeText={onChange}
+                                        />
+                                        {showFromDatePicker && (
+                                            <DateTimePicker
+                                                value={startDate}
+                                                mode="date"
+                                                display="default"
+                                                onChange={(e, date) => {
+                                                    onChangeFrom(e, date);
+                                                    onChange(date);
+                                                }}
+                                                minimumDate={new Date()}
+                                            />
+                                        )}
+                                    </Pressable>
+                                </>
                             )}
-                        </Pressable>
+                        </>
                     )}
                 />
                 <Controller
@@ -494,24 +562,93 @@ const AUIAddNewCourse = () => {
                     name="scheduleTo"
                     render={({ field: { onChange, value } }) => (
                         <>
-                            <AUIInputField
-                                label={t("to")}
-                                placeholder="DD/MM/YY"
-                                value={formatDate(value)}
-                                onFocus={() => setShowToDatePicker(true)}
-                                style={styles.dateInput}
-                            />
-                            {showToDatePicker && (
-                                <DateTimePicker
-                                    value={endDate}
-                                    mode="date"
-                                    display="default"
-                                    onChange={(e, date) => {
-                                        onChangeTo(e, date);
-                                        onChange(date);
-                                    }}
-                                    minimumDate={new Date()}
-                                />
+                            {Platform.OS === "ios" ? (
+                                <>
+                                    <AUIButton
+                                        title={`To :  ${formatDate(endDate?.toISOString())}`}
+                                        style={{ borderWidth: 0, width: "48%" }}
+                                        onPress={() => setShowToDatePicker(!showToDatePicker)}
+                                        borderColor={APP_THEME.light.primary.first}
+                                    />
+
+                                    {showToDatePicker && (
+                                        <Modal
+                                            animationType="slide"
+                                            transparent={true}
+                                            visible={showToDatePicker}
+                                            onRequestClose={() => {
+                                                setShowToDatePicker(false);
+                                            }}
+                                        >
+                                            <AUIThemedView
+                                                style={
+                                                    Platform.OS === "ios"
+                                                        ? styles.iosModalContent
+                                                        : styles.andoridModalContent
+                                                }
+                                            >
+                                                <AUIThemedView style={styles.titleContainer}>
+                                                    <AUIThemedText style={styles.dateTitle}>
+                                                        Pick To Date
+                                                    </AUIThemedText>
+                                                </AUIThemedView>
+                                                <DateTimePicker
+                                                    value={endDate}
+                                                    mode="date"
+                                                    display={
+                                                        Platform.OS === "ios"
+                                                            ? "spinner"
+                                                            : "default"
+                                                    }
+                                                    onChange={(e, date) => {
+                                                        onChangeTo(e, date);
+                                                        onChange(date);
+                                                    }}
+                                                    minimumDate={new Date()}
+                                                />
+                                                <AUIThemedView style={styles.dateBtnContainer}>
+                                                    <AUIButton
+                                                        title={`Cancel`}
+                                                        style={{ borderWidth: 0, width: "48%" }}
+                                                        onPress={() => setShowToDatePicker(false)}
+                                                        borderColor="#5BD894"
+                                                    />
+                                                    <AUIButton
+                                                        title={`Select`}
+                                                        style={{ borderWidth: 0, width: "48%" }}
+                                                        onPress={() => setShowToDatePicker(false)}
+                                                        borderColor="#5BD894"
+                                                        selected
+                                                    />
+                                                </AUIThemedView>
+                                            </AUIThemedView>
+                                        </Modal>
+                                    )}
+                                </>
+                            ) : (
+                                <>
+                                    <Pressable onPress={() => setShowToDatePicker(true)}>
+                                        <AUIInputField
+                                            label={t("to")}
+                                            value={formatDate(value)}
+                                            style={styles.dateInput}
+                                            editable={false}
+                                            onChangeText={onChange}
+                                        />
+                                        {showToDatePicker && (
+                                            <DateTimePicker
+                                                value={endDate}
+                                                mode="date"
+                                                display="default"
+                                                onChange={(e, date) => {
+                                                    onChangeTo(e, date);
+                                                    onChange(date);
+                                                }}
+                                                minimumDate={new Date()}
+                                            />
+                                        )}
+                                    </Pressable>
+                                </>
                             )}
                         </>
                     )}
@@ -978,5 +1115,43 @@ const styles = StyleSheet.create({
 
     dateWrapper: {
         marginBottom: 20, // Adjust spacing between date pickers
+    },
+
+    andoridModalContent: {
+        height: "100%",
+        width: "100%",
+        borderTopRightRadius: 20,
+        borderTopLeftRadius: 20,
+    },
+    iosModalContent: {
+        position: "absolute",
+        bottom: 0,
+        height: "50%",
+        width: "100%",
+        borderTopRightRadius: 20,
+        borderTopLeftRadius: 20,
+    },
+    titleContainer: {
+        paddingHorizontal: 20,
+        paddingVertical: 15,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        borderTopRightRadius: 20,
+        borderTopLeftRadius: 20,
+    },
+    dateTitle: {
+        padding: 10,
+        fontSize: 16,
+        marginBottom: 10,
+    },
+    dateBtnContainer: {
+        paddingHorizontal: 20,
+        paddingVertical: 15,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        borderTopRightRadius: 20,
+        borderTopLeftRadius: 20,
     },
 });

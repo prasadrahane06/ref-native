@@ -133,6 +133,7 @@ const Course: React.FC<CourseProps> = ({
                         </AUIThemedText>
                         {startDate}
                     </AUIThemedText>
+                    
                 </AUIThemedView>
                 {favorite && (
                     <TouchableOpacity
@@ -147,7 +148,7 @@ const Course: React.FC<CourseProps> = ({
                         style={styles.editiConContainer}
                         onPress={() => onEdit(courseId)}
                     >
-                        <FontAwesome name="edit" size={23} color={APP_THEME.light.primary.first} />
+                        <FontAwesome name="pencil" size={23} color={APP_THEME.light.primary.first} />
                     </TouchableOpacity>
                 )}
                 {cart && (
@@ -217,8 +218,8 @@ const styles = StyleSheet.create({
         position: "absolute",
         top: 10,
         right: 10,
-        backgroundColor: "rgba(149, 207, 156, 0.4)",
-        borderRadius: 20,
+        backgroundColor: "white",//"rgba(149, 207, 156, 0.4)",
+        borderRadius: 5,
         padding: 3,
     },
     cartIconContainer: {

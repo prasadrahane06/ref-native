@@ -9,16 +9,17 @@ import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
 import useIsomorphicLayoutEffect from "@/customHooks/useIsomorphicLayoutEffect";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
+import { setResponse } from "@/redux/apiSlice";
 import { addItemToCart, removeItemFromCart } from "@/redux/cartSlice";
 import { addToFavorite, removeFromFavorite } from "@/redux/favoriteSlice";
 import { RootState } from "@/redux/store";
 import { Ionicons } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
-import { useLocalSearchParams, useNavigation } from "expo-router";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
 // import { t } from "i18next";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Pressable, StyleSheet, TouchableOpacity } from "react-native";
+import { BackHandler, Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import Animated, {
     interpolate,
     useAnimatedRef,
@@ -81,7 +82,7 @@ function CoursePlanTabs({ courseId, clientId }: CoursePlanTabsProps) {
                             ]}
                         >
                             {/* {plan.name} */}
-                            {t("plan") + (index + 1)}
+                            {t("plan") + " " + (index + 1)}
                         </AUIThemedText>
                     </Pressable>
                 ))}
@@ -131,6 +132,18 @@ export default function CourseDetails() {
     const favorite = useLangTransformSelector((state: RootState) => state.favorite.items);
     const cartItems = useLangTransformSelector((state: RootState) => state.cart.items);
     const theme = useSelector((state: RootState) => state.global.theme);
+
+    useEffect(() => {
+        const backAction = () => {
+            dispatch(setResponse({ storeName: "individualCourse", data: null }));
+            router.back();
+            return true;
+        };
+
+        const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
+
+        return () => backHandler.remove();
+    }, []);
 
     useEffect(() => {
         requestFn(API_URL.course, "individualCourse", { id: id });

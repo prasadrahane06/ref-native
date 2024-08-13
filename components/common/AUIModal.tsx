@@ -5,6 +5,9 @@ import { AUIThemedText } from "./AUIThemedText";
 import { AUIThemedView } from "./AUIThemedView";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-gesture-handler";
+import { TEXT_THEME } from "@/constants/Colors";
+import { RootState } from "@/redux/store";
+import { useSelector } from "react-redux";
 
 interface CustomModalProps {
     visible: boolean;
@@ -16,6 +19,9 @@ interface CustomModalProps {
 
 const AUIModal: React.FC<CustomModalProps> = ({ visible, onClose, title, children, style }) => {
     const { top, bottom } = useSafeAreaInsets();
+
+    const theme = useSelector((state: RootState) => state.global.theme);
+
     return (
         <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
             <SafeAreaView
@@ -26,7 +32,11 @@ const AUIModal: React.FC<CustomModalProps> = ({ visible, onClose, title, childre
                         <AUIThemedView style={styles.headerRow}>
                             <AUIThemedText style={styles.header}>{title}</AUIThemedText>
                             <TouchableOpacity onPress={onClose}>
-                                <MaterialIcons name="close" size={28} />
+                                <MaterialIcons
+                                    name="close"
+                                    size={28}
+                                    color={TEXT_THEME[theme].primary}
+                                />
                             </TouchableOpacity>
                         </AUIThemedView>
                         <ScrollView contentContainerStyle={styles.scrollContainer}>

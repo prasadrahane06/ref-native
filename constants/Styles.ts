@@ -15,9 +15,9 @@ export const initialPageStyles = StyleSheet.create({
         marginTop: StatusBar.currentHeight,
     },
     iosIndexHeader: {
-        marginLeft: -25,
+        // marginLeft: -25,
         top: -71,
-        width: 444,
+        width: "100%",
         height: 208,
         backgroundColor: "transparent",
         borderRadius: 104,

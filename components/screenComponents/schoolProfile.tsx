@@ -70,7 +70,7 @@ function SchoolProfile() {
                     <AUIThemedText style={styles.name}>{mySchoolDetails?.name}</AUIThemedText>
                     <AUIThemedText style={styles.email}>{mySchoolDetails?.email}</AUIThemedText>
                     <AUIThemedText style={styles.email}>
-                        Unique School ID: {mySchoolDetails?.schoolId}
+                        School ID: {mySchoolDetails?.schoolId}
                     </AUIThemedText>
                 </View>
             </AUIThemedView>
@@ -170,6 +170,7 @@ const styles = StyleSheet.create({
     },
     email: {
         paddingTop: 5,
+        fontSize: 14,
     },
     container: {
         marginTop: 130,

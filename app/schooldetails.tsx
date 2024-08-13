@@ -132,12 +132,12 @@ export default function SchoolDetails() {
             street: data.street,
         };
 
-        if (city) {
-            payload.city = city;
-        }
-
         if (locationId) {
             payload.location = locationId;
+        }
+
+        if (city) {
+            payload.city = city;
         }
 
         patch(API_URL.school, payload)
@@ -171,6 +171,13 @@ export default function SchoolDetails() {
         });
 
         if (!result.canceled) {
+            const fileSize = result.assets[0].fileSize;
+
+            if (fileSize && fileSize > 20000000) {
+                alert("File size should be less than 20 MB.");
+                return;
+            }
+
             if (value === "logo") {
                 setValue(value, result.assets[0].base64);
                 setSelectedLogo(result.assets[0]?.uri);

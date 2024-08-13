@@ -18,7 +18,7 @@ import * as ImagePicker from "expo-image-picker";
 import { default as React, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { Dimensions, Platform, Pressable, StyleSheet, TouchableOpacity } from "react-native";
+import { Dimensions, Modal, Platform, Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import { useSelector } from "react-redux";
 
 interface AddEvent {
@@ -170,6 +170,13 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
         });
 
         if (!result.canceled) {
+            const fileSize = result.assets[0].fileSize;
+
+            if (fileSize && fileSize > 20000000) {
+                alert("File size should be less than 20 MB.");
+                return;
+            }
+
             const assetUri = result.assets[0]?.uri;
             const manipResult = await ImageManipulator.manipulateAsync(
                 assetUri,
@@ -214,6 +221,15 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
         }
 
         return fileName.substring(0, maxLength - 3) + "...";
+    };
+
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString);
+        const day = date.getDate().toString().padStart(2, "0");
+        const month = (date.getMonth() + 1).toString().padStart(2, "0");
+        const year = date.getFullYear().toString().slice(-2);
+
+        return `${day}/${month}/${year}`;
     };
 
     return (
@@ -265,25 +281,111 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                         name="eventDate"
                         defaultValue=""
                         render={({ field: { onChange, value } }) => (
-                            <Pressable onPress={() => setDatePickerVisible(true)}>
-                                <AUIInputField
-                                    label={t("event_date")}
-                                    placeholder={t("select_date")}
-                                    value={selectedDate ? selectedDate.toDateString() : ""}
-                                    style={styles.input}
-                                    editable={false}
-                                />
-                            </Pressable>
+                            <>
+                                {Platform.OS === "ios" ? (
+                                    <>
+                                        <AUIButton
+                                            // title={`From :  ${formatDate(
+                                            //     startDate?.toISOString()
+                                            // )}`}
+                                            title={`Select Date`}
+                                            style={{ borderWidth: 0, width: "48%" }}
+                                            onPress={() => setDatePickerVisible(!datePickerVisible)}
+                                            borderColor={APP_THEME.light.primary.first}
+                                        />
+
+                                        {datePickerVisible && (
+                                            <Modal
+                                                animationType="slide"
+                                                transparent={true}
+                                                visible={datePickerVisible}
+                                                onRequestClose={() => {
+                                                    setDatePickerVisible(false);
+                                                }}
+                                            >
+                                                <AUIThemedView
+                                                    style={
+                                                        Platform.OS === "ios"
+                                                            ? styles.iosModalContent
+                                                            : styles.andoridModalContent
+                                                    }
+                                                >
+                                                    <AUIThemedView style={styles.titleContainer}>
+                                                        <AUIThemedText style={styles.dateTitle}>
+                                                            Pick From Date
+                                                        </AUIThemedText>
+                                                    </AUIThemedView>
+                                                    <DateTimePicker
+                                                        value={selectedDate || new Date()}
+                                                        mode="date"
+                                                        display={
+                                                            Platform.OS === "ios"
+                                                                ? "spinner"
+                                                                : "default"
+                                                        }
+                                                        // onChange={(e, date) => {
+                                                        //     console.log("date -->", date);
+                                                        //     onChangeFrom(e, date);
+                                                        //     onChange(date);
+                                                        // }}
+                                                        onChange={handleDateChange}
+                                                        minimumDate={new Date()}
+                                                    />
+                                                    <AUIThemedView style={styles.dateBtnContainer}>
+                                                        <AUIButton
+                                                            title={`Cancel`}
+                                                            style={{ borderWidth: 0, width: "48%" }}
+                                                            onPress={() =>
+                                                                setDatePickerVisible(false)
+                                                            }
+                                                            borderColor="#5BD894"
+                                                        />
+                                                        <AUIButton
+                                                            title={`Select`}
+                                                            style={{ borderWidth: 0, width: "48%" }}
+                                                            onPress={() =>
+                                                                setDatePickerVisible(false)
+                                                            }
+                                                            borderColor="#5BD894"
+                                                            selected
+                                                        />
+                                                    </AUIThemedView>
+                                                </AUIThemedView>
+                                            </Modal>
+                                        )}
+                                    </>
+                                ) : (
+                                    <>
+                                        <Pressable onPress={() => setDatePickerVisible(true)}>
+                                            <AUIInputField
+                                                label={t("event_date")}
+                                                placeholder={t("select_date")}
+                                                value={
+                                                    selectedDate ? selectedDate.toDateString() : ""
+                                                }
+                                                style={styles.input}
+                                                editable={false}
+                                                onChangeText={onChange}
+                                            />
+                                            {datePickerVisible && (
+                                                <DateTimePicker
+                                                    value={selectedDate || new Date()}
+                                                    mode="date"
+                                                    display="default"
+                                                    // onChange={(e, date) => {
+                                                    //     onChangeFrom(e, date);
+                                                    //     onChange(date);
+                                                    // }}
+                                                    onChange={handleDateChange}
+                                                    minimumDate={new Date()}
+                                                />
+                                            )}
+                                        </Pressable>
+                                    </>
+                                )}
+                            </>
                         )}
                     />
-                    {datePickerVisible && (
-                        <DateTimePicker
-                            value={selectedDate || new Date()}
-                            mode="date"
-                            display="default"
-                            onChange={handleDateChange}
-                        />
-                    )}
                 </AUIThemedView>
                 <Controller
                     control={control}
@@ -442,5 +544,42 @@ const styles = StyleSheet.create({
     },
     container: {
         marginTop: 20,
+    },
+    andoridModalContent: {
+        height: "100%",
+        width: "100%",
+        borderTopRightRadius: 20,
+        borderTopLeftRadius: 20,
+    },
+    iosModalContent: {
+        position: "absolute",
+        bottom: 0,
+        height: "50%",
+        width: "100%",
+        borderTopRightRadius: 20,
+        borderTopLeftRadius: 20,
+    },
+    titleContainer: {
+        paddingHorizontal: 20,
+        paddingVertical: 15,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        borderTopRightRadius: 20,
+        borderTopLeftRadius: 20,
+    },
+    dateTitle: {
+        padding: 10,
+        fontSize: 16,
+        marginBottom: 10,
+    },
+    dateBtnContainer: {
+        paddingHorizontal: 20,
+        paddingVertical: 15,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        borderTopRightRadius: 20,
+        borderTopLeftRadius: 20,
     },
 });

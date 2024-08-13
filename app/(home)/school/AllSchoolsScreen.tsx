@@ -12,24 +12,24 @@ import { ScrollView } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 import AllSchoolsList from "../list/AllSchoolsList";
 import { useTranslation } from "react-i18next";
+import { useLocalSearchParams } from "expo-router";
 
-import { ApiSuccessToast } from "@/components/common/AUIToast";
-
-interface SchoolListProps {
-    data: any[];
-}
-
-const AllSchoolsScreen: React.FC<SchoolListProps> = ({ data }) => {
+const AllSchoolsScreen = () => {
     const { t } = useTranslation();
     const { requestFn } = useApiRequest();
+    const { from } = useLocalSearchParams();
+
+    const theme = useSelector((state: RootState) => state.global.theme);
 
     const [page, setPage] = useState(1);
 
-    const schoolsResponse = useLangTransformSelector(
-        (state: RootState) => state.api.AllSchool || {}
-    );
+    let schoolsResponse: any;
 
-    const theme = useSelector((state: RootState) => state.global.theme);
+    if (from === "destination") {
+        schoolsResponse = useLangTransformSelector((state: RootState) => state.api.countrySchool);
+    } else {
+        schoolsResponse = useLangTransformSelector((state: RootState) => state.api.AllSchool || {});
+    }
 
     useEffect(() => {
         requestFn(API_URL.school, "AllSchool", { page: `${page}`, status: 2 });

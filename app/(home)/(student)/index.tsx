@@ -149,10 +149,12 @@ export default function HomeScreen() {
                 <CourseList data={courseResponse?.docs.slice(0, 4)} />
             </AUIThemedView>
 
-            <AUIThemedView>
-                <SectionTitle>{t(GLOBAL_TRANSLATION_LABEL.increase_your_chances)}</SectionTitle>
-                <IncreaseChanceList data={lastChanceResponse?.docs} />
-            </AUIThemedView>
+            {lastChanceResponse && lastChanceResponse?.docs?.length > 0 && (
+                <AUIThemedView>
+                    <SectionTitle>{t(GLOBAL_TRANSLATION_LABEL.increase_your_chances)}</SectionTitle>
+                    <IncreaseChanceList data={lastChanceResponse?.docs} />
+                </AUIThemedView>
+            )}
         </ScrollView>
     );
 }

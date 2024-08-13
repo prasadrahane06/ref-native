@@ -16,6 +16,7 @@ interface SectionTitleProps {
     style?: ViewStyle;
     titleStyle?: TextStyle;
     viewAllVisible?: boolean;
+    params?: { from: string };
 }
 
 const SectionTitle: React.FC<SectionTitleProps> = ({
@@ -25,6 +26,7 @@ const SectionTitle: React.FC<SectionTitleProps> = ({
     style,
     titleStyle,
     viewAllVisible,
+    params,
 }) => {
     const { t } = useTranslation();
     const isRTL = useSelector((state: RootState) => state.global.isRTL);
@@ -33,10 +35,19 @@ const SectionTitle: React.FC<SectionTitleProps> = ({
 
     return (
         <AUIThemedView style={[styles.container, isRTL && { flexDirection: "row-reverse" }, style]}>
-            <AUIThemedText style={[styles.title, titleStyle]}>{children}</AUIThemedText>
+            <AUIThemedText
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={[styles.title, titleStyle]}
+            >
+                {children}
+            </AUIThemedText>
             {viewAll && (
-                // @ts-ignore
-                <Link href={viewAll} style={[styles.viewAll, { color: TEXT_THEME[theme].primary }]}>
+                <Link
+                    // @ts-ignore
+                    href={{ pathname: viewAll, params: params }}
+                    style={[styles.viewAll, { color: TEXT_THEME[theme].primary }]}
+                >
                     {t(GLOBAL_TRANSLATION_LABEL.view_all)}
                 </Link>
             )}
@@ -61,8 +72,8 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        paddingHorizontal: 15,
-        paddingTop: 15,
+        marginHorizontal: 15,
+        marginTop: 15,
     },
     title: {
         fontWeight: "bold",
@@ -73,7 +84,7 @@ const styles = StyleSheet.create({
         textDecorationLine: "underline",
         fontSize: 14,
         fontWeight: "500",
-        marginHorizontal:8
+        marginHorizontal: 8,
     },
 });
 

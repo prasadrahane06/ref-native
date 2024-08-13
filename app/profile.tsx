@@ -25,6 +25,7 @@ import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
     KeyboardAvoidingView,
+    Modal,
     Platform,
     Pressable,
     ScrollView,
@@ -261,6 +262,13 @@ const Profile: React.FC = () => {
         });
 
         if (!result.canceled) {
+            const fileSize = result.assets[0].fileSize;
+
+            if (fileSize && fileSize > 20000000) {
+                alert("File size should be less than 20 MB.");
+                return;
+            }
+
             setProfileBase64(result.assets[0].base64);
             setProfileImage(result.assets[0]?.uri);
         } else {
@@ -449,57 +457,137 @@ const Profile: React.FC = () => {
                             name="dateOfBirth"
                             control={control}
                             render={({ field: { value, onChange }, fieldState: { error } }) => (
-                                <AUIThemedView
-                                    style={{
-                                        flex: 1,
-                                        flexDirection: "row",
-                                        alignItems: "center",
-                                        height: 50,
-                                        borderWidth: 1,
-                                        borderColor: "#5BD894",
-                                        borderRadius: 6,
-                                    }}
-                                >
-                                    <Pressable
-                                        onPress={() => setShowDatePicker(true)}
-                                        style={{
-                                            flex: 1,
-                                            flexDirection: "row",
-                                            alignItems: "center",
-                                            paddingHorizontal: 10,
-                                        }}
-                                    >
-                                        <TextInput
-                                            style={{
-                                                flex: 1,
-                                                paddingVertical: 10,
-                                                color: TEXT_THEME[theme].primary,
-                                            }}
-                                            value={formatDate(value)}
-                                            editable={false}
-                                            onChangeText={onChange}
-                                        />
-                                        <Ionicons
-                                            name="calendar-clear"
-                                            size={20}
-                                            color={APP_THEME.light.primary.first}
-                                        />
-                                    </Pressable>
-                                    {error && (
-                                        <AUIThemedText style={styles.fieldError}>
-                                            {error.message}
-                                        </AUIThemedText>
+                                <>
+                                    {Platform.OS === "ios" ? (
+                                        <>
+                                            <AUIButton
+                                                title={`Select Date of Birth`}
+                                                style={{ borderWidth: 0, width: "48%" }}
+                                                onPress={() => setShowDatePicker(!showDatePicker)}
+                                                borderColor={APP_THEME.light.primary.first}
+                                            />
+
+                                            {showDatePicker && (
+                                                <Modal
+                                                    animationType="slide"
+                                                    transparent={true}
+                                                    visible={showDatePicker}
+                                                    onRequestClose={() => {
+                                                        setShowDatePicker(false);
+                                                    }}
+                                                >
+                                                    <AUIThemedView
+                                                        style={
+                                                            Platform.OS === "ios"
+                                                                ? styles.iosModalContent
+                                                                : styles.andoridModalContent
+                                                        }
+                                                    >
+                                                        <AUIThemedView
+                                                            style={styles.titleContainer}
+                                                        >
+                                                            <AUIThemedText style={styles.dateTitle}>
+                                                                Pick From Date
+                                                            </AUIThemedText>
+                                                        </AUIThemedView>
+                                                        <DateTimePicker
+                                                            value={dateOfBirth}
+                                                            mode="date"
+                                                            display={
+                                                                Platform.OS === "ios"
+                                                                    ? "spinner"
+                                                                    : "default"
+                                                            }
+                                                            onChange={onDateChange}
+                                                            maximumDate={new Date()}
+                                                        />
+                                                        <AUIThemedView
+                                                            style={styles.dateBtnContainer}
+                                                        >
+                                                            <AUIButton
+                                                                title={`Cancel`}
+                                                                style={{
+                                                                    borderWidth: 0,
+                                                                    width: "48%",
+                                                                }}
+                                                                onPress={() =>
+                                                                    setShowDatePicker(false)
+                                                                }
+                                                                borderColor="#5BD894"
+                                                            />
+                                                            <AUIButton
+                                                                title={`Select`}
+                                                                style={{
+                                                                    borderWidth: 0,
+                                                                    width: "48%",
+                                                                }}
+                                                                onPress={() =>
+                                                                    setShowDatePicker(false)
+                                                                }
+                                                                borderColor="#5BD894"
+                                                                selected
+                                                            />
+                                                        </AUIThemedView>
+                                                    </AUIThemedView>
+                                                </Modal>
+                                            )}
+                                        </>
+                                    ) : (
+                                        <>
+                                            <AUIThemedView
+                                                style={{
+                                                    flex: 1,
+                                                    flexDirection: "row",
+                                                    alignItems: "center",
+                                                    height: 50,
+                                                    borderWidth: 1,
+                                                    borderColor: "#5BD894",
+                                                    borderRadius: 6,
+                                                }}
+                                            >
+                                                <Pressable
+                                                    onPress={() => setShowDatePicker(true)}
+                                                    style={{
+                                                        flex: 1,
+                                                        flexDirection: "row",
+                                                        alignItems: "center",
+                                                        paddingHorizontal: 10,
+                                                    }}
+                                                >
+                                                    <TextInput
+                                                        style={{
+                                                            flex: 1,
+                                                            paddingVertical: 10,
+                                                            color: TEXT_THEME[theme].primary,
+                                                        }}
+                                                        value={formatDate(value)}
+                                                        editable={false}
+                                                        onChangeText={onChange}
+                                                    />
+                                                    <Ionicons
+                                                        name="calendar-clear"
+                                                        size={20}
+                                                        color={APP_THEME.light.primary.first}
+                                                    />
+                                                </Pressable>
+                                                {error && (
+                                                    <AUIThemedText style={styles.fieldError}>
+                                                        {error.message}
+                                                    </AUIThemedText>
+                                                )}
+                                                {showDatePicker && (
+                                                    <DateTimePicker
+                                                        value={dateOfBirth}
+                                                        mode="date"
+                                                        display="default"
+                                                        onChange={onDateChange}
+                                                        maximumDate={new Date()}
+                                                    />
+                                                )}
+                                            </AUIThemedView>
+                                        </>
                                     )}
-                                    {showDatePicker && (
-                                        <DateTimePicker
-                                            value={dateOfBirth}
-                                            mode="date"
-                                            display="default"
-                                            onChange={onDateChange}
-                                            maximumDate={new Date()}
-                                        />
-                                    )}
-                                </AUIThemedView>
+                                </>
                             )}
                         />
                     </AUIThemedView>
@@ -791,6 +879,43 @@ const Profile: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
+    andoridModalContent: {
+        height: "100%",
+        width: "100%",
+        borderTopRightRadius: 20,
+        borderTopLeftRadius: 20,
+    },
+    iosModalContent: {
+        position: "absolute",
+        bottom: 0,
+        height: "50%",
+        width: "100%",
+        borderTopRightRadius: 20,
+        borderTopLeftRadius: 20,
+    },
+    titleContainer: {
+        paddingHorizontal: 20,
+        paddingVertical: 15,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        borderTopRightRadius: 20,
+        borderTopLeftRadius: 20,
+    },
+    dateTitle: {
+        padding: 10,
+        fontSize: 16,
+        marginBottom: 10,
+    },
+    dateBtnContainer: {
+        paddingHorizontal: 20,
+        paddingVertical: 15,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        borderTopRightRadius: 20,
+        borderTopLeftRadius: 20,
+    },
     disabledInput: {
         opacity: 0.5,
         borderWidth: 0,

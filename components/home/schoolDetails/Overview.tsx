@@ -396,9 +396,11 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
                                     {t("when_you_want_to_start_course")}
                                 </AUIThemedText>
                                 <AUIThemedView style={enquiryFormStyles.dateContainer}>
-                                    <AUIThemedText style={inputFieldStyle.label}>
-                                        {t("from")}
-                                    </AUIThemedText>
+                                    {Platform.OS === "android" && (
+                                        <AUIThemedText style={inputFieldStyle.label}>
+                                            {t("from")}
+                                        </AUIThemedText>
+                                    )}
                                     <Controller
                                         name="startDate"
                                         control={control}
@@ -406,63 +408,173 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
                                             field: { value, onChange },
                                             fieldState: { error },
                                         }) => (
-                                            <AUIThemedView
-                                                style={{
-                                                    flex: 1,
-                                                    flexDirection: "row",
-                                                    alignItems: "center",
-                                                    borderWidth: 2,
-                                                    borderColor: "#ccc",
-                                                    borderRadius: 6,
-                                                }}
-                                            >
-                                                <Pressable
-                                                    onPress={() => setShowStartDatePicker(true)}
-                                                    style={{
-                                                        flex: 1,
-                                                        flexDirection: "row",
-                                                        alignItems: "center",
-                                                        paddingHorizontal: 10,
-                                                    }}
-                                                >
-                                                    {showStartDatePicker && (
-                                                        <DateTimePicker
-                                                            value={startDate}
-                                                            mode="date"
-                                                            display="default"
-                                                            onChange={onChangeStartDate}
-                                                            minimumDate={tomorrow}
+                                            <>
+                                                {Platform.OS === "ios" ? (
+                                                    <>
+                                                        <AUIButton
+                                                            title={`From :  ${formatDate(
+                                                                startDate?.toISOString()
+                                                            )}`}
+                                                            style={{ borderWidth: 0, width: "48%" }}
+                                                            onPress={() =>
+                                                                setShowStartDatePicker(
+                                                                    !showStartDatePicker
+                                                                )
+                                                            }
+                                                            borderColor={
+                                                                APP_THEME.light.primary.first
+                                                            }
                                                         />
-                                                    )}
-                                                    <TextInput
-                                                        style={{
-                                                            flex: 1,
-                                                            paddingVertical: 10,
-                                                            color: TEXT_THEME[theme].primary,
-                                                        }}
-                                                        value={formatDate(value)}
-                                                        editable={false}
-                                                        onChangeText={onChange}
-                                                    />
-                                                    <Ionicons
-                                                        name="calendar-clear"
-                                                        size={20}
-                                                        color={APP_THEME[theme].primary.first}
-                                                    />
-                                                </Pressable>
-                                                {error && (
-                                                    <AUIThemedText
-                                                        style={enquiryFormStyles.fieldError}
-                                                    >
-                                                        {error.message}
-                                                    </AUIThemedText>
+
+                                                        {showStartDatePicker && (
+                                                            <Modal
+                                                                animationType="slide"
+                                                                transparent={true}
+                                                                visible={showStartDatePicker}
+                                                                onRequestClose={() => {
+                                                                    setShowStartDatePicker(false);
+                                                                }}
+                                                            >
+                                                                <AUIThemedView
+                                                                    style={
+                                                                        Platform.OS === "ios"
+                                                                            ? dateStyles.iosModalContent
+                                                                            : dateStyles.andoridModalContent
+                                                                    }
+                                                                >
+                                                                    <AUIThemedView
+                                                                        style={
+                                                                            dateStyles.titleContainer
+                                                                        }
+                                                                    >
+                                                                        <AUIThemedText
+                                                                            style={
+                                                                                dateStyles.dateTitle
+                                                                            }
+                                                                        >
+                                                                            Pick From Date
+                                                                        </AUIThemedText>
+                                                                    </AUIThemedView>
+                                                                    <DateTimePicker
+                                                                        value={startDate}
+                                                                        mode="date"
+                                                                        display={
+                                                                            Platform.OS === "ios"
+                                                                                ? "spinner"
+                                                                                : "default"
+                                                                        }
+                                                                        onChange={onChangeStartDate}
+                                                                        minimumDate={tomorrow}
+                                                                    />
+                                                                    <AUIThemedView
+                                                                        style={
+                                                                            dateStyles.dateBtnContainer
+                                                                        }
+                                                                    >
+                                                                        <AUIButton
+                                                                            title={`Cancel`}
+                                                                            style={{
+                                                                                borderWidth: 0,
+                                                                                width: "48%",
+                                                                            }}
+                                                                            onPress={() =>
+                                                                                setShowStartDatePicker(
+                                                                                    false
+                                                                                )
+                                                                            }
+                                                                            borderColor="#5BD894"
+                                                                        />
+                                                                        <AUIButton
+                                                                            title={`Select`}
+                                                                            style={{
+                                                                                borderWidth: 0,
+                                                                                width: "48%",
+                                                                            }}
+                                                                            onPress={() =>
+                                                                                setShowStartDatePicker(
+                                                                                    false
+                                                                                )
+                                                                            }
+                                                                            borderColor="#5BD894"
+                                                                            selected
+                                                                        />
+                                                                    </AUIThemedView>
+                                                                </AUIThemedView>
+                                                            </Modal>
+                                                        )}
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <AUIThemedView
+                                                            style={{
+                                                                flex: 1,
+                                                                flexDirection: "row",
+                                                                alignItems: "center",
+                                                                borderWidth: 2,
+                                                                borderColor: "#ccc",
+                                                                borderRadius: 6,
+                                                            }}
+                                                        >
+                                                            <Pressable
+                                                                onPress={() =>
+                                                                    setShowStartDatePicker(true)
+                                                                }
+                                                                style={{
+                                                                    flex: 1,
+                                                                    flexDirection: "row",
+                                                                    alignItems: "center",
+                                                                    paddingHorizontal: 10,
+                                                                }}
+                                                            >
+                                                                {showStartDatePicker && (
+                                                                    <DateTimePicker
+                                                                        value={startDate}
+                                                                        mode="date"
+                                                                        display="default"
+                                                                        onChange={onChangeStartDate}
+                                                                        minimumDate={tomorrow}
+                                                                    />
+                                                                )}
+                                                                <TextInput
+                                                                    style={{
+                                                                        flex: 1,
+                                                                        paddingVertical: 10,
+                                                                        color: TEXT_THEME[theme]
+                                                                            .primary,
+                                                                    }}
+                                                                    value={formatDate(value)}
+                                                                    editable={false}
+                                                                    onChangeText={onChange}
+                                                                />
+                                                                <Ionicons
+                                                                    name="calendar-clear"
+                                                                    size={20}
+                                                                    color={
+                                                                        APP_THEME[theme].primary
+                                                                            .first
+                                                                    }
+                                                                />
+                                                            </Pressable>
+                                                            {error && (
+                                                                <AUIThemedText
+                                                                    style={
+                                                                        enquiryFormStyles.fieldError
+                                                                    }
+                                                                >
+                                                                    {error.message}
+                                                                </AUIThemedText>
+                                                            )}
+                                                        </AUIThemedView>
+                                                    </>
                                                 )}
-                                            </AUIThemedView>
+                                            </>
                                         )}
                                     />
-                                    <AUIThemedText style={inputFieldStyle.label}>
-                                        {t("to")}
-                                    </AUIThemedText>
+                                    {Platform.OS === "android" && (
+                                        <AUIThemedText style={inputFieldStyle.label}>
+                                            {t("to")}
+                                        </AUIThemedText>
+                                    )}
                                     <Controller
                                         name="endDate"
                                         control={control}
@@ -470,58 +582,166 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
                                             field: { value, onChange },
                                             fieldState: { error },
                                         }) => (
-                                            <AUIThemedView
-                                                style={{
-                                                    flex: 1,
-                                                    flexDirection: "row",
-                                                    alignItems: "center",
-                                                    borderWidth: 2,
-                                                    borderColor: "#ccc",
-                                                    borderRadius: 6,
-                                                }}
-                                            >
-                                                <Pressable
-                                                    onPress={() => setShowEndDatePicker(true)}
-                                                    style={{
-                                                        flex: 1,
-                                                        flexDirection: "row",
-                                                        alignItems: "center",
-                                                        paddingHorizontal: 10,
-                                                    }}
-                                                >
-                                                    <TextInput
-                                                        style={{
-                                                            flex: 1,
-                                                            paddingVertical: 10,
-                                                            color: TEXT_THEME[theme].primary,
-                                                        }}
-                                                        value={formatDate(value)}
-                                                        editable={false}
-                                                        onChangeText={onChange}
-                                                    />
-                                                    <Ionicons
-                                                        name="calendar-clear"
-                                                        size={20}
-                                                        color={APP_THEME[theme].primary.first}
-                                                    />
-                                                </Pressable>
-                                                {error && (
-                                                    <AUIThemedText
-                                                        style={enquiryFormStyles.fieldError}
-                                                    >
-                                                        {error.message}
-                                                    </AUIThemedText>
+                                            <>
+                                                {Platform.OS === "ios" ? (
+                                                    <>
+                                                        <AUIButton
+                                                            title={`To :  ${formatDate(
+                                                                endDate?.toISOString()
+                                                            )}`}
+                                                            style={{ borderWidth: 0, width: "48%" }}
+                                                            onPress={() =>
+                                                                setShowEndDatePicker(
+                                                                    !showEndDatePicker
+                                                                )
+                                                            }
+                                                            borderColor={
+                                                                APP_THEME.light.primary.first
+                                                            }
+                                                        />
+
+                                                        {showEndDatePicker && (
+                                                            <Modal
+                                                                animationType="slide"
+                                                                transparent={true}
+                                                                visible={showEndDatePicker}
+                                                                onRequestClose={() => {
+                                                                    setShowEndDatePicker(false);
+                                                                }}
+                                                            >
+                                                                <AUIThemedView
+                                                                    style={
+                                                                        Platform.OS === "ios"
+                                                                            ? dateStyles.iosModalContent
+                                                                            : dateStyles.andoridModalContent
+                                                                    }
+                                                                >
+                                                                    <AUIThemedView
+                                                                        style={
+                                                                            dateStyles.titleContainer
+                                                                        }
+                                                                    >
+                                                                        <AUIThemedText
+                                                                            style={
+                                                                                dateStyles.dateTitle
+                                                                            }
+                                                                        >
+                                                                            Pick To Date
+                                                                        </AUIThemedText>
+                                                                    </AUIThemedView>
+                                                                    <DateTimePicker
+                                                                        value={endDate}
+                                                                        mode="date"
+                                                                        display={
+                                                                            Platform.OS === "ios"
+                                                                                ? "spinner"
+                                                                                : "default"
+                                                                        }
+                                                                        onChange={onChangeEndDate}
+                                                                        minimumDate={tomorrow}
+                                                                    />
+                                                                    <AUIThemedView
+                                                                        style={
+                                                                            dateStyles.dateBtnContainer
+                                                                        }
+                                                                    >
+                                                                        <AUIButton
+                                                                            title={`Cancel`}
+                                                                            style={{
+                                                                                borderWidth: 0,
+                                                                                width: "48%",
+                                                                            }}
+                                                                            onPress={() =>
+                                                                                setShowEndDatePicker(
+                                                                                    false
+                                                                                )
+                                                                            }
+                                                                            borderColor="#5BD894"
+                                                                        />
+                                                                        <AUIButton
+                                                                            title={`Select`}
+                                                                            style={{
+                                                                                borderWidth: 0,
+                                                                                width: "48%",
+                                                                            }}
+                                                                            onPress={() =>
+                                                                                setShowEndDatePicker(
+                                                                                    false
+                                                                                )
+                                                                            }
+                                                                            borderColor="#5BD894"
+                                                                            selected
+                                                                        />
+                                                                    </AUIThemedView>
+                                                                </AUIThemedView>
+                                                            </Modal>
+                                                        )}
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <AUIThemedView
+                                                            style={{
+                                                                flex: 1,
+                                                                flexDirection: "row",
+                                                                alignItems: "center",
+                                                                borderWidth: 2,
+                                                                borderColor: "#ccc",
+                                                                borderRadius: 6,
+                                                            }}
+                                                        >
+                                                            <Pressable
+                                                                onPress={() =>
+                                                                    setShowEndDatePicker(true)
+                                                                }
+                                                                style={{
+                                                                    flex: 1,
+                                                                    flexDirection: "row",
+                                                                    alignItems: "center",
+                                                                    paddingHorizontal: 10,
+                                                                }}
+                                                            >
+                                                                <TextInput
+                                                                    style={{
+                                                                        flex: 1,
+                                                                        paddingVertical: 10,
+                                                                        color: TEXT_THEME[theme]
+                                                                            .primary,
+                                                                    }}
+                                                                    value={formatDate(value)}
+                                                                    editable={false}
+                                                                    onChangeText={onChange}
+                                                                />
+                                                                <Ionicons
+                                                                    name="calendar-clear"
+                                                                    size={20}
+                                                                    color={
+                                                                        APP_THEME[theme].primary
+                                                                            .first
+                                                                    }
+                                                                />
+                                                            </Pressable>
+                                                            {error && (
+                                                                <AUIThemedText
+                                                                    style={
+                                                                        enquiryFormStyles.fieldError
+                                                                    }
+                                                                >
+                                                                    {error.message}
+                                                                </AUIThemedText>
+                                                            )}
+                                                            {showEndDatePicker && (
+                                                                <DateTimePicker
+                                                                    value={endDate}
+                                                                    mode="date"
+                                                                    display="default"
+                                                                    onChange={onChangeEndDate}
+                                                                    minimumDate={tomorrow}
+                                                                />
+                                                            )}
+                                                        </AUIThemedView>
+                                                    </>
                                                 )}
-                                                {showEndDatePicker && (
-                                                    <DateTimePicker
-                                                        value={endDate}
-                                                        mode="date"
-                                                        display="default"
-                                                        onChange={onChangeEndDate}
-                                                        minimumDate={tomorrow}
-                                                    />
-                                                )}
-                                            </AUIThemedView>
+                                            </>
                                         )}
                                     />
                                 </AUIThemedView>
@@ -816,6 +1036,45 @@ const enquiryFormStyles = StyleSheet.create({
     phoneNumber: { flex: 1 },
 });
 
+const dateStyles = StyleSheet.create({
+    andoridModalContent: {
+        height: "100%",
+        width: "100%",
+        borderTopRightRadius: 20,
+        borderTopLeftRadius: 20,
+    },
+    iosModalContent: {
+        position: "absolute",
+        bottom: 0,
+        height: "50%",
+        width: "100%",
+        borderTopRightRadius: 20,
+        borderTopLeftRadius: 20,
+    },
+    titleContainer: {
+        paddingHorizontal: 20,
+        paddingVertical: 15,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        borderTopRightRadius: 20,
+        borderTopLeftRadius: 20,
+    },
+    dateTitle: {
+        padding: 10,
+        fontSize: 16,
+        marginBottom: 10,
+    },
+    dateBtnContainer: {
+        paddingHorizontal: 20,
+        paddingVertical: 15,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        borderTopRightRadius: 20,
+        borderTopLeftRadius: 20,
+    },
+});
 const enquireNowStyles = StyleSheet.create({
     andoridModalContent: {
         height: "100%",

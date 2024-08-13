@@ -51,7 +51,7 @@ const IncreaseChance = ({
                     <Text style={[styles.courseName, styles.textWrap]}>{courseName}</Text>
                     <Text style={[styles.schoolName, styles.textWrap]}>{schoolName}</Text>
                     <Text style={[styles.daysRemaining, styles.textWrap]}>
-                        {daysLeft}
+                        {daysLeft} Days remaining
                     </Text>
                 </AUIThemedView>
             </AUIThemedView>
@@ -88,8 +88,8 @@ const styles = StyleSheet.create({
         fontSize: 12,
     },
     textWrap: {
-        flexWrap: 'wrap',
-        width: '100%',
+        flexWrap: "wrap",
+        width: "100%",
     },
 });
 

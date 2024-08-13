@@ -155,6 +155,13 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
         });
 
         if (!result.canceled) {
+            const fileSize = result.assets[0].fileSize;
+
+            if (fileSize && fileSize > 20000000) {
+                alert("File size should be less than 20 MB.");
+                return;
+            }
+
             const assetUri = result.assets[0]?.uri;
             const manipResult = await ImageManipulator.manipulateAsync(
                 assetUri,

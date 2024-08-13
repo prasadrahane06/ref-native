@@ -18,7 +18,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Dimensions, StyleSheet, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Animated, {
     interpolate,
@@ -201,9 +201,7 @@ export default function CityDetails() {
     return (
         <AUIThemedView>
             <Animated.ScrollView ref={scrollRef} scrollEventThrottle={16}>
-                <AUIThemedView
-                    style={[styles.container, { backgroundColor: APP_THEME[theme].background }]}
-                >
+                <AUIThemedView style={[styles.container]}>
                     <AUIThemedView>
                         <Animated.Image
                             source={{
@@ -219,34 +217,19 @@ export default function CityDetails() {
                         />
                     </AUIThemedView>
 
-                    <AUIThemedView
-                        style={[
-                            styles.infoContainer,
-                            { backgroundColor: APP_THEME[theme].background },
-                        ]}
-                    >
+                    <AUIThemedView style={[styles.infoContainer, ,]}>
                         <AUIThemedText style={styles.name}>
                             {t("why_study_in")} {country?.name}
                         </AUIThemedText>
-                        <AUIThemedView
-                            style={[
-                                styles.headingContainer,
-                                { backgroundColor: APP_THEME[theme].background },
-                            ]}
-                        >
-                            <AUIThemedView style={{ backgroundColor: APP_THEME[theme].background }}>
+                        <AUIThemedView style={[styles.headingContainer, ,]}>
+                            <AUIThemedView>
                                 <AUIImage
                                     path={country?.flag}
                                     style={styles.headingImage}
                                     contentFit="cover"
                                 />
                             </AUIThemedView>
-                            <AUIThemedView
-                                style={[
-                                    styles.nestedContainer,
-                                    { backgroundColor: APP_THEME[theme].background },
-                                ]}
-                            >
+                            <AUIThemedView style={[styles.nestedContainer, ,]}>
                                 <AUIThemedText style={styles.headingName}>
                                     200+ Universities
                                 </AUIThemedText>
@@ -256,12 +239,7 @@ export default function CityDetails() {
                             </AUIThemedView>
                         </AUIThemedView>
 
-                        <AUIThemedView
-                            style={[
-                                styles.iconContainer,
-                                { backgroundColor: APP_THEME[theme].background },
-                            ]}
-                        >
+                        <AUIThemedView style={[styles.iconContainer, ,]}>
                             <View style={styles.iconWrapper}>
                                 <AUIImage
                                     path={photoGallary[0]}
@@ -343,21 +321,18 @@ export default function CityDetails() {
                     <AUIThemedView>
                         <AUIThemedView style={[styles.photoGalleryheader]}>
                             <AUIThemedText style={styles.photoGalleryText}>
-                                {/* {GLOBAL_TEXT.photo_gallery} */}
                                 {t("photo_gallery")}
                             </AUIThemedText>
                         </AUIThemedView>
                         <PhotoGallaryList data={country?.images} />
                     </AUIThemedView>
 
-                    <AUIThemedView
-                        style={[
-                            styles.popularSchoolsContainer,
-                            { backgroundColor: APP_THEME[theme].background },
-                        ]}
-                    >
-                        <SectionTitle viewAll="(home)/school/AllSchoolsScreen">
-                            {/* {GLOBAL_TEXT.popular_schools} */}
+                    <AUIThemedView style={[styles.popularSchoolsContainer]}>
+                        <SectionTitle
+                            viewAll="/(home)/school/AllSchoolsScreen"
+                            style={styles.sectionTitle}
+                            params={{ from: "destination" }}
+                        >
                             {t("popular_school")}
                         </SectionTitle>
                         <SchoolList data={schoolsResponse?.docs} />
@@ -367,9 +342,10 @@ export default function CityDetails() {
         </AUIThemedView>
     );
 }
-
+const width = Dimensions.get("window").width;
 const IMG_HEIGHT = 200;
 const styles = StyleSheet.create({
+    sectionTitle: { marginVertical: 10 },
     container: { flex: 1 },
     screenHeader: {
         height: 100,

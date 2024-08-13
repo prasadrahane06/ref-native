@@ -40,7 +40,7 @@ const SchoolProfile = () => {
     const user = useLangTransformSelector((state: RootState) => state.global.user);
     console.log("user =>", user);
     const theme = useSelector((state: RootState) => state.global.theme);
-    const mySchoolDetails = useLangTransformSelector(   
+    const mySchoolDetails = useLangTransformSelector(
         (state: RootState) => state.api.MySchoolDetails
     );
     const countryDataForSchool = useLangTransformSelector(
@@ -80,7 +80,7 @@ const SchoolProfile = () => {
         remark: Yup.string().required(`${t("remark_is_required")}`),
         website: Yup.string().required(`${t("website_is_required")}`),
         country: Yup.string().required(`${t("country_is_required")}`),
-        city: Yup.string().required(`${t("city_is_required")}`),
+        city: Yup.string().optional(),
         state: Yup.string().required(`${t("state_is_required")}`),
         zip: Yup.string().required(`${t("zip_is_required")}`),
         street: Yup.string().required(`${t("street_is_required")}`),
@@ -101,8 +101,6 @@ const SchoolProfile = () => {
             street: mySchoolDetails?.street,
         },
     });
-
-
 
     useEffect(() => {
         if (countryDataForSchool && countryDataForSchool.docs) {
@@ -136,6 +134,13 @@ const SchoolProfile = () => {
         });
 
         if (!result.canceled) {
+            const fileSize = result.assets[0].fileSize;
+
+            if (fileSize && fileSize > 20000000) {
+                alert("File size should be less than 20 MB.");
+                return;
+            }
+
             if (value === "logo") {
                 setLogoBase64(result.assets[0].base64);
                 setLogo(result.assets[0]?.uri);
@@ -153,11 +158,26 @@ const SchoolProfile = () => {
 
         const country = data.country;
         const state = data.state;
+        const city = data.city;
 
         const countryName = Country.getCountryByCode(country)?.name;
         const stateName = State.getStateByCodeAndCountry(state, country)?.name;
 
         const locationId = locationData.find((loc: any) => loc.location === countryName)?._id;
+
+        let updatedCity = city;
+
+        if (
+            country === mySchoolDetails?.countryCode &&
+            state === mySchoolDetails?.stateCode &&
+            city === mySchoolDetails?.city
+        ) {
+            updatedCity = mySchoolDetails?.city;
+        }
+
+        if (!selectedCity) {
+            updatedCity = stateName;
+        }
 
         const payload: any = {
             name: data.name,
@@ -166,7 +186,7 @@ const SchoolProfile = () => {
             website: data.website,
             country: countryName,
             state: stateName,
-            city: data.city,
+            city: updatedCity,
             zip: data.zip,
             street: data.street,
         };
@@ -431,7 +451,9 @@ const SchoolProfile = () => {
                         control={control}
                         render={({ field: { onChange, value }, fieldState: { error } }) => (
                             <AUIThemedView>
-                                <AUIThemedText style={styles.label}>{t("city")}</AUIThemedText>
+                                <AUIThemedText style={styles.label}>
+                                    {t("city")} (optional)
+                                </AUIThemedText>
                                 {/* @ts-ignore */}
                                 <DropdownComponent
                                     list={cities.map((city) => ({
