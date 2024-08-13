@@ -461,7 +461,9 @@ const Profile: React.FC = () => {
                                     {Platform.OS === "ios" ? (
                                         <>
                                             <AUIButton
-                                                title={`Select Date of Birth`}
+                                                title={`${
+                                                    dateOfBirth ? formatDate(`${dateOfBirth}`) : ""
+                                                }`}
                                                 style={{ borderWidth: 0, width: "48%" }}
                                                 onPress={() => setShowDatePicker(!showDatePicker)}
                                                 borderColor={APP_THEME.light.primary.first}
@@ -487,7 +489,7 @@ const Profile: React.FC = () => {
                                                             style={styles.titleContainer}
                                                         >
                                                             <AUIThemedText style={styles.dateTitle}>
-                                                                Pick From Date
+                                                                {t("pickDateOfBirth")}
                                                             </AUIThemedText>
                                                         </AUIThemedView>
                                                         <DateTimePicker

@@ -312,7 +312,7 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                                                 >
                                                     <AUIThemedView style={styles.titleContainer}>
                                                         <AUIThemedText style={styles.dateTitle}>
-                                                            Pick From Date
+                                                            {t("pickFromDate")}
                                                         </AUIThemedText>
                                                     </AUIThemedView>
                                                     <DateTimePicker

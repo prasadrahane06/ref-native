@@ -492,7 +492,7 @@ const AUIAddNewCourse = () => {
                                             >
                                                 <AUIThemedView style={styles.titleContainer}>
                                                     <AUIThemedText style={styles.dateTitle}>
-                                                        Pick From Date
+                                                        {t("pickFromDate")}
                                                     </AUIThemedText>
                                                 </AUIThemedView>
                                                 <DateTimePicker
@@ -589,7 +589,7 @@ const AUIAddNewCourse = () => {
                                             >
                                                 <AUIThemedView style={styles.titleContainer}>
                                                     <AUIThemedText style={styles.dateTitle}>
-                                                        Pick To Date
+                                                        {t("pickToDate")}
                                                     </AUIThemedText>
                                                 </AUIThemedView>
                                                 <DateTimePicker

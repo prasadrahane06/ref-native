@@ -452,7 +452,7 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
                                                                                 dateStyles.dateTitle
                                                                             }
                                                                         >
-                                                                            Pick From Date
+                                                                            {t("pickFromDate")}
                                                                         </AUIThemedText>
                                                                     </AUIThemedView>
                                                                     <DateTimePicker
@@ -626,7 +626,7 @@ function EnquireNowModal({ isVisible, onClose, courseId, userId, clientId }: Enq
                                                                                 dateStyles.dateTitle
                                                                             }
                                                                         >
-                                                                            Pick To Date
+                                                                            {t("pickToDate")}
                                                                         </AUIThemedText>
                                                                     </AUIThemedView>
                                                                     <DateTimePicker

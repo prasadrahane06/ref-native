@@ -350,6 +350,10 @@ export const en = {
     timestamp: "Timestamp",
     close: "Close",
     transaction_id: "Transaction ID",
+    date: "Date",
+    pickFromDate: "Pick From Date",
+    pickToDate: "Pick To Date",
+    pickDateOfBirth:"Pick Date Of Birth"
 };
 
 export const ar = {
@@ -697,4 +701,8 @@ export const ar = {
     timestamp: "التوقيت",
     close: "إغلاق",
     transaction_id: "معرف المعاملة",
+    date: "تاريخ",
+    pickFromDate: "اختر من التاريخ",
+    pickToDate: "اختر حتى الآن",
+    pickDateOfBirth: "اختر تاريخ الميلاد",
 };

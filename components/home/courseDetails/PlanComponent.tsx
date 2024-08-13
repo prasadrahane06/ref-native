@@ -435,7 +435,7 @@ function EnquireNowModal({
                                                                     <AUIThemedText
                                                                         style={dateStyles.dateTitle}
                                                                     >
-                                                                        Pick From Date
+                                                                        {t("pickFromDate")}
                                                                     </AUIThemedText>
                                                                 </AUIThemedView>
                                                                 <DateTimePicker
@@ -601,7 +601,7 @@ function EnquireNowModal({
                                                                     <AUIThemedText
                                                                         style={dateStyles.dateTitle}
                                                                     >
-                                                                        Pick To Date
+                                                                        {t("pickToDate")}
                                                                     </AUIThemedText>
                                                                 </AUIThemedView>
                                                                 <DateTimePicker
