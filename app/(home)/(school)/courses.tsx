@@ -135,7 +135,16 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     searchBarContainer: {
-        marginHorizontal: 15,
+        flexDirection: "row",
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 1,
+        // backgroundColor: "white",
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "center",
     },
     scrollViewContent: {
         marginTop: 70,

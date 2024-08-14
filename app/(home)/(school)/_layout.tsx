@@ -78,7 +78,7 @@ const EventsScreen = () => {
     };
 
     const renderItem = ({ item }: { item: event }) => (
-        <TouchableOpacity onPress={() => handleEditEvent(item)}>
+        <TouchableOpacity onPress={() => handleEditEvent(item)} style={styles.eventContainer}>
             <AUIThemedView style={styles.event}>
                 <Image source={{ uri: item?.eventImage }} style={styles.image} />
                 <AUIThemedText style={styles.name} numberOfLines={1}>
@@ -381,6 +381,12 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
         height: 100,
         width: 80,
+    },
+    eventContainer: {
+        flex: 1,
+        margin: 5, // This controls the spacing between the grid items
+        alignItems: "center",
+        justifyContent: "center",
     },
     name: {
         fontSize: 16,

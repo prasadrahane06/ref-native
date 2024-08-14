@@ -62,10 +62,12 @@ export default function TabFourScreen() {
     }, [page, myFacilitys.totalPages]);
 
     const renderItem = ({ item }: { item: Facility }) => (
-        <TouchableOpacity onPress={() => handleEditFacility(item)}>
+        <TouchableOpacity onPress={() => handleEditFacility(item)} style={styles.eventContainer}>
             <AUIThemedView style={styles.facility}>
                 <Image source={{ uri: item?.image }} style={styles.image} />
-                <AUIThemedText style={styles.name}>{item?.name}</AUIThemedText>
+                <AUIThemedText style={styles.name} numberOfLines={1} ellipsizeMode="tail">
+                    {item?.name}
+                </AUIThemedText>
             </AUIThemedView>
         </TouchableOpacity>
     );
@@ -147,6 +149,12 @@ const styles = StyleSheet.create({
     },
     name: {
         fontSize: 16,
+    },
+    eventContainer: {
+        flex: 1,
+        margin: 5, // This controls the spacing between the grid items
+        alignItems: "center",
+        justifyContent: "center",
     },
     noData: {
         fontSize: 16,

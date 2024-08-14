@@ -404,7 +404,7 @@ const styles = StyleSheet.create({
     },
     iconWrapper: {
         alignItems: "center",
-        backgroundColor: APP_THEME.light.primary.third,
+        backgroundColor: APP_THEME.light.primary.first,
         paddingHorizontal: 25,
         borderRadius: 10,
         width: 100,
@@ -418,7 +418,7 @@ const styles = StyleSheet.create({
     iconTextContainer: {
         marginBottom: 5,
         width: 90,
-        backgroundColor: APP_THEME.light.primary.third,
+        backgroundColor: APP_THEME.light.primary.first,
     },
     iconText: {
         marginTop: 5,

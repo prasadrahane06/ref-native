@@ -19,6 +19,9 @@ import { Alert, Pressable, TouchableOpacity } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
 import { Provider, useDispatch, useSelector } from "react-redux";
+import useAxios from "./services/axiosClient";
+import messaging from "@react-native-firebase/messaging";
+import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { baseURL } from "./services/axiosClient";
 // import messaging from "@react-native-firebase/messaging";
 
@@ -288,6 +291,9 @@ const InitialLayout = () => {
                             </TouchableOpacity>
                         </Link>
                     ),
+                    headerStyle: {
+                        backgroundColor: BACKGROUND_THEME[theme].background,
+                    },
                 }}
             />
 
