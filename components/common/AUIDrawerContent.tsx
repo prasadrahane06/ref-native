@@ -50,6 +50,9 @@ const AUIDrawerContent = (props: any) => {
     const mySchoolDetails = useLangTransformSelector(
         (state: RootState) => state.api.MySchoolDetails
     );
+    const userProfileData = useLangTransformSelector(
+        (state: RootState) => state.api.userProfileData
+    );
 
     const name = data?.name;
     const gender = data?.gender;
@@ -84,8 +87,8 @@ const AUIDrawerContent = (props: any) => {
                         {type === "student" ? (
                             <AUIImage
                                 path={
-                                    data?.photo
-                                        ? data?.photo
+                                    userProfileData?.photo
+                                        ? userProfileData?.photo
                                         : gender === "Male"
                                         ? Asset.fromModule(
                                               require("@/assets/images/local/user.png")

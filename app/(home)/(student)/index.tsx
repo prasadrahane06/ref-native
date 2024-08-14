@@ -63,13 +63,13 @@ export default function HomeScreen() {
     }, [fetchCourses]);
 
     useEffect(() => {
-        requestFn(API_URL.school, "school", { status: 2 });
-        requestFn(API_URL.country, "country");
-        requestFn(API_URL.favorite, "favorite", { user: true });
-        requestFn(API_URL.language, "language");
-        requestFn(API_URL.cart, "cart");
         requestFn(API_URL.user, "userProfileData", { id: _id });
+        requestFn(API_URL.country, "country");
+        requestFn(API_URL.school, "school", { status: 2 });
+        requestFn(API_URL.language, "language");
         requestFn(API_URL.course, "lastDateToApply", { lastChance: true });
+        requestFn(API_URL.favorite, "favorite", { user: true });
+        requestFn(API_URL.cart, "cart");
     }, []);
 
     const favorite = useLangTransformSelector((state: RootState) => state.api.favorite);
@@ -143,7 +143,13 @@ export default function HomeScreen() {
             </AUIThemedView>
 
             <AUIThemedView>
-                <SectionTitle viewAll="(home)/course/AllCoursesScreen">
+                <SectionTitle
+                    viewAll={
+                        courseResponse?.docs?.length > 0
+                            ? "(home)/course/AllCoursesScreen"
+                            : undefined
+                    }
+                >
                     {t(GLOBAL_TRANSLATION_LABEL.popular_courses)}
                 </SectionTitle>
                 <CourseList data={courseResponse?.docs.slice(0, 4)} />

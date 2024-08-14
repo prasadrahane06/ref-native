@@ -95,8 +95,13 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                 refreshEvents();
             })
             .catch((error) => {
-                ApiErrorToast(`${t("failed_to_add_event")}`);
+                if (error.response?.status === 413) {
+                    ApiErrorToast(t("image_too_large"));
+                    return;
+                }
+
                 console.log("error in add event", error);
+                ApiErrorToast(`${t("failed_to_add_event")}`);
             })
             .finally(() => setLoading(false));
     };
@@ -120,8 +125,13 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                 refreshEvents();
             })
             .catch((error) => {
-                ApiErrorToast(`${t("failed_to_update_event")}`);
+                if (error.response?.status === 413) {
+                    ApiErrorToast(t("image_too_large"));
+                    return;
+                }
+
                 console.log("error in update event", error);
+                ApiErrorToast(`${t("failed_to_update_event")}`);
             })
             .finally(() => setLoading(false));
     };
@@ -166,17 +176,10 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
             aspect: [4, 3],
-            quality: 1,
+            quality: 0.5,
         });
 
         if (!result.canceled) {
-            const fileSize = result.assets[0].fileSize;
-
-            if (fileSize && fileSize > 20000000) {
-                alert("File size should be less than 20 MB.");
-                return;
-            }
-
             const assetUri = result.assets[0]?.uri;
             const manipResult = await ImageManipulator.manipulateAsync(
                 assetUri,

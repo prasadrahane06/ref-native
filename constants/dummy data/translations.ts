@@ -154,6 +154,7 @@ export const en = {
     fee: "Fee",
     fee_structure: "Fee Structure",
     find_your_destination: "Find your destination",
+    image_too_large: "File size should be less than 20 MB.",
     form_availability: "Form availability",
     format: "DD/MM/YY",
     frequently_ask_questions: "Frequently Asked Questions",
@@ -210,6 +211,7 @@ export const en = {
     no_id_available: "No ID available",
     no_reviews: "No Reviews",
     no_courses: "No Courses",
+    no_plans_found: "No plans found.",
     not_available: " Not Available",
     notification: "Notification",
     number_of_seats: "Number of Seats",
@@ -352,7 +354,7 @@ export const en = {
     date: "Date",
     pickFromDate: "Pick From Date",
     pickToDate: "Pick To Date",
-    pickDateOfBirth:"Pick Date Of Birth"
+    pickDateOfBirth: "Pick Date Of Birth",
 };
 
 export const ar = {
@@ -509,6 +511,7 @@ export const ar = {
     fee: "الرسوم",
     fee_structure: "هيكل الرسوم",
     find_your_destination: "ابحث عن وجهتك",
+    image_too_large: "يجب أن يكون حجم الملف أقل من 20 ميغابايت.",
     form_availability: "توفر النموذج",
     format: "يوم/شهر/سنة",
     frequently_ask_questions: "اطرح الأسئلة بشكل متكرر",
@@ -564,6 +567,7 @@ export const ar = {
     no_id_available: "لا يوجد معرف متاح",
     no_reviews: "لم يتم تقديم تعليقات",
     no_courses: "لا دورات",
+    no_plans_found: "لم يتم العثور على خطوط",
     not_available: "غير متاح",
     notification: "الاشعارات",
     number_of_seats: "عدد المقاعد",

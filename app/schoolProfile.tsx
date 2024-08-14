@@ -130,17 +130,10 @@ const SchoolProfile = () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             base64: true,
             allowsEditing: true,
-            quality: 1,
+            quality: 0.5,
         });
 
         if (!result.canceled) {
-            const fileSize = result.assets[0].fileSize;
-
-            if (fileSize && fileSize > 20000000) {
-                alert("File size should be less than 20 MB.");
-                return;
-            }
-
             if (value === "logo") {
                 setLogoBase64(result.assets[0].base64);
                 setLogo(result.assets[0]?.uri);
@@ -216,6 +209,12 @@ const SchoolProfile = () => {
             .catch((error: any) => {
                 dispatch(setLoader(false));
                 console.log("error in school profile save", error);
+
+                if (error.response?.status === 413) {
+                    ApiErrorToast(t("image_too_large"));
+                    return;
+                }
+
                 ApiErrorToast(error.message);
             });
     };

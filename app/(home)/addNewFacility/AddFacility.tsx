@@ -7,6 +7,7 @@ import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import { APP_THEME, TEXT_THEME } from "@/constants/Colors";
 import { API_URL } from "@/constants/urlProperties";
+import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import useLoading from "@/customHooks/useLoading";
 import { RootState } from "@/redux/store";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -40,9 +41,14 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
     refreshFacilities,
 }) => {
     const { t } = useTranslation();
-    const user = useSelector((state: RootState) => state.global.user);
     const { post, patch, del } = useAxios();
     const { control, handleSubmit, reset, setValue, getValues } = useForm();
+
+    const user = useSelector((state: RootState) => state.global.user);
+    const mySchoolDetails = useLangTransformSelector(
+        (state: RootState) => state.api.MySchoolDetails
+    );
+
     const [image, setImage] = useState<string | null>(facility?.image || null);
     const [initialValues, setInitialValues] = useState<any>({});
     const [showConfirmation, setShowConfirmation] = useState(false);
@@ -81,7 +87,7 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
     const handleSave = () => {
         const values = getValues();
         const payload = {
-            client: user?.client,
+            client: mySchoolDetails?._id,
             name: values.facilityName,
             description: values.description,
             image: image,
@@ -94,8 +100,13 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
                 reset();
             })
             .catch((error) => {
-                ApiErrorToast(`${t("failed_to_add_facility")}`);
+                if (error.response?.status === 413) {
+                    ApiErrorToast(t("image_too_large"));
+                    return;
+                }
+
                 console.log("error in add facility", error);
+                ApiErrorToast(`${t("failed_to_add_facility")}`);
             })
             .finally(() => setLoading(false));
     };
@@ -122,8 +133,13 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
                 reset();
             })
             .catch((error) => {
-                ApiErrorToast(`${t("failed_to_update_facility")}`);
+                if (error.response?.status === 413) {
+                    ApiErrorToast(t("image_too_large"));
+                    return;
+                }
+
                 console.log("error in edit facility", error);
+                ApiErrorToast(`${t("failed_to_update_facility")}`);
             })
             .finally(() => setLoading(false));
     };
@@ -151,17 +167,10 @@ const AddNewFacilities: React.FC<AddFacilities> = ({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
             aspect: [4, 3],
-            quality: 1,
+            quality: 0.5,
         });
 
         if (!result.canceled) {
-            const fileSize = result.assets[0].fileSize;
-
-            if (fileSize && fileSize > 20000000) {
-                alert("File size should be less than 20 MB.");
-                return;
-            }
-
             const assetUri = result.assets[0]?.uri;
             const manipResult = await ImageManipulator.manipulateAsync(
                 assetUri,

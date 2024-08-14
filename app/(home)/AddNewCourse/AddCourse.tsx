@@ -231,10 +231,15 @@ const AUIAddNewCourse = () => {
                 dispatch(setLoader(false));
             })
             .catch((error) => {
-                ApiErrorToast(error.message);
+                dispatch(setLoader(false));
                 console.log("error in add course", error);
 
-                dispatch(setLoader(false));
+                if (error.response?.status === 413) {
+                    ApiErrorToast(t("image_too_large"));
+                    return;
+                }
+
+                ApiErrorToast(error.message);
             });
     };
 
@@ -264,9 +269,15 @@ const AUIAddNewCourse = () => {
                 dispatch(setLoader(false));
             })
             .catch((error) => {
-                ApiErrorToast(error.message);
-                console.log("error in edit course", error);
                 dispatch(setLoader(false));
+                console.log("error in edit course", error);
+
+                if (error.response?.status === 413) {
+                    ApiErrorToast(t("image_too_large"));
+                    return;
+                }
+
+                ApiErrorToast(error.message);
             });
     };
 
@@ -289,17 +300,10 @@ const AUIAddNewCourse = () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             base64: true,
             allowsEditing: true,
-            quality: 1,
+            quality: 0.5,
         });
 
         if (!result.canceled) {
-            const fileSize = result.assets[0].fileSize;
-
-            if (fileSize && fileSize > 20000000) {
-                alert("File size should be less than 20 MB.");
-                return;
-            }
-
             setImageBase64(result.assets[0].base64);
             setShowImage(result.assets[0].uri);
             // @ts-ignore
@@ -723,12 +727,13 @@ const AUIAddNewCourse = () => {
                         innerStyle={styles.AUIAccordionInnerStyle}
                         title={t("select_plans")}
                     >
+                        {plans?.length === 0 && <AUIThemedText>{t("no_plans_found")}</AUIThemedText>}
                         {plans?.map((plan: Plan, index: number) => (
                             <AUIThemedView
                                 key={plan?._id}
                                 style={[
                                     styles.facilitiesRow,
-                                    index === plans.length - 1 && styles.lastFacilitiesRow,
+                                    index === plans?.length - 1 && styles.lastFacilitiesRow,
                                 ]}
                             >
                                 <AUIThemedView style={styles.CheckboxContainer}>
@@ -756,7 +761,7 @@ const AUIAddNewCourse = () => {
                                                         );
                                                     }}
                                                     disabled={!value && selectedPlan.length > 2}
-                                                    color={value ? "#5BD894" : undefined}
+                                                    color={value ? "#5BD894" : "#fff"}
                                                 />
                                                 <AUIThemedText style={styles.facilitiesLabel}>
                                                     {plan?.name}

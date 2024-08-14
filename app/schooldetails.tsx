@@ -28,6 +28,7 @@ import { DETAILS_FIELDS } from "@/constants/Properties";
 import CustomTooltip from "@/components/common/AUIToolTip";
 import { Ionicons } from "@expo/vector-icons";
 import { APP_THEME } from "@/constants/Colors";
+import { useTranslation } from "react-i18next";
 
 const schema = Yup.object().shape({
     remark: Yup.string().required("Remark is required"),
@@ -50,6 +51,7 @@ interface LocationData {
 export default function SchoolDetails() {
     const { requestFn } = useApiRequest();
     const { patch } = useAxios();
+    const { t } = useTranslation();
     const dispatch = useDispatch();
     const router = useRouter();
 
@@ -158,8 +160,14 @@ export default function SchoolDetails() {
             })
             .catch((error: any) => {
                 dispatch(setLoader(false));
-                ApiErrorToast(error.response?.data?.message);
                 console.log("error in schooldetails onSave =>", error);
+
+                if (error.response?.status === 413) {
+                    ApiErrorToast(t("image_too_large"));
+                    return;
+                }
+
+                ApiErrorToast(error.response?.data?.message);
             });
     };
 
@@ -167,17 +175,10 @@ export default function SchoolDetails() {
         let result = await ImagePicker.launchImageLibraryAsync({
             base64: true,
             allowsEditing: true,
-            quality: 1,
+            quality: 0.5,
         });
 
         if (!result.canceled) {
-            const fileSize = result.assets[0].fileSize;
-
-            if (fileSize && fileSize > 20000000) {
-                alert("File size should be less than 20 MB.");
-                return;
-            }
-
             if (value === "logo") {
                 setValue(value, result.assets[0].base64);
                 setSelectedLogo(result.assets[0]?.uri);
