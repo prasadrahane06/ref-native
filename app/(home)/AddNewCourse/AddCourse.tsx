@@ -340,7 +340,6 @@ const AUIAddNewCourse = () => {
         setAddPlanVisible(true);
         setCurrentPlan(undefined);
     };
-
     const generateRandomId = (): string => {
         return Math.floor(1000 + Math.random() * 9000).toString(); // Generate a random 4-digit number
     };
@@ -696,7 +695,19 @@ const AUIAddNewCourse = () => {
                         </AUIThemedView>
 
                         {showImage && (
-                            <ImageViewer selectedImage={showImage} style={styles.image} />
+                            <AUIThemedView style={styles.imageContainer}>
+                                <ImageViewer selectedImage={showImage} style={styles.image} />
+                                <TouchableOpacity
+                                    style={styles.closeIcon}
+                                    onPress={() => setShowImage(null)}
+                                >
+                                    <MaterialIcons
+                                        name="close"
+                                        size={24}
+                                        color={TEXT_THEME.light.danger}
+                                    />
+                                </TouchableOpacity>
+                            </AUIThemedView>
                         )}
                     </AUIThemedView>
                 )}
@@ -926,6 +937,9 @@ const AUIAddNewCourse = () => {
                     setCurrentPlan(undefined);
                     setSelectedPlan([]);
                     setRenderSelectedPlan([]);
+                    plans?.forEach((plan: any, index: any) => {
+                        setValue(`plans.${index}` as any, false);
+                    });
                 }}
                 plan={currentPlan}
                 isEditMode={currentPlan !== undefined}
@@ -1101,11 +1115,23 @@ const styles = StyleSheet.create({
         color: APP_THEME.light.primary.first,
     },
     fileName: {},
+    imageContainer: {
+        position: "relative",
+        width: 250,
+        height: 150,
+        marginTop: 10,
+    },
     image: {
         width: 250,
         height: 150,
         marginTop: 10,
         borderRadius: 0,
+    },
+    closeIcon: {
+        position: "absolute",
+        right: -10,
+        backgroundColor: APP_THEME.light.lightGray,
+        borderRadius: 20,
     },
     screenTitle: {
         fontSize: 18,

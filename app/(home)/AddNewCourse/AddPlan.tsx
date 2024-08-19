@@ -205,6 +205,10 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
     const onSave = (data: any) => {
         dispatch(setLoader(true));
 
+        const filteredCourses = data.courses.filter(
+            (course: { title: string; subtitle: string }) =>
+                course.title.trim() || course.subtitle.trim()
+        );
         const duration = `${data.durationInNumber} ${data.durationInUnit}`.trim();
 
         const payload = {
@@ -214,7 +218,7 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
             schedule: data.schedule,
             price: data.price,
             bookYourSeat: data.bookYourSeat,
-            courseDetails: data.courses,
+            courseDetails: filteredCourses,
             facilities: selectedFacilities,
             lessonsHour: duration, //  change in backend
         };
@@ -250,7 +254,10 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
         // if (selectedFacilities !== initialValues.facilities) {
         //     payload.facilities = selectedFacilities;
         // }
-
+        const filteredCourses = data.courses.filter(
+            (course: { title: string; subtitle: string }) =>
+                course.title.trim() || course.subtitle.trim()
+        );
         const duration = `${data.durationInNumber} ${data.durationInUnit}`.trim();
 
         const payload = {
@@ -260,7 +267,7 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
             schedule: data.schedule,
             price: data.price,
             bookYourSeat: data.bookYourSeat,
-            courseDetails: data.courses,
+            courseDetails: filteredCourses,
             facilities: selectedFacilities,
             lessonsHour: duration, //  change in backend
         };
@@ -345,23 +352,6 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                 />
 
                 <AUIThemedView style={{ marginVertical: 25 }}>
-                    <AUIThemedView style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-                        <AUIThemedText style={inputFieldStyle.label}>
-                            {t("enter_total_duration")}
-                        </AUIThemedText>
-
-                        <CustomTooltip
-                            text="Total Duration is duration of your whole course for that plan"
-                            tooltipStyle={{ padding: 15 }}
-                        >
-                            <Ionicons
-                                name="information-circle-outline"
-                                size={20}
-                                color={APP_THEME.light.primary.first}
-                            />
-                        </CustomTooltip>
-                    </AUIThemedView>
-
                     <AUIThemedView style={styles.durationContainer}>
                         <Controller
                             name="durationInNumber"
@@ -372,18 +362,27 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                                         style={{
                                             flexDirection: "row",
                                             alignItems: "center",
-                                            borderWidth: 2,
-                                            borderColor: "#ccc",
-                                            borderRadius: 6,
+                                            gap: 10,
                                         }}
                                     >
-                                        <TextInput
-                                            style={{
-                                                flex: 1,
-                                                paddingVertical: 10,
-                                                color: TEXT_THEME[theme].primary,
-                                                padding: 20,
-                                            }}
+                                        <AUIThemedText style={inputFieldStyle.label}>
+                                            {t("enter_total_duration")}
+                                        </AUIThemedText>
+
+                                        <CustomTooltip
+                                            text="Total Duration is duration of your whole course for that plan"
+                                            tooltipStyle={{ padding: 15 }}
+                                        >
+                                            <Ionicons
+                                                name="information-circle-outline"
+                                                size={20}
+                                                color={APP_THEME.light.primary.first}
+                                            />
+                                        </CustomTooltip>
+                                    </AUIThemedView>
+                                    <AUIThemedView>
+                                        <AUIInputField
+                                            style={styles.input}
                                             value={value}
                                             onChangeText={onChange}
                                             keyboardType="numeric"
@@ -404,7 +403,7 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                             name="durationInUnit"
                             control={control}
                             render={({ field: { value, onChange }, fieldState: { error } }) => (
-                                <AUIThemedView style={{ flex: 1 }}>
+                                <AUIThemedView style={{ flex: 1, marginTop: 25 }}>
                                     <AUIThemedView>
                                         <DropdownComponent
                                             //@ts-ignore
@@ -415,14 +414,7 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                                             }
                                             labelField="unit"
                                             // label="Select your unit"
-                                            labelStyles={{
-                                                marginTop: 10,
-                                                marginBottom: 5,
-                                                fontSize: 13,
-                                                fontWeight: "bold",
-                                                fontStyle: "normal",
-                                                color: "#333",
-                                            }}
+                                            style={styles.input}
                                             valueField="unit"
                                             placeholder={"Select Duration"}
                                             listWithIcon
