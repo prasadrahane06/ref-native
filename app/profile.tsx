@@ -13,7 +13,7 @@ import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector
 import { setResponse } from "@/redux/apiSlice";
 import { setLoader, setUser } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import { City, Country, State } from "country-state-city";
@@ -24,6 +24,7 @@ import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
+    Alert,
     KeyboardAvoidingView,
     Modal,
     Platform,
@@ -37,6 +38,7 @@ import "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import useAxios from "./services/axiosClient";
+import AUIModal from "@/components/common/AUIModal";
 
 const genderData = [
     {
@@ -146,7 +148,7 @@ const Profile: React.FC = () => {
     const avatar = gender === "Male" ? maleAvatar : femaleAvatar;
 
     const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
-    const [profileImage, setProfileImage] = useState<string>(userProfileData?.photo || avatar);
+    const [profileImage, setProfileImage] = useState<any>(userProfileData?.photo || avatar);
 
     const [profileBase64, setProfileBase64] = useState<any>(null);
     const [selectedCountry, setSelectedCountry] = useState<any>(null);
@@ -199,8 +201,6 @@ const Profile: React.FC = () => {
         mode: "onChange",
         defaultValues: {
             name: userProfileData?.name,
-            // phoneNumber: userProfileData?.phone,
-            // email: userProfileData?.email,
             language: userProfileData?.language,
             dateOfBirth: dateOfBirth && dateOfBirth?.toISOString(),
             gender: userProfileData?.gender || "",
@@ -234,6 +234,14 @@ const Profile: React.FC = () => {
             }
         }
         return false;
+    };
+
+    const resetState = (value: string) => {
+        setSelectedCountry(value);
+        setSelectedState(null);
+        setSelectedCity(null);
+        setValue("state", "");
+        setValue("city", "");
     };
 
     const onDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
@@ -357,6 +365,55 @@ const Profile: React.FC = () => {
             });
     };
 
+    const handleRemovepic = () => {
+        Alert.alert(
+            `${t("delete_profile_picture")}`,
+            `${t("delete_profile_description")}`,
+            [
+                {
+                    text: `${t("cancel")}`,
+                    onPress: () => console.log("Remove cancelled"),
+                    style: "cancel",
+                },
+                {
+                    text: `${t("confirm_delete")}`,
+                    onPress: () => {
+                        dispatch(setLoader(true));
+
+                        const payload = {
+                            id: userProfileData?._id,
+                            photo: "",
+                        };
+                        patch(API_URL.user, payload)
+                            .then((res: any) => {
+                                dispatch(setLoader(false));
+
+                                storeUserData("@user-data", {
+                                    ...res?.data,
+                                });
+                                setProfileImage(avatar);
+                                dispatch(setUser(res?.data));
+                                dispatch(
+                                    setResponse({
+                                        storeName: "userProfileData",
+                                        data: res?.data,
+                                    })
+                                );
+                                ApiSuccessToast("Profile picture deleted successfully");
+                            })
+                            .catch((error: any) => {
+                                dispatch(setLoader(false));
+                                console.log("Error deleting profile picture:", error);
+                                ApiErrorToast("Failed to delete profile picture");
+                            });
+                    },
+                    style: "destructive",
+                },
+            ],
+            { cancelable: false }
+        );
+    };
+
     const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
     return (
         <KeyboardAvoidingView
@@ -366,15 +423,32 @@ const Profile: React.FC = () => {
         >
             <ScrollView automaticallyAdjustKeyboardInsets={true}>
                 <AUIThemedView style={styles.container}>
-                    <TouchableOpacity style={styles.profileImageContainer} onPress={pickImageAsync}>
-                        <AUIImage icon path={profileImage} style={[styles.profileImage]} />
-                        <Ionicons
-                            name="create-outline"
-                            size={24}
-                            color={APP_THEME.light.primary.first}
-                            style={styles.editIcon}
-                        />
-                    </TouchableOpacity>
+                    <AUIThemedView style={styles.profileImageContainer}>
+                        <TouchableOpacity onPress={pickImageAsync}>
+                            <AUIImage icon path={profileImage} style={styles.profileImage} />
+                        </TouchableOpacity>
+                        {profileImage !== avatar ? (
+                            <TouchableOpacity style={styles.closeIcon} onPress={handleRemovepic}>
+                                <MaterialCommunityIcons
+                                    name="delete-forever"
+                                    size={24}
+                                    color="red"
+                                />
+                            </TouchableOpacity>
+                        ) : (
+                            <TouchableOpacity
+                                style={styles.editIconContainer1}
+                                onPress={pickImageAsync}
+                            >
+                                <Ionicons
+                                    name="create-outline"
+                                    size={24}
+                                    color={APP_THEME.light.primary.first}
+                                    style={styles.editIcon}
+                                />
+                            </TouchableOpacity>
+                        )}
+                    </AUIThemedView>
 
                     <Controller
                         name="name"
@@ -605,7 +679,6 @@ const Profile: React.FC = () => {
                                     value={value}
                                     setValue={({ gender }: { gender: string }) => onChange(gender)}
                                     labelField="gender"
-                                    // label="Select your gender"
                                     labelStyles={{
                                         marginTop: 10,
                                         marginBottom: 5,
@@ -751,7 +824,7 @@ const Profile: React.FC = () => {
                                     //@ts-ignore
                                     setValue={({ value }) => {
                                         onChange(value);
-                                        setSelectedCountry(value);
+                                        resetState(value);
                                     }}
                                     labelField="label"
                                     valueField="value"
@@ -935,8 +1008,11 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-between",
     },
-    editIcon: {
+    editIconContainer1: {
         position: "absolute",
+        left: 10,
+    },
+    editIcon: {
         left: 70,
     },
     editIconContainer: {
@@ -968,7 +1044,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        // backgroundColor: "#fff",
     },
     header: {
         flexDirection: "row",
@@ -982,16 +1057,20 @@ const styles = StyleSheet.create({
     },
     profileImageContainer: {
         position: "relative",
-        alignItems: "flex-start",
-        marginBottom: 20,
-        height: 100,
         width: 100,
-        borderRadius: 100,
+        height: 100,
     },
     profileImage: {
-        height: 100,
-        width: 100,
-        borderRadius: 100,
+        width: "100%",
+        height: "100%",
+        borderRadius: 50,
+    },
+    closeIcon: {
+        position: "absolute",
+        right: 0,
+        backgroundColor: APP_THEME.light.lightGray,
+        borderRadius: 20,
+        padding: 2,
     },
     label: {
         marginTop: 10,

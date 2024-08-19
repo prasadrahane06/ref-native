@@ -54,7 +54,7 @@ const EventsScreen = () => {
         }, [page])
     );
     useEffect(() => {
-        if (page === eventData.totalPages) {
+        if (page === eventData?.totalPages) {
             const timer = setTimeout(() => {
                 setShowMessage(false);
             }, 5000);
@@ -62,7 +62,7 @@ const EventsScreen = () => {
         } else {
             setShowMessage(true);
         }
-    }, [page, eventData.totalPages]);
+    }, [page, eventData?.totalPages]);
 
     const handleAddNewEvent = () => {
         setSelectedEvent(undefined);

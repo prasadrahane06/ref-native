@@ -73,6 +73,8 @@ export const en = {
     date_of_birth: "Date of Birth",
     date_of_birth_is_required: "Date of birth is required",
     days_remaining: "Days remaining",
+    delete_profile_picture: "Delete Profile Picture",
+    delete_profile_description: "Are you sure you want to delete your profile picture?",
     delete: "Delete",
     delete_account: "Delete Account",
     delete_sure: "Are you sure you want to delete your account? This action cannot be undone.",
@@ -358,6 +360,7 @@ export const en = {
     pickFromDate: "Pick From Date",
     pickToDate: "Pick To Date",
     pickDateOfBirth: "Pick Date Of Birth",
+    profile_delete_confirmation: "Are you sure you want to delete your profile picture?",
 };
 
 export const ar = {
@@ -713,4 +716,7 @@ export const ar = {
     pickFromDate: "اختر من التاريخ",
     pickToDate: "اختر حتى الآن",
     pickDateOfBirth: "اختر تاريخ الميلاد",
+    profile_delete_confirmation: "هل أنت متأكد أنك تريد حذف الصورة الشخصية الخاصة بك؟",
+    delete_profile_picture: "حذف صورة الملف الشخصي",
+    delete_profile_description: "هل أنت متأكد أنك تريد حذف الصورة الشخصية الخاصة بك؟",
 };
