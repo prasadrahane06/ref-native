@@ -96,7 +96,7 @@ const EventsScreen = () => {
                 style={styles.AddEventButton}
                 onPress={handleAddNewEvent}
             />
-            {!eventData.docs?.length && (
+            {!eventData?.docs?.length && (
                 <AUIThemedText style={styles.noEvents}>{`${t(
                     "no_events_available"
                 )}`}</AUIThemedText>
@@ -110,14 +110,14 @@ const EventsScreen = () => {
                 contentContainerStyle={styles.container}
             />
 
-            {eventData.docs?.length > 0 && (
+            {eventData?.docs?.length > 0 && (
                 <AUIThemedView>
                     <TouchableOpacity
                         style={{ padding: 10, alignItems: "center" }}
-                        disabled={page === eventData.totalPages}
+                        disabled={page === eventData?.totalPages}
                         onPress={() => setPage((prevPage: any) => prevPage + 1)}
                     >
-                        {page === eventData.totalPages ? (
+                        {page === eventData?.totalPages ? (
                             showMessage && (
                                 <AUIThemedText>{`${t("you_are_caught_up")}`}</AUIThemedText>
                             )

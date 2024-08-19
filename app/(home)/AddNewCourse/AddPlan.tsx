@@ -281,7 +281,7 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
 
     const handleDelete = () => {
         if (!plan?._id) return;
-        del(`${API_URL.plan}?id=${plan?._id}`)
+        del(API_URL.plan, {}, { id: plan?._id })
             .then((res) => {
                 ApiSuccessToast(`${t("plan_deleted_successfully")}`);
                 onClose();
@@ -640,6 +640,9 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                         innerStyle={styles.AUIAccordionInnerStyle}
                         title={t("add_facilities_for_your_plan")}
                     >
+                        {facilities?.length === 0 && (
+                            <AUIThemedText>{t("no_facilities_found")}</AUIThemedText>
+                        )}
                         {facilities?.map((facility: Facility) => (
                             <AUIThemedView key={facility?._id} style={styles.facilitiesRow}>
                                 <AUIThemedView style={styles.CheckboxContainer}>

@@ -132,19 +132,10 @@ export default function TabThreeScreen() {
 const styles = StyleSheet.create({
     root: {
         flex: 1,
-        padding: 20,
+        marginHorizontal: 20,
     },
     searchBarContainer: {
-        flexDirection: "row",
-        position: "absolute",
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 1,
-        // backgroundColor: "white",
-        width: "100%",
-        alignItems: "center",
-        justifyContent: "center",
+        marginHorizontal: 20,
     },
     scrollViewContent: {
         marginTop: 70,
@@ -153,6 +144,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
+        paddingBottom: 20,
     },
     AddNewCourseButton: {
         width: "40%",

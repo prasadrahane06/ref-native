@@ -727,7 +727,9 @@ const AUIAddNewCourse = () => {
                         innerStyle={styles.AUIAccordionInnerStyle}
                         title={t("select_plans")}
                     >
-                        {plans?.length === 0 && <AUIThemedText>{t("no_plans_found")}</AUIThemedText>}
+                        {plans?.length === 0 && (
+                            <AUIThemedText>{t("no_plans_found")}</AUIThemedText>
+                        )}
                         {plans?.map((plan: Plan, index: number) => (
                             <AUIThemedView
                                 key={plan?._id}
@@ -761,7 +763,7 @@ const AUIAddNewCourse = () => {
                                                         );
                                                     }}
                                                     disabled={!value && selectedPlan.length > 2}
-                                                    color={value ? "#5BD894" : "#fff"}
+                                                    color={value ? "#5BD894" : "#9DA1AC"}
                                                 />
                                                 <AUIThemedText style={styles.facilitiesLabel}>
                                                     {plan?.name}

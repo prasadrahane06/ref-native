@@ -51,7 +51,7 @@ export default function TabFourScreen() {
     };
 
     useEffect(() => {
-        if (page === myFacilitys.totalPages) {
+        if (page === myFacilitys?.totalPages) {
             const timer = setTimeout(() => {
                 setShowMessage(false);
             }, 5000);
@@ -59,7 +59,7 @@ export default function TabFourScreen() {
         } else {
             setShowMessage(true);
         }
-    }, [page, myFacilitys.totalPages]);
+    }, [page, myFacilitys?.totalPages]);
 
     const renderItem = ({ item }: { item: Facility }) => (
         <TouchableOpacity onPress={() => handleEditFacility(item)} style={styles.eventContainer}>
@@ -81,7 +81,7 @@ export default function TabFourScreen() {
                 style={styles.button}
                 onPress={handleAddNewFacility}
             />
-            {!myFacilitys.docs?.length && (
+            {!myFacilitys?.docs?.length && (
                 <AUIThemedText style={styles.noFacility}>{`${t(
                     "no_facility_available"
                 )}`}</AUIThemedText>
@@ -107,10 +107,10 @@ export default function TabFourScreen() {
             />
             <TouchableOpacity
                 style={{ padding: 10, alignItems: "center" }}
-                disabled={page === myFacilitys.totalPages}
+                disabled={page === myFacilitys?.totalPages}
                 onPress={() => setPage((prevPage: any) => prevPage + 1)}
             >
-                {page === myFacilitys.totalPages ? (
+                {page === myFacilitys?.totalPages ? (
                     showMessage && <AUIThemedText>{`${t("you_are_caught_up")}`}</AUIThemedText>
                 ) : (
                     <AUIThemedText>{`${t("load_more")}`}</AUIThemedText>
