@@ -30,7 +30,7 @@ const School: React.FC<SchoolProps> = ({ id, title, image, caption, favorite, st
     const dispatch = useDispatch();
     const { t } = useTranslation();
     const { del } = useAxios();
-    const handlePress = useDebouncedNavigate(2000); // 2000 ms = 2 seconds
+    const handlePress = useDebouncedNavigate((pathname: any) => router.push(pathname), 300);
 
     const handleRemoveFav = (id: string, type: string) => {
         Alert.alert(

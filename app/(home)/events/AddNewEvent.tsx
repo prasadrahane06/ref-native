@@ -418,7 +418,14 @@ const AddNewEvent: React.FC<AddEvent> = ({ visible, onClose, event, refreshEvent
                             : `${t("no_file_chosen")}`}
                     </AUIThemedText>
                 </AUIThemedView>
-                {image && <Image source={{ uri: image }} style={styles.image} />}
+                {image && (
+                    <AUIThemedView style={styles.imageContainer}>
+                        <Image source={{ uri: image }} style={styles.image} />
+                        <TouchableOpacity style={styles.closeIcon} onPress={() => setImage(null)}>
+                            <MaterialIcons name="close" size={24} color={TEXT_THEME.light.danger} />
+                        </TouchableOpacity>
+                    </AUIThemedView>
+                )}
                 <AUIThemedView style={styles.buttonContainer}>
                     {event ? (
                         <AUIThemedView style={styles.buttonMainContainer}>
@@ -527,10 +534,22 @@ const styles = StyleSheet.create({
         color: APP_THEME.light.primary.first,
     },
     fileName: {},
+    imageContainer: {
+        position: "relative",
+        width: 60,
+        height: 60,
+        marginTop: 10,
+    },
     image: {
         width: 60,
         height: 60,
         marginTop: 10,
+    },
+    closeIcon: {
+        position: "absolute",
+        right: -10,
+        backgroundColor: APP_THEME.light.lightGray,
+        borderRadius: 20,
     },
     facility: {
         flex: 1,

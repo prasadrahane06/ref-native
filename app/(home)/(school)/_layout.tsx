@@ -96,6 +96,11 @@ const EventsScreen = () => {
                 style={styles.AddEventButton}
                 onPress={handleAddNewEvent}
             />
+            {!eventData.docs?.length && (
+                <AUIThemedText style={styles.noEvents}>{`${t(
+                    "no_events_available"
+                )}`}</AUIThemedText>
+            )}
             <FlatList
                 data={eventData?.docs || []}
                 renderItem={renderItem}
@@ -105,19 +110,23 @@ const EventsScreen = () => {
                 contentContainerStyle={styles.container}
             />
 
-            <AUIThemedView>
-                <TouchableOpacity
-                    style={{ padding: 10, alignItems: "center" }}
-                    disabled={page === eventData.totalPages}
-                    onPress={() => setPage((prevPage: any) => prevPage + 1)}
-                >
-                    {page === eventData.totalPages ? (
-                        showMessage && <AUIThemedText>{`${t("you_are_caught_up")}`}</AUIThemedText>
-                    ) : (
-                        <AUIThemedText>{`${t("load_more")}`}</AUIThemedText>
-                    )}
-                </TouchableOpacity>
-            </AUIThemedView>
+            {eventData.docs?.length > 0 && (
+                <AUIThemedView>
+                    <TouchableOpacity
+                        style={{ padding: 10, alignItems: "center" }}
+                        disabled={page === eventData.totalPages}
+                        onPress={() => setPage((prevPage: any) => prevPage + 1)}
+                    >
+                        {page === eventData.totalPages ? (
+                            showMessage && (
+                                <AUIThemedText>{`${t("you_are_caught_up")}`}</AUIThemedText>
+                            )
+                        ) : (
+                            <AUIThemedText>{`${t("load_more")}`}</AUIThemedText>
+                        )}
+                    </TouchableOpacity>
+                </AUIThemedView>
+            )}
             <AddNewEvent
                 visible={isModalVisible}
                 onClose={handleCloseModal}
@@ -370,6 +379,10 @@ const styles = StyleSheet.create({
     AddEventButton: {
         marginHorizontal: 15,
     },
+    noEvents: {
+        padding: 20,
+        textAlign: "center",
+    },
     image: {
         width: 60,
         height: 60,
@@ -384,7 +397,7 @@ const styles = StyleSheet.create({
     },
     eventContainer: {
         flex: 1,
-        margin: 5, // This controls the spacing between the grid items
+        margin: 5,
         alignItems: "center",
         justifyContent: "center",
     },

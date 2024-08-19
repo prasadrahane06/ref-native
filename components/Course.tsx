@@ -17,6 +17,7 @@ import { AUIThemedText } from "./common/AUIThemedText";
 import { AUIThemedView } from "./common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "./common/AUIToast";
 import { TouchableOpacityProps } from "react-native-gesture-handler";
+import { router } from "expo-router";
 
 interface CourseProps {
     title: string;
@@ -48,7 +49,7 @@ const Course: React.FC<CourseProps> = ({
     const { del } = useAxios();
     const dispatch = useDispatch();
     const { t } = useTranslation();
-    const handlePress = useDebouncedNavigate(2000);
+    const handlePress = useDebouncedNavigate((pathname: any) => router.push(pathname), 300);
 
     const theme = useSelector((state: RootState) => state.global.theme);
 
@@ -133,7 +134,6 @@ const Course: React.FC<CourseProps> = ({
                         </AUIThemedText>
                         {startDate}
                     </AUIThemedText>
-                    
                 </AUIThemedView>
                 {favorite && (
                     <TouchableOpacity
@@ -148,7 +148,11 @@ const Course: React.FC<CourseProps> = ({
                         style={styles.editiConContainer}
                         onPress={() => onEdit(courseId)}
                     >
-                        <FontAwesome name="pencil" size={23} color={APP_THEME.light.primary.first} />
+                        <FontAwesome
+                            name="pencil"
+                            size={23}
+                            color={APP_THEME.light.primary.first}
+                        />
                     </TouchableOpacity>
                 )}
                 {cart && (
@@ -218,7 +222,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         top: 10,
         right: 10,
-        backgroundColor: "white",//"rgba(149, 207, 156, 0.4)",
+        backgroundColor: "white", //"rgba(149, 207, 156, 0.4)",
         borderRadius: 5,
         padding: 3,
     },

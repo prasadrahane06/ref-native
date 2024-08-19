@@ -81,6 +81,11 @@ export default function TabFourScreen() {
                 style={styles.button}
                 onPress={handleAddNewFacility}
             />
+            {!myFacilitys.docs?.length && (
+                <AUIThemedText style={styles.noFacility}>{`${t(
+                    "no_facility_available"
+                )}`}</AUIThemedText>
+            )}
             <View style={styles.flatListContainer}>
                 <ScrollView>
                     <FlatList
@@ -127,6 +132,10 @@ const styles = StyleSheet.create({
     button: {
         marginTop: 20,
     },
+    noFacility: {
+        padding: 20,
+        textAlign: "center",
+    },
     flatListContainer: {
         flex: 1,
         marginTop: 20,
@@ -135,15 +144,13 @@ const styles = StyleSheet.create({
         flexGrow: 1,
     },
     row: {
-        flex: 1,
-        justifyContent: "space-between",
+        justifyContent: "flex-start",
         marginBottom: 20,
     },
     facility: {
-        flex: 1,
         alignItems: "center",
-        justifyContent: "space-evenly",
-        marginHorizontal: 5,
+        justifyContent: "flex-start",
+        marginHorizontal: 13,
         height: 100,
         width: 80,
     },

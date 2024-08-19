@@ -36,11 +36,13 @@ import {
     ScrollView,
     StyleSheet,
     TextInput,
+    TouchableOpacity,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import ContactNow from "../schoolDetails/ContactNow";
 import { FacilitiesList } from "../schoolDetails/FacilitiesList";
+import useDebouncedNavigate from "@/customHooks/useDebouncedNavigate";
 // import { t } from "i18next";
 
 interface PlanComponentProps {
@@ -824,6 +826,19 @@ export default function PlanComponent({
         requestFn(API_URL.purchaseCourse, "isPurchased", { user: true, course: courseId });
     }, []);
 
+    const handleProfileNavigation = useDebouncedNavigate((type: string) => {
+        router.push({
+            pathname: "/profile",
+            params: {
+                from: type === "buy" ? "buyButton" : "bookYourSeatButton",
+                type: type,
+                planId: planId,
+                courseId: courseId,
+                clientId: clientId,
+            },
+        });
+    }, 300);
+
     const handlePhonePress = () => {
         Linking.openURL(`tel:${clientPhone}`);
     };
@@ -873,7 +888,7 @@ export default function PlanComponent({
 
             {userType !== "school" && (
                 <AUIThemedView style={styles.btnContainer}>
-                    <Pressable
+                    <TouchableOpacity
                         style={[
                             styles.bookContainer,
                             {
@@ -894,26 +909,15 @@ export default function PlanComponent({
                             (isPurchased?.docs[0]?.type === "bookYourSeat" ||
                                 isPurchased?.docs[0]?.type === "buy")
                         }
-                        onPress={() =>
-                            router.push({
-                                pathname: "/profile",
-                                params: {
-                                    from: "bookYourSeatButton",
-                                    type: "bookYourSeat",
-                                    planId: planId,
-                                    courseId: courseId,
-                                    clientId: clientId,
-                                },
-                            })
-                        }
+                        onPress={() => handleProfileNavigation("bookYourSeat")}
                     >
                         <AntDesign name="calendar" size={24} color={TEXT_THEME[theme].primary} />
                         <AUIThemedText style={styles.blackBoldText}>
                             {t(GLOBAL_TRANSLATION_LABEL.bookYourSeat)}
                         </AUIThemedText>
-                    </Pressable>
+                    </TouchableOpacity>
 
-                    <Pressable
+                    <TouchableOpacity
                         style={[
                             styles.buyContainer,
                             {
@@ -934,22 +938,11 @@ export default function PlanComponent({
                         disabled={
                             isPurchased && isPurchased?.docs && isPurchased?.docs[0]?.type === "buy"
                         }
-                        onPress={() =>
-                            router.push({
-                                pathname: "/profile",
-                                params: {
-                                    from: "buyButton",
-                                    type: "buy",
-                                    planId: planId,
-                                    courseId: courseId,
-                                    clientId: clientId,
-                                },
-                            })
-                        }
+                        onPress={() => handleProfileNavigation("buy")}
                     >
                         <Ionicons name="bag-handle-outline" size={24} color="black" />
                         <AUIThemedText style={styles.whiteBoldText}>{t("buy_now")}</AUIThemedText>
-                    </Pressable>
+                    </TouchableOpacity>
                 </AUIThemedView>
             )}
             {userType !== "school" && (

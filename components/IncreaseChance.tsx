@@ -6,6 +6,7 @@ import AUIImage from "./common/AUIImage";
 import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
 import useDebouncedNavigate from "@/customHooks/useDebouncedNavigate";
+import { router } from "expo-router";
 
 interface IncreaseChanceItem {
     courseId?: string;
@@ -24,7 +25,7 @@ const IncreaseChance = ({
 }: IncreaseChanceItem) => {
     const theme = useSelector((state: RootState) => state.global.theme);
 
-    const handlePress = useDebouncedNavigate(2000);
+    const handlePress = useDebouncedNavigate((pathname: any) => router.push(pathname), 300);
 
     // Get the current date and the target date from props
     const currentDate = new Date();

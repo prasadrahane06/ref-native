@@ -21,7 +21,7 @@ const Destination = ({ title, image, countryWidth, countryHeight, favorite, id }
     const dispatch = useDispatch();
     const { del } = useAxios();
     const { t } = useTranslation();
-    const handlePress = useDebouncedNavigate(2000);
+    const handlePress = useDebouncedNavigate((pathname: any) => router.push(pathname), 300);
 
     const handleRemoveFav = (id: string, type: string) => {
         Alert.alert(

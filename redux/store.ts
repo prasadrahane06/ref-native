@@ -1,16 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import apiSlice from "./apiSlice";
-import cartSlice from "./cartSlice";
-import globalSlice from "./globalSlice";
-import favoriteSlice from "./favoriteSlice";
+import rootReducer from "./rootReducer";
 
 export const store = configureStore({
-    reducer: {
-        global: globalSlice,
-        api: apiSlice,
-        cart: cartSlice,
-        favorite: favoriteSlice,
-    },
+    reducer: rootReducer,
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

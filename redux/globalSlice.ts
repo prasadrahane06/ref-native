@@ -131,6 +131,7 @@ export const globalSlice = createSlice({
         ) => {
             state.user = action.payload;
         },
+        logout: () => initialState,
     },
 });
 
@@ -147,6 +148,7 @@ export const {
     setUser,
     setIsRTL,
     setselectedLanguage,
+    logout,
 } = globalSlice.actions;
 
 export default globalSlice.reducer;

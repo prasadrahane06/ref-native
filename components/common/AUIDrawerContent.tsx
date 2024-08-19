@@ -3,7 +3,7 @@ import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
 import { GLOBAL_TRANSLATION_LABEL } from "@/constants/Properties";
 import { clearAllData, storeUserData } from "@/constants/RNAsyncStore";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
-import { setTheme } from "@/redux/globalSlice";
+import { logout, setTheme } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
 import { FontAwesome } from "@expo/vector-icons";
 import { DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer";
@@ -68,6 +68,7 @@ const AUIDrawerContent = (props: any) => {
 
     const onLogout = () => {
         clearAllData();
+        dispatch(logout());
         router.replace({ pathname: "/" });
     };
 
