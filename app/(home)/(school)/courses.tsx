@@ -106,11 +106,15 @@ export default function TabThreeScreen() {
                                 disabled={false}
                             />
                         </AUIThemedView>
-                        <CourseList
-                            data={searchResult.length > 0 ? searchResult : myCourse?.docs}
-                            showEditIcons={true}
-                            onEdit={handleEditCourse}
-                        />
+                        {searchResult?.length > 0 || myCourse?.docs?.length > 0 ? (
+                            <CourseList
+                                data={searchResult?.length > 0 ? searchResult : myCourse?.docs}
+                                showEditIcons={true}
+                                onEdit={handleEditCourse}
+                            />
+                        ) : (
+                            <AUIThemedText style={{alignItems:"center" ,textAlign:"center", justifyContent:"center"}}>No Course Is Available</AUIThemedText>
+                        )}
                     </AUIThemedView>
                 </AUIThemedView>
             </ScrollView>

@@ -136,21 +136,21 @@ export const en = {
     failed_to_update_facility: "Failed to update facility",
     failed_to_update_plan: "Failed to update plan",
     false: "false",
-    faq1: "How can I apply to a foreign school through the app?",
-    faq2: "What documents are required for admission?",
-    faq3: "How can I track the status of my application?",
-    faq4: "Are there language courses available to prepare before applying?",
-    faq5: "Is there support for visa and accommodation arrangements?",
+    faq1:"What is the best way to start learning English with this app?",
+    faq2:"How long will it take to see improvement in my English skills?",
+    faq3:"Can I use the app offline?",
+    faq4:"Is there a way to track my progress?",
+    faq5:"What levels of English does the app cover?",
     faq_ans1:
-        "You can apply by selecting the desired school, filling out the application form, and submitting the required documents directly through the app.",
+   " The best way to start is by following the structured lessons from the beginning, practicing regularly, and making use of the interactive exercises. Our app is designed to guide you step-by-step, ensuring you build a strong foundation.",
     faq_ans2:
-        "Typically, you will need your academic records, a copy of your passport, language proficiency test results, and any other documents specified by the school.",
+        "Improvement varies depending on your current level and the time you dedicate daily. However, with consistent practice, most users notice significant improvements within a few weeks.",
     faq_ans3:
-        "You can track the status of your application in the My Applications section of the app, where updates will be provided regularly.",
+        "Yes, you can download lessons and exercises for offline use. This allows you to continue learning even when you don't have access to the internet.",
     faq_ans4:
-        "Yes, the app offers various language courses to help you prepare for studying abroad. You can find them in the Language Courses section.",
+        "Absolutely! The app includes a progress tracker that records your completed lessons, quiz scores, and overall improvement, helping you stay motivated and on track.",
     faq_ans5:
-        "Yes, the app provides guidance and resources for visa applications and finding suitable accommodation near your chosen school.",
+        "YThe app caters to all levels, from beginners to advanced learners. You can start at your current level and advance through more challenging content as you improve.",
     fav_countries: "Countries",
     fav_courses: "Courses",
     fav_schools: "Schools",
@@ -360,7 +360,21 @@ export const en = {
     pickFromDate: "Pick From Date",
     pickToDate: "Pick To Date",
     pickDateOfBirth: "Pick Date Of Birth",
-    profile_delete_confirmation: "Are you sure you want to delete your profile picture?",
+    faq6:"How do I manage student enrollments?",
+    faq7:"How can I monitor student performance?",
+    faq8:"How do I upload course materials?",
+    faq9:"What should I do if I encounter a technical issue?",
+    faq10:"How can I customize the course curriculum?",
+    faq_ans6:
+    " To manage student enrollments, go to the Student Management section in your dashboard. From there, you can add, remove, or update student details.",
+     faq_ans7:
+         " You can monitor student performance by accessing the Performance Reports under the Analytics tab. It provides detailed reports on each student's progress, attendance, and grades.",
+     faq_ans8:
+         "Course materials can be uploaded through the Course Management section. Select the course you wish to update and use the Upload Materials option.",
+     faq_ans9:
+         "If you encounter any technical issues, please contact our technical support team via the Help & Support section. You can also check our troubleshooting guides for quick fixes.",
+     faq_ans10:
+         " You can customize the course curriculum by going to the Curriculum Builder tool in the dashboard. This allows you to add or remove modules, set prerequisites, and update course content.",
 };
 
 export const ar = {
@@ -497,21 +511,21 @@ export const ar = {
     failed_to_update_facility: "فشل في تحديث المنشأة",
     failed_to_update_plan: "فشل تحديث الخطة",
     false: "خاطئ",
-    faq1: "كيف يمكنني التقديم للالتحاق بمدرسة أجنبية عبر التطبيق؟",
-    faq2: "ما هي المستندات المطلوبة للتقديم للالتحاق؟",
-    faq3: "كيف يمكنني تتبع حالة طلب التقديم الخاص بي؟",
-    faq4: "هل هناك دورات لغوية متاحة للتحضير قبل التقديم؟",
-    faq5: "هل يتوفر دعم لترتيبات التأشيرة والإقامة؟",
+    faq1: "ما هي أفضل طريقة لبدء تعلم اللغة الإنجليزية باستخدام هذا التطبيق؟",
+    faq2: "كم من الوقت سيستغرق لتحسين مهاراتي في اللغة الإنجليزية؟",
+    faq3: "هل يمكنني استخدام التطبيق دون اتصال بالإنترنت؟",
+    faq4: "هل هناك طريقة لتتبع تقدمي؟",
+    faq5: "ما هي مستويات اللغة الإنجليزية التي يغطيها التطبيق؟",
     faq_ans1:
-        "يمكنك التقديم من خلال اختيار المدرسة المطلوبة، تعبئة نموذج التقديم، وتقديم المستندات المطلوبة مباشرةً عبر التطبيق.",
+        "أفضل طريقة للبدء هي اتباع الدروس المنظمة من البداية، وممارسة التدريبات بانتظام، واستخدام التمارين التفاعلية. تم تصميم التطبيق ليقودك خطوة بخطوة لضمان بناء أساس قوي.",
     faq_ans2:
-        "عادةً، ستحتاج إلى سجلاتك الأكاديمية، نسخة من جواز السفر، نتائج اختبار الكفاءة اللغوية، وأي مستندات أخرى تحددها المدرسة.",
+        "يختلف التحسن حسب مستواك الحالي والوقت الذي تخصصه يوميًا. ولكن مع الممارسة المنتظمة، يلاحظ معظم المستخدمين تحسنًا كبيرًا في غضون بضعة أسابيع.",
     faq_ans3:
-        "يمكنك تتبع حالة طلب التقديم في قسم طلباتي في التطبيق، حيث سيتم توفير التحديثات بشكل منتظم.",
+        "نعم، يمكنك تحميل الدروس والتمارين لاستخدامها دون اتصال. وهذا يتيح لك مواصلة التعلم حتى عندما لا يكون لديك اتصال بالإنترنت.",
     faq_ans4:
-        "نعم، يوفر التطبيق دورات لغوية مختلفة لمساعدتك في التحضير لدراستك في الخارج. يمكنك العثور عليها في قسم الدورات اللغوية.",
+    "نعم، يوفر التطبيق إرشادات وموارد لتقديم طلبات التأشيرة والعثور على إقامة مناسبة بالقرب من مدرستك المختارة.",
     faq_ans5:
-        "نعم، يوفر التطبيق إرشادات وموارد لتقديم طلبات التأشيرة والعثور على إقامة مناسبة بالقرب من مدرستك المختارة.",
+        "يلبي التطبيق جميع المستويات من المبتدئين إلى المتعلمين المتقدمين. يمكنك البدء من مستواك الحالي والتقدم من خلال محتوى أكثر تحديًا مع تحسنك.",
     fav_countries: "البلدان المفضلة",
     fav_courses: "الدورات المفضلة",
     fav_schools: "المدارس المفضلة",
@@ -716,7 +730,14 @@ export const ar = {
     pickFromDate: "اختر من التاريخ",
     pickToDate: "اختر حتى الآن",
     pickDateOfBirth: "اختر تاريخ الميلاد",
-    profile_delete_confirmation: "هل أنت متأكد أنك تريد حذف الصورة الشخصية الخاصة بك؟",
-    delete_profile_picture: "حذف صورة الملف الشخصي",
-    delete_profile_description: "هل أنت متأكد أنك تريد حذف الصورة الشخصية الخاصة بك؟",
+    faq6:"كيف يمكنني إدارة تسجيلات الطلاب؟",
+    faq7:"كيف يمكنني مراقبة أداء الطلاب؟",
+    faq8:"كيف يمكنني تحميل مواد الدورة؟",
+    faq9:"ماذا يجب أن أفعل إذا واجهت مشكلة فنية؟",
+    faq10:"كيف يمكنني تخصيص منهاج الدورة؟",
+   faq_ans6: "لإدارة تسجيلات الطلاب، انتقل إلى قسم إدارة الطلاب في لوحة التحكم. من هناك، يمكنك إضافة أو إزالة أو تحديث تفاصيل الطلاب.",
+    faq_ans7: "يمكنك مراقبة أداء الطلاب من خلال الوصول إلى تقارير الأداء ضمن علامة التبويب التحليلات. وهي توفر تقارير مفصلة عن تقدم كل طالب، حضوره، ودرجاته.",
+    faq_ans8: "يمكن تحميل مواد الدورة من خلال قسم إدارة الدورات. اختر الدورة التي ترغب في تحديثها واستخدم خيار تحميل المواد.",
+    faq_ans9: "إذا واجهت أي مشاكل فنية، يرجى الاتصال بفريق الدعم الفني عبر قسم الدعم والمساعدة. يمكنك أيضًا الاطلاع على أدلة استكشاف الأخطاء وإصلاحها للحصول على حلول سريعة.",
+    faq_ans10: "يمكنك تخصيص منهاج الدورة عن طريق الانتقال إلى أداة منشئ المناهج في لوحة التحكم. هذا يتيح لك إضافة أو إزالة الوحدات، وتعيين المتطلبات السابقة، وتحديث محتوى الدورة."
 };

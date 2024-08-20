@@ -73,7 +73,7 @@ const StudentInfoScreen = () => {
                             ellipsizeMode="tail"
                         >
                             {t("mail_id")}:
-                            <AUIThemedText style={styles.value} numberOfLines={0}>
+                            <AUIThemedText style={styles.value} numberOfLines={1} ellipsizeMode="tail">
                                 {studentData?.user?.email}
                             </AUIThemedText>
                         </AUIThemedText>
@@ -373,7 +373,8 @@ const styles = StyleSheet.create({
         color: APP_THEME.light.ternary.first,
         fontSize: 15,
         // alignItems: "center",
-        flexWrap: "wrap",
+        flexWrap: 'nowrap', 
+        flexShrink: 1, 
     },
 
     detailRow: {
