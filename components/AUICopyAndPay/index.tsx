@@ -50,20 +50,18 @@ const AUICopyAndPay = ({ checkoutId, paymentMode }: any) => {
             const debounceTimeout = setTimeout(async () => {
                 setLoading(true);
                 const result = await get(API_URL.paymentCheckoutStatus, {
-                    id: resourceId
+                    id: resourceId,
                 });
                 if (result?.data) {
                     setLoading(false);
                     setPaymentDetails(result?.data);
                     setModalVisible(true);
                 }
-               
             }, 300); // Adjust the debounce delay as needed
 
             return () => clearTimeout(debounceTimeout);
         }
     }, [eventMessages, resourcePath]);
-
 
     const handleWebViewNavigationStateChange = (newNavState: any) => {
         const { url } = newNavState;
@@ -72,7 +70,7 @@ const AUICopyAndPay = ({ checkoutId, paymentMode }: any) => {
         if (url.includes("/payment-status?id=")) {
             const urlParams = new URLSearchParams(new URL(url).search);
             const receivedPath = urlParams.get("resourcePath");
-            if(receivedPath !== resourcePath){
+            if (receivedPath !== resourcePath) {
                 setResourcePath(receivedPath);
             }
         }
@@ -98,7 +96,6 @@ const AUICopyAndPay = ({ checkoutId, paymentMode }: any) => {
     };
 
     const getCheckoutIdFromEvent = (eventMsg: any) => {
-
         if (!eventMsg) {
             return "";
         }
@@ -111,9 +108,10 @@ const AUICopyAndPay = ({ checkoutId, paymentMode }: any) => {
         }
     };
 
-
     const handleModalClose = () => {
         setModalVisible(false);
+
+        router.dismissAll();
         router.replace("/(home)/(student)");
     };
 
