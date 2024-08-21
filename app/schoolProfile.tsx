@@ -6,13 +6,14 @@ import AUIInputField from "@/components/common/AUIInputField";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
-import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
+import { APP_THEME, BACKGROUND_THEME } from "@/constants/Colors";
 import { storeUserData } from "@/constants/RNAsyncStore";
 import { API_URL } from "@/constants/urlProperties";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { setResponse } from "@/redux/apiSlice";
 import { setLoader, setUser } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
+import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { City, Country, State } from "country-state-city";
 import * as ImagePicker from "expo-image-picker";
@@ -21,6 +22,7 @@ import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
+    Alert,
     KeyboardAvoidingView,
     Platform,
     ScrollView,
@@ -30,8 +32,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import useAxios from "./services/axiosClient";
-import AUIModal from "@/components/common/AUIModal";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 const SchoolProfile = () => {
     const { patch } = useAxios();
@@ -58,8 +58,6 @@ const SchoolProfile = () => {
     const [selectedCountry, setSelectedCountry] = useState<any>(null);
     const [selectedState, setSelectedState] = useState<any>(null);
     const [selectedCity, setSelectedCity] = useState<any>(null);
-    const [showConfirmation, setShowConfirmation] = useState(false);
-    const [deleteTarget, setDeleteTarget] = useState<"logo" | "banner" | null>(null);
 
     const country = mySchoolDetails?.country;
     const state = mySchoolDetails?.state;
@@ -134,6 +132,8 @@ const SchoolProfile = () => {
         setSelectedCity(null);
         setValue("state", "");
         setValue("city", "");
+        setValue("zip", "");
+        setValue("street", "");
     };
 
     const pickImageAsync = async (value: any) => {
@@ -229,36 +229,58 @@ const SchoolProfile = () => {
             });
     };
 
-    const handleDelete = () => {
-        if (!deleteTarget) return;
+    const handleRemovepic = (type: string) => {
+        Alert.alert(
+            type === "banner" ? t("delete_banner") : t("delete_logo"),
+            type === "banner"
+                ? t("profileBanner_delete_confirmation")
+                : t("profileLogo_delete_confirmation"),
+            [
+                {
+                    text: `${t("cancel")}`,
+                    onPress: () => console.log("Remove cancelled"),
+                    style: "cancel",
+                },
+                {
+                    text: `${t("confirm_delete")}`,
+                    onPress: () => {
+                        if (!type) return;
 
-        dispatch(setLoader(true));
+                        dispatch(setLoader(true));
 
-        const payload = {
-            id: mySchoolDetails?._id,
-            [deleteTarget]: "",
-        };
+                        const payload = {
+                            id: mySchoolDetails?._id,
+                            [type]: "",
+                        };
 
-        patch(API_URL.school, payload)
-            .then((res: any) => {
-                setShowConfirmation(false);
-                dispatch(setLoader(false));
+                        patch(API_URL.school, payload)
+                            .then((res: any) => {
+                                dispatch(setLoader(false));
 
-                storeUserData("@user-data", {
-                    ...res?.data,
-                });
-                dispatch(setUser(res?.data));
-                dispatch(setResponse({ storeName: "MySchoolDetails", data: res?.data }));
-                ApiSuccessToast(
-                    `${deleteTarget === "logo" ? "Logo" : "Banner"} deleted successfully`
-                );
-            })
-            .catch((error: any) => {
-                dispatch(setLoader(false));
-                console.log("error in school profile delete", error);
-                setShowConfirmation(false);
-                ApiErrorToast(`Failed to delete ${deleteTarget === "logo" ? "logo" : "banner"}`);
-            });
+                                storeUserData("@user-data", {
+                                    ...res?.data,
+                                });
+                                dispatch(setUser(res?.data));
+                                dispatch(
+                                    setResponse({ storeName: "MySchoolDetails", data: res?.data })
+                                );
+                                ApiSuccessToast(
+                                    `${type === "logo" ? "Logo" : "Banner"} deleted successfully`
+                                );
+                            })
+                            .catch((error: any) => {
+                                dispatch(setLoader(false));
+                                console.log("error in school profile delete", error);
+                                ApiErrorToast(
+                                    `Failed to delete ${type === "logo" ? "logo" : "banner"}`
+                                );
+                            });
+                    },
+                    style: "destructive",
+                },
+            ],
+            { cancelable: false }
+        );
     };
 
     const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
@@ -272,60 +294,66 @@ const SchoolProfile = () => {
             <ScrollView>
                 <AUIThemedView style={styles.container}>
                     <AUIThemedView>
-                        <TouchableOpacity onPress={() => pickImageAsync("logo")}>
-                            <AUIThemedText style={styles.label}>School Logo</AUIThemedText>
-                            <AUIImage path={logo} style={styles.logo} />
-                        </TouchableOpacity>
-                        {logo ? (
-                            <TouchableOpacity
-                                style={styles.logoCloseIcon}
-                                onPress={() => {
-                                    setDeleteTarget("logo");
-                                    setShowConfirmation(true);
-                                }}
-                            >
-                                <MaterialCommunityIcons
-                                    name="delete-forever"
-                                    size={24}
-                                    color="red"
-                                />
+                        <AUIThemedText style={styles.label}>School Logo</AUIThemedText>
+                        <AUIThemedView style={styles.logoWrapper}>
+                            <TouchableOpacity onPress={() => pickImageAsync("logo")}>
+                                <AUIImage path={logo} style={styles.logo} />
+                                <AUIThemedView style={styles.halfCircleOverlay}>
+                                    <Feather
+                                        name="edit"
+                                        size={24}
+                                        color={APP_THEME.light.background}
+                                        style={{
+                                            alignSelf: "center",
+                                            marginTop: 10,
+                                        }}
+                                    />
+                                </AUIThemedView>
                             </TouchableOpacity>
-                        ) : (
-                            <TouchableOpacity style={styles.logoCloseIcon} onPress={pickImageAsync}>
-                                <Ionicons
-                                    name="create-outline"
-                                    size={24}
-                                    color={APP_THEME.light.primary.first}
-                                />
-                            </TouchableOpacity>
-                        )}
+                            {logo && (
+                                <TouchableOpacity
+                                    style={styles.logoCloseIcon}
+                                    onPress={() => {
+                                        handleRemovepic("logo");
+                                    }}
+                                >
+                                    <MaterialCommunityIcons
+                                        name="delete-forever"
+                                        size={24}
+                                        color="red"
+                                    />
+                                </TouchableOpacity>
+                            )}
+                        </AUIThemedView>
                     </AUIThemedView>
 
                     <AUIThemedView>
                         <TouchableOpacity onPress={() => pickImageAsync("banner")}>
                             <AUIThemedText style={styles.label}>School Banner</AUIThemedText>
                             <AUIBackgroundImage path={banner} style={styles.banner} />
+                            <AUIThemedView style={styles.bannerOverlay}>
+                                <Feather
+                                    name="edit"
+                                    size={24}
+                                    color={APP_THEME.light.background}
+                                    style={{
+                                        alignSelf: "center",
+                                        marginTop: 10,
+                                    }}
+                                />
+                            </AUIThemedView>
                         </TouchableOpacity>
-                        {banner ? (
+                        {banner && (
                             <TouchableOpacity
                                 style={styles.closeIcon}
                                 onPress={() => {
-                                    setDeleteTarget("banner");
-                                    setShowConfirmation(true);
+                                    handleRemovepic("banner");
                                 }}
                             >
                                 <MaterialCommunityIcons
                                     name="delete-forever"
                                     size={24}
                                     color="red"
-                                />
-                            </TouchableOpacity>
-                        ) : (
-                            <TouchableOpacity style={styles.closeIcon} onPress={pickImageAsync}>
-                                <Ionicons
-                                    name="create-outline"
-                                    size={24}
-                                    color={APP_THEME.light.primary.first}
                                 />
                             </TouchableOpacity>
                         )}
@@ -638,29 +666,6 @@ const SchoolProfile = () => {
                     </AUIThemedView>
                 </AUIThemedView>
             </ScrollView>
-            <AUIModal
-                visible={showConfirmation}
-                onClose={() => setShowConfirmation(false)}
-                title="Confirm Delete"
-            >
-                <AUIThemedText>
-                    Are you sure you want to delete school {deleteTarget}?
-                </AUIThemedText>
-                <AUIThemedView style={styles.buttonContainer}>
-                    <AUIButton
-                        title="Cancel"
-                        onPress={() => setShowConfirmation(false)}
-                        style={{ width: "48%" }}
-                    />
-                    <AUIButton
-                        title="Delete"
-                        selected
-                        background={TEXT_THEME.light.danger}
-                        style={{ width: "48%" }}
-                        onPress={handleDelete}
-                    />
-                </AUIThemedView>
-            </AUIModal>
         </KeyboardAvoidingView>
     );
 };
@@ -695,6 +700,10 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
+    logoWrapper: {
+        width: 100,
+        height: 100,
+    },
     logo: {
         width: 100,
         height: 100,
@@ -715,8 +724,8 @@ const styles = StyleSheet.create({
     },
     logoCloseIcon: {
         position: "absolute",
-        right: 220,
-        top: 25,
+        right: -2,
+        top: -10,
         backgroundColor: APP_THEME.light.lightGray,
         borderRadius: 20,
         padding: 2,
@@ -729,9 +738,25 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         padding: 2,
     },
-    editIconContainer1: {
+    halfCircleOverlay: {
         position: "absolute",
-        left: 10,
+        bottom: 0,
+        left: 0,
+        width: 100,
+        height: 50,
+        backgroundColor: "rgba(91, 216, 148, 0.4)",
+        borderBottomLeftRadius: 50,
+        borderBottomRightRadius: 50,
+    },
+    bannerOverlay: {
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        width: "100%",
+        height: 90,
+        backgroundColor: "rgba(91, 216, 148, 0.5)",
+        justifyContent: "center",
+        alignItems: "center",
     },
     label: {
         marginTop: 10,

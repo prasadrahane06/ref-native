@@ -136,13 +136,13 @@ export const en = {
     failed_to_update_facility: "Failed to update facility",
     failed_to_update_plan: "Failed to update plan",
     false: "false",
-    faq1:"What is the best way to start learning English with this app?",
-    faq2:"How long will it take to see improvement in my English skills?",
-    faq3:"Can I use the app offline?",
-    faq4:"Is there a way to track my progress?",
-    faq5:"What levels of English does the app cover?",
+    faq1: "What is the best way to start learning English with this app?",
+    faq2: "How long will it take to see improvement in my English skills?",
+    faq3: "Can I use the app offline?",
+    faq4: "Is there a way to track my progress?",
+    faq5: "What levels of English does the app cover?",
     faq_ans1:
-   " The best way to start is by following the structured lessons from the beginning, practicing regularly, and making use of the interactive exercises. Our app is designed to guide you step-by-step, ensuring you build a strong foundation.",
+        " The best way to start is by following the structured lessons from the beginning, practicing regularly, and making use of the interactive exercises. Our app is designed to guide you step-by-step, ensuring you build a strong foundation.",
     faq_ans2:
         "Improvement varies depending on your current level and the time you dedicate daily. However, with consistent practice, most users notice significant improvements within a few weeks.",
     faq_ans3:
@@ -360,21 +360,26 @@ export const en = {
     pickFromDate: "Pick From Date",
     pickToDate: "Pick To Date",
     pickDateOfBirth: "Pick Date Of Birth",
-    faq6:"How do I manage student enrollments?",
-    faq7:"How can I monitor student performance?",
-    faq8:"How do I upload course materials?",
-    faq9:"What should I do if I encounter a technical issue?",
-    faq10:"How can I customize the course curriculum?",
+    profile_delete_confirmation: "Are you sure you want to delete your profile picture?",
+    delete_logo: "Delete Logo",
+    profileLogo_delete_confirmation: "Are you sure you want to delete your school logo?",
+    delete_banner: "Delete Banner",
+    profileBanner_delete_confirmation: "Are you sure you want to delete your school banner?",
+    faq6: "How do I manage student enrollments?",
+    faq7: "How can I monitor student performance?",
+    faq8: "How do I upload course materials?",
+    faq9: "What should I do if I encounter a technical issue?",
+    faq10: "How can I customize the course curriculum?",
     faq_ans6:
-    " To manage student enrollments, go to the Student Management section in your dashboard. From there, you can add, remove, or update student details.",
-     faq_ans7:
-         " You can monitor student performance by accessing the Performance Reports under the Analytics tab. It provides detailed reports on each student's progress, attendance, and grades.",
-     faq_ans8:
-         "Course materials can be uploaded through the Course Management section. Select the course you wish to update and use the Upload Materials option.",
-     faq_ans9:
-         "If you encounter any technical issues, please contact our technical support team via the Help & Support section. You can also check our troubleshooting guides for quick fixes.",
-     faq_ans10:
-         " You can customize the course curriculum by going to the Curriculum Builder tool in the dashboard. This allows you to add or remove modules, set prerequisites, and update course content.",
+        " To manage student enrollments, go to the Student Management section in your dashboard. From there, you can add, remove, or update student details.",
+    faq_ans7:
+        " You can monitor student performance by accessing the Performance Reports under the Analytics tab. It provides detailed reports on each student's progress, attendance, and grades.",
+    faq_ans8:
+        "Course materials can be uploaded through the Course Management section. Select the course you wish to update and use the Upload Materials option.",
+    faq_ans9:
+        "If you encounter any technical issues, please contact our technical support team via the Help & Support section. You can also check our troubleshooting guides for quick fixes.",
+    faq_ans10:
+        " You can customize the course curriculum by going to the Curriculum Builder tool in the dashboard. This allows you to add or remove modules, set prerequisites, and update course content.",
 };
 
 export const ar = {
@@ -523,7 +528,7 @@ export const ar = {
     faq_ans3:
         "نعم، يمكنك تحميل الدروس والتمارين لاستخدامها دون اتصال. وهذا يتيح لك مواصلة التعلم حتى عندما لا يكون لديك اتصال بالإنترنت.",
     faq_ans4:
-    "نعم، يوفر التطبيق إرشادات وموارد لتقديم طلبات التأشيرة والعثور على إقامة مناسبة بالقرب من مدرستك المختارة.",
+        "نعم، يوفر التطبيق إرشادات وموارد لتقديم طلبات التأشيرة والعثور على إقامة مناسبة بالقرب من مدرستك المختارة.",
     faq_ans5:
         "يلبي التطبيق جميع المستويات من المبتدئين إلى المتعلمين المتقدمين. يمكنك البدء من مستواك الحالي والتقدم من خلال محتوى أكثر تحديًا مع تحسنك.",
     fav_countries: "البلدان المفضلة",
@@ -730,14 +735,26 @@ export const ar = {
     pickFromDate: "اختر من التاريخ",
     pickToDate: "اختر حتى الآن",
     pickDateOfBirth: "اختر تاريخ الميلاد",
-    faq6:"كيف يمكنني إدارة تسجيلات الطلاب؟",
-    faq7:"كيف يمكنني مراقبة أداء الطلاب؟",
-    faq8:"كيف يمكنني تحميل مواد الدورة؟",
-    faq9:"ماذا يجب أن أفعل إذا واجهت مشكلة فنية؟",
-    faq10:"كيف يمكنني تخصيص منهاج الدورة؟",
-   faq_ans6: "لإدارة تسجيلات الطلاب، انتقل إلى قسم إدارة الطلاب في لوحة التحكم. من هناك، يمكنك إضافة أو إزالة أو تحديث تفاصيل الطلاب.",
-    faq_ans7: "يمكنك مراقبة أداء الطلاب من خلال الوصول إلى تقارير الأداء ضمن علامة التبويب التحليلات. وهي توفر تقارير مفصلة عن تقدم كل طالب، حضوره، ودرجاته.",
-    faq_ans8: "يمكن تحميل مواد الدورة من خلال قسم إدارة الدورات. اختر الدورة التي ترغب في تحديثها واستخدم خيار تحميل المواد.",
-    faq_ans9: "إذا واجهت أي مشاكل فنية، يرجى الاتصال بفريق الدعم الفني عبر قسم الدعم والمساعدة. يمكنك أيضًا الاطلاع على أدلة استكشاف الأخطاء وإصلاحها للحصول على حلول سريعة.",
-    faq_ans10: "يمكنك تخصيص منهاج الدورة عن طريق الانتقال إلى أداة منشئ المناهج في لوحة التحكم. هذا يتيح لك إضافة أو إزالة الوحدات، وتعيين المتطلبات السابقة، وتحديث محتوى الدورة."
+    profile_delete_confirmation: "هل أنت متأكد أنك تريد حذف الصورة الشخصية الخاصة بك؟",
+    delete_profile_picture: "حذف صورة الملف الشخصي",
+    delete_profile_description: "هل أنت متأكد أنك تريد حذف الصورة الشخصية الخاصة بك؟",
+    delete_logo: "حذف الشعار",
+    profileLogo_delete_confirmation: "هل أنت متأكد أنك تريد حذف شعار مدرستك؟",
+    delete_banner: "حذف البانر",
+    profileBanner_delete_confirmation: "هل أنت متأكد أنك تريد حذف شعار مدرستك؟",
+    faq6: "كيف يمكنني إدارة تسجيلات الطلاب؟",
+    faq7: "كيف يمكنني مراقبة أداء الطلاب؟",
+    faq8: "كيف يمكنني تحميل مواد الدورة؟",
+    faq9: "ماذا يجب أن أفعل إذا واجهت مشكلة فنية؟",
+    faq10: "كيف يمكنني تخصيص منهاج الدورة؟",
+    faq_ans6:
+        "لإدارة تسجيلات الطلاب، انتقل إلى قسم إدارة الطلاب في لوحة التحكم. من هناك، يمكنك إضافة أو إزالة أو تحديث تفاصيل الطلاب.",
+    faq_ans7:
+        "يمكنك مراقبة أداء الطلاب من خلال الوصول إلى تقارير الأداء ضمن علامة التبويب التحليلات. وهي توفر تقارير مفصلة عن تقدم كل طالب، حضوره، ودرجاته.",
+    faq_ans8:
+        "يمكن تحميل مواد الدورة من خلال قسم إدارة الدورات. اختر الدورة التي ترغب في تحديثها واستخدم خيار تحميل المواد.",
+    faq_ans9:
+        "إذا واجهت أي مشاكل فنية، يرجى الاتصال بفريق الدعم الفني عبر قسم الدعم والمساعدة. يمكنك أيضًا الاطلاع على أدلة استكشاف الأخطاء وإصلاحها للحصول على حلول سريعة.",
+    faq_ans10:
+        "يمكنك تخصيص منهاج الدورة عن طريق الانتقال إلى أداة منشئ المناهج في لوحة التحكم. هذا يتيح لك إضافة أو إزالة الوحدات، وتعيين المتطلبات السابقة، وتحديث محتوى الدورة.",
 };

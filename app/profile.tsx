@@ -13,7 +13,7 @@ import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector
 import { setResponse } from "@/redux/apiSlice";
 import { setLoader, setUser } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
-import { Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import { City, Country, State } from "country-state-city";
@@ -38,7 +38,6 @@ import "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import useAxios from "./services/axiosClient";
-import AUIModal from "@/components/common/AUIModal";
 
 const genderData = [
     {
@@ -426,6 +425,17 @@ const Profile: React.FC = () => {
                     <AUIThemedView style={styles.profileImageContainer}>
                         <TouchableOpacity onPress={pickImageAsync}>
                             <AUIImage icon path={profileImage} style={styles.profileImage} />
+                            <AUIThemedView style={styles.halfCircleOverlay}>
+                                <Feather
+                                    name="edit"
+                                    size={24}
+                                    color={APP_THEME.light.background}
+                                    style={{
+                                        alignSelf: "center",
+                                        marginTop: 10,
+                                    }}
+                                />
+                            </AUIThemedView>
                         </TouchableOpacity>
                         {profileImage !== avatar ? (
                             <TouchableOpacity style={styles.closeIcon} onPress={handleRemovepic}>
@@ -436,17 +446,7 @@ const Profile: React.FC = () => {
                                 />
                             </TouchableOpacity>
                         ) : (
-                            <TouchableOpacity
-                                style={styles.editIconContainer1}
-                                onPress={pickImageAsync}
-                            >
-                                <Ionicons
-                                    name="create-outline"
-                                    size={24}
-                                    color={APP_THEME.light.primary.first}
-                                    style={styles.editIcon}
-                                />
-                            </TouchableOpacity>
+                            <></>
                         )}
                     </AUIThemedView>
 
@@ -1015,16 +1015,6 @@ const styles = StyleSheet.create({
     editIcon: {
         left: 70,
     },
-    editIconContainer: {
-        position: "absolute",
-        bottom: 0,
-        padding: 10,
-        width: 100,
-        height: 50,
-        borderBottomLeftRadius: 100,
-        borderBottomRightRadius: 100,
-        backgroundColor: "rgba(91, 216, 148, 0.3)",
-    },
     buttonContainer: {
         marginTop: 10,
         flexDirection: "row",
@@ -1071,6 +1061,16 @@ const styles = StyleSheet.create({
         backgroundColor: APP_THEME.light.lightGray,
         borderRadius: 20,
         padding: 2,
+    },
+    halfCircleOverlay: {
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        width: 100,
+        height: 50,
+        backgroundColor: "rgba(91, 216, 148, 0.4)",
+        borderBottomLeftRadius: 50,
+        borderBottomRightRadius: 50,
     },
     label: {
         marginTop: 10,
