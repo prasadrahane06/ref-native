@@ -17,6 +17,7 @@ import { countriesData } from "@/constants/dummy data/countriesData";
 import { nationalityData } from "@/constants/dummy data/nationalityData";
 import { API_URL } from "@/constants/urlProperties";
 import useApiRequest from "@/customHooks/useApiRequest";
+import useDebouncedNavigate from "@/customHooks/useDebouncedNavigate";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
 import { setLoader } from "@/redux/globalSlice";
 import { RootState } from "@/redux/store";
@@ -42,8 +43,6 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import ContactNow from "../schoolDetails/ContactNow";
 import { FacilitiesList } from "../schoolDetails/FacilitiesList";
-import useDebouncedNavigate from "@/customHooks/useDebouncedNavigate";
-// import { t } from "i18next";
 
 interface PlanComponentProps {
     courseId: string;
@@ -247,7 +246,6 @@ function EnquireNowModal({
                                     }}
                                 >
                                     <AUIThemedText style={[inputFieldStyle.label]}>
-                                        {/* {ENQUIRY_FIELDS.nationality.label} */}
                                         {t("nationality")}
                                     </AUIThemedText>
                                     <DropdownComponent
@@ -358,7 +356,6 @@ function EnquireNowModal({
                             render={({ field: { onChange, value }, fieldState: { error } }) => (
                                 <AUIThemedView style={enquiryFormStyles.fieldContainer}>
                                     <AUIThemedText style={[inputFieldStyle.label]}>
-                                        {/* {ENQUIRY_FIELDS.language.label} */}
                                         {t("select_language_to_learn")}
                                     </AUIThemedText>
                                     {/* @ts-ignore */}
@@ -839,6 +836,10 @@ export default function PlanComponent({
         });
     }, 300);
 
+    const filteredCourses = similarCourses?.filter(
+        (course: { _id: string }) => course?._id !== courseId
+    );
+
     const handlePhonePress = () => {
         Linking.openURL(`tel:${clientPhone}`);
     };
@@ -971,7 +972,7 @@ export default function PlanComponent({
                 />
             </AUIThemedView>
 
-            {userType !== "school" && similarCourses?.length > 0 && (
+            {userType !== "school" && filteredCourses?.length > 0 ? (
                 <AUIThemedView style={styles.similarCourseContainer}>
                     <AUIThemedView>
                         <AUIThemedText style={{ fontWeight: "bold" }}>
@@ -979,7 +980,18 @@ export default function PlanComponent({
                         </AUIThemedText>
                     </AUIThemedView>
                     <AUIThemedView>
-                        <SimilarCoursesList data={similarCourses} />
+                        <SimilarCoursesList data={filteredCourses} />
+                    </AUIThemedView>
+                </AUIThemedView>
+            ) : (
+                <AUIThemedView style={styles.similarCourseContainer}>
+                    <AUIThemedView>
+                        <AUIThemedText style={{ fontWeight: "bold" }}>
+                            {t(GLOBAL_TRANSLATION_LABEL.similarCourses)}
+                        </AUIThemedText>
+                    </AUIThemedView>
+                    <AUIThemedView style={styles.noSimilarCourses}>
+                        <AUIThemedText>{t("no_courses_found")}</AUIThemedText>
                     </AUIThemedView>
                 </AUIThemedView>
             )}
@@ -1066,7 +1078,6 @@ const enquireNowStyles = StyleSheet.create({
     andoridModalContent: {
         height: "100%",
         width: "100%",
-        // backgroundColor: "#fff",
         borderTopRightRadius: 20,
         borderTopLeftRadius: 20,
     },
@@ -1075,12 +1086,10 @@ const enquireNowStyles = StyleSheet.create({
         bottom: 0,
         height: "90%",
         width: "100%",
-        // backgroundColor: "#fff",
         borderTopRightRadius: 20,
         borderTopLeftRadius: 20,
     },
     titleContainer: {
-        // backgroundColor: "#fff",
         paddingHorizontal: 20,
         paddingVertical: 15,
         flexDirection: "row",
@@ -1116,7 +1125,6 @@ const styles = StyleSheet.create({
         position: "absolute",
         bottom: 0,
         borderWidth: StyleSheet.hairlineWidth,
-        // borderColor: APP_THEME.primary.first,
     },
     facilityContainer: {
         borderBottomWidth: 1,
@@ -1147,11 +1155,9 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         padding: 10,
         width: "50%",
-        // backgroundColor: APP_THEME.background,
     },
     blackBoldText: {
         fontWeight: "bold",
-        // color: "#000",
     },
     buyContainer: {
         flexDirection: "row",
@@ -1161,7 +1167,6 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         padding: 10,
         width: "50%",
-        // backgroundColor: APP_THEME.primary.first,
     },
     whiteBoldText: {
         fontWeight: "bold",
@@ -1176,6 +1181,12 @@ const styles = StyleSheet.create({
     similarCourseContainer: {
         marginVertical: 10,
         marginHorizontal: 15,
+    },
+    noSimilarCourses: {
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: 16,
+        marginTop: 20,
     },
 });
 

@@ -102,7 +102,7 @@ function StudentDetailsTabs({ courseId, clientId }: TabProps) {
                                 : { color: TEXT_THEME[theme].secondary },
                         ]}
                     >
-                        {t(GLOBAL_TRANSLATION_LABEL.courses)}
+                        {t("courses_")}
                     </AUIThemedText>
                 </Pressable>
             </AUIThemedView>
