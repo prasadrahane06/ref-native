@@ -16,19 +16,19 @@ const Help = () => {
    
    
     const studentFAQ = [
-        { question: t("faq1"), answer: t("faq_ans1") },
-        { question: t("faq2"), answer: t("faq_ans2") },
-        { question: t("faq3"), answer: t("faq_ans3") },
-        { question: t("faq4"), answer: t("faq_ans4") },
-        { question: t("faq5"), answer: t("faq_ans5") },
+        { question: t("stu_faq1"), answer: t("stu_ans1") },
+        { question: t("stu_faq2"), answer: t("stu_ans2") },
+        { question: t("stu_faq3"), answer: t("stu_ans3") },
+        { question: t("stu_faq4"), answer: t("stu_ans4") },
+        { question: t("stu_faq5"), answer: t("stu_ans5") },
     ];
 
     const schoolFAQ = [
-        { question: t("faq6"), answer: t("faq_ans6") },
-        { question: t("faq7"), answer: t("faq_ans7") },
-        { question: t("faq8"), answer: t("faq_ans8") },
-        { question: t("faq9"), answer: t("faq_ans9") },
-        { question: t("faq10"), answer: t("faq_ans10")},
+        { question: t("sch_faq1"), answer: t("sch_ans1") },
+        { question: t("sch_faq2"), answer: t("sch_ans2") },
+        { question: t("sch_faq3"), answer: t("sch_ans3") },
+        { question: t("sch_faq4"), answer: t("sch_ans4") },
+        { question: t("sch_faq5"), answer: t("sch_ans5")},
     ];
 
     const faqData = type === 'student' ? studentFAQ : schoolFAQ;
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     answer: {
         flex: 1,
         fontSize: 16,
-        marginLeft: 18,
+        marginLeft: 2,
     },
 });
 

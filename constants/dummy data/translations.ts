@@ -137,21 +137,21 @@ export const en = {
     failed_to_update_facility: "Failed to update facility",
     failed_to_update_plan: "Failed to update plan",
     false: "false",
-    faq1: "What is the best way to start learning English with this app?",
-    faq2: "How long will it take to see improvement in my English skills?",
-    faq3: "Can I use the app offline?",
-    faq4: "Is there a way to track my progress?",
-    faq5: "What levels of English does the app cover?",
-    faq_ans1:
-        " The best way to start is by following the structured lessons from the beginning, practicing regularly, and making use of the interactive exercises. Our app is designed to guide you step-by-step, ensuring you build a strong foundation.",
-    faq_ans2:
-        "Improvement varies depending on your current level and the time you dedicate daily. However, with consistent practice, most users notice significant improvements within a few weeks.",
-    faq_ans3:
-        "Yes, you can download lessons and exercises for offline use. This allows you to continue learning even when you don't have access to the internet.",
-    faq_ans4:
-        "Absolutely! The app includes a progress tracker that records your completed lessons, quiz scores, and overall improvement, helping you stay motivated and on track.",
-    faq_ans5:
-        "YThe app caters to all levels, from beginners to advanced learners. You can start at your current level and advance through more challenging content as you improve.",
+    stu_faq1: "How do I sign up for the app?",
+    stu_faq2: "How can I find the right course for me?",
+    stu_faq3: "What payment methods are accepted for course purchases?",
+    stu_faq4: "Can I get a refund if I’m not satisfied with the course?",
+    stu_faq5: "How do I access the courses I’ve purchased?",
+    stu_ans1:
+        "Download the app, go to the 'Student Sign-Up' section, enter your details, and create an account. Once registered, you can start browsing courses.",
+    stu_ans2:
+        "Use the search bar or browse through the categories to find courses that match your interests. Each course comes with detailed descriptions, so you can choose the one that suits you best.",
+    stu_ans3:
+        "We accept major credit/debit cards and other popular payment methods, depending on your region. All transactions are secure and encrypted.",
+    stu_ans4:
+        "Refunds are subject to the refund policy of the respective school. Please review the course terms before purchasing, and contact support if you need assistance.",
+    stu_ans5:
+        "Once you’ve purchased a course, it will appear in the 'My Courses' section of the app. You can start learning immediately or at your own pace.",
     fav_countries: "Countries",
     fav_courses: "Courses",
     fav_schools: "Schools",
@@ -361,26 +361,22 @@ export const en = {
     pickFromDate: "Pick From Date",
     pickToDate: "Pick To Date",
     pickDateOfBirth: "Pick Date Of Birth",
+    sch_faq1: "How do I onboard my school on the app?",
+    sch_faq2: "What types of courses can I add to the app?",
+    sch_faq3: "How do I update or modify my courses?",
+    sch_faq4: "How will I receive payments from students?",
+    sch_faq5: "What should I do if I encounter issues while using the app?",
+    sch_ans1:
+        " After downloading the app, go to the 'School Onboarding' section, fill in your institution's details, and submit the necessary documents. Our team will review your submission, and once approved, you'll be able to add your courses.",
+    sch_ans2:
+        "You can add any language-related courses that your school offers. Make sure to include course details, duration, fees, and other relevant information to attract students.",
+    sch_ans3:
+        "Navigate to the 'Manage Courses' section in the app, select the course you wish to update, and make the necessary changes. Don’t forget to save your updates!",
+    sch_ans4:
+        "Payments are processed through our secure payment gateway. You will receive payments directly to your registered bank account within 7 working days of a student enrolling in your course.",
+    sch_ans5:
+        " If you experience any issues, you can contact our support team through the 'Help & Support' section in the app, and we’ll assist you promptly.",
     profile_delete_confirmation: "Are you sure you want to delete your profile picture?",
-    delete_logo: "Delete Logo",
-    profileLogo_delete_confirmation: "Are you sure you want to delete your school logo?",
-    delete_banner: "Delete Banner",
-    profileBanner_delete_confirmation: "Are you sure you want to delete your school banner?",
-    faq6: "How do I manage student enrollments?",
-    faq7: "How can I monitor student performance?",
-    faq8: "How do I upload course materials?",
-    faq9: "What should I do if I encounter a technical issue?",
-    faq10: "How can I customize the course curriculum?",
-    faq_ans6:
-        " To manage student enrollments, go to the Student Management section in your dashboard. From there, you can add, remove, or update student details.",
-    faq_ans7:
-        " You can monitor student performance by accessing the Performance Reports under the Analytics tab. It provides detailed reports on each student's progress, attendance, and grades.",
-    faq_ans8:
-        "Course materials can be uploaded through the Course Management section. Select the course you wish to update and use the Upload Materials option.",
-    faq_ans9:
-        "If you encounter any technical issues, please contact our technical support team via the Help & Support section. You can also check our troubleshooting guides for quick fixes.",
-    faq_ans10:
-        " You can customize the course curriculum by going to the Curriculum Builder tool in the dashboard. This allows you to add or remove modules, set prerequisites, and update course content.",
 };
 
 export const ar = {
@@ -518,21 +514,23 @@ export const ar = {
     failed_to_update_facility: "فشل في تحديث المنشأة",
     failed_to_update_plan: "فشل تحديث الخطة",
     false: "خاطئ",
-    faq1: "ما هي أفضل طريقة لبدء تعلم اللغة الإنجليزية باستخدام هذا التطبيق؟",
-    faq2: "كم من الوقت سيستغرق لتحسين مهاراتي في اللغة الإنجليزية؟",
-    faq3: "هل يمكنني استخدام التطبيق دون اتصال بالإنترنت؟",
-    faq4: "هل هناك طريقة لتتبع تقدمي؟",
-    faq5: "ما هي مستويات اللغة الإنجليزية التي يغطيها التطبيق؟",
-    faq_ans1:
-        "أفضل طريقة للبدء هي اتباع الدروس المنظمة من البداية، وممارسة التدريبات بانتظام، واستخدام التمارين التفاعلية. تم تصميم التطبيق ليقودك خطوة بخطوة لضمان بناء أساس قوي.",
-    faq_ans2:
-        "يختلف التحسن حسب مستواك الحالي والوقت الذي تخصصه يوميًا. ولكن مع الممارسة المنتظمة، يلاحظ معظم المستخدمين تحسنًا كبيرًا في غضون بضعة أسابيع.",
-    faq_ans3:
-        "نعم، يمكنك تحميل الدروس والتمارين لاستخدامها دون اتصال. وهذا يتيح لك مواصلة التعلم حتى عندما لا يكون لديك اتصال بالإنترنت.",
-    faq_ans4:
-        "نعم، يوفر التطبيق إرشادات وموارد لتقديم طلبات التأشيرة والعثور على إقامة مناسبة بالقرب من مدرستك المختارة.",
-    faq_ans5:
-        "يلبي التطبيق جميع المستويات من المبتدئين إلى المتعلمين المتقدمين. يمكنك البدء من مستواك الحالي والتقدم من خلال محتوى أكثر تحديًا مع تحسنك.",
+    stu_faq1: "كيف يمكنني التسجيل في التطبيق؟",
+    stu_faq2: "كيف يمكنني العثور على الدورة المناسبة لي؟",
+    stu_faq3: "ما هي طرق الدفع المقبولة لشراء الدورات؟",
+    stu_faq4: "هل يمكنني استرداد الأموال إذا لم أكن راضيًا عن الدورة؟",
+    stu_faq5: "كيف يمكنني الوصول إلى الدورات التي قمت بشرائها؟",
+    stu_ans1:
+        "قم بتنزيل التطبيق، وانتقل إلى قسم 'تسجيل الطالب'، وأدخل تفاصيلك وأنشئ حسابًا. بمجرد التسجيل، يمكنك البدء في تصفح الدورات.",
+    stu_ans2:
+       "استخدم شريط البحث أو تصفح الفئات للعثور على الدورات التي تتناسب مع اهتماماتك. تأتي كل دورة بوصف تفصيلي، لذا يمكنك اختيار ما يناسبك.",
+
+    stu_ans3:
+      "نقبل بطاقات الائتمان/الخصم الرئيسية وطرق الدفع الشائعة الأخرى، حسب منطقتك. جميع المعاملات آمنة ومشفرة.",
+    stu_ans4:
+     
+"تخضع استردادات الأموال لسياسة الاسترداد الخاصة بالمدرسة المعنية. يرجى مراجعة شروط الدورة قبل الشراء، واتصل بالدعم إذا كنت بحاجة إلى مساعدة.",
+    stu_ans5:
+       "بمجرد شراء دورة، ستظهر في قسم 'دوراتي' في التطبيق. يمكنك البدء في التعلم فورًا أو حسب وتيرتك.",
     fav_countries: "البلدان المفضلة",
     fav_courses: "الدورات المفضلة",
     fav_schools: "المدارس المفضلة",
@@ -737,26 +735,22 @@ export const ar = {
     pickFromDate: "اختر من التاريخ",
     pickToDate: "اختر حتى الآن",
     pickDateOfBirth: "اختر تاريخ الميلاد",
+    sch_faq1: "كيف أقوم بتسجيل مدرستي في التطبيق؟",
+    sch_faq2: "ما أنواع الدورات التي يمكنني إضافتها إلى التطبيق؟",
+    sch_faq3: "كيف يمكنني تحديث أو تعديل دوراتي؟",
+    sch_faq4: "كيف سأستلم المدفوعات من الطلاب؟",
+    sch_faq5: "ماذا يجب أن أفعل إذا واجهتني مشاكل أثناء استخدام التطبيق؟",
+    sch_ans1:
+        "بعد تنزيل التطبيق، انتقل إلى قسم 'تسجيل المدرسة' واملأ تفاصيل مؤسستك وقم بتقديم المستندات المطلوبة. سيتولى فريقنا مراجعة طلبك، وبمجرد الموافقة، ستتمكن من إضافة دوراتك.",
+    sch_ans2:
+        "يمكنك إضافة أي دورات متعلقة باللغات تقدمها مدرستك. تأكد من تضمين تفاصيل الدورة، المدة، الرسوم، والمعلومات الأخرى ذات الصلة لجذب الطلاب.",
+    sch_ans3:
+        "انتقل إلى قسم 'إدارة الدورات' في التطبيق، اختر الدورة التي ترغب في تحديثها، وقم بإجراء التغييرات اللازمة. لا تنسَ حفظ التحديثات!",
+    sch_ans4:
+        "تتم معالجة المدفوعات من خلال بوابة الدفع الآمنة لدينا. ستتلقى المدفوعات مباشرة إلى حسابك البنكي المسجل خلال 7 أيام عمل من تسجيل الطالب في دورتك.",
+    sch_ans5:
+        "إذا واجهتك أي مشاكل، يمكنك الاتصال بفريق الدعم الخاص بنا من خلال قسم 'المساعدة والدعم' في التطبيق، وسنقوم بمساعدتك فورًا.",
     profile_delete_confirmation: "هل أنت متأكد أنك تريد حذف الصورة الشخصية الخاصة بك؟",
     delete_profile_picture: "حذف صورة الملف الشخصي",
     delete_profile_description: "هل أنت متأكد أنك تريد حذف الصورة الشخصية الخاصة بك؟",
-    delete_logo: "حذف الشعار",
-    profileLogo_delete_confirmation: "هل أنت متأكد أنك تريد حذف شعار مدرستك؟",
-    delete_banner: "حذف البانر",
-    profileBanner_delete_confirmation: "هل أنت متأكد أنك تريد حذف شعار مدرستك؟",
-    faq6: "كيف يمكنني إدارة تسجيلات الطلاب؟",
-    faq7: "كيف يمكنني مراقبة أداء الطلاب؟",
-    faq8: "كيف يمكنني تحميل مواد الدورة؟",
-    faq9: "ماذا يجب أن أفعل إذا واجهت مشكلة فنية؟",
-    faq10: "كيف يمكنني تخصيص منهاج الدورة؟",
-    faq_ans6:
-        "لإدارة تسجيلات الطلاب، انتقل إلى قسم إدارة الطلاب في لوحة التحكم. من هناك، يمكنك إضافة أو إزالة أو تحديث تفاصيل الطلاب.",
-    faq_ans7:
-        "يمكنك مراقبة أداء الطلاب من خلال الوصول إلى تقارير الأداء ضمن علامة التبويب التحليلات. وهي توفر تقارير مفصلة عن تقدم كل طالب، حضوره، ودرجاته.",
-    faq_ans8:
-        "يمكن تحميل مواد الدورة من خلال قسم إدارة الدورات. اختر الدورة التي ترغب في تحديثها واستخدم خيار تحميل المواد.",
-    faq_ans9:
-        "إذا واجهت أي مشاكل فنية، يرجى الاتصال بفريق الدعم الفني عبر قسم الدعم والمساعدة. يمكنك أيضًا الاطلاع على أدلة استكشاف الأخطاء وإصلاحها للحصول على حلول سريعة.",
-    faq_ans10:
-        "يمكنك تخصيص منهاج الدورة عن طريق الانتقال إلى أداة منشئ المناهج في لوحة التحكم. هذا يتيح لك إضافة أو إزالة الوحدات، وتعيين المتطلبات السابقة، وتحديث محتوى الدورة.",
 };
