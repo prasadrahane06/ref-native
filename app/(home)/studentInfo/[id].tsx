@@ -9,11 +9,11 @@ import { useLocalSearchParams } from "expo-router";
 // import { t } from "i18next";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { StyleSheet, ScrollView, Dimensions } from "react-native";
+import { StyleSheet, ScrollView, Dimensions, View } from "react-native";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import Foundation from "@expo/vector-icons/Foundation";
 import Entypo from "@expo/vector-icons/Entypo";
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import AUIImage from "@/components/common/AUIImage";
 import { Asset } from "expo-asset";
 // import NotificationDrawer from "../notification/notification";
@@ -53,7 +53,7 @@ const StudentInfoScreen = () => {
 
                     <AUIThemedView style={styles.contactContainer}>
                         <AUIThemedText style={styles.contactText}>
-                            {studentData?.user?.name}
+                        {studentData?.user?.name}
                         </AUIThemedText>
                         <AUIThemedText style={styles.contactText}>
                             {t("student_id")}:
@@ -67,13 +67,9 @@ const StudentInfoScreen = () => {
                                 {studentData?.user?.phone}
                             </AUIThemedText>
                         </AUIThemedText>
-                        <AUIThemedText
-                            style={styles.contactText}
-                            numberOfLines={1}
-                            ellipsizeMode="tail"
-                        >
+                        <AUIThemedText style={styles.contactText}>
                             {t("mail_id")}:
-                            <AUIThemedText style={styles.value} numberOfLines={1} ellipsizeMode="tail">
+                            <AUIThemedText style={styles.value}>
                                 {studentData?.user?.email}
                             </AUIThemedText>
                         </AUIThemedText>
@@ -271,7 +267,6 @@ const styles = StyleSheet.create({
         width: 100,
         height: 100,
         borderRadius: 50,
-        // backgroundColor:"F5F5F5",
     },
     contactContainerHeader: {
         flexDirection: "row",
@@ -289,28 +284,28 @@ const styles = StyleSheet.create({
     header: {
         fontSize: 18,
         fontWeight: "bold",
-        // marginTop: 18,
         marginBottom: 20,
-        // textAlign: "left",
-        // marginLeft:8,
-        // color: APP_THEME.light.ternary.first,
     },
-
     contactContainer: {
         padding: 10,
-        // backgroundColor: APP_THEME.light.secondary.first,
         backgroundColor: APP_THEME.light.primary.third,
         borderRadius: 10,
         borderColor: "black",
         borderWidth: 1,
         fontSize: 12,
-        // flex: 1,
+        maxWidth: "70%",
     },
     contactText: {
         fontSize: 15,
         marginBottom: 5,
         fontWeight: "bold",
         color: APP_THEME.light.ternary.first,
+        flexShrink: 1,
+    },
+    value: {
+        fontSize: 15,
+        color: APP_THEME.light.ternary.first,
+        flexShrink: 1,
     },
     section: {
         marginBottom: 10,
@@ -367,15 +362,6 @@ const styles = StyleSheet.create({
         color: APP_THEME.light.ternary.first,
         // backgroundColor: APP_THEME.light.secondary.first,
     },
-    value: {
-        // fontWeight: "bold",
-        backgroundColor: APP_THEME.light.primary.third,
-        color: APP_THEME.light.ternary.first,
-        fontSize: 15,
-        // alignItems: "center",
-        flexWrap: 'nowrap', 
-        flexShrink: 1, 
-    },
 
     detailRow: {
         flexDirection: "row",
@@ -395,6 +381,14 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         marginBottom: 8,
         backgroundColor: APP_THEME.light.primary.third,
+        color: APP_THEME.light.ternary.first,
+    },
+    emailContainer: {
+        flexDirection: "row",
+        flexWrap: "wrap", 
+    },
+    emailText: {
+        fontSize: 15,
         color: APP_THEME.light.ternary.first,
     },
 });

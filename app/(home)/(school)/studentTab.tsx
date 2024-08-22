@@ -119,8 +119,7 @@ export default function TabTwoScreen() {
                         )}
                     </AUIThemedView>
                 </AUIThemedView>
-            </ScrollView>
-            <TouchableOpacity
+                <TouchableOpacity
                 style={{ padding: 10, alignItems: "center" }}
                 disabled={page === schoolPurchaseCourse.totalPages}
                 onPress={() => setPage((prevPage: any) => prevPage + 1)}
@@ -131,6 +130,8 @@ export default function TabTwoScreen() {
                     <AUIThemedText>{`${t("load_more")}`}</AUIThemedText>
                 )}
             </TouchableOpacity>
+            </ScrollView>
+            
         </AUIThemedView>
     );
 }
