@@ -111,14 +111,12 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
         schedule: Yup.string().required(`${t("schedule_is_required")}`),
         price: Yup.string().required(`${t("price_is_required")}`),
         bookYourSeat: Yup.string().required(`${t("price_is_required")}`),
-        // courses: Yup.array()
-        //     .of(
-        //         Yup.object().shape({
-        //             title: Yup.string().required(),
-        //             subtitle: Yup.string().required(),
-        //         })
-        //     )
-        //     .optional(),
+        courses: Yup.array().of(
+            Yup.object().shape({
+                title: Yup.string().required(t("title_is_required")),
+                subtitle: Yup.string().required(t("subtitle_is_required")),
+            })
+        ),
         // ...facilitySchema,
         // [`facility_${}`]: Yup.boolean().optional(),
     });
@@ -138,7 +136,6 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
         },
     });
 
-    const theme = useSelector((state: RootState) => state.global.theme);
     const user = useSelector((state: RootState) => state.global.user);
     const facility = useLangTransformSelector((state: RootState) => state.api.myFacilitys || {});
 
@@ -539,14 +536,17 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                         </CustomTooltip>
                     </AUIThemedView>
 
-                    <AUIThemedView style={styles.courseDetailsItems}>
+                    <AUIThemedView>
                         <AUIThemedView style={{ paddingTop: 10 }}>
                             {fields.map((item, index) => (
                                 <AUIThemedView key={item.id} style={styles.courseDetailsItem}>
                                     <Controller
                                         control={control}
                                         name={`courses.${index}.title` as const}
-                                        render={({ field: { onChange, value } }) => (
+                                        render={({
+                                            field: { onChange, value },
+                                            fieldState: { error },
+                                        }) => (
                                             <AUIThemedView>
                                                 <AUIThemedView style={{ flexDirection: "row" }}>
                                                     <AUIThemedText style={styles.label}>
@@ -566,21 +566,39 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                                                     onChangeText={onChange}
                                                     style={styles.input}
                                                 />
+                                                <AUIThemedView>
+                                                    {error && (
+                                                        <AUIThemedText
+                                                            style={styles.titleFieldError}
+                                                        >
+                                                            {error.message}
+                                                        </AUIThemedText>
+                                                    )}
+                                                </AUIThemedView>
                                             </AUIThemedView>
                                         )}
                                     />
                                     <Controller
                                         control={control}
                                         name={`courses.${index}.subtitle` as const}
-                                        render={({ field: { onChange, value } }) => (
+                                        render={({
+                                            field: { onChange, value },
+                                            fieldState: { error },
+                                        }) => (
                                             <AUIThemedView>
                                                 <AUIInputField
                                                     label={t("subTitle")}
                                                     placeholder={t("subTitle")}
                                                     value={value}
                                                     onChangeText={onChange}
-                                                    style={styles.input}
                                                 />
+                                                <AUIThemedView>
+                                                    {error && (
+                                                        <AUIThemedText style={styles.fieldError}>
+                                                            {error.message}
+                                                        </AUIThemedText>
+                                                    )}
+                                                </AUIThemedView>
                                             </AUIThemedView>
                                         )}
                                     />
@@ -755,6 +773,12 @@ const styles = StyleSheet.create({
         position: "absolute",
         color: "red",
         fontSize: 13,
+        marginTop: 5,
+    },
+    titleFieldError: {
+        color: "red",
+        fontSize: 13,
+        marginTop: 5,
     },
     courseDetailsItem: {
         borderWidth: 1,
@@ -762,9 +786,6 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderColor: APP_THEME.light.primary.first,
         marginVertical: 5,
-    },
-    courseDetailsItems: {
-        paddingTop: 5,
     },
     courseDetails: {
         flexDirection: "row",
