@@ -47,6 +47,7 @@ export default function PurchaseScreen() {
     const newid = JSON.parse(id);
 
     const individualPlan = useLangTransformSelector((state: RootState) => state.api.individualPlan);
+    const taxAmount = useLangTransformSelector((state: RootState) => state.api.taxAmount);
     const paymentDetialsForThisCourse = useLangTransformSelector(
         (state: RootState) => state.api.paymentIsPurchasedCourse || {}
     );
@@ -64,6 +65,7 @@ export default function PurchaseScreen() {
 
     useEffect(() => {
         requestFn(API_URL.plan, "individualPlan", { id: newid.planId });
+        requestFn(API_URL.tax , "taxAmount" )
     }, [newid.planId]);
 
     useEffect(() => {
@@ -87,9 +89,12 @@ export default function PurchaseScreen() {
    
 
     useEffect(() => {
-        if (individualPlan) {
+        if (individualPlan && taxAmount) {
             const price = newid.type === "buy" ? individualPlan.price : individualPlan.bookYourSeat;
-            const tax = price * 0.18;
+            const tax = taxAmount[0].value
+            ? (price * taxAmount[0].value / 100)
+            : (price * 0.18);
+          
             const total = price + tax;
 
             setPlanValue({

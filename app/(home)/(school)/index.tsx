@@ -26,18 +26,21 @@ export default function HomeScreen() {
     const { t } = useTranslation();
 
     const theme = useSelector((state: RootState) => state.global.theme);
+    const taxAmount = useSelector((state: RootState) => state.api.taxAmount);
     const user = useLangTransformSelector((state: RootState) => state.global.user);
     const myCourse = useLangTransformSelector((state: RootState) => state.api.myCourse);
     const mySchoolDetails = useLangTransformSelector(
         (state: RootState) => state.api.MySchoolDetails
     );
 
+    const [newInfo , setNewInfo] = useState<any>(null)
+
     useEffect(() => {
         requestFn(API_URL.schoolAnalytics, "MySchoolDetails", { client: true });
         requestFn(API_URL.course, "myCourse", { client: true });
         requestFn(API_URL.country, "countryDataForSchool");
+        requestFn(API_URL.tax , "taxAmount" )
     }, []);
-
     useEffect(() => {
         // create bot
         botPost("/bot", {
@@ -107,7 +110,42 @@ export default function HomeScreen() {
     const validateData = (data: any) => {
         return data.map((value: any) => (isNaN(value) || !isFinite(value) ? 0 : value));
     };
+    
 
+    useEffect(() => {
+        if (taxAmount) {
+            const updatedInfo = mySchoolDetails?.schoolInfoData?.map((item: any) => {
+    
+                if (item.id === "4" && !item.title.includes("undefined")) {
+                    const array = item.title.split(" ");
+    
+                    
+                    const amount = parseFloat(array[1].replace(/[^0-9.-]+/g, '')); 
+                    
+                
+                    const amountAfterTax = amount - (amount * (taxAmount[0].value / 100));
+    
+                    console.log("amountAfterTax", amountAfterTax);
+    
+                    return {
+                        ...item,
+                        title: `SAR ${amountAfterTax.toFixed(0)} + `, 
+                    };
+                }
+    
+                return {
+                    ...item
+                };
+            });
+    
+            
+            setNewInfo(updatedInfo);
+    
+           
+            console.log("updatedInfo", updatedInfo);
+        }
+    }, [taxAmount, mySchoolDetails]);
+    
     return (
         <AUIThemedView>
             <ScrollView style={{ backgroundColor: BACKGROUND_THEME[theme].background }}>
@@ -117,7 +155,7 @@ export default function HomeScreen() {
                         {mySchoolDetails?.schoolInfoData && (
                             <FlatList
                                 scrollEnabled={false}
-                                data={mySchoolDetails?.schoolInfoData}
+                                data={newInfo}
                                 numColumns={2}
                                 renderItem={({ item }) => (
                                     <AUIInfoCard
@@ -133,6 +171,7 @@ export default function HomeScreen() {
                                                 : item?.title
                                         )}
                                         subtitle={item?.subtitle}
+                                        
                                     />
                                 )}
                                 keyExtractor={(item) => item.id}

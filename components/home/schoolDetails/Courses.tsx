@@ -37,9 +37,7 @@ export default function CoursesTab({ schoolCourses }: { schoolCourses: any }) {
     const [page, setPage] = useState<number>(1);
     const [isFilterModalVisible, setIsFilterModalVisible] = useState<boolean>(false);
     const [selectedFilters, setSelectedFilters] = useState({
-        view: false,
-        lastChance: false,
-        rating: false,
+        view: false
     });
 
     const { requestFn } = useApiRequest();
@@ -59,34 +57,44 @@ export default function CoursesTab({ schoolCourses }: { schoolCourses: any }) {
         }
     }, [debouncedSearchPhrase, page]);
 
+    
+
     // Function to handle filter application
     const applyFilters = () => {
-        requestFn(API_URL.schoolSearch, "schoolCourse", {
-            client: schoolCourses?._id,
-            courseName: debouncedSearchPhrase,
-            view: selectedFilters.view,
-            rating: selectedFilters.rating,
-            lastChance: selectedFilters.lastChance,
-        });
-
         setIsFilterModalVisible(false);
     };
 
-    const resetFilters = () => {
-        setSelectedFilters({
-            view: false,
-            lastChance: false,
-            rating: false,
-        });
-        setIsFilterModalVisible(false);
-    };
+    // const resetFilters = () => {
+    //     setSelectedFilters({
+    //         view: false
+            
+    //     });
+    //     setIsFilterModalVisible(false);
+    // };
 
     const toggleFilter = (filterName: string) => {
-        setSelectedFilters((prevState: any) => ({
-            ...prevState,
-            [filterName]: !prevState[filterName],
-        }));
+        setSelectedFilters((prevState: any) => {
+            // Check for the "view" filter and if it's true, make the request
+            if (filterName === "view" && prevState[filterName] === true) {
+                requestFn(API_URL.course, "schoolCourse", {
+                    client: schoolCourses?._id,
+                    page: `${page}`,
+                });
+            }
+            if(filterName === "view" && prevState[filterName] === false){
+                requestFn(API_URL.courseSortByView, "schoolCourse", {
+                    client: schoolCourses?._id
+                });
+            }
+    
+            // Return the updated state with the toggled filter
+            return {
+                ...prevState,
+                [filterName]: !prevState[filterName],
+            };
+        });
     };
+    
 
     const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
 
@@ -107,9 +115,9 @@ export default function CoursesTab({ schoolCourses }: { schoolCourses: any }) {
                     />
 
                     {/* Filter Button */}
-                    {/* <TouchableOpacity onPress={() => setIsFilterModalVisible(true)}>
+                    <TouchableOpacity onPress={() => setIsFilterModalVisible(true)}>
                     <AUIFilter />
-                </TouchableOpacity> */}
+                </TouchableOpacity>
                 </AUIThemedView>
 
                 {/* Filter Modal */}
@@ -134,40 +142,22 @@ export default function CoursesTab({ schoolCourses }: { schoolCourses: any }) {
                                 </Text>
                             </TouchableOpacity>
 
-                            <TouchableOpacity
-                                style={styles.filterOption}
-                                onPress={() => toggleFilter("lastChance")}
-                            >
-                                <Text style={styles.filterText}>Last Chance</Text>
-                                <Text style={styles.filterCheckbox}>
-                                    {selectedFilters.lastChance ? "✓" : ""}
-                                </Text>
-                            </TouchableOpacity>
 
-                            <TouchableOpacity
-                                style={styles.filterOption}
-                                onPress={() => toggleFilter("rating")}
-                            >
-                                <Text style={styles.filterText}>By Rating</Text>
-                                <Text style={styles.filterCheckbox}>
-                                    {selectedFilters.rating ? "✓" : ""}
-                                </Text>
-                            </TouchableOpacity>
 
                             {/* Apply and Reset Buttons */}
                             <View style={styles.buttonContainer}>
                                 <Pressable
-                                    style={[styles.button, styles.applyButton]}
+                                    style={[styles.button, styles.resetButton]}
                                     onPress={applyFilters}
                                 >
-                                    <Text style={styles.buttonText}>Apply</Text>
+                                    <Text style={styles.buttonText}>Close</Text>
                                 </Pressable>
-                                <Pressable
+                                {/* <Pressable
                                     style={[styles.button, styles.resetButton]}
                                     onPress={resetFilters}
                                 >
                                     <Text style={styles.buttonText}>Reset</Text>
-                                </Pressable>
+                                </Pressable> */}
                             </View>
                         </View>
                     </View>

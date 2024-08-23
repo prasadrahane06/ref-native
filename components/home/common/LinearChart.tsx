@@ -58,7 +58,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
                 style={[styles.container, { backgroundColor: APP_THEME[theme].background }]}
             >
                 <AUIThemedText style={[styles.title]}>{title}</AUIThemedText>
-                <AUIThemedText style={[styles.subTitle]}>Payments are in $ Currency</AUIThemedText>
+                <AUIThemedText style={[styles.subTitle]}>Payments are in SAR Currency</AUIThemedText>
                 {isDataEmpty ? (
                     <BlurView intensity={90} style={styles.blurContainer}>
                         <AUIThemedText style={styles.noDataText}>

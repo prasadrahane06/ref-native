@@ -32,4 +32,6 @@ export const API_URL = {
     paymentDetails: "/payment/getPaymentDetails",
     paymentIsPurchasedCourse: "/payment/IsPurchased",
     paymentCheckoutStatus: "/payment/status",
+    courseSortByView : "/course/sortByView",
+    tax : "master/tax"
 };
