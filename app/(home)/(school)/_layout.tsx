@@ -18,7 +18,7 @@ import { Image } from "expo-image";
 import { Tabs, useFocusEffect } from "expo-router";
 import { default as React, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FlatList, Modal, StyleSheet, TouchableOpacity, View } from "react-native";
+import { FlatList, Modal, StyleSheet, TouchableOpacity } from "react-native";
 import { useSelector } from "react-redux";
 import AddNewEvent from "../events/AddNewEvent";
 import NotificationDrawer from "../notification/notification";
@@ -229,7 +229,12 @@ export default function AUIDrawer() {
 export function TabLayout() {
     const { requestFn } = useApiRequest();
 
-    const [config, setConfig] = useState({});
+    const [config, setConfig] = useState({
+        config: {
+            color: "green",
+            language: "english",
+        },
+    });
 
     const user = useLangTransformSelector((state: RootState) => state.global.user);
 
@@ -247,6 +252,7 @@ export function TabLayout() {
                 user={user}
                 widgetStyle={{ bottom: "10%" }}
             />
+
             <Tabs
                 screenOptions={{
                     headerShown: false,

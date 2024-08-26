@@ -13,11 +13,10 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FlatList, ScrollView, StyleSheet } from "react-native";
 import "react-native-gesture-handler";
-
-import { useAxiosClient as useBotAxios } from "at-chatbot-native";
 import formatNumberWithComma from "@/utils/numberFomatter";
 import { BACKGROUND_THEME } from "@/constants/Colors";
 import { useSelector } from "react-redux";
+import { useAxiosClient as useBotAxios } from "at-chatbot-native";
 
 export default function HomeScreen() {
     const { requestFn } = useApiRequest();
@@ -33,13 +32,13 @@ export default function HomeScreen() {
         (state: RootState) => state.api.MySchoolDetails
     );
 
-    const [newInfo , setNewInfo] = useState<any>(null)
+    const [newInfo, setNewInfo] = useState<any>(null);
 
     useEffect(() => {
         requestFn(API_URL.schoolAnalytics, "MySchoolDetails", { client: true });
         requestFn(API_URL.course, "myCourse", { client: true });
         requestFn(API_URL.country, "countryDataForSchool");
-        requestFn(API_URL.tax , "taxAmount" )
+        requestFn(API_URL.tax, "taxAmount");
     }, []);
     useEffect(() => {
         // create bot
@@ -69,38 +68,6 @@ export default function HomeScreen() {
             });
     }, []);
 
-    // chatbot code below
-    const [config, setConfig] = useState({});
-    // const consumerId: string = "667276fdb4001407af7aa8a2";
-
-    // Keep it for future chatbot use
-    // Bilal : 66683f4f7a4338e3c14339ab
-    // Agent : 667278245b62c3824a62e12f
-    // const userId = "667278245b62c3824a62e12f";
-
-    // useEffect(() => {
-    //     get("https://example.com") // get bot configs
-    //         .then((res) => {
-    //             console.log(res);
-
-    //             // dummy configs
-    //             const botConfigs = {
-    //                 _id: "667276fdb4001407af7aa8a2",
-    //                 name: "School 1",
-    //                 owner: "School 1",
-    //                 config: {
-    //                     color: "green",
-    //                     language: "english",
-    //                 },
-    //             };
-
-    //             setConfig(botConfigs);
-    //         })
-    //         .catch((err) => {
-    //             console.log("Error in get /bot =>", err);
-    //         });
-    // }, []);
-
     const specificDummyData = {
         labels: ["month"],
         pendingData: [0],
@@ -110,45 +77,39 @@ export default function HomeScreen() {
     const validateData = (data: any) => {
         return data.map((value: any) => (isNaN(value) || !isFinite(value) ? 0 : value));
     };
-    
 
     useEffect(() => {
         if (taxAmount) {
             const updatedInfo = mySchoolDetails?.schoolInfoData?.map((item: any) => {
-    
                 if (item.id === "4" && !item.title.includes("undefined")) {
                     const array = item.title.split(" ");
-    
-                    
-                    const amount = parseFloat(array[1].replace(/[^0-9.-]+/g, '')); 
-                    
-                
-                    const amountAfterTax = amount - (amount * (taxAmount[0].value / 100));
-    
+
+                    const amount = parseFloat(array[1].replace(/[^0-9.-]+/g, ""));
+
+                    const amountAfterTax = amount - amount * (taxAmount[0].value / 100);
+
                     console.log("amountAfterTax", amountAfterTax);
-    
+
                     return {
                         ...item,
-                        title: `SAR ${amountAfterTax.toFixed(0)} + `, 
+                        title: `SAR ${amountAfterTax.toFixed(0)} + `,
                     };
                 }
-    
+
                 return {
-                    ...item
+                    ...item,
                 };
             });
-    
-            
+
             setNewInfo(updatedInfo);
-    
-           
+
             console.log("updatedInfo", updatedInfo);
         }
     }, [taxAmount, mySchoolDetails]);
-    
+
     return (
         <AUIThemedView>
-            <ScrollView style={{ backgroundColor: BACKGROUND_THEME[theme].background }}>
+            <ScrollView>
                 <AUIThemedView style={styles.section}>
                     <SectionTitle>{mySchoolDetails?.name}</SectionTitle>
                     <AUIThemedView style={{ alignItems: "center", marginTop: 15 }}>
@@ -171,7 +132,6 @@ export default function HomeScreen() {
                                                 : item?.title
                                         )}
                                         subtitle={item?.subtitle}
-                                        
                                     />
                                 )}
                                 keyExtractor={(item) => item.id}

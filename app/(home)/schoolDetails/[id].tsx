@@ -27,7 +27,6 @@ import Animated, {
 } from "react-native-reanimated";
 import { StarRatingDisplay } from "react-native-star-rating-widget";
 import { useDispatch, useSelector } from "react-redux";
-
 import { setResponse } from "@/redux/apiSlice";
 
 interface TabProps {
@@ -126,11 +125,22 @@ export default function SchoolDetails() {
     const { post, del } = useAxios();
     const { requestFn } = useApiRequest();
     const dispatch = useDispatch();
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
+    const currentLanguage = i18n.language;
+
     const effect = useIsomorphicLayoutEffect();
 
     // chatbot
-    const [config, setConfig] = useState({});
+    const [config, setConfig] = useState({
+        langController: {
+            mode: "app",
+            lang: currentLanguage,
+        },
+        config: {
+            color: "green",
+            language: "english",
+        },
+    });
     const [readMore, setReadMore] = useState(false);
 
     const user = useLangTransformSelector((state: RootState) => state.global.user);
@@ -142,6 +152,8 @@ export default function SchoolDetails() {
     const isRTL = useSelector((state: RootState) => state.global.isRTL);
     const theme = useSelector((state: RootState) => state.global.theme);
     const [overallRatings, setRatings] = useState(0);
+
+    const consumerId = id;
 
     useEffect(() => {
         const backAction = () => {
@@ -314,39 +326,6 @@ export default function SchoolDetails() {
             </AUIThemedView>
         );
     }
-
-    // chatbot code below
-    const consumerId = id;
-
-    // const consumerId: string = "667276fdb4001407af7aa8a2";
-
-    // Keep it for future chatbot use
-    // Bilal : 66683f4f7a4338e3c14339ab
-    // Agent : 667278245b62c3824a62e12f
-    // const userId = "667278245b62c3824a62e12f";
-
-    // useEffect(() => {
-    //     get("https://example.com") // get bot configs
-    //         .then((res) => {
-    //             console.log(res);
-
-    //             // dummy configs
-    //             const botConfigs = {
-    //                 _id: "667276fdb4001407af7aa8a2",
-    //                 name: "School 1",
-    //                 owner: "School 1",
-    //                 config: {
-    //                     color: "green",
-    //                     language: "english",
-    //                 },
-    //             };
-
-    //             setConfig(botConfigs);
-    //         })
-    //         .catch((err) => {
-    //             console.log("Error in get /bot =>", err);
-    //         });
-    // }, []);
 
     const wordsLimit = 50;
     const truncatedText = schoolsResponse?.description?.split(" ").slice(0, wordsLimit).join(" ");
