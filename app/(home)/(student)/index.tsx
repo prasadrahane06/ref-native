@@ -29,6 +29,7 @@ export default function HomeScreen() {
 
     const [selectedLanguage, setSelectedLanguage] = useState("English");
     const [selectedLanguageInEng, setSelectedLanguageInEng] = useState("English");
+    const [selectedLanguageCode, setSelectedLanguageCode] = useState("en");
     const ref = useRef<ICarouselInstance>(null);
 
     const { t } = useTranslation();
@@ -56,6 +57,7 @@ export default function HomeScreen() {
         )[0];
         setSelectedLanguageInEng(rawLangObj?.name?.en || "English");
         setSelectedLanguage(lng);
+        setSelectedLanguageCode(rawLangObj?.code || "en");
     };
 
     useEffect(() => {
@@ -150,7 +152,7 @@ export default function HomeScreen() {
                             : undefined
                     }
                 >
-                    {t(GLOBAL_TRANSLATION_LABEL.popular_courses)}
+                    {t(GLOBAL_TRANSLATION_LABEL.popular_courses)} ({selectedLanguageCode.toUpperCase()})
                 </SectionTitle>
                 <CourseList data={courseResponse?.docs.slice(0, 4)} />
             </AUIThemedView>

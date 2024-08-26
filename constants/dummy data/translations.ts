@@ -247,7 +247,7 @@ export const en = {
     please_provide_valid_email: "Please provide valid email",
     please_specify: "Please specify",
     popular_course: "Popular Courses",
-    popular_courses: "Popular Courses (EN)",
+    popular_courses: "Popular Courses ",
     popular_school: "Popular School",
     popular_schools: "Popular schools",
     population: " Population",
