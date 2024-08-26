@@ -136,12 +136,11 @@ export default function ChangeNumberEmail() {
             dispatch(setUser(userData));
             dispatch(setResponse({ storeName: "userProfileData", data: userData }));
 
-            // //@ts-ignore
             router.back();
         } catch (error: any) {
             console.log("error in verifyOtp", error);
-            ApiErrorToast(error);
-            dispatch(setLoader(false));
+
+            ApiErrorToast(error.message.response.data.message);
         } finally {
             dispatch(setLoader(false));
         }
@@ -161,16 +160,14 @@ export default function ChangeNumberEmail() {
         dispatch(setLoader(true));
         post(API_URL.changeContact, payload)
             .then((res) => {
-                dispatch(setLoader(false));
-
                 ApiSuccessToast(res.message);
                 setOtpSent(true);
             })
             .catch((error) => {
                 console.log("error in verifyOtp", error.message);
-                ApiErrorToast(error);
-                dispatch(setLoader(false));
-            });
+                ApiErrorToast(error.message.response.data.message);
+            })
+            .finally(() => dispatch(setLoader(false)));
     };
 
     const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
