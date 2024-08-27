@@ -18,15 +18,11 @@ interface CustomModalProps {
 }
 
 const AUIModal: React.FC<CustomModalProps> = ({ visible, onClose, title, children, style }) => {
-    const { top, bottom } = useSafeAreaInsets();
-
     const theme = useSelector((state: RootState) => state.global.theme);
 
     return (
         <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
-            <SafeAreaView
-                style={[styles.modalContainer, style, { paddingTop: top, paddingBottom: bottom }]}
-            >
+            <SafeAreaView style={[styles.modalContainer, style]}>
                 <AUIThemedView style={styles.modalContainer}>
                     <AUIThemedView style={[styles.modalContent, style]}>
                         <AUIThemedView style={styles.headerRow}>
@@ -54,7 +50,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        backgroundColor: "rgba(0, 0, 0, 0.3)",
     },
     modalContent: {
         width: "90%",

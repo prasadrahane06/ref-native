@@ -97,6 +97,19 @@ export default function TabFourScreen() {
                         columnWrapperStyle={styles.row}
                         contentContainerStyle={styles.container}
                     />
+                    <TouchableOpacity
+                        style={{ alignItems: "center" }}
+                        disabled={page === myFacilitys?.totalPages}
+                        onPress={() => setPage((prevPage: any) => prevPage + 1)}
+                    >
+                        {page === myFacilitys?.totalPages ? (
+                            showMessage && (
+                                <AUIThemedText>{`${t("you_are_caught_up")}`}</AUIThemedText>
+                            )
+                        ) : (
+                            <AUIThemedText>{`${t("load_more")}`}</AUIThemedText>
+                        )}
+                    </TouchableOpacity>
                 </ScrollView>
             </View>
             <AddNewFacilities
@@ -105,17 +118,6 @@ export default function TabFourScreen() {
                 refreshFacilities={refreshFacilities}
                 facility={selectedFacility}
             />
-            <TouchableOpacity
-                style={{ padding: 10, alignItems: "center" }}
-                disabled={page === myFacilitys?.totalPages}
-                onPress={() => setPage((prevPage: any) => prevPage + 1)}
-            >
-                {page === myFacilitys?.totalPages ? (
-                    showMessage && <AUIThemedText>{`${t("you_are_caught_up")}`}</AUIThemedText>
-                ) : (
-                    <AUIThemedText>{`${t("load_more")}`}</AUIThemedText>
-                )}
-            </TouchableOpacity>
         </AUIThemedView>
     );
 }
@@ -159,7 +161,7 @@ const styles = StyleSheet.create({
     },
     eventContainer: {
         flex: 1,
-        margin: 5, // This controls the spacing between the grid items
+        margin: 5,
         alignItems: "center",
         justifyContent: "center",
     },

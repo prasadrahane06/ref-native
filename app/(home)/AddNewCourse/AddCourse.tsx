@@ -51,7 +51,6 @@ interface FormValues {
     totalSeats: any;
     scheduleFrom: Date;
     scheduleTo: Date;
-    // currentType: any;
     category: any;
     image: any;
     plans: any;
@@ -104,25 +103,12 @@ const AUIAddNewCourse = () => {
         scheduleFrom: Yup.string().required("Schedule from date is required"),
         scheduleTo: Yup.string().required("Schedule to date is required"),
         image: Yup.string().required("Image is required"),
-        // plans: Yup.array()
-        //     .min(1, "Select at least one plan")
-        //     .max(3, "Select a maximum of 3 plans")
-        //     .required("Plans are required"),
     });
 
     const { control, handleSubmit, reset, setValue } = useForm({
         resolver: yupResolver(schema),
         mode: "onChange",
         defaultValues: {
-            // courseName: editCourse?.courseName || "",
-            // description: editCourse?.description || "",
-            // language: editCourse?.language || "",
-            // totalSeats: editCourse?.numberOfSeats || "",
-            // scheduleFrom: startDate && startDate?.toISOString(),
-            // scheduleTo: endDate && endDate?.toISOString(),
-            // image: editCourse?.image || "",
-            // plans: [],
-
             courseName: "",
             description: "",
             language: "",
@@ -244,8 +230,6 @@ const AUIAddNewCourse = () => {
     };
 
     const handleEdit = (data: any) => {
-        // dispatch(setLoader(true));
-
         const payload: any = {
             id: editCourse?._id,
             courseName: data.courseName,
@@ -309,7 +293,6 @@ const AUIAddNewCourse = () => {
             // @ts-ignore
             setValue("image", result.assets[0].base64);
             setImageName(result.assets[0].fileName);
-            // setIsImageEdited(true);
         } else {
             alert("You did not select any image.");
         }
@@ -341,7 +324,7 @@ const AUIAddNewCourse = () => {
         setCurrentPlan(undefined);
     };
     const generateRandomId = (): string => {
-        return Math.floor(1000 + Math.random() * 9000).toString(); // Generate a random 4-digit number
+        return Math.floor(1000 + Math.random() * 9000).toString();
     };
 
     const truncateFileName = (fileName: string | null, maxLength: number): string => {
@@ -507,7 +490,6 @@ const AUIAddNewCourse = () => {
                                                             : "default"
                                                     }
                                                     onChange={(e, date) => {
-                                                        console.log("date -->", date);
                                                         onChangeFrom(e, date);
                                                         onChange(date);
                                                     }}
@@ -684,7 +666,7 @@ const AUIAddNewCourse = () => {
                             <TouchableOpacity onPress={pickImage} style={styles.uploadButton}>
                                 <MaterialIcons name="cloud-upload" size={24} color="#5BD894" />
                                 <AUIThemedText style={styles.uploadButtonText}>
-                                    {t("upload_file")}
+                                    {edit ? t("change_banner") : t("upload_file")}
                                 </AUIThemedText>
                             </TouchableOpacity>
                             <AUIThemedText style={styles.fileName}>
@@ -697,16 +679,6 @@ const AUIAddNewCourse = () => {
                         {showImage && (
                             <AUIThemedView style={styles.imageContainer}>
                                 <ImageViewer selectedImage={showImage} style={styles.image} />
-                                <TouchableOpacity
-                                    style={styles.closeIcon}
-                                    onPress={() => setShowImage(null)}
-                                >
-                                    <MaterialIcons
-                                        name="close"
-                                        size={24}
-                                        color={TEXT_THEME.light.danger}
-                                    />
-                                </TouchableOpacity>
                             </AUIThemedView>
                         )}
                     </AUIThemedView>
@@ -1127,12 +1099,6 @@ const styles = StyleSheet.create({
         marginTop: 10,
         borderRadius: 0,
     },
-    closeIcon: {
-        position: "absolute",
-        right: -10,
-        backgroundColor: APP_THEME.light.lightGray,
-        borderRadius: 20,
-    },
     screenTitle: {
         fontSize: 18,
         fontWeight: "bold",
@@ -1147,7 +1113,7 @@ const styles = StyleSheet.create({
     },
 
     dateWrapper: {
-        marginBottom: 20, // Adjust spacing between date pickers
+        marginBottom: 20,
     },
 
     andoridModalContent: {

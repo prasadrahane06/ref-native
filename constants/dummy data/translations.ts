@@ -282,10 +282,12 @@ export const en = {
     seat_booking_amount: "Seat Booking Amount",
     seats: "Seats",
     select_banner: "Select banner",
+    change_banner: "Change banner",
     select_category: "Select Category",
     select_date: "Select Date",
     select_facilities: "Select Facilities",
     select_image: "Select image",
+    change_image: "Change image",
     select_item: "Select item",
     select_language: "Select Language",
     select_language_to_learn: "Select Language to learn",
@@ -379,6 +381,27 @@ export const en = {
     sch_ans5:
         " If you experience any issues, you can contact our support team through the 'Help & Support' section in the app, and we’ll assist you promptly.",
     profile_delete_confirmation: "Are you sure you want to delete your profile picture?",
+    delete_logo: "Delete Logo",
+    profileLogo_delete_confirmation: "Are you sure you want to delete your school logo?",
+    delete_banner: "Delete Banner",
+    profileBanner_delete_confirmation: "Are you sure you want to delete your school banner?",
+    facility_name_is_required: "Facility name is required",
+    faq6: "How do I manage student enrollments?",
+    faq7: "How can I monitor student performance?",
+    faq8: "How do I upload course materials?",
+    faq9: "What should I do if I encounter a technical issue?",
+    faq10: "How can I customize the course curriculum?",
+    image_is_required: "Image is required",
+    faq_ans6:
+        " To manage student enrollments, go to the Student Management section in your dashboard. From there, you can add, remove, or update student details.",
+    faq_ans7:
+        " You can monitor student performance by accessing the Performance Reports under the Analytics tab. It provides detailed reports on each student's progress, attendance, and grades.",
+    faq_ans8:
+        "Course materials can be uploaded through the Course Management section. Select the course you wish to update and use the Upload Materials option.",
+    faq_ans9:
+        "If you encounter any technical issues, please contact our technical support team via the Help & Support section. You can also check our troubleshooting guides for quick fixes.",
+    faq_ans10:
+        " You can customize the course curriculum by going to the Curriculum Builder tool in the dashboard. This allows you to add or remove modules, set prerequisites, and update course content.",
 };
 
 export const ar = {
@@ -524,15 +547,14 @@ export const ar = {
     stu_ans1:
         "قم بتنزيل التطبيق، وانتقل إلى قسم 'تسجيل الطالب'، وأدخل تفاصيلك وأنشئ حسابًا. بمجرد التسجيل، يمكنك البدء في تصفح الدورات.",
     stu_ans2:
-       "استخدم شريط البحث أو تصفح الفئات للعثور على الدورات التي تتناسب مع اهتماماتك. تأتي كل دورة بوصف تفصيلي، لذا يمكنك اختيار ما يناسبك.",
+        "استخدم شريط البحث أو تصفح الفئات للعثور على الدورات التي تتناسب مع اهتماماتك. تأتي كل دورة بوصف تفصيلي، لذا يمكنك اختيار ما يناسبك.",
 
     stu_ans3:
-      "نقبل بطاقات الائتمان/الخصم الرئيسية وطرق الدفع الشائعة الأخرى، حسب منطقتك. جميع المعاملات آمنة ومشفرة.",
+        "نقبل بطاقات الائتمان/الخصم الرئيسية وطرق الدفع الشائعة الأخرى، حسب منطقتك. جميع المعاملات آمنة ومشفرة.",
     stu_ans4:
-     
-"تخضع استردادات الأموال لسياسة الاسترداد الخاصة بالمدرسة المعنية. يرجى مراجعة شروط الدورة قبل الشراء، واتصل بالدعم إذا كنت بحاجة إلى مساعدة.",
+        "تخضع استردادات الأموال لسياسة الاسترداد الخاصة بالمدرسة المعنية. يرجى مراجعة شروط الدورة قبل الشراء، واتصل بالدعم إذا كنت بحاجة إلى مساعدة.",
     stu_ans5:
-       "بمجرد شراء دورة، ستظهر في قسم 'دوراتي' في التطبيق. يمكنك البدء في التعلم فورًا أو حسب وتيرتك.",
+        "بمجرد شراء دورة، ستظهر في قسم 'دوراتي' في التطبيق. يمكنك البدء في التعلم فورًا أو حسب وتيرتك.",
     fav_countries: "البلدان المفضلة",
     fav_courses: "الدورات المفضلة",
     fav_schools: "المدارس المفضلة",
@@ -659,10 +681,12 @@ export const ar = {
     seat_booking_amount: "مبلغ حجز المقعد",
     seats: "مقاعد",
     select_banner: "حدد لافتة",
+    change_banner: "تغيير الشعار",
     select_category: "اختر الفئة",
     select_date: "حدد تاريخ",
     select_facilities: "حدد المرافق",
     select_image: "اختر صورة",
+    change_image: "تغيير الصورة",
     select_item: "حدد العنصر",
     select_language: "اختار اللغة",
     select_language_to_learn: "اختر اللغة التي تريد تعلمها",
@@ -757,4 +781,25 @@ export const ar = {
     profile_delete_confirmation: "هل أنت متأكد أنك تريد حذف الصورة الشخصية الخاصة بك؟",
     delete_profile_picture: "حذف صورة الملف الشخصي",
     delete_profile_description: "هل أنت متأكد أنك تريد حذف الصورة الشخصية الخاصة بك؟",
+    delete_logo: "حذف الشعار",
+    profileLogo_delete_confirmation: "هل أنت متأكد أنك تريد حذف شعار مدرستك؟",
+    delete_banner: "حذف البانر",
+    profileBanner_delete_confirmation: "هل أنت متأكد أنك تريد حذف شعار مدرستك؟",
+    facility_name_is_required: "اسم المنشأة مطلوب",
+    image_is_required: "الصورة مطلوبة",
+    faq6: "كيف يمكنني إدارة تسجيلات الطلاب؟",
+    faq7: "كيف يمكنني مراقبة أداء الطلاب؟",
+    faq8: "كيف يمكنني تحميل مواد الدورة؟",
+    faq9: "ماذا يجب أن أفعل إذا واجهت مشكلة فنية؟",
+    faq10: "كيف يمكنني تخصيص منهاج الدورة؟",
+    faq_ans6:
+        "لإدارة تسجيلات الطلاب، انتقل إلى قسم إدارة الطلاب في لوحة التحكم. من هناك، يمكنك إضافة أو إزالة أو تحديث تفاصيل الطلاب.",
+    faq_ans7:
+        "يمكنك مراقبة أداء الطلاب من خلال الوصول إلى تقارير الأداء ضمن علامة التبويب التحليلات. وهي توفر تقارير مفصلة عن تقدم كل طالب، حضوره، ودرجاته.",
+    faq_ans8:
+        "يمكن تحميل مواد الدورة من خلال قسم إدارة الدورات. اختر الدورة التي ترغب في تحديثها واستخدم خيار تحميل المواد.",
+    faq_ans9:
+        "إذا واجهت أي مشاكل فنية، يرجى الاتصال بفريق الدعم الفني عبر قسم الدعم والمساعدة. يمكنك أيضًا الاطلاع على أدلة استكشاف الأخطاء وإصلاحها للحصول على حلول سريعة.",
+    faq_ans10:
+        "يمكنك تخصيص منهاج الدورة عن طريق الانتقال إلى أداة منشئ المناهج في لوحة التحكم. هذا يتيح لك إضافة أو إزالة الوحدات، وتعيين المتطلبات السابقة، وتحديث محتوى الدورة.",
 };

@@ -740,7 +740,7 @@ const AddPlan: React.FC<AddPlanProps> = ({ visible, onClose, plan, refreshPlans 
                     onClose={() => setShowConfirmation(false)}
                     title="Confirm Delete"
                 >
-                    <AUIThemedText>Are you sure you want to delete this facility?</AUIThemedText>
+                    <AUIThemedText>Are you sure you want to delete this plan?</AUIThemedText>
                     <AUIThemedView style={styles.buttonContainer}>
                         <AUIButton
                             title="Cancel"
