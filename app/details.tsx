@@ -17,11 +17,13 @@ import { City, Country, State } from "country-state-city";
 import { router } from "expo-router";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { KeyboardAvoidingView, Platform, ScrollView } from "react-native";
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet } from "react-native";
 import "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import useAxios from "./services/axiosClient";
+import AUIInputField from "@/components/common/AUIInputField";
+
 
 const qualificationData = [
     {
@@ -93,6 +95,8 @@ const schema = Yup.object().shape({
     country: Yup.string().required("Country is required"),
     city: Yup.string().optional(),
     state: Yup.string().required("State is required"),
+    street: Yup.string(),
+    postcode: Yup.string()
 });
 
 const DetailsPage = () => {
@@ -119,6 +123,8 @@ const DetailsPage = () => {
             country: "",
             state: "",
             city: "",
+            street: "",
+            postcode: "",
         },
     });
 
@@ -129,6 +135,7 @@ const DetailsPage = () => {
         const state = data.state;
         const city = data.city;
 
+
         const countryName = Country.getCountryByCode(country)?.name;
         const stateName = State.getStateByCodeAndCountry(state, country)?.name;
 
@@ -138,11 +145,15 @@ const DetailsPage = () => {
             language: data.language,
             country: countryName,
             state: stateName,
+            street: data.street,
+            postcode: data.postcode
         };
 
         if (city) {
             payload.city = city;
         }
+
+
 
         patch(API_URL.user, payload)
             .then((res: any) => {
@@ -334,6 +345,54 @@ const DetailsPage = () => {
                                     </AUIThemedView>
                                 )}
                             />
+                            <Controller
+                                name="street"
+                                control={control}
+                                render={({ field: { onChange, value }, fieldState: { error } }) => (
+                                    <AUIThemedView >
+                                        <AUIInputField
+                                            value={value}
+                                            onChangeText={onChange}
+                                            placeholder="street"
+                                            label="Street"
+                                        />
+                                        <AUIThemedView>
+                                            {error && (
+                                                <AUIThemedText
+
+                                                    type="subtitle"
+                                                >
+                                                    {error.message}
+                                                </AUIThemedText>
+                                            )}
+                                        </AUIThemedView>
+                                    </AUIThemedView>
+                                )}
+                            />
+                            <Controller
+                                name="postcode"
+                                control={control}
+                                render={({ field: { onChange, value }, fieldState: { error } }) => (
+                                    <AUIThemedView >
+                                        <AUIInputField
+                                            value={value}
+                                            onChangeText={onChange}
+                                            placeholder="Entre your postcode"
+                                            label="Postcode"
+                                        />
+                                        <AUIThemedView>
+                                            {error && (
+                                                <AUIThemedText
+
+                                                    type="subtitle"
+                                                >
+                                                    {error.message}
+                                                </AUIThemedText>
+                                            )}
+                                        </AUIThemedView>
+                                    </AUIThemedView>
+                                )}
+                            />
                         </AUIThemedView>
                         <AUIThemedView style={signupPageStyles.buttonContainer}>
                             <AUIButton
@@ -359,5 +418,20 @@ const DetailsPage = () => {
         </KeyboardAvoidingView>
     );
 };
+
+const styles = StyleSheet.create({
+    label: {
+        marginTop: 10,
+        marginBottom: 5,
+        fontSize: 13,
+        fontWeight: "bold",
+        fontStyle: "normal",
+    },
+        fieldError: {
+        position: "absolute",
+        color: "red",
+        fontSize: 13,
+    },
+})
 
 export default DetailsPage;

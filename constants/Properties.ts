@@ -102,8 +102,23 @@ export const GLOBAL_TRANSLATION_LABEL = {
     applePay: "applePay",
     gPay: "gPay",
 };
-export const SIGNUP_FIELDS = {
-    name: { label: "Name", placeholder: "e.g John Doe", type: "INPUT" },
+export const SIGNUP_FIELDS_STUDENT = {
+    FirstName: { label: "FirstName", placeholder: "e.g John", type: "INPUT" },
+    LastName: { label: "LastName", placeholder: "e.g Doe", type: "INPUT" },
+    email: {
+        label: "Email",
+        placeholder: "e.g john.doe@gmail.com",
+        type: "INPUT",
+    },
+    phone: {
+        label: "Mobile Number",
+        placeholder: "Enter your phone number",
+        type: "INPUT",
+    },
+};
+
+export const SIGNUP_FIELDS_SCHOOL = {
+    name: { label: "name", placeholder: "e.g John Doe", type: "INPUT" },
     email: {
         label: "Email",
         placeholder: "e.g john.doe@gmail.com",

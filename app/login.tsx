@@ -6,7 +6,7 @@ import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import OTPScreen from "@/components/screenComponents/OTPScreen";
 import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
-import { GLOBAL_TEXT, SIGNUP_FIELDS } from "@/constants/Properties";
+import { GLOBAL_TEXT,  SIGNUP_FIELDS_STUDENT } from "@/constants/Properties";
 import { storeUserData } from "@/constants/RNAsyncStore";
 import { loginPageStyles, secondaryButtonStyle } from "@/constants/Styles";
 import { countriesData } from "@/constants/dummy data/countriesData";
@@ -495,7 +495,7 @@ export const ContactNumberField = ({ label, control }: any) => {
                                 style={{ flex: 2 }}
                                 value={value}
                                 onChangeText={onChange}
-                                placeholder={SIGNUP_FIELDS.phone.placeholder}
+                                placeholder={SIGNUP_FIELDS_STUDENT.phone.placeholder}
                                 keyboardType="numeric"
                                 autoFocus={true}
                             />
@@ -535,7 +535,7 @@ export const InputField = ({ control }: any) => (
                     <AUIInputField
                         value={value}
                         onChangeText={onChange}
-                        placeholder={SIGNUP_FIELDS.email.placeholder}
+                        placeholder={SIGNUP_FIELDS_STUDENT.email.placeholder}
                         autoFocus={true}
                     />
                     {error && (

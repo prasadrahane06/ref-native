@@ -182,6 +182,8 @@ const Profile: React.FC = () => {
         country: Yup.string().required(`${t("country_is_required")}`),
         city: Yup.string().optional(),
         state: Yup.string().required(`${t("state_is_required")}`),
+        street: Yup.string().required(`${t("street_is_required")}`),
+        postcode : Yup.string().required(`${t("postcode_is_required")}`)
     });
 
     const formData = {
@@ -194,6 +196,8 @@ const Profile: React.FC = () => {
         country: countryCode,
         state: stateCode,
         city: userProfileData?.city,
+        street : userProfileData?.street,
+        postcode : userProfileData?.postcode
     };
     const { reset, setValue, control, handleSubmit, formState } = useForm({
         resolver: yupResolver(schema),
@@ -208,6 +212,8 @@ const Profile: React.FC = () => {
             country: countryCode,
             state: stateCode,
             city: userProfileData?.city,
+            street : userProfileData?.street,
+            postcode : userProfileData?.postcode
         },
     });
 
@@ -311,6 +317,8 @@ const Profile: React.FC = () => {
             country: countryName,
             state: stateName,
             city: updatedCity,
+            street : data.street,
+            postcode : data.postcode
         };
 
         if (profileBase64) {
@@ -891,6 +899,48 @@ const Profile: React.FC = () => {
                                     listWithIcon
                                     position="top"
                                 />
+                            </AUIThemedView>
+                        )}
+                    />
+                    <Controller
+                        name="street"
+                        control={control}
+                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <AUIThemedView>
+                                <AUIThemedText style={styles.label}>{t("street")}</AUIThemedText>
+                                <AUIInputField
+                                    value={value}
+                                    onChangeText={onChange}
+                                    placeholder={t("street")}
+                                />
+                                <AUIThemedView>
+                                    {error && (
+                                        <AUIThemedText style={styles.fieldError}>
+                                            {error.message}
+                                        </AUIThemedText>
+                                    )}
+                                </AUIThemedView>
+                            </AUIThemedView>
+                        )}
+                    />
+                    <Controller
+                        name="postcode"
+                        control={control}
+                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <AUIThemedView>
+                                <AUIThemedText style={styles.label}>{t("postcode")}</AUIThemedText>
+                                <AUIInputField
+                                    value={value}
+                                    onChangeText={onChange}
+                                    placeholder={t("postcode")}
+                                />
+                                <AUIThemedView>
+                                    {error && (
+                                        <AUIThemedText style={styles.fieldError}>
+                                            {error.message}
+                                        </AUIThemedText>
+                                    )}
+                                </AUIThemedView>
                             </AUIThemedView>
                         )}
                     />

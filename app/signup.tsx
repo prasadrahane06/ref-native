@@ -5,7 +5,7 @@ import { AUISafeAreaView } from "@/components/common/AUISafeAreaView";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast, FormValidateToast } from "@/components/common/AUIToast";
-import { GLOBAL_TEXT, SIGNUP_FIELDS } from "@/constants/Properties";
+import { GLOBAL_TEXT, SIGNUP_FIELDS_STUDENT ,SIGNUP_FIELDS_SCHOOL} from "@/constants/Properties";
 import { countriesData } from "@/constants/dummy data/countriesData";
 import { API_URL } from "@/constants/urlProperties";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
@@ -27,11 +27,20 @@ const SignupPage = () => {
     const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
     const dispatch = useDispatch();
     const profile = useLangTransformSelector((state: RootState) => state.global.profile);
+   
     const deviceToken = useSelector((state: RootState) => state.global.deviceToken);
     const { post } = useAxios();
     const [errors, setErrors] = useState<any>({});
+    const [signupType, setSignupType] = useState<any>(()=>{
+        if(profile === "student"){
+            return SIGNUP_FIELDS_STUDENT
+        }
+        return SIGNUP_FIELDS_SCHOOL
+    });
     const [signupValues, setSignupValues] = useState<any>({
-        name: "",
+        FirstName: "",
+        name : "",
+        LastName: "",
         email: "",
         phone: "",
         phoneCode: "+91",
@@ -40,13 +49,22 @@ const SignupPage = () => {
     const emailInputRef = useRef(null);
     const phoneInputRef = useRef(null);
     useEffect(() => {
+        const isNameValid =
+            (signupValues.name.trim() !== "" || 
+            (signupValues.FirstName.trim() !== "" && signupValues.LastName.trim() !== ""));
+    
         const isValid =
-            Object.values(signupValues).every((x) => x) && Object.keys(errors).length === 0;
+            isNameValid &&
+            signupValues.email.trim() !== "" &&
+            signupValues.phone.trim() !== "" &&
+            Object.keys(errors).length === 0;
+    
         setIsButtonEnabled(isValid);
     }, [signupValues, errors]);
+    
 
     const handleOnSave = () => {
-        const { name, email, phone, phoneCode } = signupValues;
+        const { FirstName, LastName , email, phone, phoneCode ,  name  } = signupValues;
         // @ts-ignore
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(signupValues.email)) {
             setErrors({
@@ -72,13 +90,15 @@ const SignupPage = () => {
         }
         setErrors({});
         let code = phoneCode.split("+")[1];
+        let payloadName = profile === "student" ? `${FirstName.trim()} ${LastName.trim()}` : name;
         let payload = {
-            name,
+            name : payloadName,
             email,
             phone: `${code}${phone}`,
             registerType: profile,
             deviceToken: deviceToken,
         };
+        
         dispatch(setSignupDetails(payload));
         dispatch(setLoader(true));
         post(API_URL.register, payload)
@@ -167,12 +187,12 @@ const SignupPage = () => {
                     >
                         <AUIThemedView style={signupPageStyles.formLayout}>
                             <AUIThemedView style={signupPageStyles.fieldContainer}>
-                                {Object.keys(SIGNUP_FIELDS).map((item, i) => (
+                                {Object.keys(signupType).map((item, i) => (
                                     <AUIThemedView key={i}>
                                         {item === "phone" ? (
                                             <ContactNumberField
-                                                label={SIGNUP_FIELDS[item].label}
-                                                placeholder={SIGNUP_FIELDS[item].placeholder}
+                                                label={signupType[item].label}
+                                                placeholder={signupType[item].placeholder}
                                                 value={signupValues[item]}
                                                 dropdownValue={signupValues.phoneCode}
                                                 handleDropdownChange={handleDropdownChange}
@@ -197,9 +217,9 @@ const SignupPage = () => {
                                             >
                                                 <AUIInputField
                                                     // @ts-ignore
-                                                    label={SIGNUP_FIELDS[item].label}
+                                                    label={signupType[item].label}
                                                     // @ts-ignore
-                                                    placeholder={SIGNUP_FIELDS[item].placeholder}
+                                                    placeholder={signupType[item].placeholder}
                                                     // @ts-ignore
                                                     value={signupValues[item]}
                                                     onChangeText={(val: any) =>
