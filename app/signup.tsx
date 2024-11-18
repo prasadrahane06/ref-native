@@ -5,7 +5,7 @@ import { AUISafeAreaView } from "@/components/common/AUISafeAreaView";
 import { AUIThemedText } from "@/components/common/AUIThemedText";
 import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast, FormValidateToast } from "@/components/common/AUIToast";
-import { GLOBAL_TEXT, SIGNUP_FIELDS_STUDENT ,SIGNUP_FIELDS_SCHOOL} from "@/constants/Properties";
+import { GLOBAL_TEXT, SIGNUP_FIELDS_STUDENT, SIGNUP_FIELDS_SCHOOL } from "@/constants/Properties";
 import { countriesData } from "@/constants/dummy data/countriesData";
 import { API_URL } from "@/constants/urlProperties";
 import { useLangTransformSelector } from "@/customHooks/useLangTransformSelector";
@@ -27,19 +27,19 @@ const SignupPage = () => {
     const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
     const dispatch = useDispatch();
     const profile = useLangTransformSelector((state: RootState) => state.global.profile);
-   
+
     const deviceToken = useSelector((state: RootState) => state.global.deviceToken);
     const { post } = useAxios();
     const [errors, setErrors] = useState<any>({});
-    const [signupType, setSignupType] = useState<any>(()=>{
-        if(profile === "student"){
-            return SIGNUP_FIELDS_STUDENT
+    const [signupType, setSignupType] = useState<any>(() => {
+        if (profile === "student") {
+            return SIGNUP_FIELDS_STUDENT;
         }
-        return SIGNUP_FIELDS_SCHOOL
+        return SIGNUP_FIELDS_SCHOOL;
     });
     const [signupValues, setSignupValues] = useState<any>({
         FirstName: "",
-        name : "",
+        name: "",
         LastName: "",
         email: "",
         phone: "",
@@ -50,21 +50,22 @@ const SignupPage = () => {
     const phoneInputRef = useRef(null);
     useEffect(() => {
         const isNameValid =
-            (signupValues.name.trim() !== "" || 
-            (signupValues.FirstName.trim() !== "" && signupValues.LastName.trim() !== ""));
-    
+            signupValues.name.trim() !== "" ||
+            (signupValues.FirstName.trim() !== "" && signupValues.LastName.trim() !== "");
+
         const isValid =
             isNameValid &&
             signupValues.email.trim() !== "" &&
             signupValues.phone.trim() !== "" &&
             Object.keys(errors).length === 0;
-    
+
         setIsButtonEnabled(isValid);
     }, [signupValues, errors]);
-    
 
     const handleOnSave = () => {
-        const { FirstName, LastName , email, phone, phoneCode ,  name  } = signupValues;
+        router.replace("/login");
+
+        const { FirstName, LastName, email, phone, phoneCode, name } = signupValues;
         // @ts-ignore
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(signupValues.email)) {
             setErrors({
@@ -92,13 +93,13 @@ const SignupPage = () => {
         let code = phoneCode.split("+")[1];
         let payloadName = profile === "student" ? `${FirstName.trim()} ${LastName.trim()}` : name;
         let payload = {
-            name : payloadName,
+            name: payloadName,
             email,
             phone: `${code}${phone}`,
             registerType: profile,
             deviceToken: deviceToken,
         };
-        
+
         dispatch(setSignupDetails(payload));
         dispatch(setLoader(true));
         post(API_URL.register, payload)
@@ -243,7 +244,7 @@ const SignupPage = () => {
                             <AUIThemedView style={signupPageStyles.section}>
                                 <AUIButton
                                     title={GLOBAL_TEXT.continue_n_verify}
-                                    disabled={!isButtonEnabled}
+                                    // disabled={!isButtonEnabled}
                                     selected
                                     icon={"arrowright"}
                                     onPress={handleOnSave}

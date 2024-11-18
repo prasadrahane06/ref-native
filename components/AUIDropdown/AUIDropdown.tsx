@@ -13,37 +13,37 @@ import styles from "./style";
  */
 
 interface DropdownItem {
-  label: string;
-  value: string;
+    label: string;
+    value: string;
 }
 
 interface CustomDropdownProps {
-  items: DropdownItem[];
-  onValueChange: (value: string) => void;
-  placeholder?: string;
-  value?: string;
+    items: DropdownItem[];
+    onValueChange: (value: string) => void;
+    placeholder?: string;
+    value?: string;
 }
 
 const AUIDropdown: React.FC<CustomDropdownProps> = ({
-  items,
-  onValueChange,
-  placeholder,
-  value,
+    items,
+    onValueChange,
+    placeholder,
+    value,
 }) => {
-  return (
-    <View style={styles.container}>
-      <Picker
-        selectedValue={value}
-        onValueChange={(itemValue) => onValueChange(itemValue)}
-        style={styles.picker}
-      >
-        <Picker.Item label={placeholder} value={null} />
-        {items.map((item) => (
-          <Picker.Item key={item.value} label={item.label} value={item.value} />
-        ))}
-      </Picker>
-    </View>
-  );
+    return (
+        <View style={styles.container}>
+            <Picker
+                selectedValue={value}
+                onValueChange={(itemValue) => onValueChange(itemValue)}
+                style={styles.picker}
+            >
+                <Picker.Item label={placeholder} value={null} />
+                {items.map((item) => (
+                    <Picker.Item key={item.value} label={item.label} value={item.value} />
+                ))}
+            </Picker>
+        </View>
+    );
 };
 
 export default AUIDropdown;

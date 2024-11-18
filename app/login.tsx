@@ -6,7 +6,7 @@ import { AUIThemedView } from "@/components/common/AUIThemedView";
 import { ApiErrorToast, ApiSuccessToast } from "@/components/common/AUIToast";
 import OTPScreen from "@/components/screenComponents/OTPScreen";
 import { APP_THEME, BACKGROUND_THEME, TEXT_THEME } from "@/constants/Colors";
-import { GLOBAL_TEXT,  SIGNUP_FIELDS_STUDENT } from "@/constants/Properties";
+import { GLOBAL_TEXT, SIGNUP_FIELDS_STUDENT } from "@/constants/Properties";
 import { storeUserData } from "@/constants/RNAsyncStore";
 import { loginPageStyles, secondaryButtonStyle } from "@/constants/Styles";
 import { countriesData } from "@/constants/dummy data/countriesData";
@@ -101,59 +101,61 @@ const LoginPage = () => {
     }, []);
 
     const handleSendOtp = () => {
-        let code = phoneCode?.split("+")[1];
-        let payload =
-            selectedButton === "mobile"
-                ? {
-                      phone: `${code}${inputValue}`,
-                      deviceToken: deviceToken,
-                  }
-                : {
-                      email: inputValue,
-                      deviceToken: deviceToken,
-                  };
+        router.replace("/details");
 
-        dispatch(setLoader(true));
-        post(API_URL.login, payload)
-            .then((res) => {
-                dispatch(setLoader(false));
+        //     let code = phoneCode?.split("+")[1];
+        //     let payload =
+        //         selectedButton === "mobile"
+        //             ? {
+        //                   phone: `${code}${inputValue}`,
+        //                   deviceToken: deviceToken,
+        //               }
+        //             : {
+        //                   email: inputValue,
+        //                   deviceToken: deviceToken,
+        //               };
 
-                if (res.statusCode !== 200) {
-                    ApiErrorToast(res.message);
-                }
+        //     dispatch(setLoader(true));
+        //     post(API_URL.login, payload)
+        //         .then((res) => {
+        //             dispatch(setLoader(false));
 
-                const userType = res.data.registerType;
+        //             if (res.statusCode !== 200) {
+        //                 ApiErrorToast(res.message);
+        //             }
 
-                if (userType === profile) {
-                    setOtpSent(true);
-                    ApiSuccessToast("OTP send successfully");
-                } else {
-                    ApiErrorToast("User is not registered");
-                }
-            })
-            .catch((e) => {
-                dispatch(setLoader(false));
-            });
-    };
+        //             const userType = res.data.registerType;
 
-    const handleOTPChange = (newOtp: string, name: string) => {
-        setOtp({
-            ...otp,
-            [name]: newOtp,
-        });
-        if (newOtp.length === 4) {
-            if (name === "signUpEmail") {
-                handleSubmitEmailOtp(newOtp);
-                return;
-            } else if (name === "signUpPhone") {
-                handleSubmitPhoneOtp(newOtp);
-                // router.push({ pathname: "/details" });
-                return;
-            } else {
-                handleSubmitLoginOtp(newOtp);
-                return;
-            }
-        }
+        //             if (userType === profile) {
+        //                 setOtpSent(true);
+        //                 ApiSuccessToast("OTP send successfully");
+        //             } else {
+        //                 ApiErrorToast("User is not registered");
+        //             }
+        //         })
+        //         .catch((e) => {
+        //             dispatch(setLoader(false));
+        //         });
+        // };
+
+        // const handleOTPChange = (newOtp: string, name: string) => {
+        //     setOtp({
+        //         ...otp,
+        //         [name]: newOtp,
+        //     });
+        //     if (newOtp.length === 4) {
+        //         if (name === "signUpEmail") {
+        //             handleSubmitEmailOtp(newOtp);
+        //             return;
+        //         } else if (name === "signUpPhone") {
+        //             handleSubmitPhoneOtp(newOtp);
+        //             // router.push({ pathname: "/details" });
+        //             return;
+        //         } else {
+        //             handleSubmitLoginOtp(newOtp);
+        //             return;
+        //         }
+        //     }
     };
 
     const verifyOtp = async (payload: any) => {
@@ -396,7 +398,6 @@ const LoginPage = () => {
                                 <View style={secondaryButtonStyle.buttonContainer}>
                                     <AUIButton
                                         title="Send OTP"
-                                        disabled={!formState.isValid}
                                         selected
                                         icon={"arrowright"}
                                         style={{ width: "50%" }}

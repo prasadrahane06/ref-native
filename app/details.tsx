@@ -24,7 +24,6 @@ import * as Yup from "yup";
 import useAxios from "./services/axiosClient";
 import AUIInputField from "@/components/common/AUIInputField";
 
-
 const qualificationData = [
     {
         qualification: "High School",
@@ -96,7 +95,7 @@ const schema = Yup.object().shape({
     city: Yup.string().optional(),
     state: Yup.string().required("State is required"),
     street: Yup.string(),
-    postcode: Yup.string()
+    postcode: Yup.string(),
 });
 
 const DetailsPage = () => {
@@ -129,12 +128,13 @@ const DetailsPage = () => {
     });
 
     const onSave = (data: any) => {
+        router.replace("/(home)/(student)");
+
         dispatch(setLoader(true));
 
         const country = data.country;
         const state = data.state;
         const city = data.city;
-
 
         const countryName = Country.getCountryByCode(country)?.name;
         const stateName = State.getStateByCodeAndCountry(state, country)?.name;
@@ -146,14 +146,12 @@ const DetailsPage = () => {
             country: countryName,
             state: stateName,
             street: data.street,
-            postcode: data.postcode
+            postcode: data.postcode,
         };
 
         if (city) {
             payload.city = city;
         }
-
-
 
         patch(API_URL.user, payload)
             .then((res: any) => {
@@ -349,7 +347,7 @@ const DetailsPage = () => {
                                 name="street"
                                 control={control}
                                 render={({ field: { onChange, value }, fieldState: { error } }) => (
-                                    <AUIThemedView >
+                                    <AUIThemedView>
                                         <AUIInputField
                                             value={value}
                                             onChangeText={onChange}
@@ -358,10 +356,7 @@ const DetailsPage = () => {
                                         />
                                         <AUIThemedView>
                                             {error && (
-                                                <AUIThemedText
-
-                                                    type="subtitle"
-                                                >
+                                                <AUIThemedText type="subtitle">
                                                     {error.message}
                                                 </AUIThemedText>
                                             )}
@@ -373,7 +368,7 @@ const DetailsPage = () => {
                                 name="postcode"
                                 control={control}
                                 render={({ field: { onChange, value }, fieldState: { error } }) => (
-                                    <AUIThemedView >
+                                    <AUIThemedView>
                                         <AUIInputField
                                             value={value}
                                             onChangeText={onChange}
@@ -382,10 +377,7 @@ const DetailsPage = () => {
                                         />
                                         <AUIThemedView>
                                             {error && (
-                                                <AUIThemedText
-
-                                                    type="subtitle"
-                                                >
+                                                <AUIThemedText type="subtitle">
                                                     {error.message}
                                                 </AUIThemedText>
                                             )}
@@ -408,7 +400,7 @@ const DetailsPage = () => {
                                 title="Save"
                                 selected
                                 onPress={handleSubmit(onSave)}
-                                disabled={!formState.isValid}
+                                // disabled={!formState.isValid}
                                 style={{ width: "50%" }}
                             />
                         </AUIThemedView>
@@ -427,11 +419,11 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         fontStyle: "normal",
     },
-        fieldError: {
+    fieldError: {
         position: "absolute",
         color: "red",
         fontSize: 13,
     },
-})
+});
 
 export default DetailsPage;

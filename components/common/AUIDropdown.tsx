@@ -56,14 +56,7 @@ const DropdownComponent = ({
     return (
         <AUIThemedView style={style}>
             {label && (
-                <AUIThemedText
-                    numberOfLines={1}
-                    style={[
-                        styles.label,
-                        labelStyles,
-                        // isFocus && { color: TEXT_THEME[theme].primary },
-                    ]}
-                >
+                <AUIThemedText numberOfLines={1} style={[styles.label, labelStyles]}>
                     {label}
                 </AUIThemedText>
             )}

@@ -28,6 +28,5 @@ const eventStyles = StyleSheet.create({
     },
     title: {
         fontSize: 14,
-        // color: APP_THEME.gray,
     },
 });

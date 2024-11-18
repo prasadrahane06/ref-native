@@ -91,6 +91,10 @@ export default function PurchaseScreen() {
     useEffect(() => {
         if (individualPlan && taxAmount) {
             const price = newid.type === "buy" ? individualPlan.price : individualPlan.bookYourSeat;
+            console.log ("price ", price);
+            console.log("taxAmount ", taxAmount[0].value);
+            console.log("bookyourseat amount " , individualPlan.bookYourSeat);
+            console.log("price of course is ", individualPlan.price);
             const tax = taxAmount[0].value
             ? (price * taxAmount[0].value / 100)
             : (price * 0.18);
